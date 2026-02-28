@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowchart Bab 3 - Konstruksi Basis Data Graf Sirah Nabawiyah</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #1a237e;
+            border-bottom: 3px solid #1a237e;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #283593;
+            background-color: #e8eaf6;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 40px;
+        }
+        .mermaid {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        .note {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 10px 15px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .page-break {
+            page-break-after: always;
+            margin: 50px 0;
+            border-top: 2px dashed #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flowchart Bab 3 - Metodologi<br/>
+    <small style="font-size: 16px; font-weight: normal;">Konstruksi Basis Data Graf Sirah Nabawiyah Berbasis NER</small></h1>
+
+    <div class="note">
+        <strong>Petunjuk:</strong> Klik kanan pada setiap flowchart dan pilih "Save image as..." untuk menyimpan sebagai gambar PNG yang bisa dimasukkan ke dokumen Word.
+    </div>
+
+    <!-- FLOWCHART 3.1.1 -->
+    <h2>Gambar 3.2 - Diagram Alir Preparasi Dataset (3.1.1)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Dokumen PDF<br/>Sirah Nabawiyah"/]
+        
+        A1 --> A2["<b>Langkah 1:</b><br/>Konversi PDF ke Citra<br/>(pdf2image)"]
+        
+        A2 --> A3["<b>Langkah 2:</b><br/>Praproses Citra<br/>Penyesuaian resolusi,<br/>reduksi noise,<br/>peningkatan kontras"]
+        
+        A3 --> A4["<b>Langkah 3:</b><br/>Ekstraksi Teks dengan OCR<br/>(PaddleOCR - Bahasa Indonesia)"]
+        
+        A4 --> A5[/"Teks per Halaman<br/>(page_001.txt, dst)"/]
+        
+        A5 --> A6["<b>Langkah 4:</b><br/>Segmentasi Berdasarkan TOC<br/>Pencocokan judul,<br/>pembersihan footer,<br/>penggabungan teks"]
+        
+        A6 --> A7[/"Dokumen Terstruktur<br/>(JSON)"/]
+        
+        A7 --> A8["<b>Langkah 5:</b><br/>Ekspor ke Format CSV"]
+        
+        A8 --> A9[/"Dataset CSV"/]
+        
+        A9 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A5 fill:#fff9c4
+        style A7 fill:#fff9c4
+        style A9 fill:#c8e6c9
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- FLOWCHART 3.1.2 -->
+    <h2>Gambar 3.3 - Diagram Alir Preprocessing Data (3.1.2)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Dataset CSV<br/>(hasil preparasi)"/]
+        
+        A1 --> A2["<b>Langkah 1:</b><br/>Penyaringan Baris Tidak Relevan<br/>Hapus UNKNOWN BAB,<br/>bibliografi, lampiran"]
+        
+        A2 --> A3["<b>Langkah 2:</b><br/>Normalisasi Teks<br/>Hapus karakter non-printing,<br/>rapikan spasi,<br/>normalisasi tanda baca"]
+        
+        A3 --> A4["<b>Langkah 3:</b><br/>Pembersihan Gibberish<br/>Hapus karakter acak,<br/>kalimat tidak bermakna"]
+        
+        A4 --> A5{"<b>Langkah 4:</b><br/>Validasi Hasil"}
+        
+        A5 -->|Tidak Valid| A2
+        A5 -->|Valid| A6[/"Dataset CSV Bersih"/]
+        
+        A6 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A5 fill:#ffccbc
+        style A6 fill:#c8e6c9
+    </div>
+
+    <!-- FLOWCHART 3.1.3 -->
+    <h2>Gambar 3.4 - Diagram Alir Chunking (3.1.3)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Dataset CSV Bersih"/]
+        
+        A1 --> A2["<b>Langkah 1:</b><br/>Segmentasi Kalimat<br/>Berdasarkan tanda . ? !"]
+        
+        A2 --> A3["<b>Langkah 2:</b><br/>Penggabungan Kalimat<br/>Menjadi Chunk<br/>Maks. 1500 karakter"]
+        
+        A3 --> A4["<b>Langkah 3:</b><br/>Penerapan Overlap<br/>1 kalimat terakhir diulang"]
+        
+        A4 --> A5["<b>Langkah 4:</b><br/>Pemberian Identitas & Metadata<br/>chunk_id, doc_id, chunk_index,<br/>judul_bab, judul_sub_bab, halaman"]
+        
+        A5 --> A6["<b>Langkah 5:</b><br/>Ekspor Hasil Chunking"]
+        
+        A6 --> A7[/"Dataset Chunks CSV"/]
+        
+        A7 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A7 fill:#c8e6c9
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- FLOWCHART 3.1.4 -->
+    <h2>Gambar 3.5 - Diagram Alir Manual Labelling (3.1.4)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Dataset Chunks CSV"/]
+        
+        A1 --> A2["<b>Langkah 1:</b><br/>Sampling Data untuk Anotasi<br/>Maks. 25 chunk per bab"]
+        
+        A2 --> A3["<b>Langkah 2:</b><br/>Persiapan Template Anotasi"]
+        
+        A3 --> A4["<b>Langkah 3:</b><br/>Proses Anotasi Manual"]
+        
+        A4 --> A4a["PERSON"]
+        A4 --> A4b["EVENT"]
+        A4 --> A4c["LOCATION"]
+        A4 --> A4d["TIME"]
+        
+        A4a --> A5["<b>Langkah 4:</b><br/>Pembagian Data"]
+        A4b --> A5
+        A4c --> A5
+        A4d --> A5
+        
+        A5 --> A6[/"Data Seed 70%"/]
+        A5 --> A7[/"Ground Truth 30%"/]
+        
+        A6 --> A8["<b>Langkah 5:</b><br/>Validasi Hasil Anotasi"]
+        A7 --> A8
+        
+        A8 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A6 fill:#c8e6c9
+        style A7 fill:#bbdefb
+        style A4a fill:#ffccbc
+        style A4b fill:#d1c4e9
+        style A4c fill:#b2dfdb
+        style A4d fill:#f0f4c3
+    </div>
+
+    <!-- FLOWCHART 3.1.5 -->
+    <h2>Gambar 3.6 - Diagram Alir Pseudo-labelling Berbasis NER (3.1.5)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Data Seed + Data Belum Berlabel"/]
+        
+        A1 --> A2["<b>Langkah 1:</b><br/>Persiapan Data Input"]
+        
+        A2 --> A3{"Dua Skenario<br/>Ekstraksi"}
+        
+        A3 --> B1["<b>SKENARIO A</b><br/>SRL-based NER"]
+        A3 --> C1["<b>SKENARIO B</b><br/>LLM-based NER"]
+        
+        B1 --> B2["Parsing Dependensi & SRL"]
+        B2 --> B3["Mapping Role ke Label:<br/>ARG0→PERSON<br/>ARGM-LOC→LOCATION<br/>ARGM-TMP→TIME<br/>Predicate→EVENT"]
+        B3 --> B4["Validasi & Filtering"]
+        
+        C1 --> C2["Perancangan Prompt<br/>+ Few-shot Examples"]
+        C2 --> C3["Eksekusi Prompt<br/>pada LLM API"]
+        C3 --> C4["Parsing & Validasi<br/>Output JSON"]
+        
+        B4 --> D1["<b>Langkah 4:</b><br/>Normalisasi Hasil"]
+        C4 --> D1
+        
+        D1 --> D2["<b>Langkah 5:</b><br/>Penyimpanan Hasil"]
+        
+        D2 --> E1[/"entities_srl.csv"/]
+        D2 --> E2[/"entities_llm.csv"/]
+        
+        E1 --> FINISH([Selesai])
+        E2 --> FINISH
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A3 fill:#ffccbc
+        style B1 fill:#ffccbc
+        style C1 fill:#d1c4e9
+        style E1 fill:#c8e6c9
+        style E2 fill:#c8e6c9
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- FLOWCHART 3.1.6 -->
+    <h2>Gambar 3.7 - Diagram Alir Pembentukan Relasi (3.1.6)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Entitas Hasil Ekstraksi"/]
+        
+        A1 --> A2["<b>Langkah 1:</b><br/>Identifikasi Kandidat<br/>Pasangan Entitas"]
+        
+        A2 --> A3["<b>Langkah 2:</b><br/>Penentuan Tipe Relasi"]
+        
+        A3 --> B1["PERSON → EVENT<br/><b>INVOLVED_IN</b>"]
+        A3 --> B2["EVENT → LOCATION<br/><b>OCCURRED_AT</b>"]
+        A3 --> B3["EVENT → TIME<br/><b>OCCURRED_ON</b>"]
+        
+        B1 --> C1["<b>Langkah 3:</b><br/>Ekstraksi Relasi dari Konteks"]
+        B2 --> C1
+        B3 --> C1
+        
+        C1 --> C2["<b>Langkah 4:</b><br/>Penyimpanan Provenance<br/>chunk_id, halaman, evidence"]
+        
+        C2 --> C3["<b>Langkah 5:</b><br/>Deduplikasi & Normalisasi"]
+        
+        C3 --> C4["<b>Langkah 6:</b><br/>Ekspor Edge List"]
+        
+        C4 --> D1[/"relations_srl.csv"/]
+        C4 --> D2[/"relations_llm.csv"/]
+        
+        D1 --> FINISH([Selesai])
+        D2 --> FINISH
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style B1 fill:#ffccbc
+        style B2 fill:#b2dfdb
+        style B3 fill:#f0f4c3
+        style D1 fill:#c8e6c9
+        style D2 fill:#c8e6c9
+    </div>
+
+    <!-- FLOWCHART 3.1.7 -->
+    <h2>Gambar 3.8 - Diagram Alir Konstruksi Knowledge Graph di Neo4j (3.1.7)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Entitas + Relasi CSV"/]
+        
+        A1 --> A2["<b>Langkah 1:</b><br/>Perancangan Skema Graf"]
+        
+        A2 --> B1["Label Node:<br/>Person, Event,<br/>Location, Time"]
+        A2 --> B2["Tipe Relationship:<br/>INVOLVED_IN,<br/>OCCURRED_AT,<br/>OCCURRED_ON"]
+        
+        B1 --> C1["<b>Langkah 2:</b><br/>Inisialisasi Database Neo4j"]
+        B2 --> C1
+        
+        C1 --> C2["<b>Langkah 3:</b><br/>Pembuatan Constraint & Index"]
+        
+        C2 --> C3["<b>Langkah 4:</b><br/>Import Node"]
+        
+        C3 --> C4["<b>Langkah 5:</b><br/>Import Relationship"]
+        
+        C4 --> C5{"<b>Langkah 6:</b><br/>Validasi Graf"}
+        
+        C5 -->|Gagal| C3
+        C5 -->|Berhasil| F1[/"Graf A (SRL-based)"/]
+        C5 -->|Berhasil| F2[/"Graf B (LLM-based)"/]
+        
+        F1 --> FINISH([Selesai])
+        F2 --> FINISH
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style C5 fill:#ffccbc
+        style F1 fill:#c8e6c9
+        style F2 fill:#c8e6c9
+        style B1 fill:#e1bee7
+        style B2 fill:#e1bee7
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- FLOWCHART 3.1.8 -->
+    <h2>Gambar 3.9 - Diagram Alir Pengujian dan Evaluasi (3.1.8)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Ground Truth 30%<br/>+ Graf A & Graf B"/]
+        
+        A1 --> A2{"Jenis Evaluasi"}
+        
+        A2 --> B0["<b>EVALUASI NER</b>"]
+        A2 --> C0["<b>EVALUASI GRAF</b>"]
+        
+        B0 --> B1["Persiapan Data Uji"]
+        B1 --> B2["Eksekusi Ekstraksi"]
+        B2 --> B2a["SRL-based NER"]
+        B2 --> B2b["LLM-based NER"]
+        B2a --> B3["Pencocokan dengan<br/>Ground Truth"]
+        B2b --> B3
+        B3 --> B4["Hitung Metrik:<br/>Precision, Recall, F1-score"]
+        B4 --> B5["Analisis Perbandingan"]
+        B5 --> B6[/"Tabel Metrik NER"/]
+        
+        C0 --> C1["Perancangan Skenario Kueri"]
+        C1 --> C2["Eksekusi Kueri Cypher"]
+        C2 --> C2a["Graf A"]
+        C2 --> C2b["Graf B"]
+        C2a --> C3["Verifikasi Hasil Kueri"]
+        C2b --> C3
+        C3 --> C4["Perbandingan Struktur Graf"]
+        C4 --> C5["Penilaian Kelayakan"]
+        C5 --> C6[/"Tabel Hasil Kueri<br/>+ Statistik Graf"/]
+        
+        B6 --> FINISH([Selesai])
+        C6 --> FINISH
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A2 fill:#ffccbc
+        style B0 fill:#bbdefb
+        style C0 fill:#e1bee7
+        style B6 fill:#c8e6c9
+        style C6 fill:#c8e6c9
+    </div>
+
+    <hr style="margin-top: 50px;">
+    <p style="text-align: center; color: #666; font-size: 12px;">
+        Flowchart Bab 3 - Konstruksi Basis Data Graf Sirah Nabawiyah Berbasis NER<br/>
+        Untuk menyimpan flowchart: Klik kanan pada diagram → Save image as... → Pilih format PNG
+    </p>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>
