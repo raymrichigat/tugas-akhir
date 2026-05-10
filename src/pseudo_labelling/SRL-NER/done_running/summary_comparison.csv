@@ -1,0 +1,4 @@
+Skenario,F1 token-weighted,F1 macro tanpa O,F1 entity (seqeval),Precision entity,Recall entity,Total iter,Total pseudo-label,Total errors
+E1,0.9955,0.8463,0.9587,0.9542,0.9633,6,237,195
+S1,0.9902,0.8601,0.908,0.8517,0.9723,5,237,433
+S2,0.9826,0.8627,0.8432,0.7404,0.9791,2,237,791
