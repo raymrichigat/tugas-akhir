@@ -2,7 +2,7 @@
 
 ## 3.1 Metode dan Alur Kerja
 
-Penelitian ini bertujuan membangun basis data graf Sirah Nabawiyah berbasis Named-Entity Recognition dengan memanfaatkan teknik pemrosesan bahasa alami. Sistem yang dikembangkan terdiri dari beberapa tahapan: preparasi dataset dari dokumen Sirah Nabawiyah, preprocessing untuk membersihkan noise hasil OCR, chunking untuk membagi teks menjadi unit yang lebih kecil, manual labelling pada sebagian data sebagai seed dan ground truth, pseudo-labelling berbasis NER menggunakan dua skenario (SRL-based dan LLM-based), pembentukan relasi antar entitas, serta konstruksi knowledge graph di Neo4j. Tahap akhir berupa pengujian dan evaluasi untuk memvalidasi kualitas ekstraksi entitas dan memverifikasi kelayakan struktur graf. Diagram alir sistem secara keseluruhan ditunjukkan pada Gambar 3.1.
+Penelitian ini bertujuan membangun basis data graf Sirah Nabawiyah berbasis Named-Entity Recognition dengan memanfaatkan teknik pemrosesan bahasa alami. Sistem yang dikembangkan terdiri dari beberapa tahapan: preparasi dataset dari dokumen Sirah Nabawiyah, preprocessing untuk membersihkan noise hasil OCR, chunking untuk membagi teks menjadi unit yang lebih kecil, manual labelling pada sebagian data sebagai seed dan ground truth, pseudo-labelling berbasis NER menggunakan dua skenario (SRL-based dan LLM-based), alias clustering untuk menormalisasi variasi nama entitas ke bentuk kanonik, pembentukan relasi antar entitas, serta konstruksi knowledge graph di Neo4j. Tahap akhir berupa pengujian dan evaluasi untuk memvalidasi kualitas ekstraksi entitas dan memverifikasi kelayakan struktur graf. Diagram alir sistem secara keseluruhan ditunjukkan pada Gambar 3.1.
 
 [SISIPKAN GAMBAR 3.1 - Diagram Alir Sistem]
 
@@ -34,13 +34,13 @@ Tahap preprocessing bertujuan untuk membersihkan dataset dari noise hasil OCR da
 
 [SISIPKAN GAMBAR 3.3 - Diagram Alir Preprocessing Data]
 
-Proses preprocessing diawali dengan penyaringan baris yang tidak relevan dari dataset. Baris-baris yang tidak termasuk konten utama seperti bagian dengan label "UNKNOWN BAB" (hasil segmentasi yang gagal), bagian bibliografi, dan bagian lampiran yang tidak relevan dihapus dari dataset. Penyaringan ini memastikan hanya konten utama Sirah Nabawiyah yang diproses pada tahap selanjutnya.
+Proses preprocessing diawali dengan penyaringan baris yang tidak relevan dari dataset. Baris dengan label "UNKNOWN BAB" (hasil segmentasi yang gagal) serta baris yang termasuk bagian bibliografi atau daftar pustaka dihapus dari dataset. Penyaringan ini memastikan hanya konten naratif utama Sirah Nabawiyah yang diproses pada tahap selanjutnya.
 
-Selanjutnya dilakukan normalisasi teks untuk menstandarkan format. Proses normalisasi meliputi penghapusan karakter non-printing (karakter kontrol yang tidak terlihat), perapian spasi berlebih (multiple spaces menjadi single space), penghapusan simbol-simbol non-informatif yang sering muncul pada hasil OCR, serta normalisasi tanda baca yang tidak konsisten. Normalisasi ini penting untuk memastikan konsistensi format teks di seluruh dataset.
+Selanjutnya dilakukan normalisasi dan pembersihan ringan (*light cleanup*) pada setiap teks. Tahap ini meliputi: (1) penghapusan karakter non-printable dan karakter tak terlihat seperti zero-width space; (2) penghapusan simbol-simbol non-informatif yang umum muncul pada hasil OCR seperti `@`, `*`, `#`, simbol bullet, serta karakter `&`, `|`, `<>`, `[]`, `~`, dan `^`; (3) normalisasi berbagai varian karakter apostrof dan tanda ain yang muncul dalam transliterasi Arab—seperti `'`, `'`, `ʻ`, dan `` ` ``—menjadi satu bentuk apostrof standar (`'`) untuk menjaga konsistensi penulisan nama seperti *Ka'bah* dan *Qur'an*; serta (4) perbaikan spasi berlebih yang sering muncul akibat OCR pada partikel Arab seperti "Al-" dan "Ar-", misalnya "Al- Julunda" dikoreksi menjadi "Al-Julunda". Normalisasi ini penting untuk memastikan konsistensi token pada tahap NER selanjutnya, khususnya untuk nama entitas yang mengandung apostrof atau prefiks Arab.
 
-Tahap berikutnya adalah pembersihan gibberish, yaitu mengidentifikasi dan menghapus token atau kalimat yang tidak bermakna akibat kesalahan OCR. Gibberish dapat berupa rangkaian karakter acak yang tidak membentuk kata, kalimat dengan proporsi karakter aneh yang tinggi, atau fragmen teks yang terpotong tidak wajar. Pembersihan gibberish dilakukan untuk meningkatkan kualitas teks sebelum tahap ekstraksi entitas.
+Tahap berikutnya adalah pembersihan *gibberish*, yaitu mengidentifikasi dan menghapus token atau kalimat yang tidak bermakna akibat kesalahan OCR. Proses ini dilakukan bertingkat dalam tiga langkah. Pertama, token yang pasti merupakan noise dihapus secara individual, yaitu token yang mengandung campuran huruf dan digit seperti "K1Aq" atau "8s". Kedua, dilakukan penghapusan pada level segmen (*segment-level*): jika terdapat tiga atau lebih token aneh berurutan—seperti huruf kapital tunggal, angka berdiri sendiri, atau kata pendek yang bukan kata umum bahasa Indonesia—segmen tersebut dihapus. Ketiga, dilakukan penghapusan pada level kalimat (*sentence-level*): kalimat yang memiliki proporsi token aneh sebesar 50% atau lebih dari jumlah token dihapus sepenuhnya. Definisi token "aneh" mencakup angka murni, huruf kapital tunggal, campuran huruf kecil dan huruf besar (seperti "pHI"), token uppercase pendek yang bukan singkatan valid, campuran digit dan huruf, serta token pendek (2–3 huruf) yang tidak termasuk dalam daftar kata umum bahasa Indonesia maupun singkatan keagamaan yang umum dalam teks Sirah seperti SAW, SWT, RA, AS, dan HR.
 
-Proses preprocessing diakhiri dengan validasi hasil melalui pengecekan manual pada sampel data. Validasi memastikan teks hasil preprocessing dapat dibaca dengan baik, tidak ada informasi penting yang terhapus, dan format teks konsisten di seluruh dataset. Output dari tahap ini adalah dataset CSV dengan teks yang telah dibersihkan dan dinormalisasi, siap untuk tahap chunking.
+Proses preprocessing diakhiri dengan penghapusan baris yang berteks kosong setelah seluruh tahap pembersihan selesai. Output dari tahap ini adalah dataset CSV dengan kolom `judul_bab`, `judul_sub_bab`, `halaman`, dan `teks_clean` yang berisi teks yang telah dibersihkan dan dinormalisasi, siap untuk tahap chunking.
 
 ---
 
@@ -88,13 +88,29 @@ Hasil ekstraksi dari kedua skenario kemudian dinormalisasi dengan menyeragamkan 
 
 ---
 
-### 3.1.6 Pembentukan Relasi
+### 3.1.6 Alias Clustering
 
-Tahap pembentukan relasi bertujuan untuk menghubungkan entitas yang telah diekstraksi menjadi pasangan node-edge sehingga terbentuk struktur pengetahuan yang dapat dimasukkan ke basis data graf. Proses ini dilakukan pada hasil ekstraksi dari kedua skenario secara terpisah. Diagram alir tahap pembentukan relasi ditunjukkan pada Gambar 3.7.
+Tahap alias clustering bertujuan untuk menormalisasi variasi penulisan nama entitas ke satu bentuk kanonik. Tahap ini dilakukan setelah pseudo-labelling karena pada saat itu seluruh entitas dari semua chunk sudah terekstrak, sehingga peta alias yang dihasilkan mencakup semua variasi nama yang ada dalam dataset — bukan hanya yang tercakup dalam data manual labelling. Dalam teks Sirah Nabawiyah, seorang tokoh sering disebut dengan beberapa variasi nama — misalnya "Umar", "Umar bin Al-Khaththab", dan "Ibnul Khaththab" yang merujuk pada orang yang sama. Tanpa normalisasi, variasi ini akan menghasilkan node-node terpisah dalam knowledge graph yang seharusnya merupakan satu entitas. Diagram alir tahap alias clustering ditunjukkan pada Gambar 3.7.
 
-[SISIPKAN GAMBAR 3.7 - Diagram Alir Pembentukan Relasi]
+[SISIPKAN GAMBAR 3.7 - Diagram Alir Alias Clustering]
 
-Proses pembentukan relasi diawali dengan identifikasi kandidat pasangan entitas yang berpotensi memiliki relasi. Pasangan entitas diidentifikasi berdasarkan kemunculan dalam chunk yang sama dan kedekatan posisi dalam teks. Entitas bertipe EVENT diprioritaskan sebagai penghubung karena dalam domain Sirah, peristiwa menjadi pusat keterhubungan antara tokoh, lokasi, dan waktu.
+Proses alias clustering dilakukan melalui dua tahap secara berurutan. Tahap pertama adalah pengelompokan manual (*manual clusters*) terhadap entitas yang sudah pasti merujuk ke entitas yang sama berdasarkan pengetahuan domain Sirah Nabawiyah. Pengelompokan ini mencakup tiga kategori label: PERSON, LOCATION, dan EVENT. Untuk PERSON, variasi seperti nama lengkap dengan nasab (nama ayah), kunyah (julukan), dan laqab (gelar) dikelompokkan ke satu bentuk kanonik — contohnya "Abu Bakar" dan "Abu Bakar Ash-Shiddiq" dipetakan ke kanonik "Abu Bakar". Untuk LOCATION, variasi transliterasi seperti "Tha'if" dan "Thaif" dinormalisasi. Untuk EVENT, variasi penamaan seperti "Perang Ahzab", "Perang Khandaq", dan "Perang Al-Khandaq" yang merujuk pada peristiwa yang sama dikelompokkan.
+
+Tahap kedua adalah pencocokan berbasis kemiripan string menggunakan algoritma Jaro-Winkler. Algoritma ini dipilih karena memberikan bobot lebih pada kesamaan prefiks nama, yang sesuai dengan karakteristik nama Arab di mana variasi ejaan umumnya terjadi pada bagian akhir nama. Threshold kemiripan ditetapkan sebesar 0,93 — lebih tinggi dari threshold umum 0,85 — karena nama-nama Arab dalam teks Sirah memiliki banyak pola struktural yang serupa namun merujuk pada orang yang berbeda (misalnya "Abu Bakar" dan "Abu Bashir"). Untuk mencegah *false positive*, diterapkan beberapa mekanisme pengaman: (a) jika kedua nama memiliki prefiks compound yang sama (Abu, Ummu, Ibnu), bagian pembeda setelah prefiks harus memiliki kemiripan di atas 0,90; (b) jika kedua nama mengandung patronimik (bin/binti), bagian patronimik harus mirip di atas 0,85; (c) rasio panjang kedua nama tidak boleh di bawah 0,80.
+
+Selain itu, digunakan daftar *exclude pairs* yang secara eksplisit mencegah pengelompokan pasangan nama yang mirip secara leksikal namun merujuk pada entitas berbeda. Contohnya, "Sa'd bin Mu'adz" dan "Sa'd bin Ubadah" memiliki kemiripan tinggi karena sama-sama bernama "Sa'd", namun merupakan dua sahabat Nabi yang berbeda. Daftar ini juga mencakup variasi perang seperti "Perang Badr Kubra" dan "Perang Badr Shughra" yang merupakan dua peristiwa terpisah.
+
+Hasil akhir dari tahap ini adalah sebuah peta alias (*alias map*) dalam format JSON yang memetakan setiap variasi nama ke bentuk kanoniknya, disertai laporan cluster dalam format Markdown untuk keperluan review manual. Peta alias ini akan digunakan pada tahap pembentukan relasi dan konstruksi knowledge graph untuk memastikan setiap entitas direpresentasikan sebagai satu node tunggal dalam graf.
+
+---
+
+### 3.1.7 Pembentukan Relasi
+
+Tahap pembentukan relasi bertujuan untuk menghubungkan entitas yang telah diekstraksi menjadi pasangan node-edge sehingga terbentuk struktur pengetahuan yang dapat dimasukkan ke basis data graf. Proses ini dilakukan pada hasil ekstraksi dari kedua skenario secara terpisah. Diagram alir tahap pembentukan relasi ditunjukkan pada Gambar 3.8.
+
+[SISIPKAN GAMBAR 3.8 - Diagram Alir Pembentukan Relasi]
+
+Proses pembentukan relasi diawali dengan normalisasi nama entitas menggunakan peta alias yang dihasilkan dari tahap alias clustering (Subbab 3.1.6). Setiap variasi nama entitas dipetakan ke bentuk kanoniknya sehingga entitas yang sama namun ditulis berbeda dikenali sebagai satu node. Selanjutnya dilakukan identifikasi kandidat pasangan entitas yang berpotensi memiliki relasi. Pasangan entitas diidentifikasi berdasarkan kemunculan dalam chunk yang sama dan kedekatan posisi dalam teks. Entitas bertipe EVENT diprioritaskan sebagai penghubung karena dalam domain Sirah, peristiwa menjadi pusat keterhubungan antara tokoh, lokasi, dan waktu.
 
 Penentuan tipe relasi dilakukan berdasarkan kombinasi label entitas yang membentuk pasangan. Pasangan PERSON dan EVENT menghasilkan relasi INVOLVED_IN yang menunjukkan keterlibatan tokoh dalam peristiwa. Pasangan EVENT dan LOCATION menghasilkan relasi OCCURRED_AT yang menunjukkan lokasi terjadinya peristiwa. Pasangan EVENT dan TIME menghasilkan relasi OCCURRED_ON yang menunjukkan waktu terjadinya peristiwa. Rancangan tipe relasi ditunjukkan pada Tabel 3.3.
 
@@ -102,15 +118,15 @@ Penentuan tipe relasi dilakukan berdasarkan kombinasi label entitas yang membent
 
 Ekstraksi relasi dari konteks dilakukan dengan menganalisis struktur kalimat untuk mengkonfirmasi relasi, menggunakan kata kunci pemicu relasi seperti "di", "pada", "ketika", dan "terlibat", serta memvalidasi relasi dengan konteks semantik. Setiap relasi yang diekstraksi dilengkapi dengan informasi provenance berupa chunk_id, halaman, dan evidence (cuplikan kalimat sebagai bukti relasi) untuk memungkinkan pelacakan kembali ke sumber.
 
-Tahap terakhir adalah deduplikasi dan normalisasi relasi dengan menggabungkan relasi yang sama dari konteks berbeda, memetakan entitas ke bentuk kanonik, dan menghapus relasi duplikat. Hasil akhir diekspor dalam format edge list ke dua file terpisah: relations_srl.csv untuk hasil skenario SRL-based dan relations_llm.csv untuk hasil skenario LLM-based.
+Tahap terakhir adalah deduplikasi relasi dengan menggabungkan relasi yang sama dari konteks berbeda dan menghapus relasi duplikat. Hasil akhir diekspor dalam format edge list ke dua file terpisah: relations_srl.csv untuk hasil skenario SRL-based dan relations_llm.csv untuk hasil skenario LLM-based.
 
 ---
 
-### 3.1.7 Konstruksi Knowledge Graph di Neo4j
+### 3.1.8 Konstruksi Knowledge Graph di Neo4j
 
-Tahap konstruksi knowledge graph bertujuan untuk membangun basis data graf di Neo4j berdasarkan entitas dan relasi yang telah diekstraksi. Proses ini menghasilkan dua graf terpisah: Graf A dari hasil SRL-based NER dan Graf B dari hasil LLM-based NER. Diagram alir tahap konstruksi knowledge graph ditunjukkan pada Gambar 3.8.
+Tahap konstruksi knowledge graph bertujuan untuk membangun basis data graf di Neo4j berdasarkan entitas dan relasi yang telah diekstraksi. Proses ini menghasilkan dua graf terpisah: Graf A dari hasil SRL-based NER dan Graf B dari hasil LLM-based NER. Diagram alir tahap konstruksi knowledge graph ditunjukkan pada Gambar 3.9.
 
-[SISIPKAN GAMBAR 3.8 - Diagram Alir Konstruksi Knowledge Graph]
+[SISIPKAN GAMBAR 3.9 - Diagram Alir Konstruksi Knowledge Graph]
 
 Proses konstruksi diawali dengan perancangan skema graf yang mendefinisikan struktur data dalam Neo4j. Skema graf terdiri dari empat label node yaitu Person untuk entitas tokoh, Event untuk entitas peristiwa, Location untuk entitas lokasi, dan Time untuk entitas waktu. Tiga tipe relationship didefinisikan yaitu INVOLVED_IN yang menghubungkan Person ke Event, OCCURRED_AT yang menghubungkan Event ke Location, dan OCCURRED_ON yang menghubungkan Event ke Time. Setiap node memiliki properti name untuk nama entitas dalam bentuk kanonik, aliases untuk variasi nama atau sebutan lain, dan source_chunks untuk daftar chunk_id sumber.
 
@@ -122,9 +138,9 @@ Tahap terakhir adalah validasi graf untuk memastikan konstruksi berhasil. Valida
 
 ---
 
-### 3.1.8 Pengujian dan Evaluasi
+### 3.1.9 Pengujian dan Evaluasi
 
-Tahap pengujian dan evaluasi bertujuan untuk memvalidasi kualitas hasil ekstraksi entitas serta memverifikasi kelayakan struktur basis data graf dalam mendukung penelusuran informasi relasional pada domain Sirah Nabawiyah. Evaluasi dalam penelitian ini terbagi menjadi dua bagian utama, yaitu evaluasi hasil Named Entity Recognition (NER) dan evaluasi fungsional basis data graf. Desain evaluasi secara keseluruhan ditunjukkan pada Tabel 3.4, dan diagram alir tahap pengujian dan evaluasi ditunjukkan pada Gambar 3.9.
+Tahap pengujian dan evaluasi bertujuan untuk memvalidasi kualitas hasil ekstraksi entitas serta memverifikasi kelayakan struktur basis data graf dalam mendukung penelusuran informasi relasional pada domain Sirah Nabawiyah. Evaluasi dalam penelitian ini terbagi menjadi dua bagian utama, yaitu evaluasi hasil Named Entity Recognition (NER) dan evaluasi fungsional basis data graf. Desain evaluasi secara keseluruhan ditunjukkan pada Tabel 3.4, dan diagram alir tahap pengujian dan evaluasi ditunjukkan pada Gambar 3.10.
 
 [SISIPKAN TABEL 3.4 - Ringkasan Desain Evaluasi]
 
@@ -133,9 +149,9 @@ Tahap pengujian dan evaluasi bertujuan untuk memvalidasi kualitas hasil ekstraks
 | Kualitas Ekstraksi NER  | Perbandingan prediksi vs ground truth          | Precision, Recall, F1-score per label dan agregat |
 | Kualitas Graf           | Pengujian kueri Cypher + perbandingan struktur | Tingkat keberhasilan kueri, statistik node/edge   |
 
-[SISIPKAN GAMBAR 3.9 - Diagram Alir Pengujian dan Evaluasi]
+[SISIPKAN GAMBAR 3.10 - Diagram Alir Pengujian dan Evaluasi]
 
-#### 3.1.8.1 Evaluasi Hasil Named Entity Recognition
+#### 3.1.9.1 Evaluasi Hasil Named Entity Recognition
 
 Evaluasi NER bertujuan untuk mengukur kemampuan kedua skenario ekstraksi (SRL-based NER dan LLM-based NER) dalam mengenali dan mengklasifikasikan entitas dari teks Sirah Nabawiyah. Evaluasi ini dilakukan dengan membandingkan hasil prediksi entitas terhadap data ground truth yang telah dianotasi secara manual. Selain mengukur performa masing-masing skenario, evaluasi juga bertujuan untuk membandingkan kedua pendekatan guna mengidentifikasi kelebihan dan kekurangan masing-masing metode dalam konteks domain Sirah.
 
@@ -147,7 +163,7 @@ Perhitungan metrik evaluasi dilakukan untuk setiap label entitas dan secara agre
 
 Tahap terakhir adalah analisis perbandingan untuk membandingkan performa SRL-based NER dengan LLM-based NER. Analisis mencakup identifikasi label mana yang paling mudah atau sulit diekstraksi oleh masing-masing metode, serta pola kesalahan yang sering terjadi seperti entitas yang terlewat atau salah klasifikasi label. Output dari evaluasi NER berupa tabel perbandingan metrik kedua skenario per label, metrik agregat, dan analisis kualitatif mengenai karakteristik performa masing-masing pendekatan.
 
-#### 3.1.8.2 Evaluasi Fungsional Basis Data Graf
+#### 3.1.9.2 Evaluasi Fungsional Basis Data Graf
 
 Evaluasi fungsional graf bertujuan untuk memverifikasi bahwa struktur graf yang dibangun dapat mendukung penelusuran informasi relasional pada domain Sirah Nabawiyah. Mengingat penelitian ini menghasilkan dua graf terpisah dari kedua skenario ekstraksi, evaluasi juga bertujuan untuk membandingkan kelayakan Graf A (hasil SRL-based NER) dan Graf B (hasil LLM-based NER) dalam menjawab kueri relasional.
 
@@ -468,22 +484,103 @@ FUNCTION ConstructSystemPrompt()
 END FUNCTION
 ```
 
-### 3.3.5 Pseudocode Pembentukan Relasi
+### 3.3.5 Pseudocode Alias Clustering
 
-Kode Semu 3.5 menunjukkan alur kerja pembentukan relasi antar entitas.
+Kode Semu 3.5 menunjukkan alur kerja normalisasi variasi nama entitas menggunakan klasterisasi alias.
+
+```
+INPUT  : entities_data (CSV berisi entitas hasil NER)
+         manual_clusters (dict klaster manual per label)
+         jw_threshold (threshold Jaro-Winkler, default 0.93)
+OUTPUT : alias_map (JSON peta alias -> nama kanonik)
+
+ALGORITMA:
+1.  BEGIN
+2.      // Tahap 1: Manual Clustering
+3.      alias_map ← {}
+4.      FOR EACH label, clusters IN manual_clusters DO
+5.          FOR EACH canonical, aliases IN clusters DO
+6.              FOR EACH alias IN aliases DO
+7.                  alias_map[label + "::" + alias] ← canonical
+8.              END FOR
+9.          END FOR
+10.     END FOR
+11.     
+12.     // Tahap 2: Jaro-Winkler Automatic Clustering
+13.     unique_names ← GetUniqueNames(entities_data, group_by=label)
+14.     
+15.     FOR EACH label, names IN unique_names DO
+16.         // Urutkan: nama terpanjang sebagai kandidat kanonik
+17.         names ← SortByLength(names, descending=TRUE)
+18.         already_mapped ← SET()
+19.         
+20.         FOR i ← 0 TO LENGTH(names) - 2 DO
+21.             IF names[i] IN already_mapped THEN CONTINUE
+22.             
+23.             FOR j ← i + 1 TO LENGTH(names) - 1 DO
+24.                 IF names[j] IN already_mapped THEN CONTINUE
+25.                 
+26.                 score ← JaroWinkler(names[i], names[j])
+27.                 
+28.                 IF score >= jw_threshold THEN
+29.                     // Guard 1: Panjang minimal harus proporsional
+30.                     IF LENGTH(names[j]) / LENGTH(names[i]) < 0.80 THEN
+31.                         CONTINUE
+32.                     END IF
+33.                     
+34.                     // Guard 2: Nama compound — bagian distingtif harus mirip
+35.                     IF IsCompound(names[i]) AND IsCompound(names[j]) THEN
+36.                         IF JaroWinkler(Distinctive(names[i]), Distinctive(names[j])) < 0.90 THEN
+37.                             CONTINUE
+38.                         END IF
+39.                     END IF
+40.                     
+41.                     // Guard 3: Patronimik (bin/binti) harus cocok
+42.                     IF HasPatronymic(names[i]) XOR HasPatronymic(names[j]) THEN
+43.                         CONTINUE
+44.                     END IF
+45.                     
+46.                     // Guard 4: Exclude pairs (false positive yang diketahui)
+47.                     IF (names[i], names[j]) IN EXCLUDE_PAIRS THEN
+48.                         CONTINUE
+49.                     END IF
+50.                     
+51.                     // Mapping: nama pendek -> nama panjang (kanonik)
+52.                     alias_map[label + "::" + names[j]] ← names[i]
+53.                     already_mapped.ADD(names[j])
+54.                 END IF
+55.             END FOR
+56.         END FOR
+57.     END FOR
+58.     
+59.     SaveJSON(alias_map, "alias_map.json")
+60.     RETURN alias_map
+61. END
+```
+
+### 3.3.6 Pseudocode Pembentukan Relasi
+
+Kode Semu 3.6 menunjukkan alur kerja pembentukan relasi antar entitas.
 
 ```
 INPUT  : entities_data (CSV berisi entitas hasil ekstraksi)
          chunks_dataset (CSV berisi chunk untuk konteks)
+         alias_map (JSON peta alias dari tahap alias clustering)
 OUTPUT : relations (CSV berisi relasi antar entitas)
 
 ALGORITMA:
 1.  BEGIN
-2.      relations ← []
-3.      entities_by_chunk ← GroupByChunkID(entities_data)
-4.      
-5.      FOR EACH chunk_id, chunk_entities IN entities_by_chunk DO
-6.          chunk_text ← GetChunkText(chunks_dataset, chunk_id)
+2.      // Normalisasi nama entitas menggunakan alias map
+3.      FOR EACH entity IN entities_data DO
+4.          key ← entity.label + "::" + entity.entity_text
+5.          entity.canonical_name ← alias_map.GET(key, entity.entity_text)
+6.      END FOR
+7.      
+8.      relations ← []
+9.      entities_by_chunk ← GroupByChunkID(entities_data)
+10.     
+11.     FOR EACH chunk_id, chunk_entities IN entities_by_chunk DO
+12.         chunk_text ← GetChunkText(chunks_dataset, chunk_id)
 7.          
 8.          // Kelompokkan entitas berdasarkan label
 9.          events ← Filter(chunk_entities, label="EVENT")
@@ -554,9 +651,9 @@ ALGORITMA:
 74. END
 ```
 
-### 3.3.6 Pseudocode Konstruksi Knowledge Graph di Neo4j
+### 3.3.7 Pseudocode Konstruksi Knowledge Graph di Neo4j
 
-Kode Semu 3.6 menunjukkan alur kerja konstruksi knowledge graph di Neo4j.
+Kode Semu 3.7 menunjukkan alur kerja konstruksi knowledge graph di Neo4j.
 
 ```
 INPUT  : entities_data (CSV berisi entitas)

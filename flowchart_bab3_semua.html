@@ -184,35 +184,35 @@
         style A4d fill:#f0f4c3
     </div>
 
-    <!-- FLOWCHART 3.1.5 -->
+    <!-- FLOWCHART 3.1.5 - PSEUDO-LABELLING -->
     <h2>Gambar 3.6 - Diagram Alir Pseudo-labelling Berbasis NER (3.1.5)</h2>
     <div class="mermaid">
     flowchart TD
         START([Mulai]) --> A1[/"Data Seed + Data Belum Berlabel"/]
-        
+
         A1 --> A2["<b>Langkah 1:</b><br/>Persiapan Data Input"]
-        
+
         A2 --> A3{"Dua Skenario<br/>Ekstraksi"}
-        
+
         A3 --> B1["<b>SKENARIO A</b><br/>SRL-based NER"]
         A3 --> C1["<b>SKENARIO B</b><br/>LLM-based NER"]
-        
+
         B1 --> B2["Parsing Dependensi & SRL"]
         B2 --> B3["Mapping Role ke Label:<br/>ARG0→PERSON<br/>ARGM-LOC→LOCATION<br/>ARGM-TMP→TIME<br/>Predicate→EVENT"]
         B3 --> B4["Validasi & Filtering"]
-        
+
         C1 --> C2["Perancangan Prompt<br/>+ Few-shot Examples"]
         C2 --> C3["Eksekusi Prompt<br/>pada LLM API"]
         C3 --> C4["Parsing & Validasi<br/>Output JSON"]
-        
+
         B4 --> D1["<b>Langkah 4:</b><br/>Normalisasi Hasil"]
         C4 --> D1
-        
+
         D1 --> D2["<b>Langkah 5:</b><br/>Penyimpanan Hasil"]
-        
+
         D2 --> E1[/"entities_srl.csv"/]
         D2 --> E2[/"entities_llm.csv"/]
-        
+
         E1 --> FINISH([Selesai])
         E2 --> FINISH
 
@@ -228,39 +228,87 @@
 
     <div class="page-break"></div>
 
-    <!-- FLOWCHART 3.1.6 -->
-    <h2>Gambar 3.7 - Diagram Alir Pembentukan Relasi (3.1.6)</h2>
+    <!-- FLOWCHART 3.1.6 - ALIAS CLUSTERING -->
+    <h2>Gambar 3.7 - Diagram Alir Alias Clustering (3.1.6)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Entitas dari<br/>Pseudo-labelling NER<br/>(entities_*.csv)"/]
+
+        A1 --> A2["<b>Tahap 1:</b><br/>Manual Clusters<br/>Kelompokkan entitas yang pasti sama<br/>berdasarkan domain knowledge"]
+
+        A2 --> A2a["PERSON:<br/>Rasulullah = Muhammad,<br/>Abu Bakar = Abu Bakar Ash-Shiddiq,<br/>Umar = Umar bin Al-Khaththab, dst."]
+        A2 --> A2b["LOCATION:<br/>Tha'if = Thaif,<br/>Ka'bah = Baitullah,<br/>Yatsrib = Yastrib"]
+        A2 --> A2c["EVENT:<br/>Perang Khandaq = Perang Ahzab,<br/>Fathul Makkah = Fathu Makkah, dst."]
+
+        A2a --> A3["<b>Tahap 2:</b><br/>Jaro-Winkler Similarity<br/>(threshold = 0,93)"]
+        A2b --> A3
+        A2c --> A3
+
+        A3 --> A3g{"Guard:<br/>Compound prefix?<br/>Patronymic?<br/>Length ratio?<br/>Exclude pairs?"}
+
+        A3g -->|Lolos semua guard| A4["Kelompokkan ke<br/>canonical yang lebih frekuen"]
+        A3g -->|Tidak lolos| A5["Skip pasangan<br/>(beda orang/tempat)"]
+
+        A4 --> A6["<b>Tahap 3:</b><br/>Generate Output"]
+        A5 --> A6
+
+        A6 --> A7[/"alias_map.json<br/>(variasi → kanonik)"/]
+        A6 --> A8[/"alias_clusters.md<br/>(laporan review)"/]
+
+        A7 --> FINISH([Selesai])
+        A8 --> FINISH
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A3g fill:#ffccbc
+        style A5 fill:#ffcdd2
+        style A7 fill:#c8e6c9
+        style A8 fill:#c8e6c9
+        style A2a fill:#ffccbc
+        style A2b fill:#b2dfdb
+        style A2c fill:#d1c4e9
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- FLOWCHART 3.1.7 -->
+    <h2>Gambar 3.8 - Diagram Alir Pembentukan Relasi (3.1.7)</h2>
     <div class="mermaid">
     flowchart TD
         START([Mulai]) --> A1[/"Entitas Hasil Ekstraksi"/]
-        
-        A1 --> A2["<b>Langkah 1:</b><br/>Identifikasi Kandidat<br/>Pasangan Entitas"]
-        
-        A2 --> A3["<b>Langkah 2:</b><br/>Penentuan Tipe Relasi"]
-        
+
+        A1 --> A0[/"alias_map.json"/]
+        A0 --> A1a["<b>Langkah 1:</b><br/>Normalisasi Nama Entitas<br/>via Alias Map"]
+
+        A1a --> A2["<b>Langkah 2:</b><br/>Identifikasi Kandidat<br/>Pasangan Entitas"]
+
+        A2 --> A3["<b>Langkah 3:</b><br/>Penentuan Tipe Relasi"]
+
         A3 --> B1["PERSON → EVENT<br/><b>INVOLVED_IN</b>"]
         A3 --> B2["EVENT → LOCATION<br/><b>OCCURRED_AT</b>"]
         A3 --> B3["EVENT → TIME<br/><b>OCCURRED_ON</b>"]
-        
-        B1 --> C1["<b>Langkah 3:</b><br/>Ekstraksi Relasi dari Konteks"]
+
+        B1 --> C1["<b>Langkah 4:</b><br/>Ekstraksi Relasi dari Konteks"]
         B2 --> C1
         B3 --> C1
-        
-        C1 --> C2["<b>Langkah 4:</b><br/>Penyimpanan Provenance<br/>chunk_id, halaman, evidence"]
-        
-        C2 --> C3["<b>Langkah 5:</b><br/>Deduplikasi & Normalisasi"]
-        
-        C3 --> C4["<b>Langkah 6:</b><br/>Ekspor Edge List"]
-        
+
+        C1 --> C2["<b>Langkah 5:</b><br/>Penyimpanan Provenance<br/>chunk_id, halaman, evidence"]
+
+        C2 --> C3["<b>Langkah 6:</b><br/>Deduplikasi Relasi"]
+
+        C3 --> C4["<b>Langkah 7:</b><br/>Ekspor Edge List"]
+
         C4 --> D1[/"relations_srl.csv"/]
         C4 --> D2[/"relations_llm.csv"/]
-        
+
         D1 --> FINISH([Selesai])
         D2 --> FINISH
 
         style START fill:#e1f5fe
         style FINISH fill:#e1f5fe
         style A1 fill:#fff9c4
+        style A0 fill:#e8eaf6
         style B1 fill:#ffccbc
         style B2 fill:#b2dfdb
         style B3 fill:#f0f4c3
@@ -268,8 +316,8 @@
         style D2 fill:#c8e6c9
     </div>
 
-    <!-- FLOWCHART 3.1.7 -->
-    <h2>Gambar 3.8 - Diagram Alir Konstruksi Knowledge Graph di Neo4j (3.1.7)</h2>
+    <!-- FLOWCHART 3.1.8 -->
+    <h2>Gambar 3.9 - Diagram Alir Konstruksi Knowledge Graph di Neo4j (3.1.8)</h2>
     <div class="mermaid">
     flowchart TD
         START([Mulai]) --> A1[/"Entitas + Relasi CSV"/]
@@ -309,8 +357,8 @@
 
     <div class="page-break"></div>
 
-    <!-- FLOWCHART 3.1.8 -->
-    <h2>Gambar 3.9 - Diagram Alir Pengujian dan Evaluasi (3.1.8)</h2>
+    <!-- FLOWCHART 3.1.9 -->
+    <h2>Gambar 3.10 - Diagram Alir Pengujian dan Evaluasi (3.1.9)</h2>
     <div class="mermaid">
     flowchart TD
         START([Mulai]) --> A1[/"Ground Truth 30%<br/>+ Graf A & Graf B"/]
