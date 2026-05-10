@@ -1,3 +1,4 @@
+# Python
 __pycache__/
 *.pyc
 .env
@@ -6,3 +7,28 @@ venv/
 *.egg-info/
 dist/
 build/
+
+# Claude Code state (lokal, jangan commit)
+.claude/
+CLAUDE_1.md
+
+# Model artifacts (terlalu besar untuk GitHub, share via Drive/HF Hub)
+*.safetensors
+*.bin
+*.ckpt
+*.pt
+*.pth
+src/pseudo_labelling/SRL-NER/done_running/**/output/models/
+
+# PDF referensi (kecuali proposal sendiri & buku sumber yang sudah tracked)
+*.pdf
+!Proposal-TA Genta Putra Prayoga.pdf
+!data/Sirah Nabawiyah by Shafiyyur Rahman Mubarakfury (syaikh.), Kathur Suhardi.pdf
+
+# Paket original Bu Diana + artifact zip Mac
+(KIRIM MHS Bu Diana)_bert-only-0.9/
+__MACOSX/
+
+# OS
+.DS_Store
+Thumbs.db
