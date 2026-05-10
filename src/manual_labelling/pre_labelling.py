@@ -9,8 +9,8 @@ import pandas as pd
 from pathlib import Path
 
 # ── Konfigurasi ──────────────────────────────────────────────────────────────
-IN_SEED = Path(r"E:\2_Kehidupan-Kuliah\10_tugas-akhir\repo-TA\TA_preprocess\TA_sirah\data\result\chunking_result\sirah_manual_seed.csv")
-OUT_PRE = Path(r"E:\2_Kehidupan-Kuliah\10_tugas-akhir\repo-TA\TA_preprocess\TA_sirah\data\result\chunking_result\sirah_prelabelled.csv")
+IN_SEED = Path(r"E:\2_Kehidupan-Kuliah\10_tugas-akhir\repo-TA\TA_preprocess\TA_sirah\data\result\manual_labelling\sirah_manual_seed.csv")
+OUT_PRE = Path(r"E:\2_Kehidupan-Kuliah\10_tugas-akhir\repo-TA\TA_preprocess\TA_sirah\data\result\manual_labelling\sirah_prelabelled.csv")
 
 # ── PERSON patterns ──────────────────────────────────────────────────────────
 # Daftar nama tokoh utama Sirah Nabawiyah (case-sensitive)
@@ -19,12 +19,13 @@ PERSON_EXACT = [
     "Rasulullah", "Nabi Muhammad", "Muhammad",
     # Keluarga Nabi
     "Khadijah", "Khadijah binti Khuwailid", "Aisyah",
-    "Fatimah", "Ali bin Abu Thalib", "Ali",
+    "Fatimah", "Ali bin Abu Thalib", "Ali bin Abi Thalib", "Ali",
     "Hamzah", "Hamzah bin Abdul Muththalib",
     "Abu Thalib", "Abbas bin Abdul Muththalib", "Al-Abbas",
     "Abdullah bin Abdul Muththalib", "Abdul Muththalib",
     "Aminah binti Wahb", "Halimah",
-    "Hasan", "Husain",
+    "Hasan", "Husain", "Ja'far bin Abu Thalib",
+    "Abu Sufyan bin Al-Harits bin Abdul Muththalib",
     # Khulafaur Rasyidin & sahabat utama
     "Abu Bakar", "Abu Bakar Ash-Shiddiq",
     "Umar bin Al-Khaththab", "Umar",
@@ -65,11 +66,13 @@ PERSON_EXACT = [
     "Al-Harits bin Harb",
     "Siba bin Arfazhah",
     "Zaid bin Tsabit",
+    "Abdullah bin Abu Rabi'ah",
     # Istri Nabi lain
     "Hafshah", "Ummu Salamah", "Zainab",
-    "Shafiyyah", "Juwairiyah", "Maimunah",
+    "Shafiyyah", "Juwairiyah",
+    "Maimunah", "Maimunah binti Al-Harits Al-Amiriyah", "Maimunah binti Al-Harits Al- Amiriyah",
     # Musuh & tokoh Quraisy
-    "Abu Jahal", "Abu Lahab", "Abu Sufyan",
+    "Abu Jahal", "Abu Lahab", "Abu Sufyan bin Harb",
     "Utbah bin Rabi'ah", "Utbah",
     "Syaibah bin Rabi'ah",
     "Walid bin Al-Mughirah",
@@ -108,9 +111,32 @@ PERSON_EXACT = [
     "Ummul Khair", "Ummu Jamil",
 ]
 
-# Pattern untuk menangkap nama dengan "bin/binti" yang belum ada di list
+# ── Improved regex untuk nama Arab dengan nasab ──────────────────────────────
+# Menangani pola: Name bin Al-Something, Name bin Abdul Something, dst.
+#
+# Atom nama: kata kapital, opsional diawali artikel Arab (Al-, Ash-, An-, dst.)
+_ART = r"(?:(?:Al|An|Ash|As|Ats|Ad|Ar|Az|At|Adz)-)"
+_ATOM = r"(?:" + _ART + r")?[A-Z][a-z']+(?:'[a-z]*)?"
+#
+# Setelah bin/binti, nama bisa compound: "Abdul Muththalib", "Abu Thalib"
+_COMPOUND = r"(?:Abdul|Abu|Abul|Abi|Ummu|Ibnu)"
+_POST_BIN = r"(?:" + _COMPOUND + r"\s+" + _ATOM + r"|" + _ATOM + r")"
+_NASAB = r"\s+(?:bin|binti)\s+" + _POST_BIN
+#
+# Nama lengkap: harus punya compound prefix (Abu/Ummu/...) ATAU minimal satu nasab (bin/binti)
 _PERSON_BIN_RE = re.compile(
-    r"\b([A-Z][a-z']+(?:\s+(?:bin|binti|Abu|Ummu|Ibnu|Ibnul|Abul)\s+[A-Z][a-z']+(?:\s+(?:bin|binti)\s+[A-Z][a-z']+)?))"
+    r"\b((?:Abu|Ummu|Ibnu|Ibnul|Abul)\s+" + _ATOM + r"(?:" + _NASAB + r")*"
+    r"|" + _ATOM + r"(?:" + _NASAB + r")+)"
+)
+
+# Pola nama terpotong: berakhir dengan "bin Al", "bin Abu", dsb.
+_TRUNCATED_SUFFIX_RE = re.compile(
+    r"\s+(?:bin|binti)\s+(?:Al|An|Ash|As|Ats|Ad|Ar|Az|At|Adz|Abu|Abul|Abi|Abdul)$"
+)
+# Pola untuk memperluas nama terpotong dari teks berikutnya
+# \s* setelah hyphen menangani artefak OCR seperti "An- Nu'man"
+_EXTEND_RE = re.compile(
+    r"(-\s*[A-Z][a-z']+(?:'[a-z]*)?|\s+[A-Z][a-z']+(?:'[a-z]*)?)"
 )
 
 # ── EVENT patterns ───────────────────────────────────────────────────────────
@@ -118,7 +144,7 @@ EVENT_EXACT = [
     # Perang
     "Perang Badr", "Perang Badar",
     "Perang Uhud",
-    "Perang Khandaq", "Perang Ahzab",
+    "Perang Khandaq", "Perang Ahzab", "Perang Al-Khandaq",
     "Perang Khaibar",
     "Perang Hunain",
     "Perang Tabuk",
@@ -219,8 +245,6 @@ _TIME_PATTERNS = [
     re.compile(r"\b(Lailatul[\s-]Qadar)"),
     # pertengahan hari Tasyriq
     re.compile(r"\b(pertengahan\s+hari[\s-]hari\s+Tasyriq)"),
-    # musim haji tahun
-    re.compile(r"\b(musim\s+haji\s+(?:tahun\s+)?(?:ke[\s-]?)?\w+)"),
 ]
 
 
@@ -246,13 +270,28 @@ def find_regex_matches(text, regex_list, label):
     results = []
     for rx in regex_list:
         for m in rx.finditer(text):
+            grp = 1 if m.lastindex else 0
             results.append({
-                "entity_text": m.group(1) if m.lastindex else m.group(0),
+                "entity_text": m.group(grp),
                 "label": label,
-                "start_char": m.start(),
-                "end_char": m.end(),
+                "start_char": m.start(grp),
+                "end_char": m.end(grp),
             })
     return results
+
+
+_INDO_STOPWORDS = {
+    "Kemudian", "Lalu", "Wahai", "Maka", "Setelah", "Ketika", "Dengan",
+    "Tentang", "Adapun", "Namun", "Sedangkan", "Menurut", "Bahkan",
+    "Kepada", "Karena", "Terhadap", "Sementara", "Begitu", "Akhirnya",
+    "Oleh", "Untuk", "Dalam", "Pada", "Dari", "Seperti", "Hingga",
+    "Tanpa", "Selain", "Sebelum", "Sesudah", "Sambil", "Seraya",
+    "Tatkala", "Tiba", "Saat", "Demi", "Bersama", "Bukan", "Tetapi",
+    "Akan", "Jika", "Bila", "Walau", "Sekalipun", "Supaya", "Agar",
+    "Antara", "Sekitar", "Berkata", "Mereka", "Merasa",
+    "Sebab", "Padahal", "Bahwa", "Yakni", "Yaitu", "Rupanya",
+    "Tanya", "Sesungguhnya", "Sungguh", "Sebenarnya", "Malah", "Justru", "Apalagi",
+}
 
 
 def find_person_bin(text):
@@ -260,13 +299,37 @@ def find_person_bin(text):
     results = []
     for m in _PERSON_BIN_RE.finditer(text):
         name = m.group(1).strip()
-        if len(name) > 5:  # skip yang terlalu pendek
-            results.append({
-                "entity_text": name,
-                "label": "PERSON",
-                "start_char": m.start(),
-                "end_char": m.end(),
-            })
+        end_pos = m.end()
+
+        if len(name) <= 5:  # skip yang terlalu pendek
+            continue
+
+        # Skip jika kata pertama adalah stopword bahasa Indonesia
+        first_word = name.split()[0]
+        if first_word in _INDO_STOPWORDS:
+            continue
+
+        # Perbaiki nama terpotong: "Ka'b bin Al" → "Ka'b bin Al-Khaththab"
+        if _TRUNCATED_SUFFIX_RE.search(name):
+            rest = text[end_pos:]
+            ext = _EXTEND_RE.match(rest)
+            if ext:
+                name += ext.group(1)
+                end_pos += ext.end()
+                # Coba extend sekali lagi untuk compound seperti
+                # "bin Abdul" + " " + "Muththalib"
+                rest2 = text[end_pos:]
+                ext2 = _EXTEND_RE.match(rest2)
+                if ext2 and not ext2.group(1).startswith("-"):
+                    name += ext2.group(1)
+                    end_pos += ext2.end()
+
+        results.append({
+            "entity_text": name.strip(),
+            "label": "PERSON",
+            "start_char": m.start(),
+            "end_char": end_pos,
+        })
     return results
 
 
@@ -316,10 +379,20 @@ def deduplicate_entities(entities):
     return kept
 
 
+def _normalize_quotes(text):
+    """Normalisasi karakter kutip unicode ke ASCII standar."""
+    text = text.replace('\u2018', "'").replace('\u2019', "'")  # ' '
+    text = text.replace('\u201C', '"').replace('\u201D', '"')  # " "
+    text = text.replace('\u0060', "'")  # `
+    text = text.replace('\u00B4', "'")  # ´
+    return text
+
+
 def extract_entities(text):
     """Ekstrak semua entitas dari teks."""
     if not isinstance(text, str) or not text.strip():
         return []
+    text = _normalize_quotes(text)
 
     all_ents = []
 
@@ -347,8 +420,20 @@ def extract_entities(text):
     # 7. TIME - bulan Hijriah
     all_ents.extend(find_time_bulan(text))
 
+    # 8. Post-processing: bersihkan noise prefix yang lolos
+    cleaned = []
+    for ent in all_ents:
+        name = ent["entity_text"]
+        first_word = name.split()[0] if name else ""
+        if first_word in _INDO_STOPWORDS and " " in name:
+            # Strip prefix noise, perbaiki start_char
+            stripped = name[len(first_word):].strip()
+            ent["start_char"] += len(name) - len(stripped)
+            ent["entity_text"] = stripped
+        cleaned.append(ent)
+
     # Deduplicate
-    return deduplicate_entities(all_ents)
+    return deduplicate_entities(cleaned)
 
 
 # ── Pipeline utama ───────────────────────────────────────────────────────────
@@ -378,7 +463,7 @@ def main():
                 r = {**base}
                 r["entity_text"] = ent["entity_text"]
                 r["label"] = ent["label"]
-                r["notes"] = "auto"
+                r["notes"] = ""
                 r["start_char"] = ent["start_char"]
                 r["end_char"] = ent["end_char"]
                 rows.append(r)

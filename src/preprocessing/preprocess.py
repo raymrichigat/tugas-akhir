@@ -3,6 +3,7 @@ Preprocessing Script untuk Dataset Sirah Nabawiyah
 - Filter baris tidak relevan (UNKNOWN BAB, bibliografi)
 - Normalisasi teks (whitespace, karakter non-printable)
 - Pembersihan gibberish OCR (token aneh, run aneh, kalimat gibberish)
+- Filter kalimat footnote/referensi bibliografi
 - Ekspor ke CSV bersih
 """
 
@@ -21,13 +22,28 @@ DROP_TOO_SHORT   = False
 MIN_WORDS        = 5
 
 # ── Regex patterns ───────────────────────────────────────────────────────────
-_SENT_SPLIT = re.compile(r"(?<=[.!?])\s+|(?<=:)\s+|(?<=;)\s+")
+# FIX: hapus split pada ':' agar kalimat kutipan/definisi tidak terpotong
+_SENT_SPLIT = re.compile(r"(?<=[.!?])\s+|(?<=;)\s+")
 ZWS_RE      = re.compile(r"[\u200b\u200c\u200d\uFEFF]")
+
+# FIX: simbol OCR noise yang bukan tanda baca standar → dibersihkan di light_cleanup
+_NOISE_SYMS_RE = re.compile(r"[&{}\|<>\[\]~^]")
+
+# Normalisasi apostrof/ain: semua varian → apostrof standar (')
+_APOSTROPHE_RE = re.compile(r"[\u2018\u2019\u201a\u201b\u2032\u02bc\u02bb\u0060\uff07\u02be\u02bf]")
+
+# Fix "Al- Kata" atau "Ar- Kata" → "Al-Kata" / "Ar-Kata" (spasi setelah tanda hubung dihapus)
+_AL_AR_SPACE_RE = re.compile(r"\b(A[lr]-)\s+")
+
+# FIX: perluas stripping punctuation/simbol agar O}, &Ku, dll terdeteksi sebagai weird
+_TRAILING_PUNC = re.compile(r"[,.:;!?\-\)\(\}\{\|\&~^<>\[\]]+$")
+_LEADING_PUNC  = re.compile(r"^[,.:;!?\-\)\(\}\{\|\&~^<>\[\]]+")
 
 # Whitelist singkatan yang valid di teks Sirah
 TOKEN_WHITELIST = {
     "SAW", "SWT", "RA", "AS", "QS", "HR", "SM", "AN",
     "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+    "XI", "XII",  # FIX: Roman numeral XI-XII (XIII+ aman karena len > 3)
     "DI", "KE", "YA", "LA", "AL", "BI", "WA", "MA", "IN",
     "DAN", "INI", "ITU", "ADA", "HAL",
 }
@@ -36,10 +52,12 @@ TOKEN_WHITELIST = {
 COMMON_SHORT_WORDS = {
     "di", "ke", "ya", "la", "mu", "ku", "se", "si", "bi",
     "al", "wa", "ma", "in", "an", "da", "ba", "ha", "ka",
-    "dan", "ini", "itu", "ada", "hal", "lah", "pun", "pun",
+    "dan", "ini", "itu", "ada", "hal", "lah", "pun",
     "dia", "dua", "apa", "tak", "jua", "bin", "abu", "bab",
-    "air", "itu", "saa", "itu", "rak", "sah", "sya", "nya",
-    "lah", "jam", "san", "raj", "dai", "akh", "ala", "ber",
+    "air", "saa", "rak", "sah", "sya", "nya",
+    "jam", "san", "raj", "dai", "akh", "ala", "ber",
+    # FIX: singkatan umum Indonesia
+    "no", "dr", "yg", "tdk", "dgn", "dll", "dst", "dsb", "tsb", "hrs",
 }
 
 
@@ -53,12 +71,18 @@ def normalize_ws(text: str) -> str:
 
 
 def light_cleanup(text: str) -> str:
-    """Cleaning ringan: hapus karakter non-printable dan simbol bullet."""
+    """Cleaning ringan: hapus karakter non-printable, simbol bullet, dan simbol OCR noise."""
     if not isinstance(text, str):
         return ""
     t = "".join(ch for ch in text if ch.isprintable())
-    t = t.replace("@", " ").replace("*", " ")
+    t = t.replace("@", " ").replace("*", " ").replace("#", " ")
     t = t.replace("•", " ").replace("·", " ").replace("●", " ").replace("▪", " ")
+    # FIX: hapus simbol OCR noise non-standar (&, {}, |, <>, [], ~, ^)
+    t = _NOISE_SYMS_RE.sub(" ", t)
+    # Normalisasi apostrof/ain ke apostrof standar (')
+    t = _APOSTROPHE_RE.sub("'", t)
+    # Fix spasi setelah "Al-" / "Ar-": "Al- Julunda" → "Al-Julunda"
+    t = _AL_AR_SPACE_RE.sub(r"\1", t)
     return normalize_ws(t)
 
 
@@ -85,12 +109,12 @@ def token_is_weird(t: str) -> bool:
     if not t:
         return False
 
-    # Bersihkan trailing punctuation untuk pengecekan (tapi cek original juga)
-    t_clean = re.sub(r"[,.:;!?\-\)\(]+$", "", t)
-    t_clean = re.sub(r"^[,.:;!?\-\)\(]+", "", t_clean)
+    # FIX: perluas stripping agar O}, &Ku, dll terdeteksi dengan benar
+    t_clean = _TRAILING_PUNC.sub("", t)
+    t_clean = _LEADING_PUNC.sub("", t_clean)
 
     if not t_clean:
-        return True  # token hanya berisi punctuation
+        return True  # token hanya berisi punctuation/simbol
 
     up = t_clean.upper()
 
@@ -118,7 +142,6 @@ def token_is_weird(t: str) -> bool:
     if re.search(r"\d", t_clean) and re.search(r"[A-Za-z]", t_clean):
         return True
 
-    # ── PERBAIKAN: Token huruf pendek yang bukan kata umum ────────────────
     # Token 1 huruf lowercase (berdiri sendiri) → kemungkinan besar noise
     if len(t_clean) == 1 and t_clean.isalpha() and t_clean == t_clean.lower():
         return True
@@ -142,8 +165,9 @@ def purge_isolated_weird_tokens(text: str) -> str:
     toks = text.split()
     kept = []
     for t in toks:
-        t_clean = re.sub(r"[,.:;!?\-\)\(]+$", "", t)
-        t_clean = re.sub(r"^[,.:;!?\-\)\(]+", "", t_clean)
+        # FIX: perluas stripping punctuation/simbol
+        t_clean = _TRAILING_PUNC.sub("", t)
+        t_clean = _LEADING_PUNC.sub("", t_clean)
         # Skip if mixed digit+letter (ALWAYS noise in this domain)
         if (t_clean and re.search(r"\d", t_clean) and re.search(r"[A-Za-z]", t_clean)
                 and t_clean.upper() not in TOKEN_WHITELIST):
@@ -230,7 +254,7 @@ def is_gibberish_sentence(s: str) -> bool:
 def remove_gibberish(text: str):
     """
     1) Hapus run token aneh (segment-level)
-    2) Split kalimat lalu buang kalimat yang gibberish (sentence-level)
+    2) Split kalimat lalu buang kalimat yang gibberish atau footnote (sentence-level)
     """
     if not isinstance(text, str):
         return "", 0
@@ -244,7 +268,7 @@ def remove_gibberish(text: str):
     # (1) segment-level removal
     t0 = remove_gibberish_runs(t0, min_run_tokens=3)
 
-    # (2) sentence-level removal
+    # (2) sentence-level removal (gibberish only)
     sents = split_sentences(t0)
     if not sents:
         return normalize_ws(t0), 0
@@ -276,7 +300,8 @@ def main():
         mask_drop |= bab_norm.eq("unknown bab")
 
     if DROP_BIBLIO:
-        pat_biblio = r"(bibliografi|daftar\s+pustaka|bibliography|references|referensi)"
+        # FIX: hapus capture group agar tidak ada UserWarning dari pandas
+        pat_biblio = r"bibliografi|daftar\s+pustaka|bibliography|references|referensi"
         mask_drop |= (
             bab_norm.str.contains(pat_biblio, regex=True, na=False) |
             sub_norm.str.contains(pat_biblio, regex=True, na=False)
@@ -289,7 +314,7 @@ def main():
     df["teks"] = df["teks"].fillna("").astype(str)
     df["teks_clean"] = df["teks"].apply(light_cleanup)
 
-    # 4. Buang gibberish OCR
+    # 4. Buang gibberish OCR + kalimat footnote
     tmp = df["teks_clean"].apply(remove_gibberish)
     df["teks_clean"] = tmp.apply(lambda x: x[0])
     df["gibberish_removed_count"] = tmp.apply(lambda x: x[1])
@@ -305,9 +330,9 @@ def main():
 
     print(f"Rows akhir: {len(df)}")
 
-    # 6. Tampilkan statistik gibberish
-    total_gibberish = df["gibberish_removed_count"].sum()
-    print(f"Total kalimat gibberish dibuang: {total_gibberish}")
+    # 6. Tampilkan statistik
+    total_dropped = df["gibberish_removed_count"].sum()
+    print(f"Total kalimat gibberish dibuang: {total_dropped}")
 
     # 7. Quick check: cari sisa 'Ug 8 B L fts' di output
     check = df["teks_clean"].str.contains("Ug 8 B L fts", na=False)
