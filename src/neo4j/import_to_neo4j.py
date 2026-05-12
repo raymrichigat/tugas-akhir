@@ -16,15 +16,23 @@ Cara pakai:
 """
 
 import argparse
+import json
 import pandas as pd
 from pathlib import Path
 
 # ── Konfigurasi ──────────────────────────────────────────────────────────────
-BASE_DIR = Path(r"E:\2_Kehidupan-Kuliah\10_tugas-akhir\repo-TA\TA_preprocess\TA_sirah")
-IN_NODES = BASE_DIR / "data" / "result" / "relation_result" / "nodes.csv"
-IN_EDGES = BASE_DIR / "data" / "result" / "relation_result" / "edges.csv"
+BASE_DIR = Path(__file__).resolve().parents[2]
+RR_DIR = BASE_DIR / "data" / "result" / "relation_result"
 OUT_DIR = BASE_DIR / "data" / "result" / "neo4j"
-OUT_CYPHER = OUT_DIR / "import_sirah.cypher"
+
+IN_NODES_V1 = RR_DIR / "nodes.csv"
+IN_EDGES_V1 = RR_DIR / "edges.csv"
+IN_NODES_V2 = RR_DIR / "nodes_v2.csv"
+IN_EDGES_V2 = RR_DIR / "edges_v2.csv"
+PERIOD_JSON = RR_DIR / "period_mapping.json"
+
+OUT_CYPHER_V1 = OUT_DIR / "import_sirah.cypher"
+OUT_CYPHER_V2 = OUT_DIR / "import_sirah_v2.cypher"
 
 
 def escape_cypher(s: str) -> str:
@@ -34,12 +42,19 @@ def escape_cypher(s: str) -> str:
     return s.replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"')
 
 
-def generate_cypher(nodes_df: pd.DataFrame, edges_df: pd.DataFrame) -> str:
-    """Generate Cypher queries untuk import ke Neo4j."""
+def generate_cypher(nodes_df: pd.DataFrame, edges_df: pd.DataFrame,
+                    periods: list[dict] | None = None) -> str:
+    """
+    Generate Cypher queries untuk import ke Neo4j.
+
+    Kalau `periods` diisi (v2 mode), Period akan dibuat sebagai first-class node
+    dan EVENT akan punya relasi `IN_PERIOD` ke Period.
+    """
     lines = []
 
+    version_tag = "v2 (with Period nodes)" if periods else "v1 (no Period nodes)"
     lines.append("// ============================================================")
-    lines.append("// Knowledge Graph Sirah Nabawiyah — Import Script")
+    lines.append(f"// Knowledge Graph Sirah Nabawiyah — Import Script [{version_tag}]")
     lines.append("// Auto-generated oleh import_to_neo4j.py")
     lines.append("// ============================================================")
     lines.append("")
@@ -48,7 +63,33 @@ def generate_cypher(nodes_df: pd.DataFrame, edges_df: pd.DataFrame) -> str:
     lines.append("// -- Constraints --")
     for label in ["Person", "Event", "Location", "Time"]:
         lines.append(f"CREATE CONSTRAINT IF NOT EXISTS FOR (n:{label}) REQUIRE n.name IS UNIQUE;")
+    if periods:
+        lines.append("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Period) REQUIRE n.period_id IS UNIQUE;")
     lines.append("")
+
+    # Period nodes (v2 only)
+    if periods:
+        lines.append("// -- Period nodes (v2: top-down periodization, 15 periods) --")
+        for p in periods:
+            pid = p["period_id"]
+            label = escape_cypher(p["label"])
+            phase = escape_cypher(p["phase"])
+            desc = escape_cypher(p.get("description", ""))
+            page_start = p["page_start"]
+            page_end = p["page_end"]
+            bab_ids = p.get("bab_ids", [])
+            bab_count = len(bab_ids)
+            props = (
+                f'period_id: "{pid}", '
+                f'label: "{label}", '
+                f'phase: "{phase}", '
+                f'description: "{desc}", '
+                f'page_start: {page_start}, '
+                f'page_end: {page_end}, '
+                f'bab_count: {bab_count}'
+            )
+            lines.append(f'MERGE (n:Period {{period_id: "{pid}"}}) SET n += {{{props}}};')
+        lines.append("")
 
     # Nodes
     lines.append("// -- Nodes --")
@@ -110,9 +151,32 @@ def generate_cypher(nodes_df: pd.DataFrame, edges_df: pd.DataFrame) -> str:
             f'SET {props};'
         )
 
+    # Event -> Period relationships (v2 only)
+    if periods:
+        # Build period_label → period_id lookup
+        label_to_pid = {p["label"]: p["period_id"] for p in periods}
+        event_nodes = nodes_df[nodes_df["label"] == "EVENT"]
+        lines.append("")
+        lines.append("// -- Event → Period (IN_PERIOD) --")
+        in_period_count = 0
+        for _, row in event_nodes.iterrows():
+            ev_name = escape_cypher(row["name"])
+            periode_label = str(row.get("periode_bab", "")).strip()
+            if periode_label in label_to_pid:
+                pid = label_to_pid[periode_label]
+                lines.append(
+                    f'MATCH (e:Event {{name: "{ev_name}"}}), (p:Period {{period_id: "{pid}"}}) '
+                    f'MERGE (e)-[:IN_PERIOD]->(p);'
+                )
+                in_period_count += 1
+        lines.append(f"// IN_PERIOD relations created: {in_period_count}")
+
     lines.append("")
     lines.append("// -- Selesai --")
-    lines.append(f"// Total: {len(nodes_df)} nodes, {len(edges_df)} edges")
+    total_msg = f"// Total: {len(nodes_df)} nodes, {len(edges_df)} edges"
+    if periods:
+        total_msg += f", {len(periods)} Period nodes"
+    lines.append(total_msg)
 
     return "\n".join(lines)
 
@@ -164,6 +228,8 @@ def import_via_driver(uri: str, user: str, password: str, cypher: str, clear: bo
 
 def main():
     parser = argparse.ArgumentParser(description="Import KG Sirah ke Neo4j")
+    parser.add_argument("--source", choices=["v1", "v2", "auto"], default="auto",
+                        help="Pilih data source: v1=nodes.csv, v2=nodes_v2.csv (default: auto-detect)")
     parser.add_argument("--uri", help="Neo4j Bolt URI (contoh: bolt://localhost:7687)")
     parser.add_argument("--user", default="neo4j", help="Neo4j username")
     parser.add_argument("--password", help="Neo4j password")
@@ -174,20 +240,39 @@ def main():
     print("IMPORT KG SIRAH NABAWIYAH KE NEO4J")
     print("=" * 60)
 
+    # Source selection
+    if args.source == "auto":
+        use_v2 = IN_NODES_V2.exists() and IN_EDGES_V2.exists()
+    else:
+        use_v2 = (args.source == "v2")
+
+    if use_v2:
+        nodes_path, edges_path, out_path = IN_NODES_V2, IN_EDGES_V2, OUT_CYPHER_V2
+        print("\n  Source: v2 (apply_review_to_kg.py output) + Period nodes")
+    else:
+        nodes_path, edges_path, out_path = IN_NODES_V1, IN_EDGES_V1, OUT_CYPHER_V1
+        print("\n  Source: v1 (raw relation_extraction output, no Period nodes)")
+
     # 1. Baca data
     print("\n[1/3] Membaca nodes & edges...")
-    nodes_df = pd.read_csv(IN_NODES, sep=";", encoding="utf-8-sig").fillna("")
-    edges_df = pd.read_csv(IN_EDGES, sep=";", encoding="utf-8-sig").fillna("")
+    nodes_df = pd.read_csv(nodes_path, sep=";", encoding="utf-8-sig").fillna("")
+    edges_df = pd.read_csv(edges_path, sep=";", encoding="utf-8-sig").fillna("")
     print(f"  Nodes: {len(nodes_df)}")
     print(f"  Edges: {len(edges_df)}")
 
+    periods = None
+    if use_v2 and PERIOD_JSON.exists():
+        with open(PERIOD_JSON, encoding="utf-8") as f:
+            periods = json.load(f)
+        print(f"  Periods: {len(periods)}")
+
     # 2. Generate Cypher
     print("\n[2/3] Generating Cypher...")
-    cypher = generate_cypher(nodes_df, edges_df)
+    cypher = generate_cypher(nodes_df, edges_df, periods=periods)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    OUT_CYPHER.write_text(cypher, encoding="utf-8")
-    print(f"  Cypher script: {OUT_CYPHER}")
+    out_path.write_text(cypher, encoding="utf-8")
+    print(f"  Cypher script: {out_path}")
 
     # 3. Import ke Neo4j (jika ada koneksi)
     if args.uri and args.password:
@@ -197,7 +282,7 @@ def main():
             print("\n  Fallback: gunakan file .cypher di Neo4j Browser")
     else:
         print("\n[3/3] Tidak ada koneksi Neo4j. Untuk import:")
-        print(f"  Opsi 1: Copy-paste isi {OUT_CYPHER} ke Neo4j Browser")
+        print(f"  Opsi 1: Copy-paste isi {out_path} ke Neo4j Browser")
         print(f"  Opsi 2: Jalankan ulang dengan --uri dan --password:")
         print(f"    python import_to_neo4j.py --uri bolt://localhost:7687 --password <pw>")
 
@@ -246,6 +331,26 @@ def main():
     print("MATCH ()-[r]->() WHERE r.weight >= 0.7")
     print("RETURN type(r), startNode(r).name, endNode(r).name, r.weight")
     print("ORDER BY r.weight DESC LIMIT 30;")
+
+    if use_v2:
+        print("")
+        print("--- Query khusus v2 (Period node) ---")
+        print("")
+        print("// Lihat semua period berurutan:")
+        print('MATCH (p:Period) RETURN p.period_id, p.label, p.phase, p.page_start, p.page_end ORDER BY p.page_start;')
+        print("")
+        print("// Event apa saja di Period P8 (Perang Badr & Dampaknya):")
+        print('MATCH (e:Event)-[:IN_PERIOD]->(p:Period {period_id: "P8"}) RETURN e.name, e.frequency ORDER BY e.frequency DESC;')
+        print("")
+        print("// Tokoh yang muncul di banyak period (tokoh lintas-zaman):")
+        print('MATCH (person:Person)-[:INVOLVED_IN]->(:Event)-[:IN_PERIOD]->(p:Period)')
+        print('RETURN person.name, count(DISTINCT p) AS n_periods ORDER BY n_periods DESC LIMIT 20;')
+        print("")
+        print("// Density per period (jumlah event + jumlah tokoh):")
+        print('MATCH (p:Period)<-[:IN_PERIOD]-(e:Event)')
+        print('OPTIONAL MATCH (e)<-[:INVOLVED_IN]-(person:Person)')
+        print('RETURN p.period_id, p.label, count(DISTINCT e) AS n_events, count(DISTINCT person) AS n_persons')
+        print('ORDER BY p.page_start;')
 
 
 if __name__ == "__main__":
