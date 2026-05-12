@@ -1,0 +1,50 @@
+﻿period_id;period_label;phase;period_pages;event_name;event_page_range;frequency;suggested_action;ACTION;CORRECT_PERIOD_ID;CORRECT_PAGES;NOTES
+P0;Konteks Arab Jahiliyah;Fase I — Pra-Islam & Latar Belakang;34-72;(period kosong — tidak ada EVENT auto + tidak ada ADD candidate);;;;;;;Period descriptive, kemungkinan tidak butuh EVENT
+P1;Nasab & Kelahiran Nabi;Fase I — Pra-Islam & Latar Belakang;73-93;Perang Fijar;87-93;3;K;K;;;Mapping persis, score 1.0
+P2;Awal Kenabian & Mandat Dakwah;Fase II — Periode Makkah;94-105;Wahyu Pertama;;;ADD;ADD;P2;94-99;(ADD candidate) Turunnya wahyu pertama di Gua Hira
+P2;Awal Kenabian & Mandat Dakwah;Fase II — Periode Makkah;94-105;Bi'tsah Nabawiyah;;;ADD;ADD;P2;94-99;(ADD candidate) Pengangkatan Muhammad sebagai Nabi
+P3;Dakwah Sirriyah;Fase II — Periode Makkah;106-109;Dakwah Sirriyah;;;ADD;ADD;P3;106-109;(ADD candidate) Periode dakwah sembunyi-sembunyi 3 tahun pertama
+P4;Dakwah Jahriyah & Tekanan Quraisy;Fase II — Periode Makkah;110-173;Hijrah;130-151;4;F;R;;;Ambigu — di Sirah biasanya merujuk Hijrah ke Madinah, bukan Habasyah. Pindah ke P6.
+P5;Dakwah di Luar Makkah & Isra Mi'raj;Fase II — Periode Makkah;174-213;Isra' Mi'raj;191-197;2;K;K;;;Mapping persis
+P5;Dakwah di Luar Makkah & Isra Mi'raj;Fase II — Periode Makkah;174-213;Baiat Aqabah;198-202;2;K;K;;;BAIAT AQABAH PERTAMA, OK
+P5;Dakwah di Luar Makkah & Isra Mi'raj;Fase II — Periode Makkah;174-213;Baiat Aqabah Kubra;203-209;4;K;K;;;Kubra=KEDUA, OK
+P6;Hijrah ke Madinah;Fase II — Periode Makkah;214-232;(period kosong — tidak ada EVENT auto + tidak ada ADD candidate);;;;ADD;P6;218-232;Split dari entity 'Hijrah' ambigu
+P7;Membangun Masyarakat Madinah;Fase III — Periode Madinah Awal;233-265;Perang Badr;256-265;44;F;F;P8;266-304;Generic 'Perang Badr' → PERANG BADR KUBRA (P8)
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Badr Aisyah;266-304;2;R;R;;;Noise NER: 'Aisyah' nama orang salah ter-attach
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Khaibar Bekas;266-304;1;R;R;;;Noise: 'Bekas' tidak relevan. Kalau dipertahankan, F ke P11
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Badr Ula;266-304;1;F;F;P9;385-389;Ula=Pertama, salah ke Kubra
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Badr Kubra;266-304;1;K;K;;;Mapping persis
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Badr Beberapa;266-304;1;R;R;;;Noise NER: 'Beberapa' adverb
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Badr Shughra;266-304;1;F;F;P9;385-389;Shughra=Kecil, beda dgn Kubra=Besar. Map ke 'Perang Badr yang Kedua'
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Fathul Makkah;267-304;3;F;F;P12;524-536;Salah period — should be P12 'Penaklukan Makkah' (Pasukan Islam Masuk Makkah)
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Uhud;305-307;27;F;F;P9;324-375;Current page (305-307) = subbab transisi. Real Perang Uhud di p.324-375 (P9)
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Bani Qainuqa';310-323;1;K;K;;;Mapping persis
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Asafan;315-323;3;R;R;;;'Asafan/Usfan tidak ada di TOC. Kalau ada konteks valid → F
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Safawan;315-323;1;K;K;;;Safawan = transliterasi varian As-Sawiq, OK
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Khandaq;321-323;24;F;F;P10;390-404;Khandaq=Ahzab, should be P10 'PERANG AHZAB ATAU KHANDAQ'
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Bu'ats;321-323;6;R;R;;;Perang Bu'ats = pra-Islam (sebelum Nabi hijrah), bukan Sirah Nabawi
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Bukhtanashar;321-323;1;R;R;;;Bukhtanashar = Nebuchadnezzar (Raja Babilonia pra-Masehi). Pasti noise
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Riddah;321-323;1;R;R;;;Perang Riddah = kemurtadan SETELAH wafat Nabi, bukan Sirah
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;266-323;Perang Buwath;321-323;1;K;K;;;Buwath = Burhan? Cek konteks — kalau memang ekspedisi awal, OK
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;Fase IV — Periode Peperangan Besar;324-389;Perang Uhud Jabal;324-375;1;K;K;;;'Uhud Jabal'=Bukit Uhud, refer ke Perang Uhud, OK
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;Fase IV — Periode Peperangan Besar;324-389;Perang Bani Mushthaliq;382-389;2;F;F;P10;390-432;Mushthaliq ≠ Nadhir. Should be P10 (Perang Khandaq hingga Bani Mushthaliq)
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;Fase IV — Periode Peperangan Besar;324-389;Perang Bani Nadhir;382-389;2;K;K;;;Mapping persis
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;Fase IV — Periode Peperangan Besar;324-389;Perang Bani Al;382-389;1;R;R;;;'Al' truncated NER cut, noise
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;Fase IV — Periode Peperangan Besar;324-389;Perang Dzul Usyairah;387-389;1;F;F;P8;266-304;Ekspedisi awal post-Hijrah, periode awal Perang Badr era. Cek halaman tepat
+P10;Perang Khandaq hingga Bani Mushthaliq;Fase IV — Periode Peperangan Besar;390-432;Perang Bani Quraizhah;405-411;1;K;K;;;Mapping persis
+P11;Hudaibiyah & Babak Baru Diplomasi;Fase V — Diplomasi & Ekspansi;433-501;Perjanjian Hudaibiyah;433-450;11;K;K;;;Mapping persis
+P11;Hudaibiyah & Babak Baru Diplomasi;Fase V — Diplomasi & Ekspansi;433-501;Perang Khaibar;473-492;10;K;K;;;PERANG KHAIBAR DAN WADIL QURA, OK
+P11;Hudaibiyah & Babak Baru Diplomasi;Fase V — Diplomasi & Ekspansi;433-501;Perang Dzatur Riqa';493-497;3;K;K;;;Mapping persis
+P11;Hudaibiyah & Babak Baru Diplomasi;Fase V — Diplomasi & Ekspansi;433-501;Ghazwah Dzatu Qarad;493-497;1;F;F;P11;470-472;Dzu Qarad ≠ Dzatur Riqa'. Ada subbab 'MANUVER MILITER SETELAH HUDAIBIYAH (PERANG GHABAH/DZU QARAD)'
+P12;Perang Mu'tah & Penaklukan Makkah;Fase V — Diplomasi & Ekspansi;502-536;Perang Mu'tah;502-510;2;K;K;;;Mapping persis
+P12;Perang Mu'tah & Penaklukan Makkah;Fase V — Diplomasi & Ekspansi;502-536;Ghazwah Mu'tah;502-510;1;K;K;;;Ghazwah=Perang, OK
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;Fase VI — Konsolidasi & Akhir Kenabian;537-575;Perang Hunain;538-551;6;K;K;;;Mapping persis
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;Fase VI — Konsolidasi & Akhir Kenabian;537-575;Perang Tha'if;544-551;2;K;K;;;Mapping persis
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;Fase VI — Konsolidasi & Akhir Kenabian;537-575;Perang Tabuk;558-571;8;K;K;;;Mapping persis
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;Fase VI — Konsolidasi & Akhir Kenabian;537-575;Perang Yarmuk;558-571;1;R;R;;;Perang Yarmuk = melawan Romawi SETELAH wafat Nabi, bukan Sirah
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;Fase VI — Konsolidasi & Akhir Kenabian;537-575;Perang Abwa';558-571;1;F;F;P8;266-304;Abwa' = ekspedisi awal post-Hijrah, bukan Tabuk era. Cek halaman tepat
+P14;Masuknya Umat & Haji Wada';Fase VI — Konsolidasi & Akhir Kenabian;576-600;Haji Wada';;;ADD;ADD;P14;594-600;(ADD candidate) Haji perpisahan / haji wada' Nabi
+P14;Masuknya Umat & Haji Wada';Fase VI — Konsolidasi & Akhir Kenabian;576-600;Khutbah Wada';;;ADD;ADD;P14;594-600;(ADD candidate) Khutbah perpisahan Nabi di Arafah
+UNMAPPED;(no period — page_range invalid);;;Mi'raj;;2;R;R;;;Split duplikat dari 'Isra' Mi'raj' yang sudah ada
+UNMAPPED;(no period — page_range invalid);;;Isra';;1;R;R;;;Split duplikat dari 'Isra' Mi'raj' yang sudah ada
+P5;Hijrah ke Habasyah;;;;;;;ADD;P5;130-151;Split dari entity 'Hijrah' ambigu
