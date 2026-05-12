@@ -109,17 +109,148 @@ TA_sirah/
 | Manual Labelling (semi-auto pre_labelling) | ✅ Selesai (`sirah_prelabelled.csv`, 6000 rows) |
 | Alias Clustering | ✅ Selesai (143 alias, 109 clusters → `alias_map.json`) |
 | Konversi seed → format BERT (CoNLL) | ✅ Selesai (`prepare_bert_data.py`) |
-| NER Pipeline (SRL-based, BERT iterative self-training) | ✅ **Selesai run 3 skenario E1 + S1 + S2** (2026-05-07). Hasil + analisis komparatif di `src/pseudo_labelling/SRL-NER/done_running/` (file `analisis_skenario_srlner.md` + notebook `compare_scenarios.ipynb`). **Rekomendasi: pakai S1 untuk inference final** (entity-F1=0.908, recall lebih tinggi, EVENT class membaik dari E1). |
+| NER Pipeline (SRL-based, BERT iterative self-training) | 🔄 **Skenario direvisi total per 2026-05-11.** Skenario baru: **S1 baseline** (✅ reuse hasil E1 lama, F1 entity=0.959, F1 EVENT=0.816), **S2 contrastive learning (SCL/JSCL) + baseline** (⏳ tunggu paper dari teman), **S3 sentence-based augmentation + S2** (⏳ depend on S2). Skenario lama (class weight + adaptive threshold yang run 2026-05-07) di-arsip di `done_running/legacy_class_weight_adaptive/` — tidak masuk klaim utama TA. Detail di `srl_ner_skenario.md`. |
 | NER Pipeline (LLM-based, Instruction Fine-Tuning + QLoRA) | ❌ **Tidak jadi dipakai** (revisi 2026-05-03). Arsip + `DEPRECATED.md` di `src/pseudo_labelling/LLM-NER/`. |
-| Temporal Detection (intra-sentence + urutan bab) | 🔄 **Baru** — perlu deteksi temporal dalam satu kalimat sebelum pembentukan graf |
-| Relation Extraction + Pembobotan | ✅ Selesai (897 nodes, 370 edges — weighted, + relasi baru). Perlu re-run setelah temporal detection. |
+| Periodisasi top-down (`period_mapping.json`) | ✅ **Baru 2026-05-12** — 15 period (P0-P14), 6 phase, 56 BAB ter-grouped semantically. Menggantikan fuzzy match BAB lama. Module: `src/relation_extraction/event_period.py`. |
+| Manual review event → period (K/F/R/ADD curation) | ✅ Selesai (2026-05-12, `event_period_review_v2.csv`). 19 K + 10 F + 12 R + 7 ADD applied via `apply_review_to_kg.py` → `nodes_v2.csv` + `edges_v2.csv`. |
+| Temporal Detection (intra-sentence) | ✅ **Selesai 2026-05-12** (rule-based, terbatas). 9835 kalimat → 3 unique relations (1 confirmed by page-order, 2 narrative co-mention). Yield rendah → struktur naratif Sirah ordering implicit. Script: `detect_temporal_relations.py`. |
+| Relation Extraction + Pembobotan | ✅ Selesai (897 → 892 nodes, 370 → 322 edges di v2 setelah review periodisasi). Weighted + relasi baru. |
 | Relasi Person-Person (KELUARGA/SAHABAT/MUSUH) | ✅ Selesai (91 KELUARGA, 25 SAHABAT, 10 MUSUH) |
-| Relasi Event Kronologis (PRECEDES) | ✅ Selesai (18 relasi PRECEDES antar event) |
-| Social Network Analysis | 🔄 Centrality selesai (174 nodes, 1164 edges, 16 komunitas). **Perlu tambah graph-level metrics** (density, clustering coefficient, network size). |
-| Uji coba sampling 3–5 event berperiode jauh | 🔄 **Baru** — Perang Badar dkk., amati keterlibatan + graf + analisis |
-| Build Knowledge Graph (Neo4j) | ✅ Cypher script diperbarui (`import_sirah.cypher`), tinggal import |
+| Relasi Event Kronologis (PRECEDES) | ✅ Selesai (12 PRECEDES di edges_v2.csv, 1 dikonfirmasi intra-sentence) |
+| Social Network Analysis — node-level (centrality) | ✅ Selesai (Louvain, betweenness, closeness, PageRank di `sna_analysis.py`) |
+| Social Network Analysis — graph-level (revisi #4 Bu Diana) | ✅ **Selesai 2026-05-12** (density 0.086, transitivity 0.77, avg_path 2.47, 8 components, giant 90.8%). Community comparison: Louvain proper Q=0.327 vs Greedy Q=0.320 vs Girvan-Newman Q=0.024. Script: `sna_graph_metrics.py`. |
+| Uji coba sampling 5 event berperiode jauh (revisi #2 Bu Diana) | ✅ **Selesai 2026-05-12** (Perang Badr/Uhud/Hudaibiyah/Khaibar/Tabuk; 60 unique Person; bias coverage NER terlihat — Perang Badr dominasi 39 person). Script: `case_study_events.py`. |
+| Build Knowledge Graph (Neo4j) v2 dengan Period node | ✅ **Selesai 2026-05-12** (`import_sirah_v2.cypher`, 15 Period nodes + IN_PERIOD relations, support query per-period) |
 
-### Catatan progres terakhir (sesi terakhir: 2026-05-07)
+### Catatan progres terakhir (sesi terakhir: 2026-05-12)
+
+#### [2026-05-12] Periodisasi Top-Down + Temporal Detection + Graph Testing + Studi Kasus + Neo4j v2
+
+Sesi ini menyelesaikan **4 dari 4 revisi Bu Diana cluster** (post-revisi periodisasi):
+
+**1. Periodisasi top-down** (revisi internal user — restruktur dari fuzzy match)
+- File baru: `data/result/relation_result/period_mapping.json` (dibuat user) — 15 period (P0-P14) tergroup ke 6 phase (Fase I-VI Pra-Islam → Konsolidasi Akhir Kenabian), mencakup 56 BAB dari 59 di TOC. 3 BAB akhir (wafat + biografi) sengaja excluded sebagai non-kronologis.
+- Module baru: `src/relation_extraction/event_period.py` — top-down lookup EVENT → period via page_range (no fuzzy match). API: `load_periods()`, `build_event_period_map()`, `compute_period_score()` drop-in compatible dengan period_mapping.py lama. Plus `load_review()` + `apply_review()` untuk human-in-the-loop curation.
+- Generator review CSV: `src/relation_extraction/build_event_period_review_v2.py` — produces `event_period_review_v2.csv` (49 rows, pre-filled suggested_action K/F/R/ADD).
+- User mark CSV (39 existing + 7 ADD candidates): 19 K, 10 F, 12 R, 7 ADD. **Hijrah ambigu di-split jadi Hijrah ke Habasyah (P5) + Hijrah ke Madinah (P6)**.
+- Apply ke nodes/edges: `src/relation_extraction/apply_review_to_kg.py` → `nodes_v2.csv` (892 nodes, EVENT 41 → 36) + `edges_v2.csv` (370 → 322 edges) + `review_apply_log.md`.
+
+**2. Temporal Detection intra-sentence** (revisi Bu Diana cluster #1, 2026-05-03)
+- Script: `src/relation_extraction/detect_temporal_relations.py` — rule-based pattern matching, temporal cues Bahasa Indonesia (sebelum/setelah/kemudian/saat/dst).
+- Hasil: 9835 kalimat → 11 kalimat dengan 2+ EVENT → 3 unique relations (1 PRECEDES + 2 CONCURRENT).
+- 1 confirmed by page-order (Perjanjian Hudaibiyah → Perang Khaibar). 2 CONCURRENT = narrative co-mention (false-positive rule).
+- **Insight metodologis untuk Bab 4:** yield rendah (0.04%) menunjukkan Sirah's narrative ordering implicit antar paragraf, bukan via cue eksplisit intra-sentence. Periodisasi top-down adalah primary signal, intra-sentence sebagai komplementer.
+- Filter: hypothetical markers ("kemungkinan", "boleh jadi") + event alias groups (drop self-reference seperti Baiat Aqabah ↔ Baiat Aqabah Kubra).
+
+**3. Graph Testing — graph-level metrics + community comparison** (revisi Bu Diana cluster #4, 2026-05-03)
+- Script: `src/analysis/sna_graph_metrics.py` (file baru, terpisah dari `sna_analysis.py` lama yang fokus per-node).
+- Graph-level metrics Person co-participation graph (163 nodes, 1135 edges): density 0.086, average_degree 13.93, transitivity_global **0.7723** (sangat tinggi — struktur klan/suku Arab confirmed), average_clustering 0.45, degree_assortativity -0.058 (neutral), giant_component 90.8%, **diameter 6 dengan avg_path 2.47** (small-world!).
+- Community detection comparison: **Louvain proper** (Q=0.3269, 13 komunitas) vs Greedy Modularity (Q=0.3196, 15 komunitas — yang dipakai `sna_analysis.py` lama, sebenarnya BUKAN Louvain meskipun di-label demikian) vs Girvan-Newman (Q=0.0239, 16 komunitas — over-fragmented).
+- ARI Louvain vs Greedy = 0.56 (moderate agreement), Louvain vs Girvan-Newman = 0.13.
+- Output: `data/result/analysis/graph_metrics_v2.md` + `.json`.
+
+**4. Studi Kasus 5 Event berperiode jauh** (revisi Bu Diana cluster #2, 2026-05-03)
+- Script: `src/analysis/case_study_events.py`.
+- 5 events: Perang Badr (P8), Perang Uhud (P9), Perjanjian Hudaibiyah (P11), Perang Khaibar (P11), Perang Tabuk (P13) — span page 266-571.
+- Total 60 unique Person, hanya **Muhammad (5/5) sebagai hub lintas-event**. 7 person muncul di 2 events (Abu Jahal/Abu Sufyan/Abu Azzah quartet Quraisy musuh utama di Badr+Uhud).
+- **Bias coverage NER terlihat:** Perang Badr dominasi (39 person, 16 direct relations) vs Tabuk (6 person, 0 direct). Bukan ground-truth keterlibatan historis — proxy content density.
+- Output: `case_study_events.md` (laporan) + `case_study_events_cypher.md` (5 set Cypher queries untuk visualisasi).
+
+**5. Neo4j Cypher v2** (update script)
+- Modified: `src/neo4j/import_to_neo4j.py` — support `--source {v1|v2|auto}` flag, auto-detect v2.
+- Output baru: `import_sirah_v2.cypher` (1287 statements, 892 nodes + 15 Period + 322 edges + 36 IN_PERIOD relations + constraints).
+- Example queries baru: query by period, density per period, tokoh lintas-period, dst.
+
+**File yang di-update di sesi ini:**
+- `CLAUDE.md` — entry ini + update status table
+- `src/neo4j/import_to_neo4j.py` — modified untuk v2 + Period node support
+- Memory: belum di-update (TBD setelah commit)
+
+**Action item sesi berikutnya:**
+1. ⏳ Import `import_sirah_v2.cypher` ke Neo4j Desktop untuk verify visual + demo Bu Diana
+2. ⏳ Run S2/S3 di Colab (notebook sudah siap dari 2026-05-11)
+3. ⏳ Setelah S2/S3 selesai, pilih winner → inference ke seluruh `sirah_chunks_final.csv` → regenerate nodes/edges dengan NER baru
+4. ⏳ Bimbingan Bu Diana — presentasi hasil periodisasi + temporal + graph testing + studi kasus
+
+#### [2026-05-11] Restrukturisasi Skenario SRL-NER (S1/S2/S3 baru menggantikan E1/S1/S2 lama)
+
+Sesi ini fokus restrukturisasi skema skenario SRL-NER. **Skenario lama (class weight + adaptive threshold)** yang sudah dijalankan 2026-05-07 didrop dari klaim utama TA — diganti dengan skenario baru yang layer-by-layer:
+
+**Skenario baru:**
+
+| Skenario | Komponen | Status |
+|---|---|---|
+| **S1 — Baseline** | Fix THRESHOLD=0.9, tanpa class weight, tanpa contrastive, tanpa augmentation | ✅ Hasil run reuse dari E1 lama (F1 entity=0.959, F1 EVENT=0.816) |
+| **S2 — Contrastive Learning + Baseline** | S1 + supervised contrastive loss (SCL/JSCL) | ⏳ Tunggu paper dari teman → coding |
+| **S3 — Sentence-based Augmentation + S2** | S2 + augmentasi kalimat fokus kelas minor | ⏳ Depend on S2 |
+
+**Latar belakang:**
+- Skenario lama (E1+S1 class weight + S2 adaptive+CW) sudah selesai run 2026-05-07. Hasil: class weight murni belum cukup untuk EVENT (F1 stuck di 0.83), trade-off precision-recall terlalu tajam (S2 lama precision 0.74).
+- Bu Diana putaran 3 (2026-05-07) menyarankan contrastive learning + sentence augmentation. Awalnya direncanakan sebagai S3+S4 di atas skenario lama.
+- **Keputusan 2026-05-11:** restrukturisasi total — buang skenario class-weight/adaptive dari klaim, ganti dengan skema baru yang lebih bersih (1 skenario = 1 layer kontribusi).
+
+**Yang menunggu trigger:**
+- Paper SCL/JSCL konkret dari teman (Bu Diana tidak menyebut paper spesifik).
+- Paper augmentasi NER konkret (kandidat default: Dai & Adel COLING 2020, DAGA EMNLP 2020).
+- Konfirmasi Bu Diana scope final di bimbingan berikutnya.
+
+**File yang di-update di sesi ini:**
+- `srl_ner_skenario.md` — rewrite total: §1 baseline, §2 S1, §3 S2 contrastive, §4 S3 augmentation, §5 timeline, §6 referensi paper (foundational Khosla 2020 + ContrastNER 2023 + Dai & Adel 2020 + DAGA 2020), §7 pertanyaan Bu Diana, §8 output ekspektasi, §9 arsip skenario lama, §10 action item
+- `CLAUDE.md` — entry ini (changelog) + update status SRL-NER ke skenario baru
+- `revisi_dosen.md` — tambah "Putaran 4 — 2026-05-11" mencatat keputusan restrukturisasi
+- `bimbingan.md` — sajikan skenario baru sebagai active plan, tandai bagian lama sebagai arsip
+- `done_running/legacy_class_weight_adaptive/` — folder baru untuk arsipkan hasil run lama
+
+**Pekerjaan yang tidak hilang:**
+- Hasil run E1 lama → direuse sebagai S1 baru (skenario teknis identik).
+- Hasil run S1/S2 lama (class weight + adaptive) tetap disimpan, bisa direferensikan di Bab 4 sebagai "studi pendahuluan / ablation pembanding".
+
+**Update lanjutan 2026-05-11 (sesi yang sama, paper S2 teridentifikasi + adaptasi lock-in):**
+- Paper rujukan S2 **sudah ada di root repo**: `Contrastive_Learning.pdf` — Dewabharata, Santoso, Afiat, Ma'ruf, Gosumolo, *Augmentation-Free Semi-Supervised Contrastive Learning for Multi-Label Classification of Indonesian Regulatory Texts* (sebagian besar penulis dari ITS).
+- Paper berisi 3 strategi contrastive (BAL/SCL/JSCL) — Sirah pakai **SCL + JSCL** (sesuai permintaan Bu Diana putaran 3, BAL skip).
+- SCL: Eq. 2–3 (positive pair = label set identik, InfoNCE). JSCL: Eq. 4–6 (weighted InfoNCE dengan `α_ij` Jaccard `J_ij = |L_i ∩ L_j| / |L_i ∪ L_j|`). Framework two-phase: contrastive pre-training → pseudo-label fine-tuning.
+- **Adaptasi JSCL ke NER → lock-in sentence-level Jaccard:** tiap kalimat punya bag-of-labels BIO (exclude `O`), Jaccard antar kalimat dalam batch, embedding kalimat = mean-pool token embeddings. Sketsa kode lengkap di `srl_ner_skenario.md` §3.6.1, knob di §3.6.2.
+
+**Update lanjutan 2026-05-11 (Fase 1 + Fase 4 implementasi — anggap approval Bu Diana sudah ada):**
+- ✅ **S2 notebook siap** (6 file: SCL/JSCL × lokal/Colab/Kaggle). Generator: `src/pseudo_labelling/SRL-NER/_build_S2_contrastive.py` — idempotent. Notebook inject `ContrastiveTrainer` subclass + helper `scl_loss_tokens()` + `jscl_loss_sentence()` + knob `LAMBDA_C=0.3, TAU=0.1`.
+- ✅ **Augmentation script siap**: `src/pseudo_labelling/SRL-NER/augment_minor_classes.py`. Strategi: Mention Replacement (Dai & Adel COLING 2020). Output: `data/result/pseudo-labelling/SRL-NER/train_augmented.csv` + `augmentation_log.json` + `sample_augmented.txt`.
+  - **Hasil augmentasi:** distribusi minor naik 2-3x (B-EVENT 0.14% → 0.28%, I-EVENT 0.15% → 0.32%, I-LOCATION 0.07% → 0.13%). 141 minor sentences → 282 augmented (n=2 variant). Pool: PERSON=894, LOCATION=137, TIME=158, EVENT=64 unique mentions.
+- ✅ **S3 notebook siap** (6 file: SCL+aug / JSCL+aug × lokal/Colab/Kaggle). Generator: `src/pseudo_labelling/SRL-NER/_build_S3_augmented.py`. S3 = S2 + load `train_augmented.csv`.
+
+**Action item sesi berikutnya:**
+1. ⏳ **Run S2a + S2b di Colab** (~3-4 jam GPU T4 per skenario).
+2. ⏳ **Run S3a + S3b di Colab** setelah S2 selesai (~3-4 jam per skenario).
+3. ⏳ Download hasil ke `done_running/S2a_scl/`, `done_running/S2b_jscl/`, `done_running/S3a_scl_aug/`, `done_running/S3b_jscl_aug/`.
+4. ⏳ Tulis `analisis_skenario_S2_S3.md` + update `compare_scenarios.ipynb` untuk include S1/S2a/S2b/S3a/S3b.
+5. ⏳ Pilih skenario terbaik → inference final ke `sirah_chunks_final.csv` → lanjut pipeline (temporal detection, relation extraction, SNA, Neo4j).
+
+#### [2026-05-07] Revisi Dosen Putaran 3 (post-run S1/S2) — `revisi_dosen.md`
+
+Pertemuan **2026-05-07** sesudah hasil run E1/S1/S2 ditunjukkan ke Bu Diana. Beliau melihat F1 EVENT (kelas paling minoritas) yang masih belum optimal di S1/S2 (0,816 → 0,835 → 0,830) dan menyarankan **dua skenario lanjutan untuk handling kelas minoritas** sebagai tambahan di atas class weight S1/S2.
+
+**1. Skenario tambahan SRL-NER:**
+- **S3 — Contrastive Learning (JSCL vs SCL):** tambahkan supervised contrastive loss ke training pipeline, supaya representasi token kelas minoritas lebih terstruktur. Variasi SCL standar (Khosla NeurIPS 2020) vs JSCL (definisi tepat menunggu konfirmasi paper).
+- **S4 — Sentence-based Augmentation:** generate kalimat baru fokus ke kelas minor (EVENT, TIME, I-LOCATION) lalu append ke train set. Bu Diana: *"oversampling bisa tapi susah"* — augmentasi sentence-based jadi alternatif yang lebih praktis.
+
+**2. Catatan referensi:**
+- Bu Diana **tidak menyebut paper spesifik** untuk JSCL/SCL. Disarankan **bertanya ke teman yang sudah pernah implementasi** untuk paper konkret. Kandidat default sementara: Khosla 2020 (SCL), ContrastNER 2023, CONTaiNER ACL 2022.
+- Untuk S4 augmentasi: Dai & Adel COLING 2020 (survey augmentasi NER), DAGA EMNLP 2020 (generative augmentation low-resource).
+
+**3. Dokumen yang di-update:**
+- `revisi_dosen.md` — restructure jadi "Putaran 1" + "Putaran 3" dengan section header
+- `srl_ner_skenario.md` — tambah §9 "Skenario Lanjutan Putaran 3" dengan detail S3/S4 (motivasi, knob, integrasi, pro/kontra, effort, matriks kombinasi S1-S4, kandidat referensi, pertanyaan Bu Diana)
+- `bimbingan.md` — tambah section "Skenario Lanjutan Putaran 3" di akhir
+- `CLAUDE.md` — entry ini (changelog) + update status SRL-NER pipeline jadi "selesai E1/S1/S2 + planning S3/S4"
+
+**4. Action item untuk sesi berikutnya:**
+1. **Tanya ke teman X** untuk paper konkret JSCL yang dipakai → update §9.4 `srl_ner_skenario.md` setelah dapat info
+2. **Konfirmasi prioritas ke Bu Diana** di bimbingan berikutnya: S3 vs S4, atau keduanya, atau cukup salah satu
+3. **Belum mulai coding** — tunggu approval scope
+
+**Status SRL-NER setelah putaran 3:**
+- Klaim selesai untuk laporan: E1 + S1 + S2 (sudah run, sudah dianalisis)
+- Klaim planning: S3 + S4 (menunggu approval + paper referensi)
+- Pertanyaan terbuka: apakah S3/S4 wajib eksekusi sebelum sidang atau cukup *future work*
 
 #### [2026-05-07] Run 3 Skenario SRL-NER + Analisis Komparatif
 

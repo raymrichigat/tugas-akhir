@@ -1,34 +1,41 @@
-# Skenario SRL-NER + Referensi — E1/E3/E4
+# Skenario SRL-NER — S1 / S2 / S3
 
-**Tanggal:** 2026-05-03
-**Konteks:** Menjawab revisi Bu Diana di `revisi_dosen.md` (poin NER):
-> *"SRL NER ini perlu di definisikan skenario nya seperti apa (seperti thresholdnya saja kah atau ada yang lainnya)"*
-> *"Untuk perbandingan Threshold bisa digunakan seperti fix threshold atau adaptif (kalau terlalu rendah akan otomatis diturunkan)"*
-> *"Kalau unbalanced perlu di handling dan ini ada berbagai macam (definisikan dulu skenario seperti apa, perlu effort nya lebih lagi)"*
+> **Tanggal revisi terakhir:** 2026-05-11
+> **Konteks revisi:** Skenario dirombak menggantikan rencana lama (class weight + adaptive threshold). Skenario lama tetap di-arsip di `done_running/legacy_class_weight_adaptive/` sebagai bukti eksplorasi, tidak masuk klaim utama TA.
 
-Dokumen ini = **bahan diskusi** sebelum implementasi. Setelah disetujui Bu Diana, skenario yang dipilih akan diimplementasikan ke notebook SRL-NER (`src/pseudo_labelling/SRL-NER/srl_ner_sirah_0.9*.ipynb`).
+## 0. Ringkasan Skenario
 
-> **Ruang lingkup:** TA fokus ke **3 eksperimen (E1, E3, E4)** — kombinasi minimal yang menjawab kedua revisi (threshold + unbalanced) tanpa membengkakkan eksperimen.
+| Skenario | Komponen | Status |
+|---|---|---|
+| **S1 — Baseline** | Fix THRESHOLD=0.9, tanpa handle imbalance, tanpa contrastive, tanpa augmentation | ✅ Hasil run reuse dari E1 lama (2026-05-07) |
+| **S2 — Contrastive Learning + Baseline** | S1 + supervised contrastive loss (SCL + JSCL sentence-level, rujuk paper Dewabharata et al. `Contrastive_Learning.pdf`) | ⏳ Paper + adaptasi sudah lock-in, tunggu approval Bu Diana → coding |
+| **S3 — Sentence-based Augmentation + S2** | S2 + augmentasi kalimat fokus kelas minor (EVENT, TIME, I-LOCATION) | ⏳ Depend on S2, tunggu paper augmentasi konkret |
+
+**Filosofi:** layer-by-layer — S2 menambah satu komponen ke S1 (contrastive), S3 menambah satu lagi ke S2 (augmentation). Tujuannya supaya kontribusi tiap komponen ke F1 kelas minoritas (terutama EVENT) bisa diisolasi.
+
+**Latar belakang revisi 2026-05-11:** skenario lama (E1+S1 class-weight + S2 adaptive+CW) sudah dijalankan dan menunjukkan class weight murni belum memuaskan untuk EVENT (F1 stuck di 0.83). Bu Diana putaran 3 menyarankan contrastive learning + sentence augmentation. Kami memutuskan **restrukturisasi total** supaya skema skenario lebih bersih: 1 skenario = 1 layer kontribusi.
 
 ---
 
-## 1. Kondisi saat ini (baseline)
+## 1. Kondisi Saat Ini (Baseline = S1)
 
 **Notebook:** `src/pseudo_labelling/SRL-NER/srl_ner_sirah_0.9.ipynb` (+ varian Colab/Kaggle)
-**Pipeline:** BERT iterative self-training (mengikuti template Bu Diana, dengan Fix A–H untuk Sirah BIO).
+**Pipeline:** BERT iterative self-training (template Bu Diana, dengan Fix A–H untuk Sirah BIO).
 
 ### 1.1 Knob yang sudah ada (dari refactor 2026-04-16)
 
-| Knob | Default | Fungsi |
+| Knob | Default S1 | Fungsi |
 |---|---|---|
 | `THRESHOLD` | **0.9** (fix) | Average entity confidence per kalimat ≥ THRESHOLD → masuk pseudo-label |
-| `MIN_ENTITY_CONF` | `None` | Reject kalimat kalau ada **satu** entity dgn conf < nilai ini |
+| `MIN_ENTITY_CONF` | `None` | Reject kalimat kalau ada satu entity dgn conf < nilai ini |
 | `SAMPLING_RATE` | `1.0` | Pakai top-K% kalimat confidence tertinggi (1.0 = semua above) |
 | `MIN_NEW_SAMPLES` | `0` | Early-stop kalau pseudo-label baru < threshold |
 | `aggregation_strategy` | `"simple"` | Strategi agregasi sub-token |
-| `MAX_ITERATIONS` | (di for-loop) | Jumlah iterasi maksimal |
+| `MAX_ITERATIONS` | 6 | Jumlah iterasi maksimal |
 
-### 1.2 Distribusi label train (`train.csv`, 101.021 tokens)
+> Semua knob mengikuti default kode Bu Diana (`BERT_Only_Percobaan_1_Argument_0.9.ipynb`) dan paper Ariyanto et al. 2025.
+
+### 1.2 Distribusi Label Train (`train.csv`, 101.021 token)
 
 | Label | Count | % | Catatan |
 |---|---:|---:|---|
@@ -47,454 +54,499 @@ Dokumen ini = **bahan diskusi** sebelum implementasi. Setelah disetujui Bu Diana
 - `EVENT` (B+I = 0.27%) dan `I-LOCATION` (0.07%) adalah **kelas minoritas ekstrem**.
 - Risiko: model bagus di PERSON tapi buruk di EVENT → fitur graf event-centric (yang justru diminta Bu Diana di revisi temporal) jadi tidak reliable.
 
----
-
-## 2. Skenario Threshold (yang dipakai)
-
-### 2.A — Fixed threshold (baseline pembanding)
-
-- THRESHOLD tetap di nilai konstan **0.9** sepanjang iterasi (= replikasi metode paper Ariyanto 2025).
-- **Pro:** sederhana, deterministik, mudah dijelaskan di Bab 3.
-- **Kontra:** kalau iterasi awal model masih lemah → hampir tidak ada pseudo-label yang lolos → self-training mandek.
-- **Kapan dipakai:** sebagai baseline (E1 dan E3).
-
-### 2.B — Adaptive threshold (dropping-only)
-
-Threshold otomatis turun bila pseudo-label yang lolos terlalu sedikit. Tidak naik kembali (one-way) untuk menjaga simplicity.
-
-**Algoritma:**
-```
-THRESHOLD_INIT     = 0.9
-THRESHOLD_MIN      = 0.7
-THRESHOLD_STEP     = 0.05
-TARGET_MIN_SAMPLES = 200   # minimal kalimat baru per iterasi
-
-for iter in range(MAX_ITERATIONS):
-    threshold = THRESHOLD_INIT
-    above = filter(predictions, threshold)
-    while len(above) < TARGET_MIN_SAMPLES and threshold > THRESHOLD_MIN:
-        threshold -= THRESHOLD_STEP   # turun ke 0.85, 0.80, 0.75, 0.70
-        above = filter(predictions, threshold)
-    if len(above) < TARGET_MIN_SAMPLES:
-        break  # benar-benar mentok
-    train += above
-    retrain()
-```
-
-**Pro:**
-- Mengatasi "cold start" iterasi pertama.
-- Selaras dengan literatur self-training (FreeMatch / FlexMatch / Yu 2023, lihat §5).
-
-**Kontra:**
-- Tambah hyperparameter (THRESHOLD_MIN, THRESHOLD_STEP, TARGET_MIN_SAMPLES).
-- Perlu dijelaskan di Bab 3 (tambah sub-bab metodologi).
-
-**Kapan dipakai:** E4.
-
-> **Alternatif yang TIDAK dipakai** (untuk transparansi):
-> - Two-way threshold (turun + naik) → kompleksitas tambahan tanpa benefit jelas
-> - Per-class threshold → tambah ×N hyperparameter, sulit di-tune dalam timeline TA
-> - Confidence percentile (top-K%) → kualitas pseudo-label tidak ada lower-bound
+→ Inilah yang melatarbelakangi **S2 (contrastive)** dan **S3 (augmentation)** sebagai layer tambahan di atas S1.
 
 ---
 
-## 3. Skenario Unbalanced Handling (yang dipakai)
+## 2. S1 — Baseline (Fix Threshold, Tanpa Handle Imbalance)
 
-Berdasarkan distribusi di §1.2, `EVENT` dan `I-LOCATION` butuh perhatian khusus.
+### 2.1 Definisi
 
-### 3.A — Class weight pada loss function
+S1 = notebook SRL-NER apa adanya, knob default:
 
-Kalkulasi class weight inverse frequency:
 ```python
-from sklearn.utils.class_weight import compute_class_weight
-weights = compute_class_weight('balanced', classes=labels, y=y_train)
-# Pass ke CrossEntropyLoss(weight=weights) via custom Trainer subclass
+THRESHOLD       = 0.9       # fix
+SAMPLING_RATE   = 1.0       # pakai semua above 0.9
+MIN_ENTITY_CONF = None      # tidak ada filter tambahan
+class_weights   = None      # tidak ada handling imbalance
+contrastive     = False     # tidak ada SCL/JSCL
+augmentation    = False     # tidak ada sentence augmentation
+MAX_ITERATIONS  = 6
 ```
 
-**Estimasi nilai weight untuk Sirah** (rumus `n_samples / (n_classes × n_samples_per_class)`):
-- O: ~0.12 (turun karena dominan)
-- B-PERSON: ~4.3, I-PERSON: ~4.9
-- B-LOCATION: ~11.1
-- B-EVENT: ~88, I-EVENT: ~82 (naik karena minoritas ekstrem)
-- I-LOCATION: ~155 (paling tinggi)
+### 2.2 Tujuan
 
-**Pro:**
-- Modifikasi minimal (~5 baris di custom Trainer); didukung HuggingFace native.
-- Standar di literatur NER imbalanced (lihat MoM Learning di §5).
-
-**Kontra:**
-- Bisa overweight kelas langka → false positive EVENT meningkat.
-- Weight ekstrem (155×) bisa bikin training tidak stabil → mungkin perlu clipping.
-
-**Kapan dipakai:** E3 dan E4.
-
-### 3.F — Tidak menangani (kontrol)
-
-E1 sengaja tidak pakai handling apapun untuk jadi pembanding murni.
-
-> **Alternatif yang TIDAK dipakai** (untuk transparansi):
-> - **Focal loss** — perlu tuning α, γ (tambah 2 hyperparameter); class weight cukup untuk Sirah
-> - **Oversampling** — risiko overfitting di kalimat unik dengan EVENT
-> - **Data augmentation** — butuh tooling Bahasa Indonesia (Word2Vec/T5-id), effort tinggi
-> - **Threshold per-class** — overlap dengan adaptive threshold di E4
-
----
-
-## 4. Eksperimen yang Akan Dijalankan
-
-### 4.1 Tabel ringkasan
-
-| Eksperimen | Threshold | Unbalanced | Effort | Tujuan |
-|---|---|---|---|---|
-| **E1 — Baseline** | Fix 0.9 | Tidak ada | Rendah (sudah ada) | Replikasi paper Ariyanto, target F1 ≈ 0.863 |
-| **E3 — Class weight only** | Fix 0.9 | Class weight | Sedang | Uji efek class weight murni |
-| **E4 — Adaptive + class weight** | Adaptif 0.9→0.7 | Class weight | Sedang | Skenario terlengkap, jawab kedua revisi |
-
-Matriks 2×2 (E2 dan E5 tidak dipakai):
-
-| | Fix threshold | Adaptive threshold |
-|---|---|---|
-| **No class weight** | **E1** ✅ | ~~E2~~ (skipped) |
-| **Class weight** | **E3** ✅ | **E4** ✅ |
-
-### 4.2 Penjelasan konkret tiap eksperimen
-
-#### **E1 — Baseline**
-
-**Yang dijalankan:** notebook SRL-NER apa adanya, knob:
-```python
-THRESHOLD       = 0.9      # fix
-SAMPLING_RATE   = 1.0      # pakai semua above 0.9
-MIN_ENTITY_CONF = None     # tidak ada filter tambahan
-class_weights   = None     # tidak ada handling
-MAX_ITERATIONS  = 5
-```
-
-**Tujuan:**
 - Replikasi metode paper Ariyanto 2025 (IndoBERT @ threshold 0.9)
-- F1 baseline harus mendekati **0.863** (angka paper)
-- Kalau hasil jauh lebih rendah → ada bug pipeline Sirah yang harus diperbaiki **sebelum** lanjut E3/E4
+- F1 baseline harus mendekati **0.863** (angka paper Ariyanto)
+- Berfungsi sebagai **kontrol murni** untuk membandingkan efek S2 (contrastive) dan S3 (augmentation)
 
-**File yang berubah:** tidak ada (tinggal run notebook existing)
-**Effort:** ~0 jam coding, ~2-3 jam Colab
+### 2.3 Hasil Aktual S1 (= E1 lama, run 2026-05-07)
 
-#### **E3 — Class weight only**
+Hasil run baseline E1 2026-05-07 **direuse sebagai S1** (skenario teknisnya identik). Tidak perlu run ulang.
 
-**Yang dijalankan:** E1 + custom Trainer subclass yang pakai weighted CrossEntropyLoss.
+**Dinamika self-training:** 6 iterasi selesai (n_above per iter: 187 → 32 → 14 → 2 → 1 → 1, total 237 pseudo-label).
 
-**Modifikasi kode (sketsa):**
+**Performance test set (42.558 token, 1.772 entitas):**
+
+| Metric | Nilai |
+|---|---|
+| F1 token-weighted (incl. O) | 0.9955 |
+| F1 macro tanpa O | 0.8463 |
+| F1 entity-level seqeval | **0.9587** |
+| Precision entity | 0.9542 |
+| Recall entity | 0.9633 |
+
+**F1 per-entitas (seqeval span-based):**
+
+| Entity | Support | F1 S1 |
+|---|---:|---:|
+| PERSON | 1.196 | 0.972 |
+| LOCATION | 449 | 0.954 |
+| TIME | 76 | 0.883 |
+| **EVENT** | **51** | **0.816** ⚠️ |
+
+**Catatan:**
+- F1 entity-level **0.9587** — sangat tinggi, melampaui target paper Ariyanto (0.863).
+- Tapi **F1 EVENT = 0.816** masih paling rendah dari 4 kelas → motivasi S2/S3.
+
+**Lokasi output:** `src/pseudo_labelling/SRL-NER/done_running/S1_baseline/` (di-rename dari `baseline/` per 2026-05-11).
+
+### 2.4 File yang Berubah
+
+Tidak ada — tinggal reuse hasil run sebelumnya.
+
+### 2.5 Effort
+
+0 jam coding, 0 jam Colab.
+
+---
+
+## 3. S2 — Contrastive Learning + Baseline
+
+### 3.1 Definisi
+
+S2 = S1 + supervised contrastive loss (SCL atau JSCL) di training. Threshold tetap fix 0.9, tidak ada class weight, tidak ada augmentation. Yang berubah **hanya loss function**.
+
+### 3.2 Motivasi
+
+Class weight di skenario lama (drop) bekerja di level loss (CE) — tapi representasi token kelas minoritas masih bisa "tertarik" ke kelas mayoritas `O`. Contrastive learning attack di level berbeda: **representasi**.
+
+> Contrastive learning menarik representasi token sekelas menjadi mirip dan mendorong token beda kelas menjauh → struktur ruang embedding lebih disiplin → klasifikasi minoritas (EVENT) lebih akurat tanpa mengubah threshold pseudo-labelling.
+
+### 3.3 Variasi yang Dibandingkan
+
+**Paper rujukan utama:** Dewabharata, Santoso, Afiat, Ma'ruf, Gosumolo — *Augmentation-Free Semi-Supervised Contrastive Learning for Multi-Label Classification of Indonesian Regulatory Texts* (file lokal: `Contrastive_Learning.pdf` di root repo, sebagian besar penulis dari ITS).
+
+Paper ini mendefinisikan 3 strategi contrastive untuk multi-label classification. **Sirah pakai SCL + JSCL** (sesuai permintaan Bu Diana putaran 3, dan BAL tidak dipakai untuk simplifikasi).
+
+| Variasi | Formulasi loss (Eq. paper) | Adaptasi ke NER token-level |
+|---|---|---|
+| **SCL (Strict Supervised Contrastive Learning)** | Eq. 2–3 paper: `p_ij = exp(sim(z_i,z_j)/τ) / Σ_k exp(sim(z_i,z_k)/τ)`, `L_SCL = Σ_i (-1/|P(i)|) Σ_{j∈P(i)} log p_ij` di mana `P(i)` = anchor `i` dan sample sekelas dalam batch. | Positive pair = token dengan label BIO yang **sama persis** (mis. dua token `B-EVENT`). Negative = token lain dalam batch. InfoNCE klasik, paling mudah implementasi. |
+| **JSCL (Jaccard Similarity Contrastive Learning)** | Eq. 4–6 paper: `L_JSCL = -(1/B) Σ_i Σ_j α_ij log(exp(x̂_i·x̂_j/τ) / Σ_k exp(x̂_i·x̂_k/τ))` dengan weighting `α_ij = J_ij / (Σ_k J_ik + ε)` dan `J_ij = |L_i ∩ L_j| / |L_i ∪ L_j|`. | **Adaptasi: sentence-level Jaccard** (lock-in 2026-05-11). Tiap kalimat punya bag-of-labels BIO `{B-PERSON, I-PERSON, B-EVENT, ...}`, Jaccard antar kalimat → weighted InfoNCE pada embedding kalimat (mean-pool). Detail di §3.6.1. |
+
+**Two-phase framework (mengikuti paper):**
+- **Phase 1 — Contrastive pre-training:** train IndoBERT encoder dengan `L_SCL` atau `L_JSCL` di labeled+unlabeled data (encoder belajar representasi yang disiplin per-kelas).
+- **Phase 2 — Pseudo-label + fine-tune:** classifier head di-fine-tune dengan supervised loss + pseudo-label loss (Eq. 7–9 paper):
+  - `L_L = (1/C) Σ_c BCE(y_c, σ(z_c))` (labeled)
+  - `L_U = (1/C) Σ_c (p_c > θ) · BCE(y_c, σ(z_c))` (pseudo-labeled, di mana θ = threshold confidence)
+  - `L_total = L_L + λ · L_U`
+
+Untuk Sirah NER, Eq. 7–9 perlu adaptasi: BCE → CrossEntropy karena single-label per token. Sisanya bisa direuse.
+
+### 3.4 Knob Hyperparameter (estimasi awal — final menunggu paper)
+
+| Knob | Range awal | Catatan |
+|---|---|---|
+| `lambda` (λ, bobot SCL) | 0.1–0.5 | Bobot relatif L_SCL terhadap L_CE |
+| `tau` (τ, temperature) | 0.07–0.5 | Temperature di softmax contrastive |
+| `batch_size` | ≥ 32 | Perlu cukup besar untuk positives/negatives sampling |
+| `MAX_ITERATIONS` | 6 | Sama dengan S1 |
+| Knob S1 lainnya | sama | Threshold, sampling_rate, dll tidak berubah |
+
+### 3.5 Integrasi ke Pipeline Existing
+
+- Custom Trainer subclass yang menambah loss SCL/JSCL di atas hidden states sebelum classifier head.
+- Pseudo-labelling loop tetap sama dengan S1 (THRESHOLD fix 0.9, dropping per-iter via `filter_threshold`).
+- Output yang berubah: `iteration_log.csv` perlu kolom tambahan (`lambda_scl`, `tau`, `loss_ce`, `loss_scl`).
+
+### 3.6 Sketsa Kode
+
+**SCL — straightforward (positive pair = token same label):**
+
 ```python
-import torch
+import torch, torch.nn.functional as F
 from transformers import Trainer
-from sklearn.utils.class_weight import compute_class_weight
 
-# Hitung weight di awal training
-y_train_flat = [label for sent in train_labels for label in sent]
-class_labels = sorted(set(y_train_flat))
-weights = compute_class_weight('balanced', classes=class_labels, y=y_train_flat)
-class_weights_tensor = torch.tensor(weights, dtype=torch.float).to(device)
+def scl_loss_tokens(hidden, labels, tau=0.1):
+    """
+    hidden : [B, T, H] token embeddings dari hidden_states[-1]
+    labels : [B, T] BIO label id, -100 = ignore (special tokens / sub-word)
+    """
+    h = hidden.reshape(-1, hidden.size(-1))           # [N, H]
+    y = labels.reshape(-1)                             # [N]
+    mask_valid = y != -100
+    h, y = h[mask_valid], y[mask_valid]               # buang ignore tokens
 
-class WeightedTrainer(Trainer):
+    h = F.normalize(h, dim=-1)
+    sim = h @ h.T / tau                                # [N, N]
+    sim = sim - sim.max(dim=-1, keepdim=True).values  # numerical stability
+
+    pos_mask = (y.unsqueeze(0) == y.unsqueeze(1)).float()
+    pos_mask.fill_diagonal_(0)                         # exclude self
+    log_prob = sim - torch.logsumexp(sim, dim=-1, keepdim=True)
+    loss = -(pos_mask * log_prob).sum(dim=-1) / pos_mask.sum(dim=-1).clamp(min=1)
+    return loss.mean()
+
+
+class ContrastiveTrainer(Trainer):
+    def __init__(self, *args, lambda_c=0.3, tau=0.1, mode="scl", **kwargs):
+        super().__init__(*args, **kwargs)
+        self.lambda_c = lambda_c
+        self.tau = tau
+        self.mode = mode  # "scl" atau "jscl"
+
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         labels = inputs.pop("labels")
-        outputs = model(**inputs)
-        logits = outputs.logits
-        loss_fct = torch.nn.CrossEntropyLoss(weight=class_weights_tensor, ignore_index=-100)
-        loss = loss_fct(logits.view(-1, model.config.num_labels), labels.view(-1))
+        outputs = model(**inputs, labels=labels, output_hidden_states=True)
+        loss_ce = outputs.loss
+        hidden = outputs.hidden_states[-1]
+
+        if self.mode == "scl":
+            loss_c = scl_loss_tokens(hidden, labels, tau=self.tau)
+        elif self.mode == "jscl":
+            loss_c = jscl_loss_tokens(hidden, labels, tau=self.tau)  # see §3.6.1
+        else:
+            raise ValueError(self.mode)
+
+        loss = (1 - self.lambda_c) * loss_ce + self.lambda_c * loss_c
         return (loss, outputs) if return_outputs else loss
 ```
 
-**Threshold tetap fix 0.9** — yang berubah hanya loss-nya.
+#### 3.6.1 JSCL — Adaptasi Sentence-level Jaccard
 
-**Tujuan:**
-- Uji apakah class weight saja sudah cukup memperbaiki F1 minoritas (terutama EVENT)
-- Bandingkan dengan E1 untuk mengisolasi efek class weight
+**Strategi final (lock-in 2026-05-11):** sentence-level Jaccard.
 
-**File yang berubah:** notebook SRL-NER (custom Trainer class, weights computation)
-**Effort:** ~2 jam coding + verifikasi, ~2-3 jam Colab
+Paper JSCL Dewabharata et al. dirancang untuk multi-label dokumen (`L_i` = set of labels per dokumen). Sirah NER token-level (1 token = 1 label BIO). Adaptasi yang dipakai:
 
-#### **E4 — Adaptive threshold + class weight (paling lengkap)**
+**Sentence-level Jaccard:**
+- **Anchor** adalah **kalimat** (representasi via mean-pool token embeddings yang valid, atau CLS embedding kalau ada).
+- **`L_i`** = bag-of-labels BIO unik di kalimat ke-`i`, contoh: `{"B-PERSON", "I-PERSON", "B-EVENT", "O"}`. Bisa pertimbangkan **exclude `O`** supaya Jaccard tidak didominasi label mayoritas — keputusan ini dicatat di §3.6.2 sebagai knob.
+- **Jaccard:** `J_ij = |L_i ∩ L_j| / |L_i ∪ L_j|` antar kalimat dalam batch.
+- **Weighted InfoNCE** dengan `α_ij = J_ij / (Σ_k≠i J_ik + ε)` mengikuti Eq. 4–6 paper persis.
+- Loss: `L_JSCL = -(1/B) Σ_i Σ_j≠i α_ij log(exp(sim(s_i, s_j)/τ) / Σ_k≠i exp(sim(s_i, s_k)/τ))`.
 
-**Yang dijalankan:** E3 + adaptive threshold dropping-only di section pseudo-labelling.
+**Kenapa sentence-level (bukan window-level / token-level):**
+- Paling konsisten dengan paper Dewabharata yang juga operate di document-level (dokumen → kalimat = analog yang paling natural).
+- Jaccard antar kalimat punya signal non-trivial (bisa 0, 0.25, 0.5, 0.75, 1.0) — beda dengan token-level single-label yang degenerate ke 0 atau 1.
+- Implementasi clean — tidak perlu hyperparameter window size tambahan.
 
-**Modifikasi kode (sketsa, di luar custom Trainer dari E3):**
 ```python
-# Hyperparameter baru
-THRESHOLD_INIT     = 0.9
-THRESHOLD_MIN      = 0.7
-THRESHOLD_STEP     = 0.05
-TARGET_MIN_SAMPLES = 200
+def jscl_loss_sentence(hidden, labels, tau=0.1, exclude_O=True, O_label_id=0):
+    """
+    JSCL sentence-level adaptation (mengikuti Eq. 4-6 paper Dewabharata et al.).
 
-for i in range(MAX_ITERATIONS):
-    threshold = THRESHOLD_INIT
-    above_df = filter_threshold(model_path, ..., threshold=threshold, ...)
-    n_above = above_df['text_id'].nunique() if len(above_df) else 0
+    hidden : [B, T, H] token embeddings dari hidden_states[-1]
+    labels : [B, T] BIO label id, -100 = ignore (special tokens / sub-word)
+    tau : temperature
+    exclude_O : kalau True, label "O" di-skip saat membangun bag-of-labels per kalimat
+                (mencegah Jaccard didominasi kelas mayoritas)
+    O_label_id : id integer label "O" di label2id
+    """
+    B, T, H = hidden.shape
+    mask_valid = (labels != -100).float().unsqueeze(-1)            # [B, T, 1]
 
-    # Adaptive: turunkan threshold kalau kurang
-    while n_above < TARGET_MIN_SAMPLES and threshold > THRESHOLD_MIN:
-        threshold -= THRESHOLD_STEP
-        above_df = filter_threshold(model_path, ..., threshold=threshold, ...)
-        n_above = above_df['text_id'].nunique() if len(above_df) else 0
+    # 1. Sentence representation: mean-pool valid tokens
+    sent_h = (hidden * mask_valid).sum(dim=1) / mask_valid.sum(dim=1).clamp(min=1)
+    sent_h = F.normalize(sent_h, dim=-1)                            # [B, H]
 
-    if n_above < TARGET_MIN_SAMPLES:
-        print(f"[iter {i}] adaptive mentok di {threshold}, stop")
-        break
+    # 2. Bag-of-labels per sentence (multi-hot)
+    num_labels = int(labels[labels != -100].max().item()) + 1
+    L = torch.zeros(B, num_labels, device=hidden.device)
+    for b in range(B):
+        valid = labels[b][labels[b] != -100]
+        if exclude_O:
+            valid = valid[valid != O_label_id]
+        if valid.numel() > 0:
+            L[b].scatter_(0, valid.unique(), 1.0)
 
-    iter_log.append({"iter": i, "threshold_used": threshold, "n_above": n_above, ...})
-    # Class weight dari E3 tetap aktif di re-train
-    train_df = pd.concat([train_df, above_df])
-    retrain_with_weighted_loss(train_df, val_df)
+    # 3. Jaccard score antar kalimat
+    inter = L @ L.T                                                 # [B, B]
+    union = L.sum(dim=-1, keepdim=True) + L.sum(dim=-1).unsqueeze(0) - inter
+    J = inter / (union + 1e-8)                                      # [B, B]
+
+    # 4. Weighting α_ij = J_ij / (Σ_k≠i J_ik + ε)
+    mask_off_diag = 1 - torch.eye(B, device=hidden.device)
+    J_off = J * mask_off_diag
+    alpha = J_off / (J_off.sum(dim=-1, keepdim=True) + 1e-8)
+
+    # 5. Weighted InfoNCE (Eq. 4 paper)
+    sim = sent_h @ sent_h.T / tau                                   # [B, B]
+    sim = sim - sim.max(dim=-1, keepdim=True).values                # stability
+    # Mask self di denominator
+    sim_masked = sim.masked_fill(torch.eye(B, dtype=torch.bool, device=hidden.device), float('-inf'))
+    log_prob = sim - torch.logsumexp(sim_masked, dim=-1, keepdim=True)
+    loss = -(alpha * log_prob * mask_off_diag).sum() / B
+    return loss
 ```
 
-**Tujuan:**
-- Skenario terlengkap — kombinasi adaptive + class weight
-- Jawab langsung kedua revisi Bu Diana sekaligus
-- Bandingkan dengan E3 (lihat efek tambahan adaptive) dan E1 (efek total kombinasi)
+#### 3.6.2 Knob JSCL Sentence-level
 
-**File yang berubah:** notebook SRL-NER (adaptive loop di pseudo-labelling section + custom Trainer dari E3)
-**Effort:** ~1 jam tambahan kalau E3 sudah jadi, ~2-3 jam Colab
-
-### 4.3 Justifikasi: kenapa E1+E3+E4 (bukan 5 eksperimen)?
-
-**Matrix 2×2 E1/E3/E4 cukup untuk menjawab semua pertanyaan riset utama:**
-
-| Perbandingan | Menjawab |
-|---|---|
-| E1 vs E3 | "Apakah class weight membantu di atas baseline?" |
-| E1 vs E4 | "Apakah kombinasi keduanya signifikan vs baseline?" |
-| E3 vs E4 | "Apakah adaptive threshold tambah value di atas class weight?" |
-| Per-label F1 EVENT (E1, E3, E4) | "Apakah handling imbalance memperbaiki kelas paling minoritas?" |
-
-**E2 (adaptive only) skipped** karena:
-- Hipotesis: class weight = strategi yang tackle imbalance ekstrem (93% O) lebih langsung
-- Kalau adaptive saja sudah cukup tanpa class weight, itu surprising — tapi bukan hipotesis utama
-- Trade-off effort: 3 eksperimen × ~5 iterasi × ~30 menit = ~7.5 jam GPU (manageable di Colab free tier)
-
-**E5 (per-class threshold) skipped** karena:
-- Tambah 4–9 hyperparameter (1 threshold per BIO label) → sulit di-tune
-- Sebagian benefit-nya sudah dicakup oleh class weight di E3/E4
-- Kalau Bu Diana minta, bisa ditambah sebagai eksperimen bonus di akhir
-
----
-
-## 5. Referensi Paper Pendukung (2021–2026)
-
-Paper yang bisa dirujuk di Bab 2/3 untuk justifikasi pemilihan eksperimen E1, E3, dan E4. Dikelompokkan ke 3 grup sesuai komponen yang dipakai:
-- **A. Adaptive threshold** (mendukung E4 — adaptive 0.9→0.7)
-- **B. Class weight / imbalance handling NER** (mendukung E3 dan E4)
-- **C. Konteks SRL Indonesia + IndoBERT NER** (mendukung E1 baseline + bahasa)
-
-> Paper untuk metode yang **tidak dipakai** (focal loss, oversampling, augmentation, per-class threshold) sengaja tidak dimasukkan supaya bibliografi rapat.
-
-### 5.A. Adaptive Threshold Pseudo-Labelling (untuk E4)
-
-#### A.1 — FreeMatch: Self-adaptive Thresholding for Semi-supervised Learning ⭐
-- **Penulis & Tahun:** Wang et al., ICLR 2023
-- **Link:** https://arxiv.org/abs/2205.07246
-- **OpenReview:** https://openreview.net/forum?id=PDrUPTXJI_A
-- **Inti:** Menggantikan fixed threshold dengan **Self-Adaptive Thresholding (SAT)** — global threshold + class-specific threshold yang dihitung dari Exponential Moving Average (EMA) confidence model. Tambahan: class fairness regularization untuk mencegah bias ke majority class.
-- **Hasil:** Error reduction 5.78% di CIFAR-10 (1 label/class), 13.59% di STL-10 (4 labels/class) versus FlexMatch.
-- **Plus untuk E4 Sirah:**
-  - Gold standard untuk adaptive threshold di SSL — sering disitir (1000+ citations)
-  - Justifikasi argumen umum: "fixed threshold suboptimal, adaptive lebih baik"
-  - Konsep "auto-adjust threshold" persis yang Bu Diana minta
-- **Minus / catatan:**
-  - Eksperimennya di image classification, bukan NER → di skenario kita pakai versi **lebih sederhana** (dropping-only, bukan EMA penuh)
-  - EMA butuh batch besar untuk stabil; dropping-only Sirah lebih ringan computasional
-
-#### A.2 — A Class-Rebalancing Self-Training Framework for Distantly-Supervised NER ⭐⭐
-- **Penulis & Tahun:** Yu et al., ACL Findings 2023
-- **Link:** https://aclanthology.org/2023.findings-acl.703/
-- **Inti:** **Paling langsung relevan** untuk E4. Mengatasi masalah self-training pada NER yang biased ke high-performance class. Solusi mencakup: (1) **class-wise flexible threshold** untuk seleksi kandidat per kelas, (2) class-rebalancing sampling, (3) re-labeling untuk perbaiki noisy pseudo-labels.
-- **Plus untuk E4 Sirah:**
-  - **NER + self-training + adaptive threshold + class imbalance** dalam satu paper — exactly mendukung E4 (gabungan adaptive threshold + class weight) dan sebagian E3 (class weight)
-  - Bisa langsung disitir di Bab 3 sebagai justifikasi metodologi gabungan
-  - ACL Findings 2023 — venue kuat
-- **Minus / catatan:**
-  - Konteks distantly-supervised NER (pakai gazetteer/knowledge base) — bukan persis pseudo-labelling Sirah, tapi prinsip transfer dengan mudah
-  - Implementasi mereka kompleks (3 komponen) — Sirah pakai sub-komponen saja
-
-#### A.3 — FlexMatch: Boosting Semi-Supervised Learning with Curriculum Pseudo-Labeling
-- **Penulis & Tahun:** Zhang et al., NeurIPS 2021
-- **Link:** https://arxiv.org/abs/2110.08263
-- **Inti:** Predecessor FreeMatch. Konsep **curriculum pseudo-labelling** — threshold turun untuk kelas yang masih sulit dipelajari model. Filosofi sama dengan dropping-only di E4: kalau model belum confidence, jangan paksakan threshold tinggi.
-- **Plus untuk E4 Sirah:**
-  - Disitir untuk konsep "curriculum" — model belajar bertahap dari kalimat mudah ke sulit
-  - Lebih simpel dari FreeMatch — dekat dengan dropping-only di skenario
-- **Minus / catatan:**
-  - Sudah dianggap obsoleted oleh FreeMatch di benchmark image, tapi masih relevan sebagai konsep dasar
-  - Sebaiknya disitir bareng FreeMatch (history) bukan sendirian
-
-### 5.B. Class Weight / Imbalance Handling NER (untuk E3 dan E4)
-
-#### B.1 — Majority or Minority: Data Imbalance Learning Method for NER (MoM) ⭐⭐
-- **Penulis & Tahun:** Akkasi et al., arxiv 2024
-- **Link:** https://arxiv.org/abs/2401.11431
-- **Inti:** Long-tail distribution di NER dengan banyak minority class + 1 majority class (kelas O). Solusi: tambahkan loss yang dihitung **hanya pada token majority class** ke loss konvensional, supaya model tidak mengabaikan O sambil tetap belajar minority. Plug-in, model-agnostic.
-- **Plus untuk E3/E4 Sirah:**
-  - **Sangat relevan** — Sirah persis long-tail dengan O dominan 93%
-  - Justifikasi langsung untuk perlunya imbalance handling di NER
-  - Implementasi mereka simpel (modifikasi loss) — paralel dengan pendekatan class weight Sirah
-- **Minus / catatan:**
-  - Belum di-peer-review (arxiv preprint per pengecekan terakhir) — kekuatan sitasi lebih lemah dari ACL/NeurIPS
-  - Eksperimen di English NER datasets — perlu disebut bahwa Sirah replikasi konsep, bukan persis metode
-
-#### B.2 — Self-Training: A Survey
-- **Penulis & Tahun:** Amini et al., Neurocomputing 2024
-- **Link:** https://www.sciencedirect.com/science/article/pii/S0925231224016758
-- **Versi arxiv (open):** https://arxiv.org/abs/2202.12040
-- **Inti:** Survey komprehensif tentang self-training: confidence-based selection, threshold strategies, noise handling, application areas. Membahas bagaimana imbalance + threshold berinteraksi.
-- **Plus untuk E1/E3/E4 Sirah:**
-  - **Wajib disitir** sebagai overview di Bab 2 (kajian pustaka self-training)
-  - Memberikan framework taxonomi yang kuat — bisa untuk justifikasi posisi metode E4 (adaptive + handling) di lanskap self-training
-  - Sitasi tinggi → kredibel
-- **Minus / catatan:**
-  - Survey, bukan metode baru — tidak bisa jadi rujukan utama untuk metode spesifik
-  - Sangat panjang (60+ halaman), perlu skim sub-section yang relevan saja
-
-#### B.3 — Sentence-Level Resampling for Named Entity Recognition (alternatif)
-- **Penulis & Tahun:** Akkasi & Moens, NAACL 2022
-- **Link:** https://aclanthology.org/2022.naacl-main.156/
-- **Inti:** Alternatif untuk imbalance handling — resampling di level kalimat berdasarkan distribusi entity, bukan modify loss. Tidak dipakai langsung di Sirah, tapi disebut sebagai pembanding metode di Bab 2.
-- **Plus untuk Sirah (sebagai pembanding):**
-  - Memperkaya Bab 2 — tunjukkan ada banyak strategi imbalance, dan Sirah memilih class weight karena alasan X
-  - NAACL — venue kuat
-- **Minus / catatan:**
-  - Tidak diimplementasikan di Sirah (tidak masuk eksperimen E1/E3/E4)
-  - Hanya disitir sebagai "pembanding metode" di kajian pustaka
-
-### 5.C. Konteks: SRL Indonesia + IndoBERT (untuk E1 baseline + bahasa)
-
-#### C.1 — Transformer-Based SRL for Crisis Events Using Semi-Supervised Learning (Ariyanto et al.) ⭐⭐⭐
-- **Penulis & Tahun:** Ariyanto, Purwitasari, Fatichah, Ravana, Andrian, Parwata, IEEE Access Sept 2025
-- **Link Paper:** https://ieeexplore.ieee.org/document/11097773 (DOI: 10.1109/ACCESS.2025.3604068)
-- **Link Disertasi (lokal):** `7025221021-Doctoral.pdf` di root repo
-- **Inti:** Paper baseline yang akan direplikasi di **E1**. Algorithm 1 (Self-Training with Filtering Function) = pipeline yang dipakai Sirah. Tested fixed threshold 0.7/0.8/0.9 → IndoBERT @ 0.9 menang dengan F1 **0.863**.
-- **Plus untuk Sirah:**
-  - **Pembimbing yang sama (Bu Diana)** — pasti expected disitir di Bab 2 dan Bab 4
-  - Method 100% transferable ke Sirah (sama-sama pseudo-labelling SRL Indonesia, sama-sama IndoBERT, sama-sama imbalanced)
-  - F1 0.863 = target E1 Sirah → kalau hasil Sirah dekat angka ini, validasi pipeline sukses
-  - Memberikan justifikasi pemilihan IndoBERT (paper sudah benchmark 4 model: IndoBERT, IndoRoBERTa, GPT-2, Komodo)
-- **Minus / catatan:**
-  - Domain Twitter crisis events ≠ narasi historis — label SRL berbeda (15 specific labels vs 4 generic Sirah)
-  - Tidak menangani imbalance secara eksplisit → justru ini gap yang Sirah isi di E3/E4
-
-#### C.2 — IPerFEX-2023: Indonesian Financial Entity Extraction with IndoBERT-BiGRU-CRF
-- **Penulis & Tahun:** Saputra et al., Journal of Big Data 2024
-- **Link:** https://journalofbigdata.springeropen.com/articles/10.1186/s40537-024-00987-6
-- **Inti:** IndoBERT untuk NER Bahasa Indonesia di domain finansial. Konfirmasi IndoBERT bagus untuk domain-specific NER.
-- **Plus untuk Sirah:**
-  - Konfirmasi pemilihan IndoBERT untuk Bahasa Indonesia sudah tepat
-  - Domain-specific NER Bahasa Indonesia → pendamping argumen Sirah (juga domain-specific)
-  - Open access (gratis akses)
-- **Minus / catatan:**
-  - Domain finansial sangat beda dari narasi sejarah
-  - Mereka pakai BiGRU+CRF di atas IndoBERT — Sirah tidak (token classification head simpel saja)
-
-#### C.3 — Dataset Enhancement and Multilingual Transfer for NER in Indonesian
-- **Penulis & Tahun:** Khairunnisa et al., ACM TALLIP 2023
-- **Link:** https://dl.acm.org/doi/10.1145/3592854
-- **Inti:** Augmentasi dataset NER Bahasa Indonesia + transfer learning dari bahasa lain. Membahas tantangan low-resource Bahasa Indonesia.
-- **Plus untuk Sirah:**
-  - Justifikasi kuat untuk "Bahasa Indonesia = low-resource untuk NER" → motivasi self-training Sirah
-  - Bisa disitir di Bab 1 (motivasi) atau awal Bab 2
-- **Minus / catatan:**
-  - Generic NER (PER/ORG/LOC), bukan domain spesifik
-  - Paywalled — perlu akses ITS
-
-### 5.D. Mapping Paper ⇄ Eksperimen
-
-| Eksperimen | Komponen | Paper rujukan utama |
+| Knob | Default | Catatan |
 |---|---|---|
-| **E1 Baseline (fix 0.9)** | Replikasi metode pembanding | C.1 (Ariyanto 2025) ⭐⭐⭐ |
-| **E3 Class weight only** | Weighted loss untuk imbalance | B.1 (MoM) + B.2 (Survey) |
-| **E4 Adaptive + class weight** | Threshold dropping + class weight | A.2 (Yu 2023) ⭐⭐ — paling cocok jadi rujukan utama |
-| **E4 — komponen adaptive saja** | Justifikasi adaptive threshold | A.1 (FreeMatch) + A.3 (FlexMatch) |
-| **Konteks bahasa** | Bahasa Indonesia + IndoBERT | C.2 + C.3 |
-| **Konteks self-training** | Overview metodologi | B.2 (Survey) |
+| `tau` (τ) | 0.1 | Temperature InfoNCE — sweep 0.07–0.5 sesuai paper |
+| `lambda_c` (λ) | 0.3 | Bobot loss contrastive di `L_total = (1-λ)L_CE + λL_JSCL` |
+| `exclude_O` | `True` | Skip label `O` di bag-of-labels. **Rekomendasi True** karena `O` muncul di hampir semua kalimat → Jaccard akan sangat tinggi tanpa diskriminasi |
+| `batch_size` | ≥ 32 | Butuh batch cukup besar supaya ada variasi bag-of-labels antar kalimat |
+| `sentence_repr` | mean-pool | Alternatif: CLS embedding (kalau jelas batas-batas kalimat di tokenizer) |
 
-### 5.E. Top 5 Sitasi Prioritas
+### 3.7 Pro & Kontra
 
-Kalau hanya bisa sitir 5 paper di Bab 2 sub-bab pseudo-labelling/imbalance, prioritas:
+**Pro:**
+- State-of-the-art untuk imbalanced classification + low-resource NER.
+- Attack imbalance di level representasi (orthogonal vs class weight di loss).
+- Tidak menambah data — masih bisa di-train di Colab T4.
 
-1. **C.1 — Ariyanto et al. IEEE Access 2025** ⭐⭐⭐ — baseline pembanding (wajib disitir, pembimbing sama)
-2. **A.2 — Yu et al. ACL 2023** ⭐⭐ — paling langsung relevan (NER + self-training + adaptive threshold + class imbalance dalam 1 paper)
-3. **B.1 — MoM Learning 2024** ⭐⭐ — imbalance handling untuk NER long-tail
-4. **A.1 — FreeMatch ICLR 2023** ⭐ — gold standard adaptive threshold (justifikasi konsep umum)
-5. **B.2 — Self-Training Survey 2024** — overview komprehensif self-training
+**Kontra:**
+- Tambah hyperparameter (λ, τ) — perlu sweep mini.
+- Memori lebih (perlu pairwise distance dalam batch).
+- Definisi JSCL belum konkret → perlu konfirmasi paper terlebih dahulu.
 
-Sisanya (A.3, B.3, C.2, C.3) bisa disitir sebagai supporting references kalau butuh memperkaya konteks atau pembanding.
+### 3.8 Effort
 
-### 5.F. Cara Akses Paper
+4-6 jam coding (per variasi SCL/JSCL) + 3-4 jam Colab GPU.
 
-| Tipe | Akses |
-|---|---|
-| **arxiv** | Gratis, link langsung di atas |
-| **ACL Anthology** | Gratis, link langsung di atas |
-| **NeurIPS / OpenReview** | Gratis, link langsung di atas |
-| **IEEE Access (paper Ariyanto)** | **Open Access — gratis** |
-| **Journal of Big Data (Springer)** | Open Access — gratis |
-| **Neurocomputing (Elsevier)** | Paywalled — pakai akses institusi ITS atau versi arxiv |
-| **ACM Digital Library** | Paywalled — pakai akses ITS |
+### 3.9 Prasyarat Sebelum Coding
 
-**Catatan akses ITS:** Untuk paper paywalled, kalau Anda sudah login ke jaringan ITS (atau pakai VPN ITS dari rumah), biasanya akses langsung terbuka via library.its.ac.id.
+1. ✅ **Paper SCL/JSCL konkret** — `Contrastive_Learning.pdf` (Dewabharata et al.) di root repo. Formulasi SCL (Eq. 2–3) dan JSCL (Eq. 4–6) sudah jelas.
+2. ✅ **Adaptasi JSCL ke NER** — lock-in **sentence-level Jaccard** (lihat §3.6.1). Sketsa kode siap di §3.6 + §3.6.1.
+3. ⏳ **Konfirmasi Bu Diana** — apakah SCL + JSCL sebagai 2 sub-skenario (S2a/S2b) atau cukup salah satu yang ditampilkan di Bab 4.
 
 ---
 
-## 6. Pertanyaan & Bahan Diskusi untuk Bu Diana
+## 4. S3 — Sentence-based Augmentation + S2
 
-### 6.1 Pertanyaan klarifikasi (sebelum coding)
+### 4.1 Definisi
 
-1. **Setuju dengan scope 3 eksperimen (E1+E3+E4)?** Atau perlu tambah E2 (adaptive only) untuk isolasi efek adaptive?
-2. **Threshold adaptif dropping-only** (turun 0.9→0.7) sudah cukup, atau perlu two-way (turun + naik)?
-3. **Class weight** (inverse frequency) sudah cukup, atau perlu bandingkan dengan focal loss juga?
-4. **Model** — tetap pakai IndoBERT base (current), atau coba IndoBERT-large / XLM-R / lainnya? Bu Diana di revisi bilang "kalau tidak mau ribet bisa pakai yang ada" — apakah ini lampu hijau untuk tetap di IndoBERT base?
-5. **Metrik perbandingan** — F1 entity-level (seqeval) saja, atau perlu juga per-label F1 untuk tunjukkan dampak handling EVENT?
-6. **Posisi di laporan** — ini dilaporkan sebagai sub-bab Bab 3 (Skenario Eksperimen) + tabel hasil di Bab 4? Atau struktur lain?
+S3 = S2 (baseline + contrastive) + augmentasi data: generate kalimat baru fokus ke kelas minor (`B-EVENT`, `I-EVENT`, `I-LOCATION`, opsional `B-TIME`/`I-TIME`) lalu append ke train set sebelum training.
 
-### 6.2 Bahan diskusi dengan rujukan paper
+### 4.2 Motivasi
 
-Saat konsultasi, paper-paper di §5 bisa dipakai untuk:
-- **Justifikasi metode adaptive threshold E4:** rujuk A.1 (FreeMatch) dan A.2 (Yu 2023) sebagai precedent
-- **Justifikasi class weight E3/E4:** rujuk B.1 (MoM) sebagai precedent NER imbalanced
-- **Justifikasi tetap pakai IndoBERT:** rujuk C.1 (Ariyanto) yang sudah benchmark 4 model
-- **Justifikasi self-training framework:** rujuk B.2 (Survey 2024) sebagai overview
-- **Justifikasi target F1 baseline ≈ 0.863:** rujuk C.1 (paper pembimbing) sebagai angka pembanding
+- EVENT support cuma 51 kalimat di test, dan B-EVENT/I-EVENT cuma 0.13%/0.14% di train. **Sample kalimat-nya memang sedikit** — class weight + contrastive tetap bekerja dengan kalimat yang sama.
+- Bu Diana putaran 3: *"oversampling bisa tapi susah. Augmentasi sentence-based (1 kalimat yang fokusnya ke minor) ditambahkan ke data train"*.
+- Augmentasi sentence-based = generate kalimat baru → variasi konteks naik tanpa duplikasi murni.
 
----
+### 4.3 Strategi Augmentasi (kandidat — final menunggu paper teman)
 
-## 7. Implementasi (setelah skenario disepakati)
+| Strategi | Cara kerja | Kelas target | Effort |
+|---|---|---|---|
+| **Template substitution** | Ganti entity di kalimat existing (mis. ganti nama PERSON di kalimat EVENT) dengan entity sekelas dari pool | EVENT, TIME, LOCATION | Rendah |
+| **Context expansion** | Tambah kalimat anchor di sebelum/sesudah yang menyebut entity minor | EVENT | Sedang |
+| **Back-translation (id→en→id)** | Translate kalimat EVENT ke English, lalu translate balik | Semua, terutama EVENT | Sedang (butuh API) |
+| **GPT paraphrase** | Pakai LLM untuk paraphrase kalimat EVENT, makna sama struktur beda | EVENT, TIME | Sedang-tinggi |
 
-Estimasi effort & file yang berubah:
+**Strategi final:** menunggu paper referensi dari teman + konfirmasi Bu Diana.
 
-| Eksperimen | File yang berubah | Estimasi |
+### 4.4 Knob Hyperparameter
+
+| Knob | Default | Fungsi |
 |---|---|---|
-| E1 (baseline) | Sudah ada, tinggal run | 0 jam coding, ~2-3 jam Colab |
-| E3 (class weight) | Custom `Trainer` subclass dengan weighted loss | ~2 jam coding |
-| E4 (adaptive + cw) | Adaptive loop + Trainer dari E3 | ~1 jam tambahan |
-| Logging & tabel | `iteration_log.csv` perlu kolom tambahan (`threshold_used`, `class_weights_active`) | ~1 jam |
+| `n_augment_per_minor_sentence` | 1–3 | Berapa kalimat augmentasi per kalimat minor original |
+| `target_classes` | `["B-EVENT", "I-EVENT", "I-LOCATION"]` | Kelas yang ditarget augmentasi |
+| `augmentation_strategy` | TBD | Pilih 1 atau kombinasi dari §4.3 |
+| Semua knob S2 | sama | Contrastive λ/τ, threshold, dll tetap |
 
-**Total estimasi:** ~4-5 jam coding + ~7-8 jam run di Colab.
+### 4.5 Integrasi ke Pipeline Existing
 
-**Prasyarat sebelum coding:**
-- Approval Bu Diana untuk scope 3 eksperimen
-- Verifikasi E1 (baseline) bisa jalan tanpa error → konfirmasi pipeline Sirah valid
+- Tambah **cell di awal notebook** untuk generate augmented sentences sebelum training (sekali, bukan per-iter self-training).
+- Output: `train_augmented.csv` (existing train + augmented) → feed ke pipeline normal yang sudah berisi S2.
+- **Tidak mengubah** loss/threshold/contrastive — augmentasi adalah **pre-processing data**.
+
+### 4.6 Pro & Kontra
+
+**Pro:**
+- Data-level intervention — orthogonal terhadap S2 (model tidak diubah).
+- Bisa dikombinasi dengan S2 dengan minimal coupling.
+- Mudah dijelaskan di Bab 3.
+
+**Kontra:**
+- Kualitas augmented sentence tergantung strategi:
+  - Template substitution → bisa hasilkan kalimat tidak natural.
+  - Back-translation → butuh API + kualitas translation.
+  - GPT paraphrase → ironis (LLM-NER dibatalkan, tapi LLM dipakai untuk augment).
+- Risiko semantic drift — entity dipindah ke konteks yang salah secara sejarah Sirah (mis. "Perang Badar" dipindah ke konteks Madinah pasca-Fathu Makkah).
+
+### 4.7 Effort
+
+3-4 jam (template) atau 6-8 jam (back-translation/GPT) + 2-3 jam Colab.
+
+### 4.8 Prasyarat Sebelum Coding
+
+1. **S2 sudah selesai** — S3 layer di atas S2.
+2. **Paper augmentasi NER konkret dari teman** — kandidat default Dai & Adel COLING 2020, DAGA EMNLP 2020.
+3. **Validasi manual sampel augmented sentence** — sebelum di-train, cek 20–30 kalimat hasil augmentasi untuk pastikan tidak ngawur secara sejarah.
 
 ---
 
-## 8. Output yang diharapkan
+## 5. Timeline & Status
 
-Setelah eksperimen selesai:
+| Skenario | Status | Trigger lanjut |
+|---|---|---|
+| **S1** | ✅ Selesai (reuse E1 2026-05-07) | – |
+| **S2** | ⏳ Menunggu approval Bu Diana | Paper + adaptasi sudah lock-in (sentence-level Jaccard). Bisa langsung coding setelah approval. |
+| **S3** | ⏳ Menunggu | S2 selesai + paper augmentasi konkret |
 
-1. **Tabel hasil utama** (Bab 4):
+**Yang harus dilakukan sebelum coding S2/S3:**
 
-| Eksperimen | F1 Overall | F1 PERSON | F1 LOCATION | F1 TIME | F1 EVENT |
+1. ✅ Paper contrastive konkret sudah ada (`Contrastive_Learning.pdf` — Dewabharata et al.).
+2. ✅ Adaptasi JSCL ke NER sudah lock-in: **sentence-level Jaccard** (§3.6.1).
+3. ⏳ Konfirmasi Bu Diana scope final: S1+S2+S3, atau S1+S2 cukup (S3 jadi future work). + SCL+JSCL keduanya atau cukup salah satu.
+4. ⏳ Hubungi teman / cari paper augmentasi konkret untuk S3 (Dai & Adel COLING 2020 sebagai default kalau tidak ada info lain).
+
+---
+
+## 6. Referensi Paper Pendukung
+
+### 6.A. Untuk S1 (Baseline)
+
+| # | Paper | Link | Relevansi |
+|---|---|---|---|
+| **A.1** ⭐⭐⭐ | **Transformer-Based SRL for Crisis Events Using Semi-Supervised Learning** (Ariyanto, Purwitasari, Fatichah, Ravana, Andrian, Parwata — IEEE Access Sept 2025) | https://ieeexplore.ieee.org/document/11097773 | Paper pembimbing — wajib disitir. Algorithm 1 = pipeline Sirah. IndoBERT @ 0.9, F1 = 0.863 target. |
+| **A.2** | **Self-Training: A Survey** (Amini et al., Neurocomputing 2024) | https://arxiv.org/abs/2202.12040 | Overview self-training untuk Bab 2. |
+| **A.3** | **IPerFEX-2023: Indonesian Financial Entity Extraction with IndoBERT-BiGRU-CRF** (Saputra et al., Journal of Big Data 2024) | https://journalofbigdata.springeropen.com/articles/10.1186/s40537-024-00987-6 | Konfirmasi pemilihan IndoBERT untuk NER Bahasa Indonesia. |
+
+### 6.B. Untuk S2 (Contrastive Learning)
+
+| # | Paper | Link | Relevansi |
+|---|---|---|---|
+| **B.1** ⭐⭐⭐ | **Augmentation-Free Semi-Supervised Contrastive Learning for Multi-Label Classification of Indonesian Regulatory Texts** (Dewabharata, Santoso, Afiat, Ma'ruf, Gosumolo) | `Contrastive_Learning.pdf` (lokal di root repo) | **Paper rujukan utama untuk S2.** Mendefinisikan **SCL** (Eq. 2–3) dan **JSCL** (Eq. 4–6) yang dipakai Sirah, plus framework two-phase (contrastive pre-training + pseudo-label fine-tuning) yang selaras dengan pipeline self-training Sirah. Sebagian besar penulis dari ITS. |
+| **B.2** ⭐⭐ | **Supervised Contrastive Learning** (Khosla et al., NeurIPS 2020) | https://arxiv.org/abs/2004.11362 | Foundational SCL — formulasi loss original. Disitir untuk justifikasi konsep SCL secara umum (paper B.1 juga rujuk ini). |
+| **B.3** ⭐ | **CONTaiNER: Few-Shot Named Entity Recognition via Contrastive Learning** (Das et al., ACL 2022) | https://aclanthology.org/2022.acl-long.439/ | Contrastive learning untuk **NER token-level** — relevan untuk justifikasi adaptasi paper B.1 (yang document-level) ke setting NER Sirah. |
+| **B.4** | **ContrastNER: Contrastive-based Prompt Tuning for Few-shot NER** (Layegh et al., 2023) | TBD — cari ulang | Aplikasi SCL ke NER few-shot. Supporting reference. |
+
+### 6.C. Untuk S3 (Sentence Augmentation NER)
+
+| # | Paper | Link | Relevansi |
+|---|---|---|---|
+| **C.1** ⭐⭐ | **An Analysis of Simple Data Augmentation for Named Entity Recognition** (Dai & Adel, COLING 2020) | https://aclanthology.org/2020.coling-main.343/ | Survey + benchmark teknik augmentasi NER (label-wise token replacement, mention replacement, sentence cropping). Kandidat utama untuk S3 template substitution. |
+| **C.2** ⭐ | **DAGA: Data Augmentation with a Generation Approach for Low-resource Tagging Tasks** (Ding et al., EMNLP 2020) | https://aclanthology.org/2020.emnlp-main.488/ | Generative augmentation untuk NER low-resource. Kalau S3 pakai LLM paraphrase. |
+| **C.3** | **Sentence-Level Resampling for Named Entity Recognition** (Akkasi & Moens, NAACL 2022) | https://aclanthology.org/2022.naacl-main.156/ | Resampling sentence-level untuk imbalance. Pembanding metode. |
+
+### 6.D. Top 5 Sitasi Prioritas
+
+Kalau hanya bisa sitir 5 paper di Bab 2 sub-bab pseudo-labelling/contrastive/augmentation:
+
+1. **A.1 — Ariyanto et al. IEEE Access 2025** ⭐⭐⭐ — baseline pembanding (wajib, pembimbing sama)
+2. **B.1 — Dewabharata et al.** ⭐⭐⭐ — paper utama S2 (SCL + JSCL formulasi)
+3. **B.3 — CONTaiNER ACL 2022** ⭐ — contrastive untuk NER token-level (justifikasi adaptasi)
+4. **C.1 — Dai & Adel COLING 2020** ⭐⭐ — augmentasi NER (benchmark) untuk S3
+5. **A.2 — Self-Training Survey 2024** — overview self-training (Bab 2)
+
+Sisanya (A.3, B.2, B.4, C.2, C.3) bisa disitir sebagai supporting references.
+
+---
+
+## 7. Pertanyaan untuk Bu Diana (Next Bimbingan)
+
+### 7.1 Klarifikasi Skenario Baru
+
+1. **Setuju dengan restrukturisasi skenario** (S1=baseline murni, S2=baseline+contrastive, S3=S2+augmentation)? Atau ingin tetap skenario lama (class weight + adaptive) ditambah putaran 3 (contrastive + augmentation)?
+2. **S2 — SCL vs JSCL**: cukup salah satu (SCL standar Khosla 2020), atau wajib bandingkan kedua varian sebagai ablation?
+3. **S3 — strategi augmentasi**: template substitution (sederhana) atau back-translation/GPT (kompleks tapi natural)?
+4. **Apakah perlu ada skenario class-weight murni** (S1 + class weight saja) sebagai pembanding pure terhadap pendekatan baru, mengingat hasil S1 lama (class weight) menunjukkan EVENT F1 +1.9%? Atau cukup dijelaskan di lampiran/arsip?
+
+### 7.2 Posisi di Laporan
+
+5. **Bab 4 — apakah klaim utama** S1+S2+S3 (skenario baru), dan eksplorasi class-weight/adaptive lama dikutip sebagai "studi pendahuluan" di sub-bab terpisah?
+6. **F1 EVENT** masih jadi metrik kunci? Atau pindah ke macro F1 tanpa O?
+
+### 7.3 Timeline
+
+7. **Kalau timeline TA terbatas**, urutan prioritas: S1+S2 cukup (S3 future work), S1+S3 (skip contrastive), atau wajib semua?
+8. **Boleh start coding S2 sebelum dapat paper JSCL teman**, dengan asumsi pakai SCL standar dulu sebagai placeholder?
+
+### 7.4 Bahan Diskusi dengan Rujukan Paper
+
+- Justifikasi SCL untuk imbalanced NER: rujuk **B.1 (Khosla 2020)** + **B.2 (ContrastNER 2023)**.
+- Justifikasi augmentasi sentence-based NER: rujuk **C.1 (Dai & Adel 2020)** + **C.2 (DAGA 2020)**.
+- Justifikasi baseline IndoBERT @ 0.9: rujuk **A.1 (Ariyanto 2025)** dengan target F1 0.863 — Sirah sudah mencapai 0.9587.
+
+---
+
+## 8. Output yang Diharapkan
+
+Setelah skenario S1+S2+S3 selesai:
+
+### 8.1 Tabel Hasil Utama (Bab 4)
+
+| Skenario | F1 entity-level | F1 PERSON | F1 LOCATION | F1 TIME | F1 EVENT |
 |---|---:|---:|---:|---:|---:|
-| E1 (baseline) | (target ≈ 0.86) | ? | ? | ? | ? |
-| E3 (class weight) | ? | ? | ? | ? | ? (target naik) |
-| E4 (adaptive + cw) | ? | ? | ? | ? | ? (target tertinggi) |
+| **S1 — Baseline** | 0.959 ✅ | 0.972 | 0.954 | 0.883 | 0.816 |
+| **S2 — Baseline + Contrastive** | ? | ? | ? | ? | ? (target naik) |
+| **S3 — S2 + Augmentation** | ? | ? | ? | ? | ? (target tertinggi) |
 
-2. **Plot F1 vs iterasi** untuk 3 eksperimen (dari `iteration_log.csv`)
-3. **Plot threshold_used vs iterasi** khusus E4 (tunjukkan dynamic adaptation)
-4. **Analisis** mana yang terbaik untuk EVENT (kunci untuk Knowledge Graph kronologis sesuai revisi temporal Bu Diana)
-5. **Rekomendasi pipeline final** — eksperimen pemenang dipakai untuk inferensi ke seluruh `sirah_chunks_final.csv`
+### 8.2 Plot
+
+- F1 vs iterasi (3 skenario, dari `iteration_log.csv`).
+- F1 per-entitas bar chart (S1 vs S2 vs S3, fokus highlight EVENT).
+- Loss curves S2: `L_CE` vs `L_SCL` per epoch (kalau pakai SCL).
+
+### 8.3 Analisis
+
+- Kontribusi marginal tiap layer: ΔF1(S2−S1) untuk efek contrastive, ΔF1(S3−S2) untuk efek augmentation.
+- Mana yang paling membantu kelas EVENT — contrastive (representasi) atau augmentation (data)?
+
+### 8.4 Rekomendasi Pipeline Final
+
+- Skenario pemenang dipakai untuk inferensi ke seluruh `sirah_chunks_final.csv`.
+- Input pembentukan Knowledge Graph.
+
+---
+
+## 9. Arsip: Skenario Lama (Class Weight + Adaptive Threshold)
+
+> **Status:** Tidak masuk klaim utama TA. Hasil run masih tersimpan di `done_running/legacy_class_weight_adaptive/` sebagai bukti eksplorasi metodologi.
+
+### 9.1 Ringkasan Skenario Lama yang Dijalankan
+
+| Skenario lama | Komponen | Hasil F1 entity | F1 EVENT |
+|---|---|---|---|
+| E1 lama (= S1 baru) | Fix 0.9, no CW | **0.959** | 0.816 |
+| S1 lama | Fix 0.9 + class weight inverse freq (clip 50) | 0.908 | 0.835 |
+| S2 lama | Adaptive 0.9→0.7 + class weight | 0.843 | 0.830 |
+
+**Temuan utama:**
+- Class weight memang menaikkan F1 EVENT (+1.9%) dan recall semua kelas.
+- Tapi precision turun signifikan (S2 lama: precision 0.74 = 26% noise).
+- Adaptive threshold STOP cepat (iter 2) karena pseudo-label pool habis.
+
+**Kenapa di-drop dari skenario aktif?**
+- Class weight bekerja di level loss saja — Bu Diana putaran 3 ingin attack imbalance di level lain (representasi via contrastive, data via augmentation).
+- Trade-off precision-recall yang terlalu tajam (S2 lama precision 0.74) → tidak ideal untuk KG.
+- Skenario baru lebih bersih: 1 layer = 1 kontribusi, mudah di-isolasi efeknya.
+
+### 9.2 Detail Hasil Lama
+
+Detail lengkap (per-iterasi log, confusion matrix, error pattern, P-R trade-off) tersimpan di:
+- `done_running/legacy_class_weight_adaptive/analisis_skenario_srlner.md`
+- `done_running/legacy_class_weight_adaptive/compare_scenarios.ipynb`
+- `done_running/legacy_class_weight_adaptive/S1_classweight/` (model + log + evaluation skenario lama class weight)
+- `done_running/legacy_class_weight_adaptive/S2_adaptive/` (model + log + evaluation skenario lama adaptive)
+
+> Data baseline (E1 lama = S1 baru) dibagi pakai dengan skenario aktif → tersimpan di `done_running/S1_baseline/`, bukan duplikat di legacy folder.
+
+### 9.3 Kalau Bu Diana Minta Lihat Lagi
+
+- File-nya tetap ada, tidak di-delete.
+- Bisa direferensikan di Bab 4 sebagai studi pendahuluan / ablation pembanding.
+- Klaim yang masih bisa dipakai: "class weight inverse frequency menaikkan F1 EVENT +1.9% di Sirah, tapi menurunkan precision overall" — bisa jadi argumen kenapa kami pindah ke contrastive learning.
+
+---
+
+## 10. Action Item Sesi Berikutnya
+
+1. ✅ Paper S2 sudah teridentifikasi — `Contrastive_Learning.pdf` (Dewabharata et al.), berisi SCL + JSCL.
+2. ✅ Adaptasi JSCL ke NER sudah lock-in: **sentence-level Jaccard** (§3.6.1). Sketsa kode siap.
+3. ⏳ **Hubungi teman / cari** paper augmentasi konkret untuk S3 (default Dai & Adel COLING 2020).
+4. ⏳ **Konfirmasi Bu Diana** scope final skenario baru (lihat §7.1) + apakah SCL + JSCL keduanya wajib atau cukup salah satu.
+5. ⏳ **Mulai coding S2** setelah action item #4 selesai (jangan langsung S3 — depend on S2).
+6. ⏳ **Jangan run di Colab** sebelum approval Bu Diana.
