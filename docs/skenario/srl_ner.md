@@ -1,19 +1,21 @@
 # Skenario SRL-NER — S1 / S2 / S3
 
-> **Tanggal revisi terakhir:** 2026-05-11
-> **Konteks revisi:** Skenario dirombak menggantikan rencana lama (class weight + adaptive threshold). Skenario lama tetap di-arsip di `done_running/legacy_class_weight_adaptive/` sebagai bukti eksplorasi, tidak masuk klaim utama TA.
+> **Tanggal revisi terakhir:** 2026-05-20 (post-bimbingan 2026-05-16)
+> **Konteks revisi:** Plan 3-skenario sudah **approved Bu Diana di bimbingan 2026-05-16**. S3 di-revisi dengan λ_C tuning sebelum augmentation. Deadline S3: **29 Mei 2026**.
 
 ## 0. Ringkasan Skenario
 
 | Skenario | Komponen | Status |
 |---|---|---|
-| **S1 — Baseline** | Fix THRESHOLD=0.9, tanpa handle imbalance, tanpa contrastive, tanpa augmentation | ✅ Hasil run reuse dari E1 lama (2026-05-07) |
-| **S2 — Contrastive Learning + Baseline** | S1 + supervised contrastive loss (SCL + JSCL sentence-level, rujuk paper Dewabharata et al. `Contrastive_Learning.pdf`) | ⏳ Paper + adaptasi sudah lock-in, tunggu approval Bu Diana → coding |
-| **S3 — Sentence-based Augmentation + S2** | S2 + augmentasi kalimat fokus kelas minor (EVENT, TIME, I-LOCATION) | ⏳ Depend on S2, tunggu paper augmentasi konkret |
+| **S1 — Baseline** | Fix THRESHOLD=0.9, tanpa handle imbalance, tanpa contrastive, tanpa augmentation | ✅ Selesai (Seq F1 entity = 0.959, reuse hasil E1 lama 2026-05-07) |
+| **S2 — Contrastive Learning + Baseline** | S1 + supervised contrastive loss (SCL + JSCL sentence-level, λ_C=0.3) | ✅ Selesai 2026-05-14/15 (S2a SCL final 0.950 / peak 0.953, S2b JSCL final 0.933 / peak 0.940) |
+| **S3 — λ_C Tuning + Mention Replacement Augmentation** | (1) Sweep λ_C ∈ {0.1, 0.2, 0.3} di S2 SCL → pilih winner; (2) S2 winner + Mention Replacement (Dai & Adel 2020) | ⏳ Deadline **29 Mei 2026** |
 
-**Filosofi:** layer-by-layer — S2 menambah satu komponen ke S1 (contrastive), S3 menambah satu lagi ke S2 (augmentation). Tujuannya supaya kontribusi tiap komponen ke F1 kelas minoritas (terutama EVENT) bisa diisolasi.
+**Filosofi:** layer-by-layer — S2 menambah contrastive ke S1, S3 menambah λ_C tuning + augmentation ke S2. Tujuannya supaya kontribusi tiap komponen ke F1 kelas minoritas (terutama EVENT) bisa diisolasi.
 
-**Latar belakang revisi 2026-05-11:** skenario lama (E1+S1 class-weight + S2 adaptive+CW) sudah dijalankan dan menunjukkan class weight murni belum memuaskan untuk EVENT (F1 stuck di 0.83). Bu Diana putaran 3 menyarankan contrastive learning + sentence augmentation. Kami memutuskan **restrukturisasi total** supaya skema skenario lebih bersih: 1 skenario = 1 layer kontribusi.
+**Latar belakang revisi 2026-05-11 (skema awal):** skenario lama (E1+S1 class-weight + S2 adaptive+CW) sudah dijalankan dan menunjukkan class weight murni belum memuaskan untuk EVENT (F1 stuck di 0.83). Bu Diana putaran 3 menyarankan contrastive learning + sentence augmentation. Kami memutuskan **restrukturisasi total** supaya skema skenario lebih bersih: 1 skenario = 1 layer kontribusi.
+
+**Latar belakang revisi 2026-05-20 (S3 plan baru):** S2 selesai run dengan λ_C=0.3 default, hasil Seq F1 entity (~0.95) sedikit di bawah S1 baseline (0.959). Hipotesis: λ_C=0.3 terlalu agresif → trade-off entity boundary vs token classification. **Sebelum lompat ke augmentation**, S3 dimulai dengan **λ_C sweep** (0.1, 0.2, 0.3) di SCL untuk close the gap. Setelah dapat winner λ_C, baru di-stack augmentation di atasnya. Plan 3-skenario ini approved Bu Diana di bimbingan 2026-05-16.
 
 ---
 
@@ -323,67 +325,109 @@ def jscl_loss_sentence(hidden, labels, tau=0.1, exclude_O=True, O_label_id=0):
 
 ---
 
-## 4. S3 — Sentence-based Augmentation + S2
+## 4. S3 — λ_C Tuning + Mention Replacement Augmentation
+
+> **Revisi 2026-05-20:** Plan S3 di-rewrite total post-bimbingan 2026-05-16. Sebelumnya: S3 = S2 (λ_C=0.3) + augmentation. Sekarang: S3 = (1) λ_C sweep di S2 SCL → winner, (2) S2 winner + Mention Replacement augmentation. Deadline **29 Mei 2026**.
 
 ### 4.1 Definisi
 
-S3 = S2 (baseline + contrastive) + augmentasi data: generate kalimat baru fokus ke kelas minor (`B-EVENT`, `I-EVENT`, `I-LOCATION`, opsional `B-TIME`/`I-TIME`) lalu append ke train set sebelum training.
+S3 punya **dua sub-tahap berurutan**:
+
+**S3.1 — λ_C sweep** di S2 SCL:
+- Run S2 SCL dengan **3 nilai λ_C: 0.1, 0.2, 0.3** (default 0.3 = run yang sudah selesai)
+- 6 iterasi self-training × 10 epoch per λ_C (sama dengan S2)
+- Pilih winner berdasarkan **Seq F1 entity-level test set**
+- Tujuan: close the gap S2 (~0.95) vs S1 (0.959) → ekspektasi λ_C lebih kecil mengurangi trade-off boundary vs token
+
+**S3.2 — Mention Replacement augmentation** (Dai & Adel 2020) di atas S3.1 winner:
+- Ambil model S2 SCL dengan λ_C winner
+- Augment train set: untuk tiap kalimat yang punya entity kelas minor (EVENT, I-LOCATION, B-TIME), generate 1–3 kalimat baru dengan mengganti entity-nya dengan entity sekelas dari pool
+- Re-run 6 iterasi self-training × 10 epoch dengan train_augmented.csv
+- Hasil = output utama S3
 
 ### 4.2 Motivasi
 
-- EVENT support cuma 51 kalimat di test, dan B-EVENT/I-EVENT cuma 0.13%/0.14% di train. **Sample kalimat-nya memang sedikit** — class weight + contrastive tetap bekerja dengan kalimat yang sama.
-- Bu Diana putaran 3: *"oversampling bisa tapi susah. Augmentasi sentence-based (1 kalimat yang fokusnya ke minor) ditambahkan ke data train"*.
-- Augmentasi sentence-based = generate kalimat baru → variasi konteks naik tanpa duplikasi murni.
+**Untuk S3.1 (λ_C tuning):**
+- S2 default λ_C=0.3 → token-level F1 naik (~0.995 vs S1 ~0.99) tapi entity-level Seq F1 turun (~0.95 vs S1 0.959)
+- Gap kecil 0.01 tapi konsisten → hipotesis: λ_C=0.3 terlalu agresif → contrastive loss over-prioritize per-token similarity, mengompromi entity boundary detection
+- λ_C lebih kecil (0.1, 0.2) → balance lebih baik antara CE loss (entity boundary) dan contrastive loss (representasi disiplin)
 
-### 4.3 Strategi Augmentasi (kandidat — final menunggu paper teman)
+**Untuk S3.2 (Mention Replacement):**
+- EVENT support cuma 51 di test set, B-EVENT/I-EVENT 0.13%/0.14% di train. Sample-nya **memang sedikit** — tuning λ_C tetap bekerja dengan kalimat yang sama
+- Bu Diana putaran 3: *"oversampling bisa tapi susah. Augmentasi sentence-based (1 kalimat yang fokusnya ke minor) ditambahkan ke data train"*
+- Mention Replacement (Dai & Adel COLING 2020) = strategi paling sederhana & robust untuk NER augmentation: cuma swap entity dengan pool sekelas, struktur sintaktik kalimat tetap
 
-| Strategi | Cara kerja | Kelas target | Effort |
-|---|---|---|---|
-| **Template substitution** | Ganti entity di kalimat existing (mis. ganti nama PERSON di kalimat EVENT) dengan entity sekelas dari pool | EVENT, TIME, LOCATION | Rendah |
-| **Context expansion** | Tambah kalimat anchor di sebelum/sesudah yang menyebut entity minor | EVENT | Sedang |
-| **Back-translation (id→en→id)** | Translate kalimat EVENT ke English, lalu translate balik | Semua, terutama EVENT | Sedang (butuh API) |
-| **GPT paraphrase** | Pakai LLM untuk paraphrase kalimat EVENT, makna sama struktur beda | EVENT, TIME | Sedang-tinggi |
+### 4.3 Strategi Augmentasi: Mention Replacement (Dai & Adel COLING 2020)
 
-**Strategi final:** menunggu paper referensi dari teman + konfirmasi Bu Diana.
+**Cara kerja:**
+1. **Build entity pool** dari train set per-kelas: `pool[B-EVENT] = [entity1, entity2, ...]`
+2. Untuk tiap kalimat di train yang mengandung entity kelas minor target:
+   - Untuk tiap entity di kalimat, **probability `p` ganti dengan entity random dari pool sekelas** (preserve BIO tagging)
+   - Generate **`n` augmented variant** per kalimat
+3. Append augmented sentences ke `train.csv` → `train_augmented.csv`
+
+**Contoh:**
+- Original: `Pada saat [Perang Badar]_EVENT, kaum muslimin menang.`
+- Augmented #1: `Pada saat [Perang Uhud]_EVENT, kaum muslimin menang.`
+- Augmented #2: `Pada saat [Perjanjian Hudaibiyah]_EVENT, kaum muslimin menang.`
+
+**Kelas target prioritas:** B-EVENT, I-EVENT, I-LOCATION, B-TIME, I-TIME (kelas dengan F1 < 0.82 di S2 SCL).
+
+**Catatan:** Augmented data sudah disiapkan di `data/result/pseudo-labelling/SRL-NER/train_augmented.csv` (script siap, distribusi minor naik 2-3×). Tinggal feed ke pipeline S2 winner.
 
 ### 4.4 Knob Hyperparameter
 
 | Knob | Default | Fungsi |
 |---|---|---|
-| `n_augment_per_minor_sentence` | 1–3 | Berapa kalimat augmentasi per kalimat minor original |
-| `target_classes` | `["B-EVENT", "I-EVENT", "I-LOCATION"]` | Kelas yang ditarget augmentasi |
-| `augmentation_strategy` | TBD | Pilih 1 atau kombinasi dari §4.3 |
-| Semua knob S2 | sama | Contrastive λ/τ, threshold, dll tetap |
+| **S3.1 — λ_C sweep** | | |
+| `lambda_c_grid` | `[0.1, 0.2, 0.3]` | Sweep di S2 SCL |
+| `tau` | 0.1 | Tetap sama |
+| Knob S2 lainnya | sama | THRESHOLD=0.9, MAX_ITERATIONS=6, dst |
+| **S3.2 — Augmentation** | | |
+| `replace_prob` | 0.7 | Probability per-entity diganti |
+| `n_augment_per_minor_sentence` | 2 | Berapa variant per kalimat minor |
+| `target_classes` | `["B-EVENT", "I-EVENT", "I-LOCATION", "B-TIME", "I-TIME"]` | Kelas yang ditarget |
+| `lambda_c` | (winner dari S3.1) | Pakai hasil sweep |
 
-### 4.5 Integrasi ke Pipeline Existing
+### 4.5 Integrasi ke Pipeline
 
-- Tambah **cell di awal notebook** untuk generate augmented sentences sebelum training (sekali, bukan per-iter self-training).
-- Output: `train_augmented.csv` (existing train + augmented) → feed ke pipeline normal yang sudah berisi S2.
-- **Tidak mengubah** loss/threshold/contrastive — augmentasi adalah **pre-processing data**.
+**S3.1:** loop `for λ_C in [0.1, 0.2, 0.3]:` di Colab notebook (3× durasi run S2 SCL = ~6-8 jam GPU T4 total). Output per-λ_C disimpan di folder terpisah supaya bisa di-compare side-by-side.
+
+**S3.2:** sekali run dengan `train_augmented.csv` sebagai input + λ_C winner (~3-4 jam GPU T4). Output di `done_running/S3_augmented_SCL/`.
 
 ### 4.6 Pro & Kontra
 
 **Pro:**
-- Data-level intervention — orthogonal terhadap S2 (model tidak diubah).
-- Bisa dikombinasi dengan S2 dengan minimal coupling.
-- Mudah dijelaskan di Bab 3.
+- λ_C sweep → empirical resolution dari hipotesis "λ_C=0.3 terlalu agresif" — datadriven decision
+- Mention Replacement = standar literatur NER augmentation (Dai & Adel 2020 paling banyak disitir)
+- Layer-by-layer tetap clean: S3 = S2 (di-tune) + augmentation, tidak loncat 2 layer sekaligus
 
 **Kontra:**
-- Kualitas augmented sentence tergantung strategi:
-  - Template substitution → bisa hasilkan kalimat tidak natural.
-  - Back-translation → butuh API + kualitas translation.
-  - GPT paraphrase → ironis (LLM-NER dibatalkan, tapi LLM dipakai untuk augment).
-- Risiko semantic drift — entity dipindah ke konteks yang salah secara sejarah Sirah (mis. "Perang Badar" dipindah ke konteks Madinah pasca-Fathu Makkah).
+- Tambah 6-8 jam GPU untuk sweep (vs single run S3 augment = 3-4 jam) — fit ke deadline 29 Mei tapi tipis
+- Mention Replacement berisiko semantic drift: "Perang Badar" diganti "Perang Tabuk" di konteks Quraisy → secara sejarah salah. Mitigasi: validasi manual sample 20-30 augmented sentences sebelum train.
 
 ### 4.7 Effort
 
-3-4 jam (template) atau 6-8 jam (back-translation/GPT) + 2-3 jam Colab.
+- **S3.1:** 2 jam coding (loop λ_C + logging) + 6-8 jam Colab GPU
+- **S3.2:** 2-3 jam coding (Mention Replacement script — sebagian sudah siap di `train_augmented.csv`) + 3-4 jam Colab
+- **Total: ~13-17 jam** dalam 9 hari (deadline 29 Mei)
 
-### 4.8 Prasyarat Sebelum Coding
+### 4.8 Prasyarat Sebelum Run
 
-1. **S2 sudah selesai** — S3 layer di atas S2.
-2. **Paper augmentasi NER konkret dari teman** — kandidat default Dai & Adel COLING 2020, DAGA EMNLP 2020.
-3. **Validasi manual sampel augmented sentence** — sebelum di-train, cek 20–30 kalimat hasil augmentasi untuk pastikan tidak ngawur secara sejarah.
+1. ✅ S2 SCL + JSCL sudah selesai (2026-05-14/15) → S2 SCL λ_C=0.3 jadi salah satu titik di sweep S3.1
+2. ✅ Mention Replacement script + `train_augmented.csv` siap (sudah dibuat sebelumnya)
+3. ⏳ Validasi manual sample augmented sentences (20-30 kalimat) sebelum run S3.2
+
+### 4.9 Output yang Diharapkan
+
+**S3.1 (λ_C sweep):**
+- Tabel Seq F1 per λ_C × per iterasi
+- Pilih λ_C dengan Seq F1 entity-level final tertinggi (atau peak tertinggi, dijustifikasi)
+- Target: ≥ S1 baseline 0.959 (close the gap)
+
+**S3.2 (augmentation):**
+- F1 EVENT naik signifikan dari S2 (target ≥ 0.85)
+- F1 entity-level overall stabil atau naik vs S3.1 winner
 
 ---
 
@@ -392,15 +436,18 @@ S3 = S2 (baseline + contrastive) + augmentasi data: generate kalimat baru fokus 
 | Skenario | Status | Trigger lanjut |
 |---|---|---|
 | **S1** | ✅ Selesai (reuse E1 2026-05-07) | – |
-| **S2** | ⏳ Menunggu approval Bu Diana | Paper + adaptasi sudah lock-in (sentence-level Jaccard). Bisa langsung coding setelah approval. |
-| **S3** | ⏳ Menunggu | S2 selesai + paper augmentasi konkret |
+| **S2** | ✅ Selesai 2026-05-14/15 (S2a SCL + S2b JSCL, λ_C=0.3) | – |
+| **S3.1 (λ_C sweep)** | ⏳ Plan post-bimbingan 2026-05-16 | Approved Bu Diana, deadline 29 Mei 2026 |
+| **S3.2 (augmentation)** | ⏳ Depend on S3.1 | Mention Replacement script + train_augmented.csv siap |
 
-**Yang harus dilakukan sebelum coding S2/S3:**
+**Action items menuju deadline 29 Mei 2026:**
 
-1. ✅ Paper contrastive konkret sudah ada (`Contrastive_Learning.pdf` — Dewabharata et al.).
-2. ✅ Adaptasi JSCL ke NER sudah lock-in: **sentence-level Jaccard** (§3.6.1).
-3. ⏳ Konfirmasi Bu Diana scope final: S1+S2+S3, atau S1+S2 cukup (S3 jadi future work). + SCL+JSCL keduanya atau cukup salah satu.
-4. ⏳ Hubungi teman / cari paper augmentasi konkret untuk S3 (Dai & Adel COLING 2020 sebagai default kalau tidak ada info lain).
+1. ⏳ **Run S3.1** — λ_C sweep (0.1, 0.2, 0.3) di S2 SCL → pilih winner berdasarkan Seq F1 entity (~6-8 jam GPU T4)
+2. ⏳ **Validasi manual** sample augmented sentences (20-30 kalimat dari train_augmented.csv) — pastikan tidak ngawur secara sejarah
+3. ⏳ **Run S3.2** — Mention Replacement augmentation di atas S3.1 winner (~3-4 jam GPU T4)
+4. ⏳ **Inference NER terbaik** ke seluruh `sirah_chunks_final.csv`
+5. ⏳ **Regenerate** `nodes_v3.csv` + `edges_v3.csv` dari output NER
+6. ⏳ **Comparison report** SRL-NER vs manual labelling (untuk bimbingan berikutnya)
 
 ---
 
@@ -445,30 +492,46 @@ Sisanya (A.3, B.2, B.4, C.2, C.3) bisa disitir sebagai supporting references.
 
 ---
 
-## 7. Pertanyaan untuk Bu Diana (Next Bimbingan)
+## 7. Status Pertanyaan Bu Diana (Resolved Post-Bimbingan 2026-05-16)
 
-### 7.1 Klarifikasi Skenario Baru
+### 7.1 Klarifikasi Skenario
 
-1. **Setuju dengan restrukturisasi skenario** (S1=baseline murni, S2=baseline+contrastive, S3=S2+augmentation)? Atau ingin tetap skenario lama (class weight + adaptive) ditambah putaran 3 (contrastive + augmentation)?
-2. **S2 — SCL vs JSCL**: cukup salah satu (SCL standar Khosla 2020), atau wajib bandingkan kedua varian sebagai ablation?
-3. **S3 — strategi augmentasi**: template substitution (sederhana) atau back-translation/GPT (kompleks tapi natural)?
-4. **Apakah perlu ada skenario class-weight murni** (S1 + class weight saja) sebagai pembanding pure terhadap pendekatan baru, mengingat hasil S1 lama (class weight) menunjukkan EVENT F1 +1.9%? Atau cukup dijelaskan di lampiran/arsip?
+1. **Restrukturisasi skenario** (S1=baseline, S2=baseline+contrastive, S3=S2+augmentation)?
+   → ✅ **Approved** Bu Diana di bimbingan 2026-05-16.
+
+2. **S2 — SCL vs JSCL**: cukup salah satu atau kedua varian?
+   → ✅ **Kedua varian sudah dijalankan** (S2a SCL + S2b JSCL). Hasil: SCL > JSCL konsisten ~+0.01.
+
+3. **S3 — strategi augmentasi**: template, back-translation, atau GPT?
+   → ✅ **Mention Replacement (Dai & Adel COLING 2020)** dipilih — paling robust + ada di literatur. Augmented data sudah siap di `train_augmented.csv`.
+
+4. **Skenario class-weight murni** sebagai pembanding pure?
+   → 🟡 **Tidak dibahas eksplisit**. Tetap di-arsip di `legacy_class_weight_adaptive/` sebagai studi pendahuluan / ablation pembanding di Bab 4.
 
 ### 7.2 Posisi di Laporan
 
-5. **Bab 4 — apakah klaim utama** S1+S2+S3 (skenario baru), dan eksplorasi class-weight/adaptive lama dikutip sebagai "studi pendahuluan" di sub-bab terpisah?
-6. **F1 EVENT** masih jadi metrik kunci? Atau pindah ke macro F1 tanpa O?
+5. **Bab 4 — klaim utama** S1+S2+S3 vs class-weight/adaptive lama?
+   → 🟡 **Tidak dibahas**. Default plan: S1+S2+S3 jadi klaim utama, class-weight/adaptive jadi sub-bab "Studi Pendahuluan".
+
+6. **F1 EVENT** masih jadi metrik kunci?
+   → 🟡 **Tidak dibahas**. Default: Seq F1 entity-level + per-class breakdown EVENT keduanya disajikan.
 
 ### 7.3 Timeline
 
-7. **Kalau timeline TA terbatas**, urutan prioritas: S1+S2 cukup (S3 future work), S1+S3 (skip contrastive), atau wajib semua?
-8. **Boleh start coding S2 sebelum dapat paper JSCL teman**, dengan asumsi pakai SCL standar dulu sebagai placeholder?
+7. **Urutan prioritas**: S1+S2 cukup, S1+S3, atau wajib semua?
+   → ✅ **Wajib semua** dengan deadline **29 Mei 2026**.
 
-### 7.4 Bahan Diskusi dengan Rujukan Paper
+8. **Boleh start coding S2 sebelum dapat paper JSCL teman**?
+   → ✅ Sudah selesai (paper Dewabharata et al. + sentence-level Jaccard adaptasi).
 
-- Justifikasi SCL untuk imbalanced NER: rujuk **B.1 (Khosla 2020)** + **B.2 (ContrastNER 2023)**.
-- Justifikasi augmentasi sentence-based NER: rujuk **C.1 (Dai & Adel 2020)** + **C.2 (DAGA 2020)**.
-- Justifikasi baseline IndoBERT @ 0.9: rujuk **A.1 (Ariyanto 2025)** dengan target F1 0.863 — Sirah sudah mencapai 0.9587.
+### 7.4 Pertanyaan/Tambahan Baru dari Bu Diana di Bimbingan 2026-05-16
+
+**Untuk bimbingan berikutnya** (di luar scope skenario S1/S2/S3, tapi terkait pipeline NER):
+
+- ⚠️ **LLM verb extraction**: lempar Sirah ke LLM, ekstrak kata kerja/kata terkait event → tambahkan sebagai Event entity (antisipasi support EVENT yang masih kecil)
+- ⚠️ **Frekuensi entitas per period**: amati frekuensi kemunculan PERSON/EVENT/LOCATION per periodisasi → justifikasi pengaruh
+- ⚠️ **Pipeline end-to-end** dengan output SRL-NER (bukan manual labelling) — comparison report wajib
+- ⚠️ **Pembukuan per-Bab** dimulai sesuai update terbaru
 
 ---
 
@@ -542,11 +605,17 @@ Detail lengkap (per-iterasi log, confusion matrix, error pattern, P-R trade-off)
 
 ---
 
-## 10. Action Item Sesi Berikutnya
+## 10. Action Item Sesi Berikutnya (Post-Bimbingan 2026-05-16, Deadline 29 Mei 2026)
 
-1. ✅ Paper S2 sudah teridentifikasi — `Contrastive_Learning.pdf` (Dewabharata et al.), berisi SCL + JSCL.
-2. ✅ Adaptasi JSCL ke NER sudah lock-in: **sentence-level Jaccard** (§3.6.1). Sketsa kode siap.
-3. ⏳ **Hubungi teman / cari** paper augmentasi konkret untuk S3 (default Dai & Adel COLING 2020).
-4. ⏳ **Konfirmasi Bu Diana** scope final skenario baru (lihat §7.1) + apakah SCL + JSCL keduanya wajib atau cukup salah satu.
-5. ⏳ **Mulai coding S2** setelah action item #4 selesai (jangan langsung S3 — depend on S2).
-6. ⏳ **Jangan run di Colab** sebelum approval Bu Diana.
+1. ✅ Plan 3-skenario approved Bu Diana — proceed.
+2. ✅ Paper S2 + S3 sudah teridentifikasi (Dewabharata et al. + Dai & Adel 2020).
+3. ✅ S2 SCL + JSCL selesai run 2026-05-14/15.
+4. ⏳ **Run S3.1** — λ_C sweep (0.1, 0.2, 0.3) di S2 SCL → pilih winner (~6-8 jam GPU T4 di Colab)
+5. ⏳ **Validasi manual** sample augmented sentences (20-30 kalimat) sebelum run S3.2
+6. ⏳ **Run S3.2** — Mention Replacement augmentation di atas S3.1 winner (~3-4 jam GPU T4)
+7. ⏳ **Inference NER terbaik** ke seluruh `sirah_chunks_final.csv`
+8. ⏳ **Regenerate `nodes_v3.csv` + `edges_v3.csv`** dari output NER
+9. ⏳ **Comparison report** SRL-NER vs manual labelling untuk bimbingan berikutnya
+10. ⏳ **Update CLAUDE.md** + mulai pembukuan Bab 4 sesuai arahan Bu Diana
+
+Detail outcome bimbingan: `../bimbingan/2026-05-16_outcome.md`. Detail propagasi: `../bimbingan/revisi_dosen.md` Putaran 5.

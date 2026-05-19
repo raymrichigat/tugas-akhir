@@ -38,6 +38,26 @@ Membangun Knowledge Graph dari teks Sirah Nabawiyah (Bahasa Indonesia) menggunak
 TA_sirah/
 ├── CLAUDE.md                          ← file ini
 ├── progress_log.md                    ← riwayat changelog sesi (terpisah supaya CLAUDE.md ringkas)
+├── docs/                              ← semua dokumentasi proyek (.md files)
+│   ├── bimbingan/                     ← catatan bimbingan + revisi dosen
+│   │   ├── revisi_dosen.md            ← raw catatan revisi Bu Diana per putaran
+│   │   ├── bimbingan_template.md      ← template diskusi untuk bimbingan SRL-NER
+│   │   ├── 2026-05-13.md              ← prep bimbingan S2-fokus
+│   │   ├── 2026-05-14_graf.md         ← prep bimbingan graf-fokus lengkap
+│   │   ├── 2026-05-16.md              ← prep bimbingan combined (graf + S2)
+│   │   ├── 2026-05-16_outcome.md      ← outcome bimbingan 2026-05-16 (catatan mentah)
+│   │   └── lama/                      ← arsip laporan bimbingan lama (01–04)
+│   ├── skenario/                      ← skenario teknis & metodologi
+│   │   ├── srl_ner.md                 ← skenario S1/S2/S3 SRL-NER (metodologi lengkap)
+│   │   ├── srl_ner_running_guide.md   ← panduan step-by-step run skenario
+│   │   ├── graf_pengujian.md          ← skenario uji coba graf (G1/G2/G3/G4)
+│   │   └── temporal.md                ← skenario temporal detection
+│   ├── bab3/                          ← draft Bab 3 metodologi
+│   │   ├── bab3_lengkap_revisi.md
+│   │   └── bab3_revisi_paragraf.md
+│   ├── referensi/                     ← rujukan paper
+│   │   └── sna_weighted_relations.md
+│   └── archive/                       ← (kosong, disiapkan untuk file lama)
 ├── data/
 │   ├── pages/                         ← 633 halaman PDF yang sudah di-render jadi PNG
 │   ├── result/
@@ -110,7 +130,7 @@ TA_sirah/
 | Manual Labelling (semi-auto pre_labelling) | ✅ Selesai (`sirah_prelabelled.csv`, 6000 rows) |
 | Alias Clustering | ✅ Selesai (143 alias, 109 clusters → `alias_map.json`) |
 | Konversi seed → format BERT (CoNLL) | ✅ Selesai (`prepare_bert_data.py`) |
-| NER Pipeline (SRL-based, BERT iterative self-training) | 🔄 **S1 ✅ + S2 ✅ + S3 ⏳.** S1 baseline reuse hasil E1 lama (Seq F1 entity=0.959). **S2 selesai run 2026-05-14/15** di Colab dengan dual-metric (token-level sklearn + entity-level seqeval): S2a SCL final 0.950/peak 0.953, S2b JSCL final 0.933/peak 0.940 — trend monotonik naik lintas 6 iterasi, gap kecil ~0.01 vs S1. Detail per-epoch di `src/pseudo_labelling/SRL-NER/S2-seqeval.md`. **S3 augmentation** (Mention Replacement Dai & Adel 2020) script + data siap, belum run — tunggu approval Bu Diana untuk pilih SCL vs SCL+JSCL. |
+| NER Pipeline (SRL-based, BERT iterative self-training) | 🔄 **S1 ✅ + S2 ✅ + S3 ⏳ (deadline 29 Mei 2026).** S1 baseline reuse hasil E1 lama (Seq F1 entity=0.959). S2 selesai 2026-05-14/15: S2a SCL final 0.950/peak 0.953, S2b JSCL final 0.933/peak 0.940. **Plan S3 baru post-bimbingan 2026-05-16:** (1) λ_C sweep (0.1/0.2/0.3) di S2 SCL untuk close gap entity-level vs S1, (2) Mention Replacement augmentation di atas winner. Approved Bu Diana. |
 | NER Pipeline (LLM-based, Instruction Fine-Tuning + QLoRA) | ❌ **Tidak jadi dipakai** (revisi 2026-05-03). Arsip + `DEPRECATED.md` di `src/pseudo_labelling/LLM-NER/`. |
 | Periodisasi top-down (`period_mapping.json`) | ✅ **Baru 2026-05-12** — 15 period (P0-P14), 6 phase, 56 BAB ter-grouped semantically. Menggantikan fuzzy match BAB lama. Module: `src/relation_extraction/event_period.py`. |
 | Manual review event → period (K/F/R/ADD curation) | ✅ Selesai (2026-05-12, `event_period_review_v2.csv`). 19 K + 10 F + 12 R + 7 ADD applied via `apply_review_to_kg.py` → `nodes_v2.csv` + `edges_v2.csv`. |
@@ -123,40 +143,50 @@ TA_sirah/
 | Uji coba sampling 5 event berperiode jauh (revisi #2 Bu Diana) | ✅ **Selesai 2026-05-12** (Perang Badr/Uhud/Hudaibiyah/Khaibar/Tabuk; 60 unique Person; bias coverage NER terlihat — Perang Badr dominasi 39 person). Script: `case_study_events.py`. |
 | Build Knowledge Graph (Neo4j) v2 dengan Period node | ✅ **Selesai 2026-05-12** (`import_sirah_v2.cypher`, 15 Period nodes + IN_PERIOD relations, support query per-period) |
 
-### Catatan progres terakhir (sesi: 2026-05-13 s/d 2026-05-16 — S2 selesai + bimbingan)
+### Catatan progres terakhir (sesi: 2026-05-16 bimbingan + 2026-05-20 propagasi outcome)
 
-Rangkaian sesi 2026-05-13 → 2026-05-16 fokus ke **eksekusi S2 + persiapan & pelaksanaan bimbingan Bu Diana**:
+**Bimbingan Bu Diana 2026-05-16 sudah dilaksanakan**, dual-focus graf + S2 SRL-NER. Outcome resmi sudah dipropagasi ke `docs/bimbingan/revisi_dosen.md` Putaran 5 + `docs/bimbingan/bimbingan_template.md` + `docs/skenario/srl_ner.md`. Catatan mentah di `docs/bimbingan/2026-05-16_outcome.md`.
 
-1. **S2 Contrastive Learning selesai run** (Colab, 14-15 Mei). S2a SCL dan S2b JSCL keduanya tuntas 6 iterasi self-training × 10 epoch. Output di `src/pseudo_labelling/SRL-NER/done_running/S2_Contrastive_Learning/` (notebook + models + evaluation xlsx).
-2. **Dual-metric evaluation** — selain token-level sklearn (yang sudah ada), ditambahkan **entity-level seqeval** via `evaluate_seqeval.py` (lokal) + `seqeval_addendum_colab.md` (cell tambahan untuk re-eval di Colab tanpa re-train). Hasil epoch-by-epoch + ringkasan final di `src/pseudo_labelling/SRL-NER/S2-seqeval.md`.
-3. **Hasil S2 (Seq F1 entity-level, comparable dengan S1 baseline 0.959):** S2a SCL final iter-6 = **0.950** (peak 0.953 di iter-6 ep-4), S2b JSCL final iter-6 = **0.933** (peak 0.940 di iter-5 ep-3). Trend **monotonik naik** lintas iterasi (SCL: 0.924 → 0.950, JSCL: 0.904 → 0.940). SCL > JSCL konsisten ~+0.01. Gap ~0.01 vs S1 — kemungkinan λ_C=0.3 terlalu agresif (trade-off entity boundary vs token classification).
-4. **Visualisasi case study 5 event** — 5 PNG individual (Badr/Uhud/Hudaibiyah/Khaibar/Tabuk) + `case_study_panel.png` gabungan via `src/analysis/visualize_case_study_events.py`. Siap untuk slide bimbingan.
-5. **Neo4j community import script tambahan** — `data/result/neo4j/import_community_v2.cypher` untuk inject property community + centrality dari `sna_metrics.csv` ke Person nodes (color by community di Neo4j Browser).
-6. **3 dokumen prep bimbingan disiapkan:** `bimbingan_2026_05_13.md` (S2-fokus), `bimbingan_graf_2026_05_14.md` (graf-fokus lengkap), dan `bimbingan_2026_05_16.md` (combined final — graf + S2 dual-metric, skrip presentasi 20-25 menit + Q&A).
-7. **Bimbingan Bu Diana 2026-05-16 sudah dilaksanakan** — outcome belum di-catat di file ini (akan ditindak terpisah).
+**Keputusan utama dari bimbingan:**
 
-**Action item terbawa ke sesi sekarang:**
-1. ⏳ Catat outcome bimbingan 2026-05-16 ke `revisi_dosen.md` (Putaran 5) + propagasi ke `bimbingan.md`/`srl_ner_skenario.md` sesuai arahan baru.
-2. ⏳ Run S3a (+ S3b kalau Bu Diana minta keduanya) di Colab — script & augmented data siap (~3-4 jam GPU T4/skenario).
-3. ⏳ Pertimbangkan tuning λ_C (0.3 → 0.1/0.2) sebagai future work kalau gap S2 vs S1 mau di-close.
-4. ⏳ Setelah S3 selesai + winner dipilih → inference ke seluruh `sirah_chunks_final.csv` → regenerate `nodes_v3.csv` + `edges_v3.csv` dengan NER baru → re-run relation extraction + SNA + Neo4j Cypher.
-5. ⏳ 2 bug pending: `OCCURRED_AT weight=2.0` (aggregation bug di `relation_extraction.py`) + `PRECEDES stale v1 mapping` (anchor ke first-mention bukan page_range v2, Fathul Makkah → Perang Uhud salah arah). Dijadwalkan post-bimbingan.
+1. ✅ **Plan 3-skenario approved** Bu Diana (S1 baseline / S2 SCL+JSCL / S3 = best dari S2 + augmentation).
+2. ⏰ **Deadline S3: 29 Mei 2026** (~9 hari).
+3. 🔄 **S3 plan di-revisi**: tune λ_C dulu (sweep 0.1/0.2/0.3 di S2 SCL) untuk close gap entity-level S2 (0.95) vs S1 (0.959), baru stack augmentation di atas winner. Bukan langsung augment dengan default λ_C=0.3.
+4. 📋 **Revisi tambahan untuk graf** (perlu dikerjakan sebelum bimbingan berikutnya):
+   - Centrality juga untuk node Event (selain Person)
+   - Wordcloud per-komunitas + interpretasi semantik tiap komunitas + arti Q-value
+   - Analisis event-related untuk 5 case study (event co-occur per period)
+   - Visualisasi prefer Neo4j (bukan PNG static)
+5. 📋 **Arahan baru pipeline NER**:
+   - Frekuensi entitas per period → justifikasi
+   - LLM verb extraction → tambah Event entity (antisipasi support EVENT kecil)
+6. 📋 **Bimbingan berikutnya**: pipeline running end-to-end dengan output SRL-NER, comparison report SRL-NER vs manual labelling, mulai pembukuan per-Bab.
 
-> 📜 **Detail historis lengkap** (sesi 2026-04-16 s/d 2026-05-11, termasuk bug fixes notebook & pre_labelling/alias clustering, dan revisi dosen putaran 1-4) dipindahkan ke **`progress_log.md`** di root. Buka file itu kalau perlu konteks/kronologi pekerjaan terdahulu.
+**Action item aktif (deadline 29 Mei):**
+1. ⏳ Run S3.1 — λ_C sweep di S2 SCL (~6-8 jam GPU T4)
+2. ⏳ Validasi manual augmented sentences (20-30 sample)
+3. ⏳ Run S3.2 — Mention Replacement augmentation di atas winner λ_C (~3-4 jam GPU T4)
+4. ⏳ Inference NER terbaik → regenerate `nodes_v3.csv` + `edges_v3.csv`
+5. ⏳ Comparison report SRL-NER vs manual labelling
+6. ⏳ Centrality untuk Event + wordcloud per-komunitas + analisis event-related case study + frekuensi entitas per-period
+7. ⏳ LLM verb extraction (POC dulu di sample chunks)
+8. ⏳ 2 bug pending: `OCCURRED_AT weight=2.0` + `PRECEDES stale v1 mapping` (post-deadline kalau mepet)
 
-### Skenario SRL-NER aktif (per 2026-05-16)
+> 📜 **Detail historis lengkap** (sesi 2026-04-16 s/d 2026-05-15, termasuk run S2 + persiapan bimbingan) dipindahkan ke **`progress_log.md`** di root. Buka file itu kalau perlu konteks/kronologi pekerjaan terdahulu.
+
+### Skenario SRL-NER aktif (per 2026-05-20)
 
 | Skenario | Komponen | Status |
 |---|---|---|
 | **S1 — Baseline** | Fix THRESHOLD=0.9, tanpa class weight, contrastive, augmentation | ✅ Reuse hasil E1 lama (Seq F1 entity=0.959, F1 EVENT=0.816) |
-| **S2a — SCL + Baseline** | S1 + Strict Supervised Contrastive (Khosla 2020) | ✅ **Selesai 2026-05-14/15.** Seq F1 final iter-6 = 0.950, peak 0.953 (iter-6 ep-4). Token F1 = 0.9955. |
-| **S2b — JSCL + Baseline** | S1 + Jaccard Sim Contrastive (Dewabharata et al.) | ✅ **Selesai 2026-05-14/15.** Seq F1 final iter-6 = 0.933, peak 0.940 (iter-5 ep-3). Token F1 = 0.9945. |
-| **S3a — SCL + Augmentation** | S2a + Mention Replacement (Dai & Adel 2020) | ⏳ Script & `train_augmented.csv` siap, belum run. Default rekomendasi: lanjut SCL saja (Bu Diana approve pending). |
-| **S3b — JSCL + Augmentation** | S2b + Mention Replacement | ⏳ Opsional, run jika Bu Diana minta kedua varian. |
+| **S2a — SCL + Baseline** | S1 + Strict Supervised Contrastive (Khosla 2020), λ_C=0.3 | ✅ Selesai 2026-05-14/15. Seq F1 final iter-6 = 0.950, peak 0.953. Token F1 = 0.9955. |
+| **S2b — JSCL + Baseline** | S1 + Jaccard Sim Contrastive (Dewabharata et al.), λ_C=0.3 | ✅ Selesai 2026-05-14/15. Seq F1 final iter-6 = 0.933, peak 0.940. Token F1 = 0.9945. |
+| **S3.1 — λ_C sweep** | S2 SCL dengan λ_C ∈ {0.1, 0.2, 0.3} → pilih winner | ⏳ Plan post-bimbingan, deadline 29 Mei. ~6-8 jam GPU T4. |
+| **S3.2 — Mention Replacement Augmentation** | S3.1 winner + Dai & Adel 2020 augmentation | ⏳ Depend on S3.1, ~3-4 jam GPU T4. |
 
-Detail metodologi + sketsa kode di `srl_ner_skenario.md`. Detail per-epoch S2 di `src/pseudo_labelling/SRL-NER/S2-seqeval.md`. Paper rujukan: `Contrastive_Learning.pdf` (Dewabharata dkk., ITS — SCL+JSCL untuk multi-label). Skenario lama (class weight + adaptive threshold dari 2026-05-07) di-arsip di `done_running/legacy_class_weight_adaptive/` — tidak masuk klaim utama, hanya dipakai sebagai ablation pembanding di Bab 4.
+Detail metodologi + sketsa kode di `docs/skenario/srl_ner.md`. Detail per-epoch S2 di `src/pseudo_labelling/SRL-NER/S2-seqeval.md`. Paper rujukan: `Contrastive_Learning.pdf` (Dewabharata dkk., ITS — SCL+JSCL untuk multi-label).
 
-Catatan jujur S2: Seq F1 entity-level ~0.95 sedikit di bawah S1 baseline 0.959 (gap ~0.01). Token-level F1 S2 (~0.995) justru lebih tinggi dari S1. Hipotesis: λ_C=0.3 terlalu agresif → trade-off antara per-token classification vs entity boundary. SCL > JSCL konsisten ~+0.01 di semua iter. Action plan: lanjut S3 dulu, kalau gap belum tertutup baru tuning λ_C di future work.
+**Catatan honest:** Seq F1 entity-level S2 (~0.95) sedikit di bawah S1 baseline 0.959 (gap ~0.01). Token-level F1 S2 (~0.995) justru lebih tinggi dari S1. Hipotesis: λ_C=0.3 terlalu agresif → trade-off antara per-token classification vs entity boundary. SCL > JSCL konsisten ~+0.01. **S3.1 λ_C sweep adalah upaya empirical untuk close the gap** sebelum lompat ke augmentation.
 
 ---
 

@@ -1,14 +1,14 @@
 # Skenario Pengujian Graf + Referensi — G1/G2/G3/G4
 
 **Tanggal:** 2026-05-04
-**Konteks:** Menjawab revisi Bu Diana di `revisi_dosen.md` (poin Graf + Uji Coba):
+**Konteks:** Menjawab revisi Bu Diana di `../bimbingan/revisi_dosen.md` (poin Graf + Uji Coba):
 > *"Perlu uji coba lain selain centrality (community atau lainnya)"*
 > *"Centrality -> fokus ke node (fokus ke graf gede nya, seperti clustering, ukuran network nya berapa, seperti density, dkk)"*
 > *"Kasus perang badar, diamati keterlibatan nya apa saja lalu diamati graf nya (sampling beberapa event)... ambil beberapa contoh 3 atau 5 fitur, dengan periode yang jauh"*
 
 Dokumen ini = **bahan diskusi** sebelum implementasi tambahan ke `src/analysis/sna_analysis.py`. Setelah disetujui Bu Diana, eksperimen yang dipilih akan diimplementasikan.
 
-> **Ruang lingkup:** TA fokus ke **4 cluster pengujian (G1/G2/G3/G4)**. Graf hanya dijalankan pada hasil **NER terbaik (E4 dari `srl_ner_skenario.md`)** — tidak ada perbandingan graf antar E1/E3/E4 untuk simplicity.
+> **Ruang lingkup:** TA fokus ke **4 cluster pengujian (G1/G2/G3/G4)**. Graf hanya dijalankan pada hasil **NER terbaik (E4 dari `srl_ner.md`)** — tidak ada perbandingan graf antar E1/E3/E4 untuk simplicity.
 
 ---
 
@@ -319,7 +319,7 @@ def case_study_event(edges_df, nodes_df, event_name, G_full):
 
 ## 6. Hubungan dengan Skenario SRL-NER (Opsi A)
 
-**Keputusan (sesuai diskusi 2026-05-04):** Graf hanya dijalankan pada hasil **NER terbaik (E4 dari `srl_ner_skenario.md`)**.
+**Keputusan (sesuai diskusi 2026-05-04):** Graf hanya dijalankan pada hasil **NER terbaik (E4 dari `srl_ner.md`)**.
 
 **Implikasi:**
 - Tidak ada perbandingan G1-G4 antar E1/E3/E4
@@ -345,7 +345,7 @@ Jadi **G1–G4 belum bisa dijalankan sebelum SRL-NER selesai dan inferensi final
 
 ## 7. Referensi Paper Pendukung (2021–2026)
 
-> **Catatan:** Paper umum SNA Islamic texts + character networks sudah ada di `referensi_sna_weighted_relations.md` (17 paper, dibuat 2026-04-24). Dokumen ini hanya menambahkan paper baru yang **spesifik** untuk G2/G3/G4.
+> **Catatan:** Paper umum SNA Islamic texts + character networks sudah ada di `../referensi/sna_weighted_relations.md` (17 paper, dibuat 2026-04-24). Dokumen ini hanya menambahkan paper baru yang **spesifik** untuk G2/G3/G4.
 
 ### 7.A Community Detection Comparison (untuk G3)
 
@@ -394,7 +394,7 @@ Jadi **G1–G4 belum bisa dijalankan sebelum SRL-NER selesai dan inferensi final
 - **Inti:** Membangun character network dari karya sastra Tiongkok dengan metrik: degree distribution, density, clustering coefficient, shortest path, diameter, centrality.
 - **Plus untuk G2 Sirah:**
   - **Sangat relevan** — character network + literary text + suite metrik graph-level identik dengan yang Sirah butuh
-  - Sudah ada di `referensi_sna_weighted_relations.md` (paper #5), tapi disitir ulang khusus untuk G2
+  - Sudah ada di `../referensi/sna_weighted_relations.md` (paper #5), tapi disitir ulang khusus untuk G2
 - **Minus / catatan:** Domain sastra Tiongkok (fiksi) ≠ historical narrative
 
 #### B.2 — Extraction and Analysis of Fictional Character Networks: A Survey
@@ -414,7 +414,7 @@ Jadi **G1–G4 belum bisa dijalankan sebelum SRL-NER selesai dan inferensi final
 - **Inti:** SNA hadits Sahih Bukhari → 16 communities (kebetulan sama dengan Sirah!), pola geografis Makkah-Madinah-Kufa-Baghdad.
 - **Plus untuk G4 Sirah:**
   - **Paling dekat dengan TA** — SNA Islamic texts dengan komunitas + analisis periodisasi
-  - Sudah di `referensi_sna_weighted_relations.md` paper #1, perlu disitir lagi untuk G4
+  - Sudah di `../referensi/sna_weighted_relations.md` paper #1, perlu disitir lagi untuk G4
 - **Minus / catatan:** Hadits chains ≠ event-based co-participation, tapi metodologi mirip
 
 > Catatan untuk G4 (event sampling): tidak banyak paper yang spesifik membahas "sub-graf per event" dari historical text. Paling dekat = analisis komunitas geografis di Aurangzeb et al. Justifikasi G4 lebih ke **revisi Bu Diana langsung** + **validasi pipeline** (kalau salah dari awal, fitur graf jadi salah) daripada precedent literatur.
@@ -447,7 +447,7 @@ Jadi **G1–G4 belum bisa dijalankan sebelum SRL-NER selesai dan inferensi final
 - **Justifikasi G2:** rujuk B.1 (Chinese Lit) + B.2 (Labatut Survey) — character network suite metrik
 - **Justifikasi G3 (perlu Leiden):** rujuk A.1 (Traag 2019) — Louvain bisa hasilkan komunitas terputus
 - **Justifikasi G4 (event sampling):** alasan utama = revisi Bu Diana langsung + validasi pipeline; pendamping = C.1 (Aurangzeb) sebagai metodologi SNA Islamic texts
-- **Konteks domain:** rujuk paper SNA Islamic texts di `referensi_sna_weighted_relations.md` (Aurangzeb hadits, MIS, dll.)
+- **Konteks domain:** rujuk paper SNA Islamic texts di `../referensi/sna_weighted_relations.md` (Aurangzeb hadits, MIS, dll.)
 
 ---
 
@@ -468,7 +468,7 @@ Jadi **G1–G4 belum bisa dijalankan sebelum SRL-NER selesai dan inferensi final
 ### 9.2 Prasyarat penting
 
 **G1-G4 tidak bisa dijalankan sebelum:**
-1. ✅ SRL-NER E1+E3+E4 selesai (lihat `srl_ner_skenario.md`)
+1. ✅ SRL-NER E1+E3+E4 selesai (lihat `srl_ner.md`)
 2. ✅ NER terbaik (E4) dipilih
 3. ✅ Inferensi NER terbaik ke seluruh `sirah_chunks_final.csv`
 4. ✅ Re-run relation extraction (dengan temporal-aware dari revisi #1)

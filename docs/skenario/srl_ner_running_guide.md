@@ -1,7 +1,7 @@
 # SRL-NER Running Guide — E1 Baseline + S1 Class Weight + S2 Adaptif
 
 **Tanggal:** 2026-05-04
-**Tujuan:** panduan step-by-step untuk menjalankan 3 eksperimen yang sudah ACC Bu Diana (lihat `bimbingan.md`).
+**Tujuan:** panduan step-by-step untuk menjalankan 3 eksperimen yang sudah ACC Bu Diana (lihat `../bimbingan/bimbingan_template.md`).
 **Durasi total:** ~10–13 jam wall-clock (4–5 jam coding + 7–8 jam GPU Colab).
 
 ---
@@ -443,7 +443,7 @@ Setelah ketiga eksperimen selesai:
 
 1. **Inferensi model pemenang ke `sirah_chunks_final.csv`** → hasilkan `sirah_chunks_NER.csv` dengan kolom entitas
 2. **Re-run Relation Extraction** dengan data NER baru (input ke `src/relation_extraction/relation_extraction.py`)
-3. **Re-run SNA** untuk metrik graph-level (lihat `graf_pengujian_skenario.md`)
+3. **Re-run SNA** untuk metrik graph-level (lihat `graf_pengujian.md`)
 4. **Lanjut implementasi temporal intra-sentence** (revisi 2026-05-03 cluster #1)
 
 ---

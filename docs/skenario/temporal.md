@@ -1,7 +1,7 @@
 # Skenario Temporal Detection — Hybrid Pattern + Bab + Position
 
 **Tanggal:** 2026-05-06
-**Konteks:** Menjawab revisi Bu Diana di `revisi_dosen.md` (cluster #1):
+**Konteks:** Menjawab revisi Bu Diana di `../bimbingan/revisi_dosen.md` (cluster #1):
 > *"Temporal dalam satu kalimat (?) perlu di deteksi (bisa dilihat dari urutan kejadian di Sirah / urutan bab nya)"*
 >
 > *"Lalu pembentukan graf, memperhatikan Temporal waktu, baru ke fitur graf nya"*
@@ -448,7 +448,7 @@ Kalau Bab 2 sub-bab temporal terbatas:
 ### 8.2 Pertanyaan strategis
 
 7. **Validasi T1 (precision)** — sample 30-50 kalimat. Ibu mau saya tunjukkan ground truth-nya juga, atau cukup precision number?
-8. **Studi kasus T3 (Perang Badar)** — selaras dengan revisi #2 Ibu (sampling event). Akan di-merge ke `graf_pengujian_skenario.md` G4, atau dipisah?
+8. **Studi kasus T3 (Perang Badar)** — selaras dengan revisi #2 Ibu (sampling event). Akan di-merge ke `graf_pengujian.md` G4, atau dipisah?
 9. **Posisi di laporan TA** — sub-bab Bab 3 (metodologi temporal) + tabel hasil di Bab 4? Atau sub-bab tersendiri?
 
 ### 8.3 Bahan diskusi dengan rujukan paper
