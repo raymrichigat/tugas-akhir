@@ -1,0 +1,323 @@
+﻿edge_idx;source_name;source_label;relation_type;target_name;target_label;total_frequency;n_periods_covered;dominant_period;dominant_count;event_natural_periods;aligned_dominant;alignment_ratio;verdict;reason
+0;Harb bin Umayyah;PERSON;INVOLVED_IN;Perang Fijar;EVENT;1;1;P1;1;P1;True;1.0;REVIEW;single mention, but in aligned period
+1;Muhammad;PERSON;INVOLVED_IN;Perang Fijar;EVENT;1;1;P1;1;P1;True;1.0;REVIEW;single mention, but in aligned period
+2;Amr bin Al-Ash;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P4;1;P8;False;0.0;DROP;single mention in non-aligned period P4 (event natural: ['P8'])
+3;Najasyi;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P4;1;P8;False;0.0;DROP;single mention in non-aligned period P4 (event natural: ['P8'])
+4;Ubay bin Khalaf;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P4;1;P9;False;0.0;DROP;single mention in non-aligned period P4 (event natural: ['P9'])
+5;Muhammad;PERSON;INVOLVED_IN;Perang Badr;EVENT;12;5;P8;4;P8;True;0.364;KEEP;freq>=2 + dominant period aligned with event
+6;Abu Jahal;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P4;1;P8;False;0.0;DROP;single mention in non-aligned period P4 (event natural: ['P8'])
+7;Abu Sufyan bin Harb;PERSON;INVOLVED_IN;Perang Badr;EVENT;5;3;P9;3;P8;False;0.2;REVIEW;freq>=2 but dominant period P9 != event natural period ['P8']
+8;Perang Badr;EVENT;OCCURRED_AT;Yatsrib;LOCATION;1;1;P4;1;P8;False;0.0;DROP;single mention in non-aligned period P4 (event natural: ['P8'])
+9;Abu Bakar;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P4;1;P9;False;0.0;DROP;single mention in non-aligned period P4 (event natural: ['P9'])
+10;Muhammad;PERSON;INVOLVED_IN;Perang Uhud;EVENT;11;4;P9;6;P9;True;0.667;KEEP;freq>=2 + dominant period aligned with event
+11;Urwah bin Az-Zubair;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P5;1;P9;False;0.0;DROP;single mention in non-aligned period P5 (event natural: ['P9'])
+12;Aisyah;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P5;1;P9;False;0.0;DROP;single mention in non-aligned period P5 (event natural: ['P9'])
+13;Ibnu Abdi;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P5;1;P9;False;0.0;DROP;single mention in non-aligned period P5 (event natural: ['P9'])
+14;Yalail bin Abdi;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P5;1;P9;False;0.0;DROP;single mention in non-aligned period P5 (event natural: ['P9'])
+15;Perang Uhud;EVENT;OCCURRED_AT;Aqabah;LOCATION;1;1;P5;1;P9;False;0.0;DROP;single mention in non-aligned period P5 (event natural: ['P9'])
+16;Abu Rasulullah;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P5;1;P8;False;0.0;DROP;single mention in non-aligned period P5 (event natural: ['P8'])
+17;Perang Khandaq;EVENT;OCCURRED_AT;Yaman;LOCATION;1;1;P5;1;P10;False;0.0;DROP;single mention in non-aligned period P5 (event natural: ['P10'])
+18;Qais bin Al-Aslat;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P5;1;P10;False;0.0;DROP;single mention in non-aligned period P5 (event natural: ['P10'])
+19;Mush'ab bin Umair;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P5;1;P10;False;0.0;DROP;single mention in non-aligned period P5 (event natural: ['P10'])
+20;Baiat Aqabah Kubra;EVENT;OCCURRED_AT;Aqabah;LOCATION;1;1;P5;1;P5;True;1.0;REVIEW;single mention, but in aligned period
+21;Muhammad;PERSON;INVOLVED_IN;Baiat Aqabah;EVENT;2;2;P5;1;P5;True;0.5;KEEP;freq>=2 + dominant period aligned with event
+22;Abu Salamah bin Abdul Asad;PERSON;INVOLVED_IN;Baiat Aqabah Kubra;EVENT;1;1;P5;1;P5;True;1.0;REVIEW;single mention, but in aligned period
+23;Baiat Aqabah Kubra;EVENT;OCCURRED_AT;Madinah;LOCATION;1;1;P5;1;P5;True;1.0;REVIEW;single mention, but in aligned period
+24;Muhammad;PERSON;INVOLVED_IN;Baiat Aqabah Kubra;EVENT;2;2;P5;1;P5;True;0.5;KEEP;freq>=2 + dominant period aligned with event
+25;Abu Bakar;PERSON;INVOLVED_IN;Baiat Aqabah Kubra;EVENT;1;1;P5;1;P5;True;1.0;REVIEW;single mention, but in aligned period
+26;Ali bin Abu Thalib;PERSON;INVOLVED_IN;Baiat Aqabah Kubra;EVENT;1;1;P5;1;P5;True;1.0;REVIEW;single mention, but in aligned period
+27;Baiat Aqabah Kubra;EVENT;OCCURRED_AT;Makkah;LOCATION;2;2;P5;1;P5;True;0.5;KEEP;freq>=2 + dominant period aligned with event
+28;Baiat Aqabah Kubra;EVENT;OCCURRED_ON;hari Kamis;TIME;1;1;P6;1;P5;False;0.0;DROP;single mention in non-aligned period P6 (event natural: ['P5'])
+29;Baiat Aqabah Kubra;EVENT;OCCURRED_ON;tanggal 26 Shafar;TIME;1;1;P6;1;P5;False;0.0;DROP;single mention in non-aligned period P6 (event natural: ['P5'])
+30;Baiat Aqabah Kubra;EVENT;OCCURRED_ON;tahun 14 dari nubuwah;TIME;1;1;P6;1;P5;False;0.0;DROP;single mention in non-aligned period P6 (event natural: ['P5'])
+31;Baiat Aqabah Kubra;EVENT;OCCURRED_ON;tanggal 12 September;TIME;1;1;P6;1;P5;False;0.0;DROP;single mention in non-aligned period P6 (event natural: ['P5'])
+32;Baiat Aqabah Kubra;EVENT;OCCURRED_ON;tahun 622 M;TIME;1;1;P6;1;P5;False;0.0;DROP;single mention in non-aligned period P6 (event natural: ['P5'])
+33;Perjanjian Hudaibiyah;EVENT;OCCURRED_ON;bulan Ramadhan;TIME;1;1;P7;1;P11;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P11'])
+34;Fathul Makkah;EVENT;OCCURRED_ON;bulan Ramadhan;TIME;1;1;P7;1;P12;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P12'])
+35;Al-Miqdad bin Amr;PERSON;INVOLVED_IN;Perang Abwa';EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+36;Muhammad;PERSON;INVOLVED_IN;Perang Abwa';EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+37;Sa'd bin Ubadah;PERSON;INVOLVED_IN;Perang Abwa';EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+38;Perang Abwa';EVENT;OCCURRED_ON;bulan Shafar 2 H;TIME;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+39;Muhammad;PERSON;INVOLVED_IN;Perang Buwath;EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+40;Hamzah bin Abdul Muththalib;PERSON;INVOLVED_IN;Perang Buwath;EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+41;Umayyah bin Khalaf;PERSON;INVOLVED_IN;Perang Buwath;EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+42;Perang Buwath;EVENT;OCCURRED_ON;bulan Rabi'ul Awwal 2 H;TIME;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+43;Sa'd bin Mu'adz;PERSON;INVOLVED_IN;Perang Safawan;EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+44;Kurz bin Jabir;PERSON;INVOLVED_IN;Perang Safawan;EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+45;Perang Safawan;EVENT;OCCURRED_AT;Madinah;LOCATION;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+46;Perang Safawan;EVENT;OCCURRED_ON;bulan Rabi'ul Awwal 2 H;TIME;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+47;Zaid bin Haritsah;PERSON;INVOLVED_IN;Perang Badr Ula;EVENT;1;1;P7;1;P9;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P9'])
+48;Ali bin Abu Thalib;PERSON;INVOLVED_IN;Perang Badr Ula;EVENT;1;1;P7;1;P9;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P9'])
+49;Perang Badr Ula;EVENT;OCCURRED_ON;bulan Jumada;TIME;1;1;P7;1;P9;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P9'])
+50;Zaid bin Haritsah;PERSON;INVOLVED_IN;Perang Dzul Usyairah;EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+51;Ali bin Abu Thalib;PERSON;INVOLVED_IN;Perang Dzul Usyairah;EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+52;Muhammad;PERSON;INVOLVED_IN;Perang Dzul Usyairah;EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+53;Perang Dzul Usyairah;EVENT;OCCURRED_ON;bulan Jumada;TIME;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+54;Kurz bin Jabir;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P7;1;P8;False;0.0;DROP;single mention in non-aligned period P7 (event natural: ['P8'])
+55;Hakim bin Hizam;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+56;Umair bin Wahb;PERSON;INVOLVED_IN;Perang Badr;EVENT;2;1;P8;2;P8;True;1.0;KEEP;freq>=2 + dominant period aligned with event
+57;Perang Badr;EVENT;OCCURRED_AT;Madinah;LOCATION;4;2;P8;2;P8;True;0.5;KEEP;freq>=2 + dominant period aligned with event
+58;Abdurrahman bin Auf;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+59;Ukkasyah bin Mihshan;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+60;Al-Abbas bin Abdul Muththalib;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+61;Abu Lahab;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+62;Perang Uhud;EVENT;OCCURRED_AT;Madinah;LOCATION;3;2;P8;2;P9;False;0.333;REVIEW;freq>=2 but dominant period P8 != event natural period ['P9']
+63;Siba bin Arfazhah;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+64;Ibnu Ummi;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+65;Perang Badr;EVENT;OCCURRED_AT;Badr;LOCATION;2;2;P8;1;P8;True;0.5;KEEP;freq>=2 + dominant period aligned with event
+66;Perang Badr;EVENT;OCCURRED_ON;bulan Syawwal 2 H;TIME;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+67;Perang Badr;EVENT;OCCURRED_AT;Makkah;LOCATION;3;2;P9;2;P8;False;0.333;REVIEW;freq>=2 but dominant period P9 != event natural period ['P8']
+68;Shafwan bin Umayyah;PERSON;INVOLVED_IN;Perang Badr;EVENT;3;2;P9;2;P8;False;0.333;REVIEW;freq>=2 but dominant period P9 != event natural period ['P8']
+69;Wahb bin Umair;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+70;Umar bin Al-Khaththab;PERSON;INVOLVED_IN;Perang Badr;EVENT;3;3;P8;1;P8;True;0.333;KEEP;freq>=2 + dominant period aligned with event
+71;Abdullah bin Abbas;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+72;Abu Lubabah bin Abdul;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+73;Perang Badr;EVENT;OCCURRED_ON;bulan Dzul Hijjah;TIME;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+74;Perang Uhud;EVENT;OCCURRED_ON;bulan Muharram 3 H;TIME;1;1;P8;1;P9;False;0.0;DROP;single mention in non-aligned period P8 (event natural: ['P9'])
+75;Perang Uhud;EVENT;OCCURRED_ON;bulan Jumada;TIME;1;1;P8;1;P9;False;0.0;DROP;single mention in non-aligned period P8 (event natural: ['P9'])
+76;Perang Badr;EVENT;OCCURRED_ON;bulan Jumada;TIME;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+77;Furat bin Hayyan;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P8;1;P8;True;1.0;REVIEW;single mention, but in aligned period
+78;Perang Uhud Jabal;EVENT;OCCURRED_AT;Uhud;LOCATION;1;1;P8;1;P9;False;0.0;DROP;single mention in non-aligned period P8 (event natural: ['P9'])
+79;Ikrimah bin Abu Jahal;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+80;Abdullah bin Abu Rabi'ah;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+81;Hamzah bin Abdul Muththalib;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+82;Ali bin Abu Thalib;PERSON;INVOLVED_IN;Perang Badr;EVENT;2;1;P9;1;P8;False;0.0;REVIEW;freq>=2 but dominant period P9 != event natural period ['P8']
+83;Abu Azzah;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+84;Abu Azzah;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+85;Abu Sufyan bin Harb;PERSON;INVOLVED_IN;Perang Uhud;EVENT;4;1;P9;3;P9;True;1.0;KEEP;freq>=2 + dominant period aligned with event
+86;As'ad bin Zurarah;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+87;Perang Uhud;EVENT;OCCURRED_ON;bulan Rabi'ul Awwal 4 H;TIME;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+88;Perang Uhud;EVENT;OCCURRED_ON;bulan Jumadil Ula;TIME;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+89;Abu Salamah bin Abdul Asad;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+90;Perang Uhud;EVENT;OCCURRED_ON;bulan Muharram 4 H;TIME;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+91;Zaid bin Haritsah;PERSON;INVOLVED_IN;Perang Badr;EVENT;2;1;P9;2;P8;False;0.0;REVIEW;freq>=2 but dominant period P9 != event natural period ['P8']
+92;Hujair bin Abu Ihab;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+93;Zaid bin Ad-Dastinah;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+94;Ka'b bin Zaid bin An-Najjar;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P9;1;P10;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P10'])
+95;Amr bin Umayyah;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P9;1;P10;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P10'])
+96;Al-Mundzir bin Uqbah bin Amir;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P9;1;P10;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P10'])
+97;Amr bin Umayyah;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+98;Ka'b bin Al-Asyraf;PERSON;INVOLVED_IN;Perang Bani Qainuqa';EVENT;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+99;Ka'b bin Al-Asyraf;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+100;Perang Bani Nadhir;EVENT;OCCURRED_ON;bulan Rabi'ul Awwal 4 H;TIME;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+101;Perang Bani Nadhir;EVENT;OCCURRED_AT;Madinah;LOCATION;1;1;P9;1;P9;True;1.0;REVIEW;single mention, but in aligned period
+102;Abu Hurairah;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+103;Abu Musa;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+104;Perang Badr;EVENT;OCCURRED_ON;bulan Rabi'ul Awwal;TIME;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+105;Perang Badr;EVENT;OCCURRED_ON;Jumadil Ula;TIME;1;1;P9;1;P8;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P8'])
+106;Muhammad;PERSON;INVOLVED_IN;Perang Dzatur Riqa';EVENT;2;2;P9;1;P11;False;0.5;REVIEW;freq>=2 but dominant period P9 != event natural period ['P11']
+107;Abu Hurairah;PERSON;INVOLVED_IN;Perang Dzatur Riqa';EVENT;2;2;P9;1;P11;False;0.5;REVIEW;freq>=2 but dominant period P9 != event natural period ['P11']
+108;Abu Musa;PERSON;INVOLVED_IN;Perang Dzatur Riqa';EVENT;2;2;P9;1;P11;False;0.5;REVIEW;freq>=2 but dominant period P9 != event natural period ['P11']
+109;Perang Dzatur Riqa';EVENT;OCCURRED_ON;bulan Rabi'ul Awwal;TIME;1;1;P9;1;P11;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P11'])
+110;Perang Dzatur Riqa';EVENT;OCCURRED_ON;Jumadil Ula;TIME;1;1;P9;1;P11;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P11'])
+111;Muhammad;PERSON;INVOLVED_IN;Perang Khaibar;EVENT;5;2;P11;4;P11;True;0.8;KEEP;freq>=2 + dominant period aligned with event
+112;Abu Hurairah;PERSON;INVOLVED_IN;Perang Khaibar;EVENT;2;2;P9;1;P11;False;0.5;REVIEW;freq>=2 but dominant period P9 != event natural period ['P11']
+113;Abu Musa;PERSON;INVOLVED_IN;Perang Khaibar;EVENT;2;2;P9;1;P11;False;0.5;REVIEW;freq>=2 but dominant period P9 != event natural period ['P11']
+114;Perang Khaibar;EVENT;OCCURRED_AT;Khaibar;LOCATION;2;2;P9;1;P11;False;0.5;REVIEW;freq>=2 but dominant period P9 != event natural period ['P11']
+115;Perang Khaibar;EVENT;OCCURRED_ON;bulan Rabi'ul Awwal;TIME;1;1;P9;1;P11;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P11'])
+116;Perang Khaibar;EVENT;OCCURRED_ON;Jumadil Ula;TIME;1;1;P9;1;P11;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P11'])
+117;Perang Dzatur Riqa';EVENT;OCCURRED_AT;Khaibar;LOCATION;1;1;P9;1;P11;False;0.0;DROP;single mention in non-aligned period P9 (event natural: ['P11'])
+118;Muhammad;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;6;1;P10;6;P10;True;1.0;KEEP;freq>=2 + dominant period aligned with event
+119;Jabir bin Abdullah;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+120;Umar bin Al-Khaththab;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+121;Ali bin Abu Thalib;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+122;Perang Khandaq;EVENT;OCCURRED_AT;Khandaq;LOCATION;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+123;Perang Khandaq;EVENT;OCCURRED_ON;bulan Syawwal;TIME;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+124;Perang Khandaq;EVENT;OCCURRED_ON;bulan Dzul Qa'dah;TIME;2;1;P10;2;P10;True;1.0;KEEP;freq>=2 + dominant period aligned with event
+125;Perang Khandaq;EVENT;OCCURRED_AT;Madinah;LOCATION;2;1;P10;2;P10;True;1.0;KEEP;freq>=2 + dominant period aligned with event
+126;Ali bin Abu Thalib;PERSON;INVOLVED_IN;Perang Bani Quraizhah;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+127;Az-Zubair bin Al-Awwam;PERSON;INVOLVED_IN;Perang Bani Quraizhah;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+128;Sa'd bin Mu'adz;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;2;1;P10;2;P10;True;1.0;KEEP;freq>=2 + dominant period aligned with event
+129;Huyai bin Akhthab;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+130;Ka'b bin Asad;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+131;Perang Khandaq;EVENT;OCCURRED_ON;bulan Dzul Qa'dah 5 H;TIME;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+132;Abdullah bin Atik;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+133;Perang Khandaq;EVENT;OCCURRED_ON;Dzul Hijjah;TIME;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+134;Abul Ash;PERSON;INVOLVED_IN;Fathul Makkah;EVENT;1;1;P10;1;P12;False;0.0;DROP;single mention in non-aligned period P10 (event natural: ['P12'])
+135;Abdullah bin Ubay bin Salul;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;1;P10;1;P8;False;0.0;DROP;single mention in non-aligned period P10 (event natural: ['P8'])
+136;Abdullah bin Ubay bin Salul;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+137;Zainab binti Jahsy;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+138;Zaid bin Haritsah;PERSON;INVOLVED_IN;Perang Khandaq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+139;Muhammad;PERSON;INVOLVED_IN;Perang Bani Mushthaliq;EVENT;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+140;Perang Khandaq;EVENT;OCCURRED_ON;tahun 4 H;TIME;1;1;P10;1;P10;True;1.0;REVIEW;single mention, but in aligned period
+141;Perjanjian Hudaibiyah;EVENT;OCCURRED_AT;Hudaibiyah;LOCATION;1;1;P11;1;P11;True;1.0;REVIEW;single mention, but in aligned period
+142;Amr bin Umayyah;PERSON;INVOLVED_IN;Perang Tabuk;EVENT;1;1;P11;1;P13;False;0.0;DROP;single mention in non-aligned period P11 (event natural: ['P13'])
+143;Muhammad;PERSON;INVOLVED_IN;Perjanjian Hudaibiyah;EVENT;2;1;P11;2;P11;True;1.0;KEEP;freq>=2 + dominant period aligned with event
+144;Salamah bin Al-Akwa';PERSON;INVOLVED_IN;Perjanjian Hudaibiyah;EVENT;1;1;P11;1;P11;True;1.0;REVIEW;single mention, but in aligned period
+145;Salamah bin Al-Akwa';PERSON;INVOLVED_IN;Perang Khaibar;EVENT;1;1;P11;1;P11;True;1.0;REVIEW;single mention, but in aligned period
+146;Ibnu Al-Akwa';PERSON;INVOLVED_IN;Ghazwah Dzatu Qarad;EVENT;1;1;P11;1;P11;True;1.0;REVIEW;single mention, but in aligned period
+147;Amir bin Al-Akwa';PERSON;INVOLVED_IN;Perang Khaibar;EVENT;1;1;P11;1;P11;True;1.0;REVIEW;single mention, but in aligned period
+148;Perang Khaibar;EVENT;OCCURRED_AT;Hudaibiyah;LOCATION;1;1;P11;1;P11;True;1.0;REVIEW;single mention, but in aligned period
+149;Ghazwah Mu'tah;EVENT;OCCURRED_AT;Syam;LOCATION;1;1;P12;1;P12;True;1.0;REVIEW;single mention, but in aligned period
+150;Muhammad;PERSON;INVOLVED_IN;Perang Mu'tah;EVENT;2;2;P12;1;P12;True;0.5;KEEP;freq>=2 + dominant period aligned with event
+151;Perang Mu'tah;EVENT;OCCURRED_AT;Syam;LOCATION;2;2;P12;1;P12;True;0.5;KEEP;freq>=2 + dominant period aligned with event
+152;Abrahah;PERSON;INVOLVED_IN;Perjanjian Hudaibiyah;EVENT;1;1;P12;1;P11;False;0.0;DROP;single mention in non-aligned period P12 (event natural: ['P11'])
+153;Fathul Makkah;EVENT;OCCURRED_AT;Makkah;LOCATION;1;1;P13;1;P12;False;0.0;DROP;single mention in non-aligned period P13 (event natural: ['P12'])
+154;Fathul Makkah;EVENT;OCCURRED_AT;Jazirah Arab;LOCATION;1;1;P13;1;P12;False;0.0;DROP;single mention in non-aligned period P13 (event natural: ['P12'])
+155;Malik bin Auf;PERSON;INVOLVED_IN;Perang Hunain;EVENT;1;1;P13;1;P13;True;1.0;REVIEW;single mention, but in aligned period
+156;Muhammad;PERSON;INVOLVED_IN;Perang Hunain;EVENT;1;1;P13;1;P13;True;1.0;REVIEW;single mention, but in aligned period
+157;Muhammad;PERSON;INVOLVED_IN;Perang Tabuk;EVENT;3;2;P14;2;P13;False;0.333;REVIEW;freq>=2 but dominant period P14 != event natural period ['P13']
+158;Perang Uhud;EVENT;OCCURRED_AT;Hunain;LOCATION;1;1;P13;1;P9;False;0.0;DROP;single mention in non-aligned period P13 (event natural: ['P9'])
+159;Muhammad;PERSON;INVOLVED_IN;Perang Tha'if;EVENT;2;1;P14;2;P13;False;0.0;REVIEW;freq>=2 but dominant period P14 != event natural period ['P13']
+160;Ka'b bin Zuhair;PERSON;INVOLVED_IN;Perang Tha'if;EVENT;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+161;Bujair bin Zuhair;PERSON;INVOLVED_IN;Perang Tha'if;EVENT;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+162;Perang Tha'if;EVENT;OCCURRED_AT;Makkah;LOCATION;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+163;Urwah bin Mas'ud;PERSON;INVOLVED_IN;Perang Tha'if;EVENT;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+164;Perang Tha'if;EVENT;OCCURRED_ON;bulan Ramadhan 9 H;TIME;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+165;Al-Harits bin Abdi;PERSON;INVOLVED_IN;Perang Tabuk;EVENT;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+166;Nu'man bin Qail;PERSON;INVOLVED_IN;Perang Tabuk;EVENT;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+167;Mu'adz bin Jabal;PERSON;INVOLVED_IN;Perang Tabuk;EVENT;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+168;Malik bin An-Namath;PERSON;INVOLVED_IN;Perang Tabuk;EVENT;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+169;Perang Tabuk;EVENT;OCCURRED_ON;tahun 9 H;TIME;1;1;P14;1;P13;False;0.0;DROP;single mention in non-aligned period P14 (event natural: ['P13'])
+170;Abul Ash bin Ar-Rabi';PERSON;INVOLVED_IN;Perang Badr;EVENT;1;0;;0;P8;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P8'])
+171;Ummu Kultsum;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;0;;0;P8;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P8'])
+172;Utsman bin Affan;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;0;;0;P8;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P8'])
+173;Hasan bin Ali;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;0;;0;P8;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P8'])
+174;Husain bin Ali;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;0;;0;P8;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P8'])
+175;Zainab;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;0;;0;P8;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P8'])
+176;Khunais bin Hudzafah;PERSON;INVOLVED_IN;Perang Badr;EVENT;1;0;;0;P8;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P8'])
+177;Perang Badr;EVENT;OCCURRED_ON;tahun 3 H;TIME;1;0;;0;P8;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P8'])
+178;Hilal bin Amir bin Sha'sha'ah;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;0;;0;P9;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P9'])
+179;Abdullah bin Jahsy;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;0;;0;P9;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P9'])
+180;Perang Uhud;EVENT;OCCURRED_ON;tahun 4 H;TIME;1;0;;0;P9;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P9'])
+181;Ummu Salamah;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;0;;0;P9;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P9'])
+182;Abu Jahal;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;0;;0;P9;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P9'])
+183;Khalid bin Al-Walid;PERSON;INVOLVED_IN;Perang Uhud;EVENT;1;0;;0;P9;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P9'])
+184;Haritsah bin Amr;PERSON;KELUARGA;Haritsah bin Tsa'labah;PERSON;1;1;P0;1;;;;REVIEW;freq=1, no event anchor — manual review
+185;Ibrahim;PERSON;KELUARGA;Isma'il;PERSON;2;1;P0;2;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+186;Mudhadh bin Amr;PERSON;KELUARGA;Isma'il;PERSON;2;1;P0;2;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+187;Muhammad bin Abdullah bin Abdul Muththalib bin Hasyim;PERSON;KELUARGA;Ibrahim;PERSON;1;1;P0;1;;;;REVIEW;freq=1, no event anchor — manual review
+188;Muhammad;PERSON;KELUARGA;Ibrahim;PERSON;1;1;P0;1;;;;REVIEW;freq=1, no event anchor — manual review
+189;Isma'il;PERSON;KELUARGA;Ibrahim;PERSON;1;1;P0;1;;;;REVIEW;freq=1, no event anchor — manual review
+190;Hanifah bin Sha'b bin Ali bin Bakr;PERSON;KELUARGA;Bakr bin Wa'il;PERSON;1;1;P0;1;;;;REVIEW;freq=1, no event anchor — manual review
+191;Adi bin An-Najjar;PERSON;KELUARGA;Salma binti Amru;PERSON;1;1;P1;1;;;;REVIEW;freq=1, no event anchor — manual review
+192;Fathimah binti Amr bin A'idz bin Imran bin Makhzum bin Yaqzhah bin Murrah;PERSON;KELUARGA;Abdul Muththalib;PERSON;1;1;P1;1;;;;REVIEW;freq=1, no event anchor — manual review
+193;Bilal bin Rabah;PERSON;SAHABAT;Abu Thalib;PERSON;1;1;P1;1;;;;REVIEW;freq=1, no event anchor — manual review
+194;Abu Bakar;PERSON;SAHABAT;Abu Thalib;PERSON;1;1;P1;1;;;;REVIEW;freq=1, no event anchor — manual review
+195;Muhammad;PERSON;KELUARGA;Khadijah;PERSON;2;2;P1;1;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+196;Khadijah;PERSON;KELUARGA;Waraqah bin Naufal;PERSON;2;1;P2;2;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+197;Waraqah bin Naufal;PERSON;KELUARGA;Khadijah;PERSON;2;1;P2;2;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+198;Zaid bin Haritsah bin Syurahbil;PERSON;KELUARGA;Khadijah;PERSON;1;1;P3;1;;;;REVIEW;freq=1, no event anchor — manual review
+199;Ali bin Abu Thalib;PERSON;KELUARGA;Khadijah;PERSON;1;1;P3;1;;;;REVIEW;freq=1, no event anchor — manual review
+200;Abu Bakar;PERSON;KELUARGA;Abu Lahab;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+201;Muhammad;PERSON;KELUARGA;Abu Lahab;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+202;Utsman bin Affan;PERSON;KELUARGA;Mush'ab bin Umair;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+203;Umar bin Al-Khaththab;PERSON;MUSUH;Muhammad;PERSON;2;2;P4;1;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+204;Hamzah bin Abdul Muththalib;PERSON;KELUARGA;Abu Thalib;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+205;Umar bin Al-Khaththab;PERSON;KELUARGA;Abu Thalib;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+206;Abu Thalib;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+207;Utbah bin Rabi'ah;PERSON;KELUARGA;Abu Jahal;PERSON;2;2;P4;1;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+208;Syaibah bin Rabi'ah;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+209;Umayyah bin Khalaf;PERSON;KELUARGA;Abu Jahal;PERSON;2;2;P4;1;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+210;Abu Sufyan bin Harb;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+211;Muhammad;PERSON;KELUARGA;Saudah binti Zam'ah;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+212;Sakran bin Amr;PERSON;KELUARGA;Saudah binti Zam'ah;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+213;Muhammad;PERSON;KELUARGA;Ummu Jamil;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+214;Ummu Jamil binti Al-Khaththab;PERSON;KELUARGA;Muhammad;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+215;Ummul Khair;PERSON;KELUARGA;Muhammad;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+216;Ummu Jamil;PERSON;KELUARGA;Muhammad;PERSON;1;1;P4;1;;;;REVIEW;freq=1, no event anchor — manual review
+217;Abu Bakar;PERSON;KELUARGA;Muhammad;PERSON;2;2;P4;1;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+218;Muhammad;PERSON;KELUARGA;Aisyah;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+219;Adam;PERSON;SAHABAT;Jibril;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+220;As'ad bin Zurarah;PERSON;SAHABAT;Mush'ab bin Umair;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+221;Ubadah bin Ash-Shamit bin Qais;PERSON;KELUARGA;Rifa'ah bin Abdul Mundzir;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+222;Sa'd bin Ubadah bin Dulaim;PERSON;KELUARGA;Rifa'ah bin Abdul Mundzir;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+223;Al-Mundzir bin Amr bin Khunais;PERSON;KELUARGA;Rifa'ah bin Abdul Mundzir;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+224;Usaid bin Hudhair bin Sammak;PERSON;KELUARGA;Rifa'ah bin Abdul Mundzir;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+225;Sa'd bin Khaitsamah bin Al-Harits;PERSON;KELUARGA;Rifa'ah bin Abdul Mundzir;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+226;Muhammad;PERSON;KELUARGA;Rifa'ah bin Abdul Mundzir;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+227;Umar bin Al-Khaththab;PERSON;SAHABAT;Abu Jahal;PERSON;1;1;P5;1;;;;REVIEW;freq=1, no event anchor — manual review
+228;Jubair bin Muth'im;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+229;Thu'aimah bin Adi;PERSON;KELUARGA;Abu Jahal;PERSON;2;1;P6;2;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+230;Al-Harits bin Amir;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+231;Naufal bin Abdi;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+232;Abul Hakam;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+233;Al-Hakam bin Abul Ash;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+234;Uqbah bin Abu Mu'aith;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+235;An-Nadhr bin Al-Harits;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+236;Zam'ah bin Al-Aswad;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+237;Abu Lahab;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+238;Muhammad;PERSON;SAHABAT;Abu Bakar;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+239;Amir bin Fuhairah;PERSON;SAHABAT;Abu Bakar;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+240;Abdullah bin Uraiqith;PERSON;SAHABAT;Abu Bakar;PERSON;1;1;P6;1;;;;REVIEW;freq=1, no event anchor — manual review
+241;Sa'd bin Mu'adz;PERSON;KELUARGA;Umayyah;PERSON;1;1;P7;1;;;;REVIEW;freq=1, no event anchor — manual review
+242;Abu Jahal;PERSON;KELUARGA;Umayyah;PERSON;1;1;P7;1;;;;REVIEW;freq=1, no event anchor — manual review
+243;Abu Jahal;PERSON;SAHABAT;Umayyah;PERSON;1;1;P7;1;;;;REVIEW;freq=1, no event anchor — manual review
+244;Abu Shafwan;PERSON;SAHABAT;Umayyah;PERSON;1;1;P7;1;;;;REVIEW;freq=1, no event anchor — manual review
+245;Muhammad;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P7;1;;;;REVIEW;freq=1, no event anchor — manual review
+246;Hamzah bin Abdul Muththalib;PERSON;KELUARGA;Abu Jahal;PERSON;1;1;P7;1;;;;REVIEW;freq=1, no event anchor — manual review
+247;Amar bin Al-Hadhrami;PERSON;KELUARGA;Abdullah bin Al-Mughirah;PERSON;1;1;P7;1;;;;REVIEW;freq=1, no event anchor — manual review
+248;Utsman bin Affan;PERSON;KELUARGA;Abdullah bin Al-Mughirah;PERSON;1;1;P7;1;;;;REVIEW;freq=1, no event anchor — manual review
+249;Al-Hakam bin Kaisan;PERSON;KELUARGA;Abdullah bin Al-Mughirah;PERSON;1;1;P7;1;;;;REVIEW;freq=1, no event anchor — manual review
+250;Jibril;PERSON;KELUARGA;Muhammad;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+251;Mush'ab bin Umair;PERSON;KELUARGA;Abu Aziz;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+252;Muhammad;PERSON;KELUARGA;Utsman bin Affan;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+253;Usamah bin Zaid;PERSON;KELUARGA;Utsman bin Affan;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+254;Ruqayah binti Rasulullah;PERSON;KELUARGA;Utsman bin Affan;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+255;Umair bin Wahb;PERSON;SAHABAT;Shafwan bin Umayyah;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+256;Wahb bin Umair;PERSON;SAHABAT;Shafwan bin Umayyah;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+257;Muhammad;PERSON;SAHABAT;Shafwan bin Umayyah;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+258;Ka'b bin Al-Asyraf;PERSON;KELUARGA;Muhammad;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+259;Sulaith bin An- Nu'man;PERSON;SAHABAT;Nu'aim bin Ma'ud;PERSON;1;1;P8;1;;;;REVIEW;freq=1, no event anchor — manual review
+260;Abu Zaid;PERSON;KELUARGA;Syurahbil bin Hasyim;PERSON;1;1;P9;1;;;;REVIEW;freq=1, no event anchor — manual review
+261;Amr bin Abdi;PERSON;KELUARGA;Syurahbil bin Hasyim;PERSON;1;1;P9;1;;;;REVIEW;freq=1, no event anchor — manual review
+262;Abu Sufyan bin Harb;PERSON;MUSUH;Muhammad;PERSON;1;1;P9;1;;;;REVIEW;freq=1, no event anchor — manual review
+263;Ibnu Qami'ah;PERSON;MUSUH;Muhammad;PERSON;1;1;P9;1;;;;REVIEW;freq=1, no event anchor — manual review
+264;Ka'b bin Asad;PERSON;MUSUH;Muhammad;PERSON;2;1;P10;2;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+265;Ka'b bin Malik;PERSON;MUSUH;Muhammad;PERSON;2;1;P10;2;;;;KEEP;freq>=2, no event anchor (period alignment N/A)
+266;Muhammad;PERSON;MUSUH;Sallam bin Abul Huqaiq;PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+267;Sallam bin Abul Huqaiq;PERSON;MUSUH;Ka'b bin Al-Asyraf;PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+268;Abdullah bin Unais;PERSON;MUSUH;Abu Rafi';PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+269;Abdullah bin Atik;PERSON;MUSUH;Abu Rafi';PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+270;Usaid bin Hudhair;PERSON;KELUARGA;Muhammad;PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+271;Abdullah bin Ubay bin Salul;PERSON;SAHABAT;Aisyah;PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+272;Muhammad;PERSON;SAHABAT;Ummu Misthah;PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+273;Aisyah;PERSON;SAHABAT;Ummu Misthah;PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+274;Aisyah;PERSON;KELUARGA;Yusuf;PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+275;Ummu Abi;PERSON;KELUARGA;Tumadhir bin Al-Ashba';PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+276;Ali bin Abu Thalib;PERSON;KELUARGA;Tumadhir bin Al-Ashba';PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+277;Sa'd bin Bakr;PERSON;KELUARGA;Tumadhir bin Al-Ashba';PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+278;Amr bin Umayyah;PERSON;SAHABAT;Salamah bin Abu Salamah;PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+279;Abu Sufyan bin Harb;PERSON;SAHABAT;Salamah bin Abu Salamah;PERSON;1;1;P10;1;;;;REVIEW;freq=1, no event anchor — manual review
+280;Abu Jandal;PERSON;SAHABAT;Abu Bashir;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+281;Najasyi;PERSON;SAHABAT;Amr bin Umayyah;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+282;Ashhamah bin Al-Aijar;PERSON;SAHABAT;Amr bin Umayyah;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+283;Heraklius;PERSON;KELUARGA;Muhammad;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+284;Abd bin Al-Julunda;PERSON;KELUARGA;Muhammad;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+285;Muhammad;PERSON;KELUARGA;Abul Huqaiq;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+286;Shafiyyah binti Huyai bin Akhthab;PERSON;KELUARGA;Abul Huqaiq;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+287;Usamah bin Zaid;PERSON;MUSUH;Mirdas bin Nuhaik;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+288;Muhammad;PERSON;KELUARGA;Maimunah binti Al-Harits Al-Amiriyah;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+289;Muhammad;PERSON;KELUARGA;Maimunah;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+290;Ja'far bin Abu Thalib;PERSON;KELUARGA;Maimunah binti Al-Harits Al-Amiriyah;PERSON;1;1;P11;1;;;;REVIEW;freq=1, no event anchor — manual review
+291;Ali bin Abu Thalib;PERSON;KELUARGA;Yusuf;PERSON;1;1;P12;1;;;;REVIEW;freq=1, no event anchor — manual review
+292;Abu Sufyan bin Al-Harits bin Abdul Muththalib;PERSON;KELUARGA;Yusuf;PERSON;1;1;P12;1;;;;REVIEW;freq=1, no event anchor — manual review
+293;Muhammad;PERSON;KELUARGA;Yusuf;PERSON;1;1;P12;1;;;;REVIEW;freq=1, no event anchor — manual review
+294;Abu Sufyan bin Harb;PERSON;SAHABAT;Hakim bin Hizam;PERSON;1;1;P12;1;;;;REVIEW;freq=1, no event anchor — manual review
+295;Budail bin Zarqa';PERSON;SAHABAT;Hakim bin Hizam;PERSON;1;1;P12;1;;;;REVIEW;freq=1, no event anchor — manual review
+296;Al-Abbas bin Abdul Muththalib;PERSON;SAHABAT;Hakim bin Hizam;PERSON;1;1;P12;1;;;;REVIEW;freq=1, no event anchor — manual review
+297;Muhammad;PERSON;KELUARGA;Adi bin Hatim;PERSON;1;1;P13;1;;;;REVIEW;freq=1, no event anchor — manual review
+298;Abu Bakar;PERSON;KELUARGA;Yusuf;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+299;Hilal bin Amir bin Sha'sha'ah;PERSON;KELUARGA;Abdullah bin Jahsy;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+300;Muhammad;PERSON;KELUARGA;Abdullah bin Jahsy;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+301;Abu Bakar;PERSON;KELUARGA;Aisyah;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+302;Umar bin Al-Khaththab;PERSON;KELUARGA;Aisyah;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+303;Hafshah;PERSON;KELUARGA;Aisyah;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+304;Ali bin Abu Thalib;PERSON;KELUARGA;Aisyah;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+305;Ummu Kultsum;PERSON;KELUARGA;Aisyah;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+306;Utsman bin Affan;PERSON;KELUARGA;Aisyah;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+307;Muhammad;PERSON;KELUARGA;Juwairiyah;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+308;Muhammad;PERSON;KELUARGA;Zainab;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+309;Zaid bin Haritsah;PERSON;KELUARGA;Zainab;PERSON;1;0;;0;;;;REVIEW;freq=1, no event anchor — manual review
+310;Isra' Mi'raj;EVENT;PRECEDES;Baiat Aqabah;EVENT;1;0;;0;P5;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P5'])
+311;Baiat Aqabah;EVENT;PRECEDES;Baiat Aqabah Kubra;EVENT;1;0;;0;P5;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P5'])
+312;Baiat Aqabah Kubra;EVENT;PRECEDES;Perang Badr;EVENT;1;0;;0;P5,P8;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P5', 'P8'])
+313;Fathul Makkah;EVENT;PRECEDES;Perang Uhud;EVENT;1;0;;0;P12,P9;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P12', 'P9'])
+314;Perang Khandaq;EVENT;PRECEDES;Perang Bani Mushthaliq;EVENT;1;0;;0;P10;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P10'])
+315;Perang Bani Mushthaliq;EVENT;PRECEDES;Perjanjian Hudaibiyah;EVENT;1;0;;0;P10,P11;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P10', 'P11'])
+316;Perjanjian Hudaibiyah;EVENT;PRECEDES;Perang Khaibar;EVENT;1;0;;0;P11;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P11'])
+317;Perang Khaibar;EVENT;PRECEDES;Perang Dzatur Riqa';EVENT;1;0;;0;P11;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P11'])
+318;Perang Dzatur Riqa';EVENT;PRECEDES;Perang Mu'tah;EVENT;1;0;;0;P11,P12;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P11', 'P12'])
+319;Perang Mu'tah;EVENT;PRECEDES;Perang Hunain;EVENT;1;0;;0;P12,P13;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P12', 'P13'])
+320;Perang Hunain;EVENT;PRECEDES;Perang Tha'if;EVENT;1;0;;0;P13;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P13'])
+321;Perang Tha'if;EVENT;PRECEDES;Perang Tabuk;EVENT;1;0;;0;P13;False;0.0;DROP;single mention in non-aligned period None (event natural: ['P13'])

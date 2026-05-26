@@ -1,0 +1,208 @@
+{
+  "input": "E:\\2_Kehidupan-Kuliah\\10_tugas-akhir\\repo-TA\\TA_preprocess\\TA_sirah\\data\\result\\pseudo-labelling\\SRL-NER\\train.csv",
+  "output": "E:\\2_Kehidupan-Kuliah\\10_tugas-akhir\\repo-TA\\TA_preprocess\\TA_sirah\\data\\result\\pseudo-labelling\\SRL-NER\\train_augmented_v2.csv",
+  "config": {
+    "n_augment": 2,
+    "replace_prob": 0.7,
+    "seed": 42,
+    "minor_labels": [
+      "B-EVENT",
+      "I-EVENT",
+      "I-LOCATION"
+    ],
+    "blacklist_size": 58,
+    "fallback_for_event_radius": 2
+  },
+  "stats": {
+    "original_sentences": 599,
+    "minor_sentences": 141,
+    "augmentable_sentences": 130,
+    "augmented_sentences": 260,
+    "original_tokens": 102884,
+    "augmented_tokens": 47122,
+    "mean_replacements_per_variant": 4.7615384615384615
+  },
+  "skip_reasons": {
+    "quran_reference": 7,
+    "no_period": 4
+  },
+  "pool_diagnostics": {
+    "pool_blacklisted_person": 1043,
+    "sentences_no_period": 47,
+    "pool_dropped_broken_event": 1
+  },
+  "augmentation_diagnostics": {
+    "replaced_TIME": 92,
+    "protected_source_PERSON": 534,
+    "replaced_PERSON": 474,
+    "replaced_LOCATION": 468,
+    "replaced_EVENT": 204,
+    "broken_event_skipped": 2
+  },
+  "pool_sizes_per_period": {
+    "P0": {
+      "PERSON": 58,
+      "LOCATION": 29,
+      "TIME": 17,
+      "EVENT": 3
+    },
+    "P1": {
+      "PERSON": 39,
+      "LOCATION": 9,
+      "TIME": 4,
+      "EVENT": 1
+    },
+    "P2": {
+      "PERSON": 10,
+      "LOCATION": 4,
+      "TIME": 8,
+      "EVENT": 1
+    },
+    "P3": {
+      "PERSON": 28,
+      "LOCATION": 1,
+      "TIME": 0,
+      "EVENT": 0
+    },
+    "P4": {
+      "PERSON": 61,
+      "LOCATION": 7,
+      "TIME": 4,
+      "EVENT": 2
+    },
+    "P5": {
+      "PERSON": 83,
+      "LOCATION": 16,
+      "TIME": 6,
+      "EVENT": 10
+    },
+    "P6": {
+      "PERSON": 39,
+      "LOCATION": 10,
+      "TIME": 8,
+      "EVENT": 1
+    },
+    "P7": {
+      "PERSON": 40,
+      "LOCATION": 14,
+      "TIME": 12,
+      "EVENT": 11
+    },
+    "P8": {
+      "PERSON": 60,
+      "LOCATION": 9,
+      "TIME": 7,
+      "EVENT": 4
+    },
+    "P9": {
+      "PERSON": 77,
+      "LOCATION": 11,
+      "TIME": 11,
+      "EVENT": 9
+    },
+    "P10": {
+      "PERSON": 77,
+      "LOCATION": 9,
+      "TIME": 19,
+      "EVENT": 6
+    },
+    "P11": {
+      "PERSON": 95,
+      "LOCATION": 16,
+      "TIME": 16,
+      "EVENT": 5
+    },
+    "P12": {
+      "PERSON": 52,
+      "LOCATION": 10,
+      "TIME": 3,
+      "EVENT": 3
+    },
+    "P13": {
+      "PERSON": 53,
+      "LOCATION": 9,
+      "TIME": 8,
+      "EVENT": 4
+    },
+    "P14": {
+      "PERSON": 43,
+      "LOCATION": 19,
+      "TIME": 28,
+      "EVENT": 3
+    }
+  },
+  "pre_augment_label_distribution": {
+    "O": 95302,
+    "B-TIME": 233,
+    "I-TIME": 433,
+    "B-PERSON": 2884,
+    "I-PERSON": 2675,
+    "B-LOCATION": 985,
+    "I-LOCATION": 72,
+    "B-EVENT": 144,
+    "I-EVENT": 156
+  },
+  "post_augment_label_distribution": {
+    "O": 138152,
+    "B-TIME": 367,
+    "I-TIME": 712,
+    "B-PERSON": 4078,
+    "I-PERSON": 3939,
+    "B-LOCATION": 1675,
+    "I-LOCATION": 198,
+    "B-EVENT": 414,
+    "I-EVENT": 471
+  },
+  "augmented_text_ids": [
+    "000354-001-aug1",
+    "000354-001-aug2",
+    "000010-001-aug1",
+    "000010-001-aug2",
+    "000146-002-aug1",
+    "000146-002-aug2",
+    "000147-001-aug1",
+    "000147-001-aug2",
+    "000088-005-aug1",
+    "000088-005-aug2",
+    "000031-001-aug1",
+    "000031-001-aug2",
+    "000032-007-aug1",
+    "000032-007-aug2",
+    "000035-002-aug1",
+    "000035-002-aug2",
+    "000032-003-aug1",
+    "000032-003-aug2",
+    "000071-003-aug1",
+    "000071-003-aug2",
+    "000071-006-aug1",
+    "000071-006-aug2",
+    "000359-001-aug1",
+    "000359-001-aug2",
+    "000359-003-aug1",
+    "000359-003-aug2",
+    "000359-002-aug1",
+    "000359-002-aug2",
+    "000080-001-aug1",
+    "000080-001-aug2",
+    "000080-010-aug1",
+    "000080-010-aug2",
+    "000080-003-aug1",
+    "000080-003-aug2",
+    "000080-002-aug1",
+    "000080-002-aug2",
+    "000080-009-aug1",
+    "000080-009-aug2",
+    "000080-005-aug1",
+    "000080-005-aug2",
+    "000080-007-aug1",
+    "000080-007-aug2",
+    "000358-002-aug1",
+    "000358-002-aug2",
+    "000358-005-aug1",
+    "000358-005-aug2",
+    "000358-003-aug1",
+    "000358-003-aug2",
+    "000099-001-aug1",
+    "000099-001-aug2"
+  ]
+}

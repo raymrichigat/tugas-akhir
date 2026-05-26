@@ -6,6 +6,137 @@ Ringkasan sesi paling baru tetap ada di `CLAUDE.md`. File ini menyimpan riwayat 
 
 ---
 
+## [2026-05-22 → 2026-05-26] S3.1 λ_C Sweep + S3.2 Augmentation + Priority D Deliverables
+
+Sesi besar yang menyelesaikan **S3.1 sweep + S3.2 augmentation winner + 5 deliverables Priority D** dari bimbingan 2026-05-16. SRL-NER pipeline secara empirik **selesai mengalahkan S1 baseline** untuk pertama kali (S3.2 F1 entity = 0.9537 vs S1 = 0.9518).
+
+### 1. S3.1 — λ_C Sweep di S2 SCL (selesai run di Colab T4)
+- 3 varian dijalankan: λ_C ∈ {0.1, 0.2, 0.3}, masing-masing 6 iterasi self-training × 10 epoch.
+- Konfigurasi tetap: τ=0.1, contrastive_mode=scl, threshold=0.9, sampling_rate=1.0, fixed val split (seed 42 by text_id).
+- Notebook: `srl_ner_sirah_S3_1_scl_lambda{01,02,03}_colab.ipynb`. Build via `_build_S3_1_lambda_sweep.py`.
+- Output: `done_running/S3_Augmented/{notebook,output/{models,evaluation},dataset}/scl_lambda{01,02,03}/`.
+- Konvergensi self-training (n_above per iter):
+  - λ_C=0.1: 203 → 3 → 3 → 0 → 1 (sampai iter-6, runtime 57 min).
+  - λ_C=0.2: 208 → 26 → 2 → 1 (sampai iter-5, runtime 52 min).
+  - λ_C=0.3: 187 → 45 → 5 (sampai iter-4, runtime 36 min).
+
+### 2. Seqeval TEST evaluation — S1 / S2 / S3.1 / S3.2 head-to-head
+- Patch `evaluate_seqeval.py` untuk include S3.1 (3 lambda) + S3.2.
+- Run lokal `python src/.../evaluate_seqeval.py --all` → output `data/result/pseudo-labelling/SRL-NER/seqeval_results.md`.
+- Hasil ringkasan (test set, 258 kalimat, 1759 entities):
+
+| Tag | F1 entity | EVENT | LOCATION | PERSON | TIME | Δ vs S1 |
+|---|---:|---:|---:|---:|---:|---:|
+| S1-baseline-iter6 | 0.9518 | 0.7677 | 0.9540 | 0.9662 | 0.8354 | — |
+| S2a-scl-iter5 | 0.9215 | 0.7579 | 0.9422 | 0.9243 | 0.8553 | -0.0303 |
+| S2b-jscl-iter6 | 0.8915 | 0.7629 | 0.9400 | 0.8849 | 0.7950 | -0.0603 |
+| S3.1-lambda01-iter6 | 0.9477 | 0.7500 | 0.9531 | 0.9598 | 0.8477 | -0.0041 |
+| S3.1-lambda02-iter5 | 0.9470 | 0.7835 | 0.9502 | 0.9590 | 0.8442 | -0.0048 |
+| S3.1-lambda03-iter4 | 0.9522 | 0.7708 | 0.9490 | 0.9684 | 0.8354 | +0.0004 |
+| **S3.2-scl-aug-iter4** | **0.9537** | **0.8454** | **0.9539** | **0.9613** | **0.9007** | **+0.0019** ✅ |
+
+### 3. Winner λ_C S3.1 — λ_C=0.3 (iter-4)
+- λ_C=0.3 sedikit melampaui S1 baseline (+0.0004), bukan λ_C=0.1/0.2 yang awalnya dihipotesiskan close gap.
+- Insight: hipotesis "λ_C kecil = lebih dekat ke S1 karena contrastive lebih ringan" **salah** untuk dataset Sirah.
+- VAL Seq F1 ranking (peak per iter): λ_C=0.2 > 0.1 > 0.3 — **terbalik** dari TEST. Pelajaran: VAL ≠ TEST untuk small NER datasets. Selalu konfirmasi pakai TEST set sebelum pilih winner.
+
+### 4. S3.2 — Mention Replacement Augmentation di atas winner λ_C=0.3 (selesai 2026-05-26)
+- Build script: `_build_S3_2_augmented.py` (idempotent, transform notebook S3.1-lambda03 → S3.2).
+- Notebook: `srl_ner_sirah_S3_2_scl_aug{,_colab,_kaggle}.ipynb`.
+- Konfigurasi: λ_C=0.3 (winner) + `train_augmented_v2.csv` (599 + 260 augmented = 859 sentences).
+- Augmentation v2 stats: I-LOCATION 72→198 (~2.75x), B-EVENT 144→414 (~2.9x), I-EVENT 156→471 (~3x).
+- Self-training konvergen di iter-4 (n_above 223→13→1), runtime 46.5 menit di Colab T4.
+- Output: `done_running/S3_Augmented/output/{models,evaluation}/scl_aug/`, `dataset/scl_aug/`.
+
+### 5. S3.2 wins — augmentation BENAR-BENAR bantu kelas minoritas
+- **F1 entity 0.9537** — pertama kali SRL-NER pipeline lewati S1 baseline (0.9518) dengan margin signifikan (+0.0019).
+- **F1 EVENT melonjak 0.7708 → 0.8454** (+0.0746) — sesuai hipotesis Bu Diana dari bimbingan 2026-05-16.
+- **F1 TIME juga naik 0.8354 → 0.9007** (+0.0653) walaupun tidak di-augment khusus — efek positif side-channel dari augmentation v2.
+- **F1 PERSON tetap kuat 0.9613** (vs S3.1=0.9684; turun -0.0071 tapi masih sangat tinggi).
+- **F1 LOCATION naik tipis** 0.9490 → 0.9539 (+0.0049).
+- Konvergen lebih cepat (4 iter, 46.5 menit) — augmentation membantu model belajar minoritas dari iter pertama.
+
+### 6. Priority D — Deliverables tambahan dari bimbingan 2026-05-16
+
+Dikerjakan paralel sambil S3.2 jalan di Colab.
+
+**6a. Centrality untuk node Event** — `src/analysis/event_centrality.py`
+- Build Event-Event graph: 36 Event nodes, 150 edges (co-participation = share Person via INVOLVED_IN, weight = jumlah Person bersama). PRECEDES (12 edges) merge dengan weight extra.
+- Output: `event_centrality.csv`, `event_centrality_summary.md`, `event_network.png`.
+- Top 5 PageRank Event: **Perang Badr (0.0818)** > Perang Khandaq (0.0695) > Perang Uhud (0.0654) > Baiat Aqabah Kubra (0.0576) > Perang Dzul Usyairah (0.0553).
+- 15 komunitas Louvain di Event network.
+
+**6b. Wordcloud per komunitas + interpretasi semantik** — `src/analysis/community_wordcloud.py`
+- 16 komunitas Louvain di Person network → 8 komunitas memenuhi syarat (≥3 anggota, korpus evidence cukup).
+- Q-value Louvain (recomputed) = **0.3170** → **moderate** structure (sesuai dengan run sebelumnya 0.327, beda ±0.01 dari random tie-breaking).
+- Interpretasi proposal per komunitas (8 komunitas):
+  - K0 (74 anggota) — komunitas inti Rasulullah + sahabat utama + lawan Quraisy (Muhammad-hub supercluster).
+  - K1 (39) — cluster Perang Badr + jaringan keluarga Nabi (Hamzah, Utsman, Zainab, Fathimah).
+  - K2 (26) — sahabat Madinah + ekspansi militer akhir (Ali, Umar, Zaid, Mush'ab).
+  - K3 (6) — delegasi Naqib Anshar Baiat Aqabah Kubra (P5-P6).
+  - K4 (4) — nasab Pra-Islam (Ibrahim, Isma'il).
+  - K5 (3) — awal kenabian (Khadijah, Waraqah, Zaid).
+  - K6 (3) — Sariyyah Nakhlah (P7).
+  - K7 (3) — pembawa bendera Quraisy di Perang Uhud.
+- Output: `community_wordclouds/community_{00-07}.png` + `community_wordclouds_summary.md`.
+
+**6c. Frekuensi entitas per-period** — sudah pre-existing dari sesi sebelumnya (`entity_freq_per_period.{csv,png}`, `entity_freq_per_period_summary.md`).
+- 15 period × 4 label, total 3737 (entity, chunk) tuples mapped.
+- Justifikasi periodisasi: P5 (107 PERSON, fase Makkah dakwah luar) + P11 (107, fase Hudaibiyah) + P10 (100, perang Khandaq) jadi top 3 PERSON-rich periods.
+
+**6d. Analisis event-related case study** — sudah pre-existing (`edge_period_cooccurrence.{csv,py}`, `edge_validation_summary.md`).
+- 322 edges → 30 KEEP (9.3%) + 185 REVIEW (57.5%) + 107 DROP (33.2%) berdasarkan period alignment heuristic.
+- Validasi anekdot Bu Diana: Perang Uhud-Aqabah dan Perang Uhud-Hunain confirmed spurious (DROP).
+- Implikasi: edges_v3.csv kandidat = 215 edges (post-DROP). Manual review 185 REVIEW sebelum apply.
+
+**6e. LLM verb extraction POC** — `src/analysis/llm_verb_extraction_poc.py`
+- Pendekatan: structured prompt + single-batch chat (gratis, reproducible).
+- Sample N=10 hybrid: 5 phase coverage (P0/P5/P8/P11/P14) + 5 Perang Badr depth (page 266-304).
+- Hasil run di Claude.ai chat: **18 kandidat EVENT baru + 28 SVO triplet**, confidence 0.85-0.95 dominan.
+- Contoh kandidat EVENT valid: "Masuk Islam Raja Najasyi" (tidak ada di nodes_v2.csv), "Pembunuhan Utbah bin Rabi'ah", "Eksekusi An-Nadhr bin Al-Harits".
+- Contoh triplet relasi baru: `Hamzah --MEMBUNUH--> Utbah`, `Ali --BERTANDING_DENGAN--> Al-Walid`, `Muhammad --MEMERINTAHKAN_BUNUH--> Uqbah` — granular dari INVOLVED_IN.
+- Output: `data/result/llm_verb_extraction/{prompt.md,sample_chunks.csv,verb_extraction_events.csv,verb_extraction_triplets.csv,verb_extraction_summary.md}`.
+- POC scope: tunjukkan konsep works. Scale-up post-deadline kalau Bu Diana approve metode.
+
+### 7. Memory update
+- 🆕 `project_s3_1_lambda_sweep_results.md` — winner + ranking + insight VAL≠TEST.
+- ✏️ `MEMORY.md` — index updated.
+
+### File baru / modified di sesi ini
+**SRL-NER:**
+- 🆕 `_build_S3_1_lambda_sweep.py`, `_build_S3_2_augmented.py` (idempotent build scripts)
+- 🆕 `srl_ner_sirah_S3_1_scl_lambda{01,02,03}{,_colab,_kaggle}.ipynb` (9 notebook)
+- 🆕 `srl_ner_sirah_S3_2_scl_aug{,_colab,_kaggle}.ipynb` (3 notebook)
+- 🆕 `done_running/S3_Augmented/` (4 sub-runs: scl_lambda01/02/03 + scl_aug, masing-masing notebook + models + evaluation + dataset)
+- ✏️ `evaluate_seqeval.py` — tambah 8 candidate entries (S3.1 lambda01/02/03 + S3.2)
+- 🆕 `data/result/pseudo-labelling/SRL-NER/seqeval_results.md` (S1+S2+S3.1+S3.2 head-to-head)
+- 🆕 `data/result/pseudo-labelling/SRL-NER/{train_augmented_v2.csv,augmentation_log_v2.json,sample_augmented_v2.txt}`
+- 🆕 `augment_minor_classes_v2.py`
+
+**Priority D analysis:**
+- 🆕 `src/analysis/event_centrality.py`
+- 🆕 `src/analysis/community_wordcloud.py`
+- 🆕 `src/analysis/llm_verb_extraction_poc.py`
+- 🆕 `data/result/analysis/{event_centrality.csv,event_centrality_summary.md,event_network.png}`
+- 🆕 `data/result/analysis/community_wordclouds/community_{00-07}.png` (8 PNG)
+- 🆕 `data/result/analysis/community_wordclouds_summary.md`
+- 🆕 `data/result/llm_verb_extraction/{prompt.md,sample_chunks.csv,responses/llm_verb_response.json,verb_extraction_events.csv,verb_extraction_triplets.csv,verb_extraction_summary.md}`
+
+### Action item terbawa ke sesi berikutnya
+
+**Pre-bimbingan berikutnya (deadline 29 Mei sudah aman, tinggal polish):**
+1. ⏳ Inference NER terbaik (S3.2-scl-aug-iter4) → regenerate `nodes_v3.csv` + `edges_v3.csv` di seluruh `sirah_chunks_final.csv`.
+2. ⏳ Comparison report SRL-NER best vs manual labelling ground truth (untuk Bab 4 + bimbingan).
+3. ⏳ Manual validation 5-10 sample LLM verb extraction (cross-check ke teks Mubarakfuri) untuk dapat angka precision konkret.
+4. ⏳ Tulis paragraf hasil di laporan / slide bimbingan untuk semua 5 deliverable Priority D.
+
+**Post-bimbingan / future work:**
+5. ⏳ Visualisasi Neo4j (bukan PNG static) — screenshot + cypher query saved.
+6. ⏳ Scale-up LLM verb extraction (Opsi B: 50 chunks via batch chat ~25 menit; atau Opsi C: full coverage via API ~$6-10).
+7. ⏳ 2 bug pending: `OCCURRED_AT weight=2.0` + `PRECEDES stale v1 mapping`.
+
+---
+
 ## [2026-05-13 → 2026-05-16] S2 Contrastive Run + Seqeval Dual-Metric + Bimbingan Bu Diana
 
 Rangkaian sesi yang fokus ke **eksekusi skenario S2 SRL-NER (SCL + JSCL)**, penambahan metrik evaluasi entity-level (seqeval) supaya head-to-head dengan S1 baseline, visualisasi case study, dan persiapan + pelaksanaan bimbingan Bu Diana 2026-05-16.

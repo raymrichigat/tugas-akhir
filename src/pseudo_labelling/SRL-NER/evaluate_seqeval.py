@@ -69,6 +69,18 @@ CANDIDATES = {
     "S2a-scl-iter6": DONE / "S2_Contrastive_Learning" / "outputs" / "models" / "S2a-scl" / "bert-only-sirah-ner-S2a-scl-0.9-iteration-6",
     "S2b-jscl-iter5": DONE / "S2_Contrastive_Learning" / "outputs" / "models" / "S2b-jscl" / "bert-only-sirah-ner-S2b-jscl-0.9-iteration-5",
     "S2b-jscl-iter6": DONE / "S2_Contrastive_Learning" / "outputs" / "models" / "S2b-jscl" / "bert-only-sirah-ner-S2b-jscl-0.9-iteration-6",
+    # S3.1 lambda sweep — pick base + final iter yang punya weights per varian.
+    # Konvergensi: lambda01 sampai iter-6, lambda02 sampai iter-5, lambda03 sampai iter-4.
+    "S3.1-scl-lambda01-base": DONE / "S3_Augmented" / "output" / "models" / "scl_lambda01" / "bert-only-sirah-ner-S3-1-scl-lambda01-base",
+    "S3.1-scl-lambda01-iter6": DONE / "S3_Augmented" / "output" / "models" / "scl_lambda01" / "bert-only-sirah-ner-S3-1-scl-lambda01-0.9-iteration-6",
+    "S3.1-scl-lambda02-base": DONE / "S3_Augmented" / "output" / "models" / "scl_lambda02" / "bert-only-sirah-ner-S3-1-scl-lambda02-base",
+    "S3.1-scl-lambda02-iter5": DONE / "S3_Augmented" / "output" / "models" / "scl_lambda02" / "bert-only-sirah-ner-S3-1-scl-lambda02-0.9-iteration-5",
+    "S3.1-scl-lambda03-base": DONE / "S3_Augmented" / "output" / "models" / "scl_lambda03" / "bert-only-sirah-ner-S3-1-scl-lambda03-base",
+    "S3.1-scl-lambda03-iter4": DONE / "S3_Augmented" / "output" / "models" / "scl_lambda03" / "bert-only-sirah-ner-S3-1-scl-lambda03-0.9-iteration-4",
+    # S3.2 augmentation di atas winner λ_C=0.3, train_augmented_v2.csv (260 augmented sentences).
+    # Konvergen di iter-4 (n_above 223 -> 13 -> 1).
+    "S3.2-scl-aug-base": DONE / "S3_Augmented" / "output" / "models" / "scl_aug" / "bert-only-sirah-ner-S3-2-scl-aug-v2-base",
+    "S3.2-scl-aug-iter4": DONE / "S3_Augmented" / "output" / "models" / "scl_aug" / "bert-only-sirah-ner-S3-2-scl-aug-v2-0.9-iteration-4",
 }
 
 

@@ -1,0 +1,262 @@
+﻿period_id;period_label;entity_type;rank;name;occurrences
+P0;Konteks Arab Jahiliyah;PERSON;1;Ibrahim;16
+P0;Konteks Arab Jahiliyah;PERSON;2;Isma'il;12
+P0;Konteks Arab Jahiliyah;PERSON;3;Muhammad;8
+P0;Konteks Arab Jahiliyah;PERSON;4;Ibnu Hisyam;5
+P0;Konteks Arab Jahiliyah;PERSON;5;Kisra;4
+P0;Konteks Arab Jahiliyah;LOCATION;1;Makkah;17
+P0;Konteks Arab Jahiliyah;LOCATION;2;Ka'bah;15
+P0;Konteks Arab Jahiliyah;LOCATION;3;Syam;15
+P0;Konteks Arab Jahiliyah;LOCATION;4;Yaman;15
+P0;Konteks Arab Jahiliyah;LOCATION;5;Jazirah Arab;12
+P0;Konteks Arab Jahiliyah;TIME;1;tahun 587 SM;2
+P0;Konteks Arab Jahiliyah;TIME;2;tahun 300 M;2
+P0;Konteks Arab Jahiliyah;TIME;3;tahun 230 SM;1
+P0;Konteks Arab Jahiliyah;TIME;4;tahun 638 M;1
+P0;Konteks Arab Jahiliyah;TIME;5;tahun 575 M;1
+P1;Nasab & Kelahiran Nabi;PERSON;1;Muhammad;21
+P1;Nasab & Kelahiran Nabi;PERSON;2;Ibnu Hisyam;15
+P1;Nasab & Kelahiran Nabi;PERSON;3;Abdul Muththalib;13
+P1;Nasab & Kelahiran Nabi;PERSON;4;Abu Thalib;6
+P1;Nasab & Kelahiran Nabi;PERSON;5;Halimah;5
+P1;Nasab & Kelahiran Nabi;EVENT;1;Perang Fijar;2
+P1;Nasab & Kelahiran Nabi;LOCATION;1;Makkah;21
+P1;Nasab & Kelahiran Nabi;LOCATION;2;Ka'bah;16
+P1;Nasab & Kelahiran Nabi;LOCATION;3;Syam;6
+P1;Nasab & Kelahiran Nabi;LOCATION;4;Madinah;4
+P1;Nasab & Kelahiran Nabi;LOCATION;5;Yaman;4
+P1;Nasab & Kelahiran Nabi;TIME;1;bulan Muharram;1
+P1;Nasab & Kelahiran Nabi;TIME;2;tahun 587 SM;1
+P1;Nasab & Kelahiran Nabi;TIME;3;tanggal 9 Rabi;1
+P1;Nasab & Kelahiran Nabi;TIME;4;tanggal 20 atau;1
+P1;Nasab & Kelahiran Nabi;TIME;5;tahun 571 M;1
+P2;Awal Kenabian & Mandat Dakwah;PERSON;1;Muhammad;14
+P2;Awal Kenabian & Mandat Dakwah;PERSON;2;Jibril;6
+P2;Awal Kenabian & Mandat Dakwah;PERSON;3;Khadijah;5
+P2;Awal Kenabian & Mandat Dakwah;PERSON;4;Waraqah bin Naufal;4
+P2;Awal Kenabian & Mandat Dakwah;PERSON;5;Musa bin Imran;3
+P2;Awal Kenabian & Mandat Dakwah;LOCATION;1;Makkah;6
+P2;Awal Kenabian & Mandat Dakwah;LOCATION;2;Gua Hira;6
+P2;Awal Kenabian & Mandat Dakwah;LOCATION;3;Jabal Nur;2
+P2;Awal Kenabian & Mandat Dakwah;LOCATION;4;Madinah;1
+P2;Awal Kenabian & Mandat Dakwah;TIME;1;bulan Ramadhan;5
+P2;Awal Kenabian & Mandat Dakwah;TIME;2;hari Senin;3
+P2;Awal Kenabian & Mandat Dakwah;TIME;3;Lailatul-Qadr;2
+P2;Awal Kenabian & Mandat Dakwah;TIME;4;Rabi'ul Awwal;1
+P2;Awal Kenabian & Mandat Dakwah;TIME;5;bulan Rajab;1
+P3;Dakwah Sirriyah;PERSON;1;Muhammad;4
+P3;Dakwah Sirriyah;PERSON;2;Ibnu Hisyam;4
+P3;Dakwah Sirriyah;PERSON;3;Abu Bakar;2
+P3;Dakwah Sirriyah;PERSON;4;Ali bin Abu Thalib;2
+P3;Dakwah Sirriyah;PERSON;5;Ibnu Luhai'ah;1
+P3;Dakwah Sirriyah;LOCATION;1;Makkah;2
+P3;Dakwah Sirriyah;LOCATION;2;Ka'bah;1
+P3;Dakwah Sirriyah;LOCATION;3;Habasyah;1
+P4;Dakwah Jahriyah & Tekanan Quraisy;PERSON;1;Muhammad;36
+P4;Dakwah Jahriyah & Tekanan Quraisy;PERSON;2;Abu Thalib;18
+P4;Dakwah Jahriyah & Tekanan Quraisy;PERSON;3;Abu Jahal;13
+P4;Dakwah Jahriyah & Tekanan Quraisy;PERSON;4;Ibnu Ishaq;9
+P4;Dakwah Jahriyah & Tekanan Quraisy;PERSON;5;Umar bin Al-Khaththab;7
+P4;Dakwah Jahriyah & Tekanan Quraisy;EVENT;1;Perang Badr;2
+P4;Dakwah Jahriyah & Tekanan Quraisy;EVENT;2;Perang Uhud;2
+P4;Dakwah Jahriyah & Tekanan Quraisy;LOCATION;1;Makkah;16
+P4;Dakwah Jahriyah & Tekanan Quraisy;LOCATION;2;Ka'bah;6
+P4;Dakwah Jahriyah & Tekanan Quraisy;LOCATION;3;Habasyah;5
+P4;Dakwah Jahriyah & Tekanan Quraisy;LOCATION;4;Shafa;3
+P4;Dakwah Jahriyah & Tekanan Quraisy;LOCATION;5;Syam;1
+P4;Dakwah Jahriyah & Tekanan Quraisy;TIME;1;bulan Ramadhan;3
+P4;Dakwah Jahriyah & Tekanan Quraisy;TIME;2;bulan Muharram;2
+P4;Dakwah Jahriyah & Tekanan Quraisy;TIME;3;bulan Rajab;2
+P4;Dakwah Jahriyah & Tekanan Quraisy;TIME;4;bulan Syawwal;1
+P4;Dakwah Jahriyah & Tekanan Quraisy;TIME;5;bulan Dzul Hijjah;1
+P5;Dakwah di Luar Makkah & Isra Mi'raj;PERSON;1;Muhammad;34
+P5;Dakwah di Luar Makkah & Isra Mi'raj;PERSON;2;Ibnu Hisyam;9
+P5;Dakwah di Luar Makkah & Isra Mi'raj;PERSON;3;Mush'ab bin Umair;8
+P5;Dakwah di Luar Makkah & Isra Mi'raj;PERSON;4;As'ad bin Zurarah;6
+P5;Dakwah di Luar Makkah & Isra Mi'raj;PERSON;5;Ibnu Ishaq;6
+P5;Dakwah di Luar Makkah & Isra Mi'raj;EVENT;1;Perang Khandaq;3
+P5;Dakwah di Luar Makkah & Isra Mi'raj;EVENT;2;Baiat Aqabah Kubra;3
+P5;Dakwah di Luar Makkah & Isra Mi'raj;EVENT;3;Perang Uhud;2
+P5;Dakwah di Luar Makkah & Isra Mi'raj;EVENT;4;Isra' Mi'raj;2
+P5;Dakwah di Luar Makkah & Isra Mi'raj;EVENT;5;Perang Badr;1
+P5;Dakwah di Luar Makkah & Isra Mi'raj;LOCATION;1;Makkah;29
+P5;Dakwah di Luar Makkah & Isra Mi'raj;LOCATION;2;Yatsrib;14
+P5;Dakwah di Luar Makkah & Isra Mi'raj;LOCATION;3;Aqabah;10
+P5;Dakwah di Luar Makkah & Isra Mi'raj;LOCATION;4;Madinah;9
+P5;Dakwah di Luar Makkah & Isra Mi'raj;LOCATION;5;Mina;5
+P5;Dakwah di Luar Makkah & Isra Mi'raj;TIME;1;bulan Ramadhan;1
+P5;Dakwah di Luar Makkah & Isra Mi'raj;TIME;2;bulan Rabi'ul Awwal;1
+P5;Dakwah di Luar Makkah & Isra Mi'raj;TIME;3;bulan Muharram;1
+P5;Dakwah di Luar Makkah & Isra Mi'raj;TIME;4;hari Tasyriq;1
+P5;Dakwah di Luar Makkah & Isra Mi'raj;TIME;5;pertengahan hari-hari Tasyriq;1
+P6;Hijrah ke Madinah;PERSON;1;Muhammad;27
+P6;Hijrah ke Madinah;PERSON;2;Abu Bakar;19
+P6;Hijrah ke Madinah;PERSON;3;Aisyah;5
+P6;Hijrah ke Madinah;PERSON;4;Abu Jahal;4
+P6;Hijrah ke Madinah;PERSON;5;Ibnu Ishaq;4
+P6;Hijrah ke Madinah;EVENT;1;Baiat Aqabah Kubra;1
+P6;Hijrah ke Madinah;LOCATION;1;Makkah;15
+P6;Hijrah ke Madinah;LOCATION;2;Madinah;11
+P6;Hijrah ke Madinah;LOCATION;3;Najd;4
+P6;Hijrah ke Madinah;LOCATION;4;Syam;2
+P6;Hijrah ke Madinah;LOCATION;5;Yaman;2
+P6;Hijrah ke Madinah;TIME;1;hari Senin;3
+P6;Hijrah ke Madinah;TIME;2;tahun 622 M;2
+P6;Hijrah ke Madinah;TIME;3;bulan Rabi'ul Awwal;1
+P6;Hijrah ke Madinah;TIME;4;hari Kamis;1
+P6;Hijrah ke Madinah;TIME;5;tanggal 9 Rabi;1
+P7;Membangun Masyarakat Madinah;PERSON;1;Muhammad;40
+P7;Membangun Masyarakat Madinah;PERSON;2;Abdullah bin Jahsy;4
+P7;Membangun Masyarakat Madinah;PERSON;3;Ibnu Hisyam;4
+P7;Membangun Masyarakat Madinah;PERSON;4;Abdullah bin Salam;4
+P7;Membangun Masyarakat Madinah;PERSON;5;Ibnu Ishaq;3
+P7;Membangun Masyarakat Madinah;EVENT;1;Perang Badr;2
+P7;Membangun Masyarakat Madinah;EVENT;2;Perjanjian Hudaibiyah;1
+P7;Membangun Masyarakat Madinah;EVENT;3;Fathul Makkah;1
+P7;Membangun Masyarakat Madinah;EVENT;4;Perang Badr Ula;1
+P7;Membangun Masyarakat Madinah;EVENT;5;Perang Dzul Usyairah;1
+P7;Membangun Masyarakat Madinah;LOCATION;1;Madinah;29
+P7;Membangun Masyarakat Madinah;LOCATION;2;Makkah;9
+P7;Membangun Masyarakat Madinah;LOCATION;3;Yatsrib;5
+P7;Membangun Masyarakat Madinah;LOCATION;4;Syam;4
+P7;Membangun Masyarakat Madinah;LOCATION;5;Masjidil Haram;3
+P7;Membangun Masyarakat Madinah;TIME;1;tanggal 1 Ramadhan;2
+P7;Membangun Masyarakat Madinah;TIME;2;tahun 623 M;2
+P7;Membangun Masyarakat Madinah;TIME;3;bulan Sya'ban 2 H;2
+P7;Membangun Masyarakat Madinah;TIME;4;bulan Ramadhan;1
+P7;Membangun Masyarakat Madinah;TIME;5;bulan Rabi'ul Awwal;1
+P8;Perang Badr & Dampaknya;PERSON;1;Muhammad;39
+P8;Perang Badr & Dampaknya;PERSON;2;Abu Sufyan bin Harb;6
+P8;Perang Badr & Dampaknya;PERSON;3;Ka'b bin Malik;6
+P8;Perang Badr & Dampaknya;PERSON;4;Ka'b bin Al-Asyraf;6
+P8;Perang Badr & Dampaknya;PERSON;5;Ibnu Hisyam;5
+P8;Perang Badr & Dampaknya;EVENT;1;Perang Badr;14
+P8;Perang Badr & Dampaknya;EVENT;2;Perang Uhud;3
+P8;Perang Badr & Dampaknya;EVENT;3;Baiat Aqabah;1
+P8;Perang Badr & Dampaknya;EVENT;4;Perang Uhud Jabal;1
+P8;Perang Badr & Dampaknya;LOCATION;1;Madinah;21
+P8;Perang Badr & Dampaknya;LOCATION;2;Makkah;19
+P8;Perang Badr & Dampaknya;LOCATION;3;Badr;11
+P8;Perang Badr & Dampaknya;LOCATION;4;Syam;5
+P8;Perang Badr & Dampaknya;LOCATION;5;Habasyah;2
+P8;Perang Badr & Dampaknya;TIME;1;hari Sabtu;1
+P8;Perang Badr & Dampaknya;TIME;2;bulan Jumada;1
+P8;Perang Badr & Dampaknya;TIME;3;bulan Dzul Hijjah;1
+P8;Perang Badr & Dampaknya;TIME;4;Syawwal;1
+P8;Perang Badr & Dampaknya;TIME;5;bulan Syawwal 2 H;1
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;PERSON;1;Muhammad;37
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;PERSON;2;Abu Sufyan bin Harb;9
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;PERSON;3;Ali bin Abu Thalib;8
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;PERSON;4;Umar bin Al-Khaththab;5
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;PERSON;5;Ibnu Hisyam;5
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;EVENT;1;Perang Uhud;9
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;EVENT;2;Perang Badr;8
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;EVENT;3;Perang Khandaq;3
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;EVENT;4;Perang Bani Nadhir;2
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;EVENT;5;Perang Khaibar;1
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;LOCATION;1;Madinah;24
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;LOCATION;2;Makkah;11
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;LOCATION;3;Badr;5
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;LOCATION;4;Uhud;5
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;LOCATION;5;Syam;3
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;TIME;1;bulan Rabi'ul Awwal;2
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;TIME;2;bulan Rabi'ul Awwal 4 H;2
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;TIME;3;hari Sabtu;1
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;TIME;4;bulan Muharram;1
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;TIME;5;Rabi'ul Awwal;1
+P10;Perang Khandaq hingga Bani Mushthaliq;PERSON;1;Muhammad;64
+P10;Perang Khandaq hingga Bani Mushthaliq;PERSON;2;Abdullah bin Ubay bin Salul;11
+P10;Perang Khandaq hingga Bani Mushthaliq;PERSON;3;Zaid bin Haritsah;10
+P10;Perang Khandaq hingga Bani Mushthaliq;PERSON;4;Aisyah;7
+P10;Perang Khandaq hingga Bani Mushthaliq;PERSON;5;Ka'b bin Asad;7
+P10;Perang Khandaq hingga Bani Mushthaliq;EVENT;1;Perang Khandaq;13
+P10;Perang Khandaq hingga Bani Mushthaliq;EVENT;2;Perang Badr;2
+P10;Perang Khandaq hingga Bani Mushthaliq;EVENT;3;Perang Bani Mushthaliq;2
+P10;Perang Khandaq hingga Bani Mushthaliq;EVENT;4;Perang Uhud;1
+P10;Perang Khandaq hingga Bani Mushthaliq;EVENT;5;Fathul Makkah;1
+P10;Perang Khandaq hingga Bani Mushthaliq;LOCATION;1;Madinah;32
+P10;Perang Khandaq hingga Bani Mushthaliq;LOCATION;2;Makkah;7
+P10;Perang Khandaq hingga Bani Mushthaliq;LOCATION;3;Najd;4
+P10;Perang Khandaq hingga Bani Mushthaliq;LOCATION;4;Khaibar;3
+P10;Perang Khandaq hingga Bani Mushthaliq;LOCATION;5;Hudaibiyah;3
+P10;Perang Khandaq hingga Bani Mushthaliq;TIME;1;bulan Dzul Qa'dah;3
+P10;Perang Khandaq hingga Bani Mushthaliq;TIME;2;bulan Rabi'ul Awwal;2
+P10;Perang Khandaq hingga Bani Mushthaliq;TIME;3;bulan Syawwal;2
+P10;Perang Khandaq hingga Bani Mushthaliq;TIME;4;hari Sabtu;2
+P10;Perang Khandaq hingga Bani Mushthaliq;TIME;5;bulan Sya'ban 6 H;2
+P11;Hudaibiyah & Babak Baru Diplomasi;PERSON;1;Muhammad;65
+P11;Hudaibiyah & Babak Baru Diplomasi;PERSON;2;Umar bin Al-Khaththab;11
+P11;Hudaibiyah & Babak Baru Diplomasi;PERSON;3;Najasyi;9
+P11;Hudaibiyah & Babak Baru Diplomasi;PERSON;4;Heraklius;7
+P11;Hudaibiyah & Babak Baru Diplomasi;PERSON;5;Ali bin Abu Thalib;7
+P11;Hudaibiyah & Babak Baru Diplomasi;EVENT;1;Perang Khaibar;6
+P11;Hudaibiyah & Babak Baru Diplomasi;EVENT;2;Perjanjian Hudaibiyah;5
+P11;Hudaibiyah & Babak Baru Diplomasi;EVENT;3;Perang Badr;1
+P11;Hudaibiyah & Babak Baru Diplomasi;EVENT;4;Perang Tabuk;1
+P11;Hudaibiyah & Babak Baru Diplomasi;EVENT;5;Perang Hunain;1
+P11;Hudaibiyah & Babak Baru Diplomasi;LOCATION;1;Khaibar;24
+P11;Hudaibiyah & Babak Baru Diplomasi;LOCATION;2;Makkah;23
+P11;Hudaibiyah & Babak Baru Diplomasi;LOCATION;3;Madinah;19
+P11;Hudaibiyah & Babak Baru Diplomasi;LOCATION;4;Hudaibiyah;9
+P11;Hudaibiyah & Babak Baru Diplomasi;LOCATION;5;Masjidil Haram;7
+P11;Hudaibiyah & Babak Baru Diplomasi;TIME;1;bulan Shafar;3
+P11;Hudaibiyah & Babak Baru Diplomasi;TIME;2;bulan Syawwal 7 H;3
+P11;Hudaibiyah & Babak Baru Diplomasi;TIME;3;tahun 6 H;2
+P11;Hudaibiyah & Babak Baru Diplomasi;TIME;4;bulan Rabi'ul Awwal 7 H;2
+P11;Hudaibiyah & Babak Baru Diplomasi;TIME;5;tahun 7 H;2
+P12;Perang Mu'tah & Penaklukan Makkah;PERSON;1;Muhammad;28
+P12;Perang Mu'tah & Penaklukan Makkah;PERSON;2;Abu Sufyan bin Harb;12
+P12;Perang Mu'tah & Penaklukan Makkah;PERSON;3;Abdullah bin Rawahah;6
+P12;Perang Mu'tah & Penaklukan Makkah;PERSON;4;Umar bin Al-Khaththab;4
+P12;Perang Mu'tah & Penaklukan Makkah;PERSON;5;Ali bin Abu Thalib;4
+P12;Perang Mu'tah & Penaklukan Makkah;EVENT;1;Perjanjian Hudaibiyah;2
+P12;Perang Mu'tah & Penaklukan Makkah;EVENT;2;Perang Badr;1
+P12;Perang Mu'tah & Penaklukan Makkah;EVENT;3;Perang Khandaq;1
+P12;Perang Mu'tah & Penaklukan Makkah;EVENT;4;Perang Mu'tah;1
+P12;Perang Mu'tah & Penaklukan Makkah;EVENT;5;Ghazwah Mu'tah;1
+P12;Perang Mu'tah & Penaklukan Makkah;LOCATION;1;Makkah;13
+P12;Perang Mu'tah & Penaklukan Makkah;LOCATION;2;Madinah;7
+P12;Perang Mu'tah & Penaklukan Makkah;LOCATION;3;Syam;5
+P12;Perang Mu'tah & Penaklukan Makkah;LOCATION;4;Ka'bah;4
+P12;Perang Mu'tah & Penaklukan Makkah;LOCATION;5;Jazirah Arab;2
+P12;Perang Mu'tah & Penaklukan Makkah;TIME;1;bulan Ramadhan 8 H;2
+P12;Perang Mu'tah & Penaklukan Makkah;TIME;2;bulan Jumada;1
+P12;Perang Mu'tah & Penaklukan Makkah;TIME;3;tanggal 17 Ramadhan;1
+P12;Perang Mu'tah & Penaklukan Makkah;TIME;4;bulan Sya'ban 8 H;1
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;PERSON;1;Muhammad;48
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;PERSON;2;Malik bin Auf;7
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;PERSON;3;Uyainah bin Hishn;5
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;PERSON;4;Adi bin Hatim;4
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;PERSON;5;Al-Aqra' bin Habis;4
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;EVENT;1;Perang Hunain;5
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;EVENT;2;Perang Uhud;2
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;EVENT;3;Perang Tabuk;2
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;EVENT;4;Fathul Makkah;1
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;LOCATION;1;Madinah;17
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;LOCATION;2;Makkah;12
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;LOCATION;3;Hunain;8
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;LOCATION;4;Tabuk;7
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;LOCATION;5;Syam;6
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;TIME;1;bulan Muharram 9 H;3
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;TIME;2;Rabi'ul Awwal;2
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;TIME;3;bulan Rabi'ul Awwal 9 H;2
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;TIME;4;hari Kamis;1
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;TIME;5;tahun 8 H;1
+P14;Masuknya Umat & Haji Wada';PERSON;1;Muhammad;29
+P14;Masuknya Umat & Haji Wada';PERSON;2;Ali bin Abu Thalib;4
+P14;Masuknya Umat & Haji Wada';PERSON;3;Usamah bin Zaid;3
+P14;Masuknya Umat & Haji Wada';PERSON;4;Abu Bakar;3
+P14;Masuknya Umat & Haji Wada';PERSON;5;Ka'b bin Malik;3
+P14;Masuknya Umat & Haji Wada';EVENT;1;Perang Tabuk;3
+P14;Masuknya Umat & Haji Wada';EVENT;2;Perang Tha'if;2
+P14;Masuknya Umat & Haji Wada';EVENT;3;Perang Mu'tah;1
+P14;Masuknya Umat & Haji Wada';LOCATION;1;Madinah;16
+P14;Masuknya Umat & Haji Wada';LOCATION;2;Makkah;12
+P14;Masuknya Umat & Haji Wada';LOCATION;3;Yaman;8
+P14;Masuknya Umat & Haji Wada';LOCATION;4;Mina;5
+P14;Masuknya Umat & Haji Wada';LOCATION;5;Jazirah Arab;4
+P14;Masuknya Umat & Haji Wada';TIME;1;tahun 9 H;5
+P14;Masuknya Umat & Haji Wada';TIME;2;hari kurban;4
+P14;Masuknya Umat & Haji Wada';TIME;3;tahun 10 H;2
+P14;Masuknya Umat & Haji Wada';TIME;4;tahun 8 H;2
+P14;Masuknya Umat & Haji Wada';TIME;5;pertengahan hari-hari Tasyriq;2

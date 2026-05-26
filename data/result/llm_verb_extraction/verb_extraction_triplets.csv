@@ -1,0 +1,29 @@
+﻿chunk_id;halaman;subject_entity;subject_label;verb_relation;object_entity;object_label;context_text;confidence
+000140-003;295-297;Ummul Fadhl;PERSON;MEMUKUL;Abu Lahab;PERSON;Ummul Fadhl bangkit memungut tiang pembatas Zamzam, lalu memukulkannya sekeras-kerasnya ke kepala Abu Lahab;0.95
+000140-003;295-297;Abu Lahab;PERSON;MEMUKUL;Abu Rafi';PERSON;Lalu aku (Abu Rafi') mengangkat batu pembatas Zamzam... Abu Lahab mengangkat tangannya tinggi-tinggi lalu memukulkan ke mukaku dengan keras.;0.9
+000254-002;465-469;Muhammad;PERSON;MENGUTUS;Amr;PERSON;Aku adalah utusan Rasulullah untuk menghadap tuan dan saudara tuan.;0.85
+000254-002;465-469;Amr;PERSON;BERBAIAT_KEPADA;Najasyi;PERSON;'Di mana engkau masuk Islam?' 'Di hadapan Najasyi,' jawabku.;0.75
+000254-002;465-469;Najasyi;PERSON;MEMELUK_ISLAM;Muhammad;PERSON;Lalu aku mengabarkan kepadanya bahwa Najasyi sudah masuk Islam.;0.7
+000131-002;281-282;Ubaidah bin Al-Harits;PERSON;BERTANDING_DENGAN;Utbah bin Rabi'ah;PERSON;Ubaidah yang paling tua di antara mereka, berhadapan dengan Utbah bin Rabi'ah;0.95
+000131-002;281-282;Hamzah;PERSON;BERTANDING_DENGAN;Syaibah bin Rabi'ah;PERSON;Hamzah berhadapan dengan Syaibah bin Rabi'ah;0.95
+000131-002;281-282;Ali bin Abu Thalib;PERSON;BERTANDING_DENGAN;Al-Walid;PERSON;Ali berhadapan dengan Al-Walid.;0.95
+000131-002;281-282;Hamzah;PERSON;MEMBUNUH;Syaibah bin Rabi'ah;PERSON;Hamzah dan Ali tidak terlalu kesulitan melibas lawan tandingnya.;0.75
+000131-002;281-282;Ali bin Abu Thalib;PERSON;MEMBUNUH;Al-Walid;PERSON;Hamzah dan Ali tidak terlalu kesulitan melibas lawan tandingnya.;0.75
+000131-002;281-282;Hamzah;PERSON;MEMBUNUH;Utbah bin Rabi'ah;PERSON;Kemudian Hamzah dan Ali menghampiri Utbah lalu membunuhnya.;0.95
+000131-002;281-282;Ali bin Abu Thalib;PERSON;MEMBUNUH;Utbah bin Rabi'ah;PERSON;Kemudian Hamzah dan Ali menghampiri Utbah lalu membunuhnya.;0.95
+000131-002;281-282;Ubaidah bin Al-Harits;PERSON;MENINGGAL_DI;Ash-Shafra';LOCATION;meninggal dunia di Ash-Shafra', empat atau lima hari setelah Perang Badr;0.95
+000127-001;275-276;Muhammad;PERSON;MEMINDAHKAN_PASUKAN_KE;Badr;LOCATION;Rasulullah membawa pasukannya ke mata air Badr agar bisa mendahului pasukan orang-orang Quraisy;0.9
+000127-001;275-276;Al-Hubab bin Al-Mundzir;PERSON;MEMBERI_SARAN_KEPADA;Muhammad;PERSON;Al-Hubab bin Al-Mundzir tampil layaknya seorang penasihat militer, seraya bertanya, 'Wahai Rasulullah, bagaimana pendapat engkau tentang keputusan berhenti di tempat ini?';0.9
+000142-002;298-299;Muhammad;PERSON;BERGERAK_KE;Madinah;LOCATION;Setelah tiga hari berada di Badr, pasukan Rasulullah bergerak ke Madinah sambil membawa tawanan dan harta rampasan;0.95
+000142-002;298-299;Muhammad;PERSON;MENYERAHKAN_PENANGANAN_KEPADA;Abdullah bin Ka'b;PERSON;membawa tawanan dan harta rampasan yang diperoleh dari orang-orang musyrik, yang penanganannya diserahkan kepada Abdullah bin Ka'b.;0.85
+000142-002;298-299;Muhammad;PERSON;MEMBAGI_HARTA_DI;Ash-Shafra';LOCATION;Setelah melewati celah Ash-Shafra', beliau menghentikan pasukan dan membagi harta rampasan di sana secara merata;0.9
+000142-002;298-299;Muhammad;PERSON;MEMERINTAHKAN_BUNUH;An-Nadhr bin Al-Harits;PERSON;Setiba di Ash-Shafra', An-Nadhr bin Al-Harits diperintahkan untuk dibunuh;0.9
+000142-002;298-299;Ali bin Abu Thalib;PERSON;MEMBUNUH;An-Nadhr bin Al-Harits;PERSON;Akhirnya dia dipenggal oleh Ali bin Abu Thalib;0.95
+000142-002;298-299;Muhammad;PERSON;MEMERINTAHKAN_BUNUH;Uqbah bin Abu Mu'aith;PERSON;Setibanya di Irquzh Zhabyah, beliau juga memerintahkan untuk membunuh Uqbah bin Abu Mu'aith.;0.95
+000142-002;298-299;Abu Bakar;PERSON;MENAHAN;Uqbah bin Abu Mu'aith;PERSON;Selagi dia hampir dibunuh, Abu Bakar menahannya.;0.85
+000142-002;298-299;Ashim bin Tsabit Al-Anshari;PERSON;MEMBUNUH;Uqbah bin Abu Mu'aith;PERSON;Lalu dia dibunuh Ashim bin Tsabit Al-Anshari.;0.95
+000140-001;295-297;Al-Haisuman bin Abdullah Al-Khuza'i;PERSON;MENYAMPAIKAN_KABAR_DI;Makkah;LOCATION;orang yang pertama kali menyampaikan kabar di Makkah tentang kekalahan Quraisy adalah Al-Haisuman bin Abdullah Al-Khuza'i.;0.95
+000140-001;295-297;Abu Lahab;PERSON;TIDAK_IKUT_SERTA;Perang Badr;EVENT;Saat Perang Badr, Abu Lahab tidak ikut serta.;0.95
+000142-001;298-299;Muhammad;PERSON;BERADA_DI;Badr;LOCATION;Seusai perang, Rasulullah masih berada di Badr selama tiga hari Sebelum meninggalkan kancah peperangan;0.95
+000142-001;298-299;Ubadah bin Ash-Shamit;PERSON;IKUT_SERTA_DALAM;Perang Badr;EVENT;Kami pergi bersama Nabi bergabung dalam Perang Badr.;0.9
+000080-010;191-197;Isra';EVENT;BERTUJUAN_KE;Baitul Maqdis;LOCATION;Allah mengisyaratkan bahwa Isra' itu merupakan perjalanan ke Baitul Maqdis.;0.85

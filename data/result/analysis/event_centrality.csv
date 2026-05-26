@@ -1,0 +1,37 @@
+﻿name;degree;weighted_degree;degree_centrality;betweenness_centrality;closeness_centrality;pagerank;frequency;periode_bab;page_range;community
+Perang Badr;19;36;0.542857;0.021069;0.553143;0.081765;44;Perang Badr & Dampaknya;266-304;0
+Perang Khandaq;19;30;0.542857;0.024514;0.553143;0.069487;24;Perang Khandaq hingga Bani Mushthaliq;390-404;0
+Perang Uhud;18;25;0.514286;0.069677;0.531868;0.065376;27;Perang Uhud & Satuan Pasukan Pasca Uhud;324-375;0
+Baiat Aqabah Kubra;18;25;0.514286;0.031151;0.531868;0.057569;4;Dakwah di Luar Makkah & Isra Mi'raj;203-209;0
+Perang Dzul Usyairah;18;24;0.514286;0.014017;0.531868;0.055271;1;Perang Badr & Dampaknya;266-304;0
+Perang Khaibar;16;23;0.457143;0.00384;0.493878;0.051568;10;Hudaibiyah & Babak Baru Diplomasi;473-492;1
+Perang Dzatur Riqa';16;22;0.457143;0.00384;0.493878;0.049587;3;Hudaibiyah & Babak Baru Diplomasi;493-497;1
+Baiat Aqabah;17;18;0.485714;0.039824;0.512169;0.046685;2;Dakwah di Luar Makkah & Isra Mi'raj;198-202;1
+Perang Tabuk;16;19;0.457143;0.002353;0.493878;0.044144;8;Hunain, Tabuk & Puncak Kekuatan Islam;558-571;1
+Perjanjian Hudaibiyah;16;19;0.457143;0.00578;0.493878;0.043779;11;Hudaibiyah & Babak Baru Diplomasi;433-450;1
+Perang Hunain;16;18;0.457143;0.00606;0.493878;0.041925;6;Hunain, Tabuk & Puncak Kekuatan Islam;538-551;1
+Perang Tha'if;16;18;0.457143;0.005601;0.493878;0.041923;2;Hunain, Tabuk & Puncak Kekuatan Islam;544-551;1
+Perang Bani Mushthaliq;16;18;0.457143;0.004582;0.493878;0.041897;2;Perang Khandaq hingga Bani Mushthaliq;390-432;1
+Perang Mu'tah;16;18;0.457143;0.005839;0.493878;0.041867;2;Perang Mu'tah & Penaklukan Makkah;502-510;1
+Perang Buwath;16;17;0.457143;0.004369;0.493878;0.039884;1;Perang Badr & Dampaknya;321-323;1
+Perang Fijar;16;16;0.457143;0.006558;0.493878;0.037933;3;Nasab & Kelahiran Nabi;87-93;1
+Perang Abwa';16;16;0.457143;0.006558;0.493878;0.037933;1;Perang Badr & Dampaknya;266-304;1
+Perang Badr Ula;5;8;0.142857;0.0;0.329252;0.022439;1;Perang Uhud & Satuan Pasukan Pasca Uhud;385-389;0
+Perang Bani Quraizhah;5;5;0.142857;0.005646;0.329252;0.016211;1;Perang Khandaq hingga Bani Mushthaliq;405-411;0
+Perang Safawan;2;2;0.057143;0.000187;0.307302;0.009912;1;Perang Badr & Dampaknya;315-323;0
+Fathul Makkah;1;1;0.028571;0.0;0.294225;0.008235;3;Perang Mu'tah & Penaklukan Makkah;524-536;0
+Perang Bani Qainuqa';1;1;0.028571;0.0;0.294225;0.008235;1;Perang Badr & Dampaknya;310-323;0
+Isra' Mi'raj;1;1;0.028571;0.0;0.288095;0.008217;2;Dakwah di Luar Makkah & Isra Mi'raj;191-197;1
+Wahyu Pertama;0;0;0.0;0.0;0.0;0.006012;0;Awal Kenabian & Mandat Dakwah;94-99;8
+Khutbah Wada';0;0;0.0;0.0;0.0;0.006012;0;Masuknya Umat & Haji Wada';594-600;13
+Haji Wada';0;0;0.0;0.0;0.0;0.006012;0;Masuknya Umat & Haji Wada';594-600;12
+Hijrah ke Madinah;0;0;0.0;0.0;0.0;0.006012;0;Hijrah ke Madinah;218-232;11
+Dakwah Sirriyah;0;0;0.0;0.0;0.0;0.006012;0;Dakwah Sirriyah;106-109;10
+Bi'tsah Nabawiyah;0;0;0.0;0.0;0.0;0.006012;0;Awal Kenabian & Mandat Dakwah;94-99;9
+Ghazwah Dzatu Qarad;0;0;0.0;0.0;0.0;0.006012;1;Hudaibiyah & Babak Baru Diplomasi;470-472;4
+Perang Badr Shughra;0;0;0.0;0.0;0.0;0.006012;1;Perang Uhud & Satuan Pasukan Pasca Uhud;385-389;7
+Perang Badr Kubra;0;0;0.0;0.0;0.0;0.006012;1;Perang Badr & Dampaknya;266-304;6
+Ghazwah Mu'tah;0;0;0.0;0.0;0.0;0.006012;1;Perang Mu'tah & Penaklukan Makkah;502-510;5
+Perang Uhud Jabal;0;0;0.0;0.0;0.0;0.006012;1;Perang Uhud & Satuan Pasukan Pasca Uhud;324-375;3
+Perang Bani Nadhir;0;0;0.0;0.0;0.0;0.006012;2;Perang Uhud & Satuan Pasukan Pasca Uhud;382-389;2
+Hijrah ke Habasyah;0;0;0.0;0.0;0.0;0.006012;0;Dakwah di Luar Makkah & Isra Mi'raj;130-151;14

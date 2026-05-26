@@ -1,0 +1,35 @@
+﻿# Pivot: unique entities per period x entity_type
+period_id;period_label;phase;PERSON;EVENT;LOCATION;TIME;TOTAL
+P0;Konteks Arab Jahiliyah;Fase I — Pra-Islam & Latar Belakang;89;0;34;20;143
+P1;Nasab & Kelahiran Nabi;Fase I — Pra-Islam & Latar Belakang;77;1;13;7;98
+P2;Awal Kenabian & Mandat Dakwah;Fase II — Periode Makkah;20;0;4;11;35
+P3;Dakwah Sirriyah;Fase II — Periode Makkah;36;0;3;0;39
+P4;Dakwah Jahriyah & Tekanan Quraisy;Fase II — Periode Makkah;81;2;10;5;98
+P5;Dakwah di Luar Makkah & Isra Mi'raj;Fase II — Periode Makkah;107;6;17;8;138
+P6;Hijrah ke Madinah;Fase II — Periode Makkah;52;1;11;14;78
+P7;Membangun Masyarakat Madinah;Fase III — Periode Madinah Awal;50;9;12;13;84
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;77;4;12;10;103
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;Fase IV — Periode Peperangan Besar;82;8;11;14;115
+P10;Perang Khandaq hingga Bani Mushthaliq;Fase IV — Periode Peperangan Besar;100;6;13;22;141
+P11;Hudaibiyah & Babak Baru Diplomasi;Fase V — Diplomasi & Ekspansi;107;7;17;18;149
+P12;Perang Mu'tah & Penaklukan Makkah;Fase V — Diplomasi & Ekspansi;70;5;12;4;91
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;Fase VI — Konsolidasi & Akhir Kenabian;79;4;17;12;112
+P14;Masuknya Umat & Haji Wada';Fase VI — Konsolidasi & Akhir Kenabian;54;3;21;32;110
+
+# Pivot: total occurrences (entity-chunk tuples) per period x entity_type
+period_id;period_label;phase;PERSON;EVENT;LOCATION;TIME;TOTAL
+P0;Konteks Arab Jahiliyah;Fase I — Pra-Islam & Latar Belakang;158;0;153;22;333
+P1;Nasab & Kelahiran Nabi;Fase I — Pra-Islam & Latar Belakang;152;2;61;7;222
+P2;Awal Kenabian & Mandat Dakwah;Fase II — Periode Makkah;53;0;15;18;86
+P3;Dakwah Sirriyah;Fase II — Periode Makkah;44;0;4;0;48
+P4;Dakwah Jahriyah & Tekanan Quraisy;Fase II — Periode Makkah;208;4;36;9;257
+P5;Dakwah di Luar Makkah & Isra Mi'raj;Fase II — Periode Makkah;232;12;92;8;344
+P6;Hijrah ke Madinah;Fase II — Periode Makkah;135;1;42;17;195
+P7;Membangun Masyarakat Madinah;Fase III — Periode Madinah Awal;120;10;61;16;207
+P8;Perang Badr & Dampaknya;Fase IV — Periode Peperangan Besar;181;19;65;10;275
+P9;Perang Uhud & Satuan Pasukan Pasca Uhud;Fase IV — Periode Peperangan Besar;173;26;57;16;272
+P10;Perang Khandaq hingga Bani Mushthaliq;Fase IV — Periode Peperangan Besar;283;20;61;32;396
+P11;Hudaibiyah & Babak Baru Diplomasi;Fase V — Diplomasi & Ekspansi;275;16;113;27;431
+P12;Perang Mu'tah & Penaklukan Makkah;Fase V — Diplomasi & Ekspansi;138;6;39;5;188
+P13;Hunain, Tabuk & Puncak Kekuatan Islam;Fase VI — Konsolidasi & Akhir Kenabian;170;10;68;16;264
+P14;Masuknya Umat & Haji Wada';Fase VI — Konsolidasi & Akhir Kenabian;103;6;68;42;219

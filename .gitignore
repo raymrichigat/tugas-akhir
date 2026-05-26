@@ -32,3 +32,8 @@ __MACOSX/
 # OS
 .DS_Store
 Thumbs.db
+
+# Personal / draft TA — jangan di-commit
+Buku-TA-Genta.docx
+instruksi.txt
+*.docx

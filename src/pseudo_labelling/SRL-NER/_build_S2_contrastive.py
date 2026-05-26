@@ -221,7 +221,17 @@ class ContrastiveTrainer(Trainer):
             raise ValueError(f'Unknown contrastive_mode: {self.contrastive_mode!r}')
 
         loss = (1.0 - self.lambda_c) * loss_ce + self.lambda_c * loss_c
-        return (loss, outputs) if return_outputs else loss
+        # IMPORTANT: kalau return_outputs=True, hanya return dict {"logits": logits},
+        # bukan ModelOutput penuh. Alasan: outputs ModelOutput membawa hidden_states
+        # (karena output_hidden_states=True), dan Trainer downstream akan extract
+        # `pred.predictions` jadi tuple (logits, hidden_states_tuple) saat evaluate.
+        # Numpy 2.x kemudian raise `inhomogeneous shape` error di
+        # `np.argmax(pred.predictions, axis=2)` di compute_metrics.
+        # Lihat success run S2a SCL `done_running/.../srl_ner_sirah_S2a_scl_colab_new.ipynb`
+        # untuk reference behavior yang work.
+        if return_outputs:
+            return loss, {"logits": logits}
+        return loss
 
 
 """

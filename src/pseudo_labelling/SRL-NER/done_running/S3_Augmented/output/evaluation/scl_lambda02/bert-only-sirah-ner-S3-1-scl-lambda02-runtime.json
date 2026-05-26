@@ -1,0 +1,14 @@
+{
+  "experiment_name": "bert-only-sirah-ner-S3-1-scl-lambda02",
+  "lambda_c": 0.2,
+  "tau": 0.1,
+  "contrastive_mode": "scl",
+  "started_at": "2026-05-23T20:20:47",
+  "ended_at": "2026-05-23T21:12:52",
+  "total_seconds": 3125.18,
+  "total_minutes": 52.09,
+  "total_hours": 0.868,
+  "iterations": 6,
+  "epochs_per_iter": 10,
+  "scope": "from pre-training (after data load) to end of evaluation"
+}

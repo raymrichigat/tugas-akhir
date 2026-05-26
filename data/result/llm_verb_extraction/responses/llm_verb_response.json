@@ -1,0 +1,476 @@
+{
+"events": [
+{
+"chunk_id": "000140-003",
+"halaman": "295-297",
+"label_aksi": "Pemukulan Abu Lahab oleh Ummul Fadhl di Zamzam",
+"verb": "memukulkan",
+"subject": "Ummul Fadhl",
+"context_text": "Ummul Fadhl bangkit memungut tiang pembatas Zamzam, lalu memukulkannya sekeras-kerasnya ke kepala Abu Lahab hingga menimbulkan luka yang menganga.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000140-003",
+"halaman": "295-297",
+"label_aksi": "Penyerangan Abu Rafi' oleh Abu Lahab",
+"verb": "memukul",
+"subject": "Abu Lahab",
+"context_text": "Abu Lahab mengangkat tangannya tinggi-tinggi lalu memukulkan ke mukaku dengan keras... dia membanting tubuhku ke tanah, kemudian menindihiku sambil melancarkan pukulan bertubi-tubi.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000140-003",
+"halaman": "295-297",
+"label_aksi": "Kematian Abu Lahab pasca Perang Badr",
+"verb": "meninggal",
+"subject": "Abu Lahab",
+"context_text": "Abu Lahab hanya mampu bertahan hidup tujuh hari setelah itu. Itu pun Allah menimpakan penyakit di sekujur tubuhnya, berupa luka bernanah.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000254-002",
+"halaman": "465-469",
+"label_aksi": "Pengutusan Amr sebagai utusan ke Raja Uman",
+"verb": "mengutus",
+"subject": "Muhammad",
+"context_text": "Aku berkata di hadapannya, 'Aku adalah utusan Rasulullah untuk menghadap tuan dan saudara tuan.'",
+"confidence": 0.85
+},
+{
+"chunk_id": "000254-002",
+"halaman": "465-469",
+"label_aksi": "Masuk Islam Amr di hadapan Najasyi",
+"verb": "masuk Islam",
+"subject": "Amr",
+"context_text": "'Di mana engkau masuk Islam?' 'Di hadapan Najasyi,' jawabku.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000254-002",
+"halaman": "465-469",
+"label_aksi": "Masuk Islam Raja Najasyi",
+"verb": "masuk Islam",
+"subject": "Najasyi",
+"context_text": "Lalu aku mengabarkan kepadanya bahwa Najasyi sudah masuk Islam.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"label_aksi": "Duel Hamzah melawan Syaibah bin Rabi'ah",
+"verb": "bertanding",
+"subject": "Hamzah",
+"context_text": "Hamzah berhadapan dengan Syaibah bin Rabi'ah... Hamzah dan Ali tidak terlalu kesulitan melibas lawan tandingnya.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"label_aksi": "Duel Ali melawan Al-Walid",
+"verb": "bertanding",
+"subject": "Ali bin Abu Thalib",
+"context_text": "Ali berhadapan dengan Al-Walid... Hamzah dan Ali tidak terlalu kesulitan melibas lawan tandingnya.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"label_aksi": "Duel Ubaidah melawan Utbah bin Rabi'ah",
+"verb": "bertanding",
+"subject": "Ubaidah bin Al-Harits",
+"context_text": "Ubaidah yang paling tua di antara mereka, berhadapan dengan Utbah bin Rabi'ah... Masing-masing saling melancarkan serangan hingga dua kali, dan masing-masing melukai lawannya.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"label_aksi": "Pembunuhan Utbah bin Rabi'ah oleh Hamzah dan Ali",
+"verb": "membunuh",
+"subject": "Hamzah dan Ali bin Abu Thalib",
+"context_text": "Kemudian Hamzah dan Ali menghampiri Utbah lalu membunuhnya.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"label_aksi": "Wafatnya Ubaidah bin Al-Harits di Ash-Shafra'",
+"verb": "meninggal",
+"subject": "Ubaidah bin Al-Harits",
+"context_text": "Dia sama sekali tidak mengeluh hingga meninggal dunia di Ash-Shafra', empat atau lima hari setelah Perang Badr, di tengah perjalanan pulang ke Madinah.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000127-001",
+"halaman": "275-276",
+"label_aksi": "Pemindahan pasukan Muslim ke mata air Badr atas saran Al-Hubab",
+"verb": "memindahkan",
+"subject": "Muhammad",
+"context_text": "Rasulullah memindahkan pasukannya, sehingga jarak mereka dengan mata air lebih dekat lagi daripada pihak musuh.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000127-001",
+"halaman": "275-276",
+"label_aksi": "Pemberian saran taktik perang oleh Al-Hubab bin Al-Mundzir",
+"verb": "menyarankan",
+"subject": "Al-Hubab bin Al-Mundzir",
+"context_text": "Al-Hubab bin Al-Mundzir tampil layaknya seorang penasihat militer... 'Pindahkanlah orang-orang ke tempat yang lebih dekat lagi dengan mata air...'",
+"confidence": 0.9
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"label_aksi": "Pembagian harta rampasan Perang Badr di Ash-Shafra'",
+"verb": "membagi",
+"subject": "Muhammad",
+"context_text": "beliau menghentikan pasukan dan membagi harta rampasan di sana secara merata di antara orang-orang Muslim setelah mengambil seperlimanya.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"label_aksi": "Eksekusi An-Nadhr bin Al-Harits di Ash-Shafra'",
+"verb": "dipenggal",
+"subject": "Ali bin Abu Thalib",
+"context_text": "Setiba di Ash-Shafra', An-Nadhr bin Al-Harits diperintahkan untuk dibunuh... Akhirnya dia dipenggal oleh Ali bin Abu Thalib.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"label_aksi": "Eksekusi Uqbah bin Abu Mu'aith di Irquzh Zhabyah",
+"verb": "dibunuh",
+"subject": "Ashim bin Tsabit Al-Anshari",
+"context_text": "Setibanya di Irquzh Zhabyah, beliau juga memerintahkan untuk membunuh Uqbah bin Abu Mu'aith... Lalu dia dibunuh Ashim bin Tsabit Al-Anshari.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000140-001",
+"halaman": "295-297",
+"label_aksi": "Penyampaian kabar kekalahan Quraisy di Makkah",
+"verb": "menyampaikan",
+"subject": "Al-Haisuman bin Abdullah Al-Khuza'i",
+"context_text": "Ibnu Ishaq menuturkan, bahwa orang yang pertama kali menyampaikan kabar di Makkah tentang kekalahan Quraisy adalah Al-Haisuman bin Abdullah Al-Khuza'i.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000140-001",
+"halaman": "295-297",
+"label_aksi": "Masuk Islam Al-Abbas, Ummul Fadhl, dan Abu Rafi' secara sembunyi",
+"verb": "masuk Islam",
+"subject": "Al-Abbas, Ummul Fadhl, Abu Rafi'",
+"context_text": "Al-Abbas masuk Islam, begitu pula Ummul Fadhl dan aku. Namun Al-Abbas menyembunyikan keislamannya.",
+"confidence": 0.9
+}
+],
+"triplets": [
+{
+"chunk_id": "000140-003",
+"halaman": "295-297",
+"subject_entity": "Ummul Fadhl",
+"subject_label": "PERSON",
+"verb_relation": "MEMUKUL",
+"object_entity": "Abu Lahab",
+"object_label": "PERSON",
+"context_text": "Ummul Fadhl bangkit memungut tiang pembatas Zamzam, lalu memukulkannya sekeras-kerasnya ke kepala Abu Lahab",
+"confidence": 0.95
+},
+{
+"chunk_id": "000140-003",
+"halaman": "295-297",
+"subject_entity": "Abu Lahab",
+"subject_label": "PERSON",
+"verb_relation": "MEMUKUL",
+"object_entity": "Abu Rafi'",
+"object_label": "PERSON",
+"context_text": "Lalu aku (Abu Rafi') mengangkat batu pembatas Zamzam... Abu Lahab mengangkat tangannya tinggi-tinggi lalu memukulkan ke mukaku dengan keras.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000254-002",
+"halaman": "465-469",
+"subject_entity": "Muhammad",
+"subject_label": "PERSON",
+"verb_relation": "MENGUTUS",
+"object_entity": "Amr",
+"object_label": "PERSON",
+"context_text": "Aku adalah utusan Rasulullah untuk menghadap tuan dan saudara tuan.",
+"confidence": 0.85
+},
+{
+"chunk_id": "000254-002",
+"halaman": "465-469",
+"subject_entity": "Amr",
+"subject_label": "PERSON",
+"verb_relation": "BERBAIAT_KEPADA",
+"object_entity": "Najasyi",
+"object_label": "PERSON",
+"context_text": "'Di mana engkau masuk Islam?' 'Di hadapan Najasyi,' jawabku.",
+"confidence": 0.75
+},
+{
+"chunk_id": "000254-002",
+"halaman": "465-469",
+"subject_entity": "Najasyi",
+"subject_label": "PERSON",
+"verb_relation": "MEMELUK_ISLAM",
+"object_entity": "Muhammad",
+"object_label": "PERSON",
+"context_text": "Lalu aku mengabarkan kepadanya bahwa Najasyi sudah masuk Islam.",
+"confidence": 0.7
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"subject_entity": "Ubaidah bin Al-Harits",
+"subject_label": "PERSON",
+"verb_relation": "BERTANDING_DENGAN",
+"object_entity": "Utbah bin Rabi'ah",
+"object_label": "PERSON",
+"context_text": "Ubaidah yang paling tua di antara mereka, berhadapan dengan Utbah bin Rabi'ah",
+"confidence": 0.95
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"subject_entity": "Hamzah",
+"subject_label": "PERSON",
+"verb_relation": "BERTANDING_DENGAN",
+"object_entity": "Syaibah bin Rabi'ah",
+"object_label": "PERSON",
+"context_text": "Hamzah berhadapan dengan Syaibah bin Rabi'ah",
+"confidence": 0.95
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"subject_entity": "Ali bin Abu Thalib",
+"subject_label": "PERSON",
+"verb_relation": "BERTANDING_DENGAN",
+"object_entity": "Al-Walid",
+"object_label": "PERSON",
+"context_text": "Ali berhadapan dengan Al-Walid.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"subject_entity": "Hamzah",
+"subject_label": "PERSON",
+"verb_relation": "MEMBUNUH",
+"object_entity": "Syaibah bin Rabi'ah",
+"object_label": "PERSON",
+"context_text": "Hamzah dan Ali tidak terlalu kesulitan melibas lawan tandingnya.",
+"confidence": 0.75
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"subject_entity": "Ali bin Abu Thalib",
+"subject_label": "PERSON",
+"verb_relation": "MEMBUNUH",
+"object_entity": "Al-Walid",
+"object_label": "PERSON",
+"context_text": "Hamzah dan Ali tidak terlalu kesulitan melibas lawan tandingnya.",
+"confidence": 0.75
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"subject_entity": "Hamzah",
+"subject_label": "PERSON",
+"verb_relation": "MEMBUNUH",
+"object_entity": "Utbah bin Rabi'ah",
+"object_label": "PERSON",
+"context_text": "Kemudian Hamzah dan Ali menghampiri Utbah lalu membunuhnya.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"subject_entity": "Ali bin Abu Thalib",
+"subject_label": "PERSON",
+"verb_relation": "MEMBUNUH",
+"object_entity": "Utbah bin Rabi'ah",
+"object_label": "PERSON",
+"context_text": "Kemudian Hamzah dan Ali menghampiri Utbah lalu membunuhnya.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000131-002",
+"halaman": "281-282",
+"subject_entity": "Ubaidah bin Al-Harits",
+"subject_label": "PERSON",
+"verb_relation": "MENINGGAL_DI",
+"object_entity": "Ash-Shafra'",
+"object_label": "LOCATION",
+"context_text": "meninggal dunia di Ash-Shafra', empat atau lima hari setelah Perang Badr",
+"confidence": 0.95
+},
+{
+"chunk_id": "000127-001",
+"halaman": "275-276",
+"subject_entity": "Muhammad",
+"subject_label": "PERSON",
+"verb_relation": "MEMINDAHKAN_PASUKAN_KE",
+"object_entity": "Badr",
+"object_label": "LOCATION",
+"context_text": "Rasulullah membawa pasukannya ke mata air Badr agar bisa mendahului pasukan orang-orang Quraisy",
+"confidence": 0.9
+},
+{
+"chunk_id": "000127-001",
+"halaman": "275-276",
+"subject_entity": "Al-Hubab bin Al-Mundzir",
+"subject_label": "PERSON",
+"verb_relation": "MEMBERI_SARAN_KEPADA",
+"object_entity": "Muhammad",
+"object_label": "PERSON",
+"context_text": "Al-Hubab bin Al-Mundzir tampil layaknya seorang penasihat militer, seraya bertanya, 'Wahai Rasulullah, bagaimana pendapat engkau tentang keputusan berhenti di tempat ini?'",
+"confidence": 0.9
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"subject_entity": "Muhammad",
+"subject_label": "PERSON",
+"verb_relation": "BERGERAK_KE",
+"object_entity": "Madinah",
+"object_label": "LOCATION",
+"context_text": "Setelah tiga hari berada di Badr, pasukan Rasulullah bergerak ke Madinah sambil membawa tawanan dan harta rampasan",
+"confidence": 0.95
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"subject_entity": "Muhammad",
+"subject_label": "PERSON",
+"verb_relation": "MENYERAHKAN_PENANGANAN_KEPADA",
+"object_entity": "Abdullah bin Ka'b",
+"object_label": "PERSON",
+"context_text": "membawa tawanan dan harta rampasan yang diperoleh dari orang-orang musyrik, yang penanganannya diserahkan kepada Abdullah bin Ka'b.",
+"confidence": 0.85
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"subject_entity": "Muhammad",
+"subject_label": "PERSON",
+"verb_relation": "MEMBAGI_HARTA_DI",
+"object_entity": "Ash-Shafra'",
+"object_label": "LOCATION",
+"context_text": "Setelah melewati celah Ash-Shafra', beliau menghentikan pasukan dan membagi harta rampasan di sana secara merata",
+"confidence": 0.9
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"subject_entity": "Muhammad",
+"subject_label": "PERSON",
+"verb_relation": "MEMERINTAHKAN_BUNUH",
+"object_entity": "An-Nadhr bin Al-Harits",
+"object_label": "PERSON",
+"context_text": "Setiba di Ash-Shafra', An-Nadhr bin Al-Harits diperintahkan untuk dibunuh",
+"confidence": 0.9
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"subject_entity": "Ali bin Abu Thalib",
+"subject_label": "PERSON",
+"verb_relation": "MEMBUNUH",
+"object_entity": "An-Nadhr bin Al-Harits",
+"object_label": "PERSON",
+"context_text": "Akhirnya dia dipenggal oleh Ali bin Abu Thalib",
+"confidence": 0.95
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"subject_entity": "Muhammad",
+"subject_label": "PERSON",
+"verb_relation": "MEMERINTAHKAN_BUNUH",
+"object_entity": "Uqbah bin Abu Mu'aith",
+"object_label": "PERSON",
+"context_text": "Setibanya di Irquzh Zhabyah, beliau juga memerintahkan untuk membunuh Uqbah bin Abu Mu'aith.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"subject_entity": "Abu Bakar",
+"subject_label": "PERSON",
+"verb_relation": "MENAHAN",
+"object_entity": "Uqbah bin Abu Mu'aith",
+"object_label": "PERSON",
+"context_text": "Selagi dia hampir dibunuh, Abu Bakar menahannya.",
+"confidence": 0.85
+},
+{
+"chunk_id": "000142-002",
+"halaman": "298-299",
+"subject_entity": "Ashim bin Tsabit Al-Anshari",
+"subject_label": "PERSON",
+"verb_relation": "MEMBUNUH",
+"object_entity": "Uqbah bin Abu Mu'aith",
+"object_label": "PERSON",
+"context_text": "Lalu dia dibunuh Ashim bin Tsabit Al-Anshari.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000140-001",
+"halaman": "295-297",
+"subject_entity": "Al-Haisuman bin Abdullah Al-Khuza'i",
+"subject_label": "PERSON",
+"verb_relation": "MENYAMPAIKAN_KABAR_DI",
+"object_entity": "Makkah",
+"object_label": "LOCATION",
+"context_text": "orang yang pertama kali menyampaikan kabar di Makkah tentang kekalahan Quraisy adalah Al-Haisuman bin Abdullah Al-Khuza'i.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000140-001",
+"halaman": "295-297",
+"subject_entity": "Abu Lahab",
+"subject_label": "PERSON",
+"verb_relation": "TIDAK_IKUT_SERTA",
+"object_entity": "Perang Badr",
+"object_label": "EVENT",
+"context_text": "Saat Perang Badr, Abu Lahab tidak ikut serta.",
+"confidence": 0.95
+},
+{
+"chunk_id": "000142-001",
+"halaman": "298-299",
+"subject_entity": "Muhammad",
+"subject_label": "PERSON",
+"verb_relation": "BERADA_DI",
+"object_entity": "Badr",
+"object_label": "LOCATION",
+"context_text": "Seusai perang, Rasulullah masih berada di Badr selama tiga hari Sebelum meninggalkan kancah peperangan",
+"confidence": 0.95
+},
+{
+"chunk_id": "000142-001",
+"halaman": "298-299",
+"subject_entity": "Ubadah bin Ash-Shamit",
+"subject_label": "PERSON",
+"verb_relation": "IKUT_SERTA_DALAM",
+"object_entity": "Perang Badr",
+"object_label": "EVENT",
+"context_text": "Kami pergi bersama Nabi bergabung dalam Perang Badr.",
+"confidence": 0.9
+},
+{
+"chunk_id": "000080-010",
+"halaman": "191-197",
+"subject_entity": "Isra'",
+"subject_label": "EVENT",
+"verb_relation": "BERTUJUAN_KE",
+"object_entity": "Baitul Maqdis",
+"object_label": "LOCATION",
+"context_text": "Allah mengisyaratkan bahwa Isra' itu merupakan perjalanan ke Baitul Maqdis.",
+"confidence": 0.85
+}
+]
+}

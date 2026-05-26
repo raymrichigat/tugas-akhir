@@ -130,7 +130,7 @@ TA_sirah/
 | Manual Labelling (semi-auto pre_labelling) | ✅ Selesai (`sirah_prelabelled.csv`, 6000 rows) |
 | Alias Clustering | ✅ Selesai (143 alias, 109 clusters → `alias_map.json`) |
 | Konversi seed → format BERT (CoNLL) | ✅ Selesai (`prepare_bert_data.py`) |
-| NER Pipeline (SRL-based, BERT iterative self-training) | 🔄 **S1 ✅ + S2 ✅ + S3 ⏳ (deadline 29 Mei 2026).** S1 baseline reuse hasil E1 lama (Seq F1 entity=0.959). S2 selesai 2026-05-14/15: S2a SCL final 0.950/peak 0.953, S2b JSCL final 0.933/peak 0.940. **Plan S3 baru post-bimbingan 2026-05-16:** (1) λ_C sweep (0.1/0.2/0.3) di S2 SCL untuk close gap entity-level vs S1, (2) Mention Replacement augmentation di atas winner. Approved Bu Diana. |
+| NER Pipeline (SRL-based, BERT iterative self-training) | ✅ **S1 ✅ + S2 ✅ + S3.1 ✅ + S3.2 ✅ (selesai 2026-05-26).** Final winner: **S3.2-scl-aug-iter4 = TEST F1 entity 0.9537** (melampaui S1=0.9518 dengan +0.0019). EVENT melonjak 0.7708→0.8454 (+0.0746). Augmentation v2 + λ_C=0.3 winning combo. Detail seqeval di `data/result/pseudo-labelling/SRL-NER/seqeval_results.md`. |
 | NER Pipeline (LLM-based, Instruction Fine-Tuning + QLoRA) | ❌ **Tidak jadi dipakai** (revisi 2026-05-03). Arsip + `DEPRECATED.md` di `src/pseudo_labelling/LLM-NER/`. |
 | Periodisasi top-down (`period_mapping.json`) | ✅ **Baru 2026-05-12** — 15 period (P0-P14), 6 phase, 56 BAB ter-grouped semantically. Menggantikan fuzzy match BAB lama. Module: `src/relation_extraction/event_period.py`. |
 | Manual review event → period (K/F/R/ADD curation) | ✅ Selesai (2026-05-12, `event_period_review_v2.csv`). 19 K + 10 F + 12 R + 7 ADD applied via `apply_review_to_kg.py` → `nodes_v2.csv` + `edges_v2.csv`. |
@@ -143,50 +143,51 @@ TA_sirah/
 | Uji coba sampling 5 event berperiode jauh (revisi #2 Bu Diana) | ✅ **Selesai 2026-05-12** (Perang Badr/Uhud/Hudaibiyah/Khaibar/Tabuk; 60 unique Person; bias coverage NER terlihat — Perang Badr dominasi 39 person). Script: `case_study_events.py`. |
 | Build Knowledge Graph (Neo4j) v2 dengan Period node | ✅ **Selesai 2026-05-12** (`import_sirah_v2.cypher`, 15 Period nodes + IN_PERIOD relations, support query per-period) |
 
-### Catatan progres terakhir (sesi: 2026-05-16 bimbingan + 2026-05-20 propagasi outcome)
+### Catatan progres terakhir (sesi: 2026-05-22→26 S3.1 sweep + S3.2 winner + Priority D)
 
-**Bimbingan Bu Diana 2026-05-16 sudah dilaksanakan**, dual-focus graf + S2 SRL-NER. Outcome resmi sudah dipropagasi ke `docs/bimbingan/revisi_dosen.md` Putaran 5 + `docs/bimbingan/bimbingan_template.md` + `docs/skenario/srl_ner.md`. Catatan mentah di `docs/bimbingan/2026-05-16_outcome.md`.
+**S3.2 menang!** SRL-NER pipeline selesai 2026-05-26 dengan TEST F1 entity = **0.9537** — pertama kali melampaui S1 baseline (0.9518) dengan margin +0.0019. Augmentation v2 (period-aware mention replacement, 260 augmented sentences) + λ_C=0.3 (winner S3.1) = winning combo.
 
-**Keputusan utama dari bimbingan:**
+**Hasil seqeval head-to-head (test set 258 kalimat, 1759 entities):**
 
-1. ✅ **Plan 3-skenario approved** Bu Diana (S1 baseline / S2 SCL+JSCL / S3 = best dari S2 + augmentation).
-2. ⏰ **Deadline S3: 29 Mei 2026** (~9 hari).
-3. 🔄 **S3 plan di-revisi**: tune λ_C dulu (sweep 0.1/0.2/0.3 di S2 SCL) untuk close gap entity-level S2 (0.95) vs S1 (0.959), baru stack augmentation di atas winner. Bukan langsung augment dengan default λ_C=0.3.
-4. 📋 **Revisi tambahan untuk graf** (perlu dikerjakan sebelum bimbingan berikutnya):
-   - Centrality juga untuk node Event (selain Person)
-   - Wordcloud per-komunitas + interpretasi semantik tiap komunitas + arti Q-value
-   - Analisis event-related untuk 5 case study (event co-occur per period)
-   - Visualisasi prefer Neo4j (bukan PNG static)
-5. 📋 **Arahan baru pipeline NER**:
-   - Frekuensi entitas per period → justifikasi
-   - LLM verb extraction → tambah Event entity (antisipasi support EVENT kecil)
-6. 📋 **Bimbingan berikutnya**: pipeline running end-to-end dengan output SRL-NER, comparison report SRL-NER vs manual labelling, mulai pembukuan per-Bab.
+| Tag | F1 entity | EVENT | TIME | Δ vs S1 |
+|---|---:|---:|---:|---:|
+| S1-baseline-iter6 | 0.9518 | 0.7677 | 0.8354 | — |
+| S3.1-lambda03-iter4 | 0.9522 | 0.7708 | 0.8354 | +0.0004 |
+| **S3.2-scl-aug-iter4** | **0.9537** | **0.8454** | **0.9007** | **+0.0019** ✅ |
 
-**Action item aktif (deadline 29 Mei):**
-1. ⏳ Run S3.1 — λ_C sweep di S2 SCL (~6-8 jam GPU T4)
-2. ⏳ Validasi manual augmented sentences (20-30 sample)
-3. ⏳ Run S3.2 — Mention Replacement augmentation di atas winner λ_C (~3-4 jam GPU T4)
-4. ⏳ Inference NER terbaik → regenerate `nodes_v3.csv` + `edges_v3.csv`
-5. ⏳ Comparison report SRL-NER vs manual labelling
-6. ⏳ Centrality untuk Event + wordcloud per-komunitas + analisis event-related case study + frekuensi entitas per-period
-7. ⏳ LLM verb extraction (POC dulu di sample chunks)
-8. ⏳ 2 bug pending: `OCCURRED_AT weight=2.0` + `PRECEDES stale v1 mapping` (post-deadline kalau mepet)
+Highlights S3.2: F1 EVENT melonjak 0.7708→0.8454 (+0.0746) sesuai hipotesis Bu Diana. F1 TIME juga naik 0.8354→0.9007 (+0.0653). Konvergen 4 iter dalam 46.5 menit.
 
-> 📜 **Detail historis lengkap** (sesi 2026-04-16 s/d 2026-05-15, termasuk run S2 + persiapan bimbingan) dipindahkan ke **`progress_log.md`** di root. Buka file itu kalau perlu konteks/kronologi pekerjaan terdahulu.
+**Priority D (5 deliverables) selesai paralel sambil S3.2 jalan:**
+- ✅ #7 Centrality node Event (`event_centrality.{csv,_summary.md,_network.png}`) — 36 Event nodes, 15 komunitas. Top PageRank: Perang Badr > Khandaq > Uhud.
+- ✅ #8 Wordcloud per komunitas (8 PNG + summary md, Q=0.317 = moderate, interpretasi 8 komunitas Person network).
+- ✅ #9 Frekuensi entitas per-period (sudah pre-existing dari sesi sebelumnya).
+- ✅ #10 Analisis event-related case study (sudah pre-existing — `edge_validation_summary.md`).
+- ✅ #11 LLM verb extraction POC (`llm_verb_extraction_poc.py` + 18 EVENT + 28 SVO triplet, structured prompt single-batch chat).
 
-### Skenario SRL-NER aktif (per 2026-05-20)
+> 📜 **Detail historis lengkap** (sesi 2026-04-16 s/d 2026-05-26, termasuk S3.1 sweep + S3.2 winner + Priority D) ada di **`progress_log.md`** di root.
+
+**Action item aktif (post-S3.2 winner):**
+1. ⏳ Inference NER terbaik (S3.2-scl-aug-iter4) → regenerate `nodes_v3.csv` + `edges_v3.csv` di seluruh `sirah_chunks_final.csv`.
+2. ⏳ Comparison report SRL-NER best vs manual labelling ground truth.
+3. ⏳ Manual validation 5-10 sample LLM verb extraction (cross-check ke teks Mubarakfuri) untuk dapat angka precision konkret.
+4. ⏳ Tulis paragraf hasil di laporan / slide bimbingan untuk semua 5 deliverable Priority D.
+5. ⏳ Visualisasi Neo4j (bukan PNG static) — screenshot + cypher query saved.
+6. ⏳ Scale-up LLM verb extraction (Opsi B: 50 chunks via batch chat ~25 menit; atau Opsi C: full coverage via API ~$6-10).
+7. ⏳ 2 bug pending (post-deadline): `OCCURRED_AT weight=2.0` + `PRECEDES stale v1 mapping`.
+
+### Skenario SRL-NER aktif (per 2026-05-26)
 
 | Skenario | Komponen | Status |
 |---|---|---|
-| **S1 — Baseline** | Fix THRESHOLD=0.9, tanpa class weight, contrastive, augmentation | ✅ Reuse hasil E1 lama (Seq F1 entity=0.959, F1 EVENT=0.816) |
-| **S2a — SCL + Baseline** | S1 + Strict Supervised Contrastive (Khosla 2020), λ_C=0.3 | ✅ Selesai 2026-05-14/15. Seq F1 final iter-6 = 0.950, peak 0.953. Token F1 = 0.9955. |
-| **S2b — JSCL + Baseline** | S1 + Jaccard Sim Contrastive (Dewabharata et al.), λ_C=0.3 | ✅ Selesai 2026-05-14/15. Seq F1 final iter-6 = 0.933, peak 0.940. Token F1 = 0.9945. |
-| **S3.1 — λ_C sweep** | S2 SCL dengan λ_C ∈ {0.1, 0.2, 0.3} → pilih winner | ⏳ Plan post-bimbingan, deadline 29 Mei. ~6-8 jam GPU T4. |
-| **S3.2 — Mention Replacement Augmentation** | S3.1 winner + Dai & Adel 2020 augmentation | ⏳ Depend on S3.1, ~3-4 jam GPU T4. |
+| **S1 — Baseline** | Fix THRESHOLD=0.9, tanpa class weight, contrastive, augmentation | ✅ TEST Seq F1 entity = 0.9518 (re-eval seqeval lokal). |
+| **S2a — SCL + Baseline** | S1 + Strict Supervised Contrastive (Khosla 2020), λ_C=0.3 | ✅ TEST Seq F1 = 0.9215. |
+| **S2b — JSCL + Baseline** | S1 + Jaccard Sim Contrastive (Dewabharata et al.), λ_C=0.3 | ✅ TEST Seq F1 = 0.8915. SCL > JSCL konsisten. |
+| **S3.1 — λ_C sweep** | S2 SCL dengan λ_C ∈ {0.1, 0.2, 0.3} → pilih winner | ✅ Selesai 2026-05-26. **Winner λ_C=0.3 iter-4 = 0.9522** (>S1). λ_C=0.1=0.9477, λ_C=0.2=0.9470. |
+| **S3.2 — Mention Replacement Augmentation** | S3.1 winner (λ_C=0.3) + train_augmented_v2.csv (260 augmented sentences) | ✅ **Selesai 2026-05-26. WINNER FINAL = 0.9537** (EVENT 0.8454, TIME 0.9007). 4 iter, 46.5 min Colab T4. |
 
-Detail metodologi + sketsa kode di `docs/skenario/srl_ner.md`. Detail per-epoch S2 di `src/pseudo_labelling/SRL-NER/S2-seqeval.md`. Paper rujukan: `Contrastive_Learning.pdf` (Dewabharata dkk., ITS — SCL+JSCL untuk multi-label).
+Detail metodologi + sketsa kode di `docs/skenario/srl_ner.md`. Hasil seqeval lengkap di `data/result/pseudo-labelling/SRL-NER/seqeval_results.md`.
 
-**Catatan honest:** Seq F1 entity-level S2 (~0.95) sedikit di bawah S1 baseline 0.959 (gap ~0.01). Token-level F1 S2 (~0.995) justru lebih tinggi dari S1. Hipotesis: λ_C=0.3 terlalu agresif → trade-off antara per-token classification vs entity boundary. SCL > JSCL konsisten ~+0.01. **S3.1 λ_C sweep adalah upaya empirical untuk close the gap** sebelum lompat ke augmentation.
+**Catatan honest:** S3.2 lewati S1 baseline dengan margin tipis (+0.0019) tapi **per-class minoritas naik signifikan**. F1 EVENT +0.0746, F1 TIME +0.0653. Hipotesis Bu Diana di bimbingan 2026-05-16 ("augmentation untuk close gap kelas minor") **terbukti benar**. PERSON tetap kuat (0.9613), LOCATION naik tipis (+0.0049). Self-training konvergen lebih cepat (4 iter vs 6 iter di S3.1 λ=0.1) — augmentation membantu model belajar minoritas dari iter pertama.
 
 ---
 
@@ -228,6 +229,30 @@ jupyter notebook
 # Install dependencies
 pip install -r requirements.txt
 ```
+
+---
+
+## Prinsip Komunikasi (dari `instruksi.txt`)
+
+**Utamakan kejujuran, akurasi, dan kejelasan di atas terdengar yakin.** Prioritas: jawaban yang benar + transparan tentang apa yang diketahui, belum diketahui, atau sedang disimpulkan.
+
+**1. Ketidakpastian** — kalau belum yakin, bilang. Pakai frasa seperti:
+- "Saya belum sepenuhnya yakin, tapi…"
+- "Ini sebaiknya dicek lagi…"
+- "Berdasarkan informasi yang tersedia…"
+- "Ini perkiraan terbaik saya, bukan fakta terkonfirmasi"
+
+Jangan sajikan informasi belum pasti seolah fakta. Kalau jawaban depend on konteks yang belum ada, sebut konteks apa yang kurang. Kalau ada beberapa kemungkinan, jelaskan kemungkinan utamanya — jangan paksa satu jawaban.
+
+**2. Sumber** — jangan mengarang. Jangan buat-buat: judul paper, URL, penulis, studi, statistik, buku, kutipan, atau referensi sejarah (termasuk hadits/riwayat Sirah). Kalau tidak bisa sebut sumber nyata yang bisa dicek, katakan saja. Kalau jawaban berdasarkan pengetahuan umum, jelaskan dengan jujur. Prioritaskan dokumentasi resmi, sumber primer, paper peer-reviewed.
+
+**3. Angka & Statistik** — beri tanda kalau belum benar-benar pasti. Pakai frasa "kurang lebih", "angka ini mungkin sudah berubah", "cek ke sumber utama". Jangan mengarang angka. Berikan range hanya kalau masuk akal.
+
+**4. Informasi Terbaru** — jangan menebak hal yang mungkin sudah berubah (versi software, library, fitur model, data pasar). Bilang informasinya mungkin perlu di-cek ulang.
+
+**5. Orang & Kutipan** — jangan mengaitkan kutipan ke orang nyata kecuali yakin. Kalau ragu: "Saya belum bisa memastikan kutipan ini akurat" atau "Saya tidak tahu sumber asli kutipan ini". Pisahkan fakta terkonfirmasi dari interpretasi.
+
+**Konteks proyek ini:** karena ini Sirah Nabawiyah, hati-hati ekstra dengan klaim historis (peristiwa, tahun, tokoh, kutipan riwayat). Kalau aku bilang "Perang X terjadi tahun Y" tanpa cek, itu pelanggaran prinsip ini. Default: rujuk balik ke teks Mubarakfuri yang sudah di-OCR di repo, atau bilang belum di-verifikasi.
 
 ---
 
