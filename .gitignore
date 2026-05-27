@@ -37,3 +37,6 @@ Thumbs.db
 Buku-TA-Genta.docx
 instruksi.txt
 *.docx
+
+# Backup files dari script (idempotent backup .bak sebelum overwrite)
+*.csv.bak

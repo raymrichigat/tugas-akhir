@@ -822,16 +822,29 @@ def print_sample_relations(edges_df, n=10):
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser(description="Relation Extraction Sirah")
+    ap.add_argument("--input", type=Path, default=IN_PRELABELLED,
+                    help="Path ke prelabelled CSV (default: sirah_prelabelled.csv)")
+    ap.add_argument("--out-nodes", type=Path, default=OUT_NODES,
+                    help="Output nodes CSV path")
+    ap.add_argument("--out-edges", type=Path, default=OUT_EDGES,
+                    help="Output edges CSV path")
+    args = ap.parse_args()
+
     print("=" * 60)
     print("RELATION EXTRACTION - Sirah Nabawiyah")
     print("  (dengan pembobotan, relasi Person-Person, kronologi Event)")
     print("=" * 60)
+    print(f"  input    : {args.input}")
+    print(f"  out_nodes: {args.out_nodes}")
+    print(f"  out_edges: {args.out_edges}")
 
     # 1. Load data & alias map
     print("\n[1/8] Loading data...")
     alias_map = load_alias_map(IN_ALIAS_MAP)
     print(f"  Alias map: {len(alias_map)} entries loaded")
-    df = load_and_prepare_data(IN_PRELABELLED, alias_map)
+    df = load_and_prepare_data(args.input, alias_map)
 
     # 2. Load TOC & build period map (untuk pembobotan)
     print("\n[2/8] Loading TOC & building period map...")
@@ -875,14 +888,14 @@ def main():
 
     # 8. Save output
     print("\n[8/8] Saving output...")
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    args.out_nodes.parent.mkdir(parents=True, exist_ok=True)
 
-    nodes_df.to_csv(OUT_NODES, index=False, sep=";", encoding="utf-8-sig")
-    print(f"  Nodes saved to: {OUT_NODES}")
+    nodes_df.to_csv(args.out_nodes, index=False, sep=";", encoding="utf-8-sig")
+    print(f"  Nodes saved to: {args.out_nodes}")
 
     edges_df = pd.DataFrame(relations_dedup)
-    edges_df.to_csv(OUT_EDGES, index=False, sep=";", encoding="utf-8-sig")
-    print(f"  Edges saved to: {OUT_EDGES}")
+    edges_df.to_csv(args.out_edges, index=False, sep=";", encoding="utf-8-sig")
+    print(f"  Edges saved to: {args.out_edges}")
 
     # Statistik akhir
     print(f"\n{'='*60}")

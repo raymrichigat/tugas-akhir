@@ -1,0 +1,104 @@
+﻿chunk_id;label;category;entity_text;in_manual;in_ner;partial_match_with_manual
+000001-002;LOCATION;extra_by_NER;india;False;True;
+000001-002;LOCATION;extra_by_NER;timur tengah;False;True;
+000002-001;PERSON;extra_by_NER;ya'rub;False;True;
+000002-002;EVENT;missed_by_NER;hijrah;True;False;
+000002-003;PERSON;missed_by_NER;abul muluk;True;False;
+000002-003;LOCATION;extra_by_NER;bahrain;False;True;
+000002-005;LOCATION;extra_by_NER;baitul-haram;False;True;
+000002-008;PERSON;extra_by_NER;isma;False;True;
+000002-011;PERSON;missed_by_NER;dar bin qushay;True;False;
+000002-011;PERSON;partial_match_NER;abdud-dar bin qushay;False;True;dar bin qushay
+000004-003;PERSON;missed_by_NER;isa;True;False;
+000004-003;PERSON;missed_by_NER;dzu nuwas;True;False;
+000004-003;LOCATION;extra_by_NER;arab;False;True;
+000005-003;PERSON;extra_by_NER;lyas bin qubaishah;False;True;
+000005-003;LOCATION;extra_by_NER;darul kalb;False;True;
+000007-004;LOCATION;extra_by_NER;baitul-haram;False;True;
+000009-002;LOCATION;extra_by_NER;iraq;False;True;
+000009-002;LOCATION;extra_by_NER;arab saudi;False;True;
+000009-002;LOCATION;extra_by_NER;tanah;False;True;
+000010-002;PERSON;extra_by_NER;shalallahu alaihi wa;False;True;
+000010-014;PERSON;extra_by_NER;habasyah;False;True;
+000010-014;LOCATION;missed_by_NER;habasyah;True;False;
+000014-001;LOCATION;missed_by_NER;dzil-majaz;True;False;
+000014-001;LOCATION;missed_by_NER;majinnah;True;False;
+000014-001;LOCATION;missed_by_NER;ukazh;True;False;
+000016-001;PERSON;missed_by_NER;ma'ad bin bagian;True;False;
+000016-001;PERSON;partial_match_NER;ma'ad bin;False;True;ma'ad bin bagian
+000016-002;PERSON;missed_by_NER;matausyalakh bin akhnukh;True;False;
+000016-002;PERSON;missed_by_NER;idris;True;False;
+000016-002;PERSON;missed_by_NER;adam;True;False;
+000016-002;PERSON;missed_by_NER;nuh;True;False;
+000017-001;PERSON;missed_by_NER;hasyim bin abdu;True;False;
+000017-001;PERSON;partial_match_NER;hasyim bin abdu manaf;False;True;hasyim bin abdu
+000017-008;PERSON;extra_by_NER;habasyah;False;True;
+000017-008;LOCATION;missed_by_NER;habasyah;True;False;
+000017-009;PERSON;extra_by_NER;az-zubair;False;True;
+000017-009;PERSON;extra_by_NER;abdul;False;True;
+000017-009;PERSON;extra_by_NER;ka'bah;False;True;
+000017-009;PERSON;extra_by_NER;ummul-hakim;False;True;
+000017-009;LOCATION;missed_by_NER;ka'bah;True;False;
+000018-001;TIME;missed_by_NER;tanggal 9 rabi;True;False;
+000018-001;TIME;partial_match_NER;tanggal 9 rabi'ul;False;True;tanggal 9 rabi
+000019-005;PERSON;partial_match_NER;abu dzu-;False;True;abu dzu- aib
+000026-001;TIME;extra_by_NER;bulan dzul-;False;True;
+000030-004;LOCATION;missed_by_NER;ka'bah;True;False;
+000032-001;TIME;missed_by_NER;malam tanggal 21 dari bulan ramadhan;True;False;
+000032-001;TIME;partial_match_NER;tanggal 21;False;True;malam tanggal 21 dari bulan ramadhan
+000032-002;TIME;extra_by_NER;bulan;False;True;
+000035-002;EVENT;extra_by_NER;malam;False;True;
+000039-002;PERSON;partial_match_NER;al-arqam bin abil-arqam;False;True;al-arqam bin abil
+000049-004;PERSON;partial_match_NER;ibnul ashda'al-hudzali;False;True;ibnul ashda
+000050-002;PERSON;partial_match_NER;al-arqam bin abil-alqam;False;True;al-arqam bin abil
+000051-006;EVENT;missed_by_NER;hijrah;True;False;
+000074-004;LOCATION;missed_by_NER;dzil-majaz;True;False;
+000074-004;LOCATION;missed_by_NER;ukazh;True;False;
+000080-002;EVENT;missed_by_NER;isra;True;False;
+000084-001;TIME;missed_by_NER;pertengahan hari-hari tasyriq;True;False;
+000084-001;TIME;partial_match_NER;hari-hari tasyriq;False;True;pertengahan hari-hari tasyriq
+000089-001;EVENT;missed_by_NER;hijrah;True;False;
+000089-005;PERSON;partial_match_NER;a-walid bin al-walid;False;True;walid bin al-walid
+000090-002;TIME;missed_by_NER;tanggal 12 september;True;False;
+000090-002;TIME;missed_by_NER;tahun 622 m;True;False;
+000090-002;TIME;missed_by_NER;tahun 14 dari nubuwah;True;False;
+000090-002;TIME;partial_match_NER;tahun 622;False;True;tahun 622 m
+000090-002;TIME;partial_match_NER;tanggal 12;False;True;tanggal 12 september
+000090-002;TIME;partial_match_NER;14;False;True;tahun 14 dari nubuwah
+000097-001;TIME;missed_by_NER;tanggal 8 rabi;True;False;
+000097-001;TIME;partial_match_NER;tanggal 8 rabi'ul;False;True;tanggal 8 rabi
+000098-002;EVENT;missed_by_NER;perang badr aisyah;True;False;
+000098-002;EVENT;partial_match_NER;perang badr;False;True;perang badr aisyah
+000098-003;EVENT;missed_by_NER;perang badr aisyah;True;False;
+000098-003;EVENT;partial_match_NER;perang badr;False;True;perang badr aisyah
+000104-001;TIME;missed_by_NER;tanggal 12 rabi;True;False;
+000104-001;TIME;partial_match_NER;tanggal 12 rabi'ul;False;True;tanggal 12 rabi
+000104-001;TIME;extra_by_NER;hari jum'at;False;True;
+000114-005;TIME;missed_by_NER;bulan jumada;True;False;
+000114-005;TIME;partial_match_NER;bulan jumadal;False;True;bulan jumada
+000114-013;EVENT;missed_by_NER;perang badr beberapa;True;False;
+000114-013;EVENT;partial_match_NER;perang badr;False;True;perang badr beberapa
+000138-002;EVENT;extra_by_NER;perang al-yamamah;False;True;
+000147-001;TIME;missed_by_NER;bulan syawwal 2 h;True;False;
+000147-001;TIME;partial_match_NER;bulan syawwal 2 hijriyah;False;True;bulan syawwal 2 h
+000153-002;EVENT;extra_by_NER;perang as-sawiq;False;True;
+000157-003;LOCATION;missed_by_NER;uhud;True;False;
+000157-003;EVENT;missed_by_NER;perang uhud jabal;True;False;
+000157-003;EVENT;partial_match_NER;jabal uhud;False;True;perang uhud jabal
+000157-003;EVENT;partial_match_NER;perang uhud;False;True;perang uhud jabal
+000213-001;PERSON;partial_match_NER;amir bin ath-;False;True;amir bin ath
+000213-002;PERSON;partial_match_NER;amir bin ath-thufail;False;True;amir bin ath
+000223-005;EVENT;extra_by_NER;perjanjian hudaibiyah;False;True;
+000224-001;TIME;extra_by_NER;bulan 213;False;True;
+000247-001;EVENT;extra_by_NER;perjanjian hudaibiyah;False;True;
+000255-002;EVENT;missed_by_NER;ghazwah dzatu qarad;True;False;
+000255-004;EVENT;missed_by_NER;perang khaibar bekas;True;False;
+000255-004;EVENT;partial_match_NER;perang khaibar;False;True;perang khaibar bekas
+000285-006;TIME;extra_by_NER;bulan rabi'ul 4;False;True;
+000293-001;EVENT;extra_by_NER;perang mu'tah;False;True;
+000296-001;TIME;extra_by_NER;8 h;False;True;
+000301-001;LOCATION;partial_match_NER;dzul marwah;False;True;marwah
+000301-001;EVENT;partial_match_NER;perang bani al-ashfar;False;True;perang bani al
+000331-001;EVENT;extra_by_NER;perang tha'if;False;True;
+000359-009;TIME;extra_by_NER;hari-hari tasyriq;False;True;
+000376-001;TIME;extra_by_NER;bulan syawal;False;True;

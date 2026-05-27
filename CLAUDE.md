@@ -142,38 +142,51 @@ TA_sirah/
 | Social Network Analysis — graph-level (revisi #4 Bu Diana) | ✅ **Selesai 2026-05-12** (density 0.086, transitivity 0.77, avg_path 2.47, 8 components, giant 90.8%). Community comparison: Louvain proper Q=0.327 vs Greedy Q=0.320 vs Girvan-Newman Q=0.024. Script: `sna_graph_metrics.py`. |
 | Uji coba sampling 5 event berperiode jauh (revisi #2 Bu Diana) | ✅ **Selesai 2026-05-12** (Perang Badr/Uhud/Hudaibiyah/Khaibar/Tabuk; 60 unique Person; bias coverage NER terlihat — Perang Badr dominasi 39 person). Script: `case_study_events.py`. |
 | Build Knowledge Graph (Neo4j) v2 dengan Period node | ✅ **Selesai 2026-05-12** (`import_sirah_v2.cypher`, 15 Period nodes + IN_PERIOD relations, support query per-period) |
+| Inference S3.2 winner ke seluruh chunks | ✅ **Selesai 2026-05-28** (Colab T4, 1 menit). Output: `data/result/pseudo-labelling/SRL-NER/inference/sirah_predicted_v3_{token,entity}.csv` (12,082 entities di 1094 chunks). |
+| Knowledge Graph v3 (built from NER inference) | ✅ **Selesai 2026-05-28**. `nodes_v3.csv` (1280 nodes, +44% vs v2) + `edges_v3.csv` (491 edges, +52% vs v2). EVENT 36→44, PERSON +32%, TIME +450%. |
+| Comparison report SRL-NER vs manual labelling | ✅ **Selesai 2026-05-28** — `comparison_srl_vs_manual.md`. Per-label F1: PERSON=0.978, LOCATION=0.975, EVENT=0.919, TIME=0.926. Micro F1=0.972 di 800 common chunks. |
 
-### Catatan progres terakhir (sesi: 2026-05-22→26 S3.1 sweep + S3.2 winner + Priority D)
+### Catatan progres terakhir (sesi: 2026-05-28 — Inference + KG v3 + Comparison)
 
-**S3.2 menang!** SRL-NER pipeline selesai 2026-05-26 dengan TEST F1 entity = **0.9537** — pertama kali melampaui S1 baseline (0.9518) dengan margin +0.0019. Augmentation v2 (period-aware mention replacement, 260 augmented sentences) + λ_C=0.3 (winner S3.1) = winning combo.
+**Pipeline end-to-end SRL-NER → Knowledge Graph selesai.** Inference model winner S3.2 ke seluruh 1094 chunks (Colab T4, 1 menit), regenerate KG v3 yang **44% lebih banyak nodes** dan **52% lebih banyak edges** dari v2.
 
-**Hasil seqeval head-to-head (test set 258 kalimat, 1759 entities):**
+**Hasil utama:**
 
-| Tag | F1 entity | EVENT | TIME | Δ vs S1 |
-|---|---:|---:|---:|---:|
-| S1-baseline-iter6 | 0.9518 | 0.7677 | 0.8354 | — |
-| S3.1-lambda03-iter4 | 0.9522 | 0.7708 | 0.8354 | +0.0004 |
-| **S3.2-scl-aug-iter4** | **0.9537** | **0.8454** | **0.9007** | **+0.0019** ✅ |
+| | v2 (manual) | **v3 (NER S3.2)** | Δ |
+|---|---:|---:|---|
+| Nodes total | 892 | **1280** | +44% |
+| EVENT | 36 | 44 | +22% (Perang Bu'Ats, Mu'Tah, Hunain ke-detect baru) |
+| Edges total | 322 | **491** | +52% |
 
-Highlights S3.2: F1 EVENT melonjak 0.7708→0.8454 (+0.0746) sesuai hipotesis Bu Diana. F1 TIME juga naik 0.8354→0.9007 (+0.0653). Konvergen 4 iter dalam 46.5 menit.
+**Comparison NER v3 vs Manual labelling (Bu Diana request):**
 
-**Priority D (5 deliverables) selesai paralel sambil S3.2 jalan:**
-- ✅ #7 Centrality node Event (`event_centrality.{csv,_summary.md,_network.png}`) — 36 Event nodes, 15 komunitas. Top PageRank: Perang Badr > Khandaq > Uhud.
-- ✅ #8 Wordcloud per komunitas (8 PNG + summary md, Q=0.317 = moderate, interpretasi 8 komunitas Person network).
-- ✅ #9 Frekuensi entitas per-period (sudah pre-existing dari sesi sebelumnya).
-- ✅ #10 Analisis event-related case study (sudah pre-existing — `edge_validation_summary.md`).
-- ✅ #11 LLM verb extraction POC (`llm_verb_extraction_poc.py` + 18 EVENT + 28 SVO triplet, structured prompt single-batch chat).
+| Label | Precision | Recall | F1 |
+|---|---:|---:|---:|
+| PERSON | 0.972 | 0.984 | **0.978** |
+| LOCATION | 0.967 | 0.983 | **0.975** |
+| EVENT | 0.913 | 0.925 | **0.919** |
+| TIME | 0.914 | 0.938 | **0.926** |
+| **MICRO** | **0.965** | **0.979** | **0.972** |
 
-> 📜 **Detail historis lengkap** (sesi 2026-04-16 s/d 2026-05-26, termasuk S3.1 sweep + S3.2 winner + Priority D) ada di **`progress_log.md`** di root.
+NER v3 cover **241 chunks tambahan** yang manual labelling tidak pernah tag (regex tidak match). Coverage scale-up = keuntungan utama.
 
-**Action item aktif (post-S3.2 winner):**
-1. ⏳ Inference NER terbaik (S3.2-scl-aug-iter4) → regenerate `nodes_v3.csv` + `edges_v3.csv` di seluruh `sirah_chunks_final.csv`.
-2. ⏳ Comparison report SRL-NER best vs manual labelling ground truth.
-3. ⏳ Manual validation 5-10 sample LLM verb extraction (cross-check ke teks Mubarakfuri) untuk dapat angka precision konkret.
-4. ⏳ Tulis paragraf hasil di laporan / slide bimbingan untuk semua 5 deliverable Priority D.
-5. ⏳ Visualisasi Neo4j (bukan PNG static) — screenshot + cypher query saved.
-6. ⏳ Scale-up LLM verb extraction (Opsi B: 50 chunks via batch chat ~25 menit; atau Opsi C: full coverage via API ~$6-10).
-7. ⏳ 2 bug pending (post-deadline): `OCCURRED_AT weight=2.0` + `PRECEDES stale v1 mapping`.
+**Issue di pipeline yang ditemukan + fixed:**
+1. Sub-word fragmentation (HF pipeline `aggregation='simple'` → 1376 entities corrupt). Fixed dengan rebuild entity-level dari token-level BIO + strip trailing punctuation.
+2. Span split di whitespace dengan `aggregation='first'`. Same fix.
+
+> 📜 **Detail historis lengkap** ada di **`progress_log.md`** di root.
+
+**Action item aktif (pre-bimbingan):**
+1. ⏳ Apply `event_period.py` ke nodes_v3.csv → assign period per EVENT.
+2. ⏳ Generate `import_sirah_v3.cypher` (Neo4j import script) dari v3.
+3. ⏳ Re-run SNA scripts (`sna_analysis.py`, `event_centrality.py`, `community_wordcloud.py`) di KG v3.
+4. ⏳ Visualisasi Neo4j (screenshot per-period, per-komunitas, 5 case study) — Bu Diana eksplisit prefer.
+5. ⏳ Slide bimbingan: 1 S3.2 winner + 1 comparison report + 5 Priority D + 1 KG v3 plan.
+6. ⏳ Manual validation 5-10 sample LLM verb extraction.
+
+**Post-bimbingan / future work:**
+7. ⏳ 2 bug pending: `OCCURRED_AT weight=2.0` + `PRECEDES stale v1 mapping` (Fathul Makkah → Perang Uhud salah arah, masih ada di v3).
+8. ⏳ Scale-up LLM verb extraction (Opsi B 50 chunks via batch chat ~25 menit).
 
 ### Skenario SRL-NER aktif (per 2026-05-26)
 

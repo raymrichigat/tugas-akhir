@@ -6,6 +6,96 @@ Ringkasan sesi paling baru tetap ada di `CLAUDE.md`. File ini menyimpan riwayat 
 
 ---
 
+## [2026-05-28] Inference S3.2 ke Seluruh Sirah + KG v3 + Comparison Report
+
+Sesi yang selesai-kan **end-to-end pipeline** dari NER (S3.2 winner) sampai Knowledge Graph baru. Deliverable utama bimbingan Bu Diana ("pipeline running end-to-end + comparison report SRL-NER vs manual labelling").
+
+### 1. Inference S3.2 ke seluruh chunks (di Colab T4, 1 menit total)
+- Notebook baru: `srl_ner_sirah_inference_v3_colab.ipynb` (Colab) — load model winner S3.2-scl-aug-iter4 dari Drive, inference seluruh `sirah_chunks_final.csv` (1094 chunks).
+- Output: `data/result/pseudo-labelling/SRL-NER/inference/sirah_predicted_v3_{token,entity}.csv` + `inference_runtime.json`.
+- Run-1 (aggregation='simple'): muncul **sub-word fragmentation** (1376 entities ber-prefix `##`, 10.6% data corrupt). Issue dari HF pipeline yang tidak konsisten merge sub-word saat ada special char.
+- Run-2 (aggregation='first'): sub-word artifact hilang (0 dengan `##`), tapi muncul issue boundary baru — span split di whitespace (`utbah` + `bin rabi` = 2 entity, padahal 1).
+- **Solusi final**: rebuild entity-level dari token-level CSV (yang BIO scheme-nya benar) via `build_v3_entity_from_token.py`. Reconstruct entity_text dari `teks_chunk[start_char:end_char]` + strip trailing punctuation.
+
+### 2. Pipeline scripts baru
+- 🆕 `src/relation_extraction/build_v3_entity_from_token.py` — decode BIO span dari token-level → reconstruct entity-level CSV yang akurat.
+- 🆕 `src/relation_extraction/build_v3_prelabelled_from_inference.py` — convert inference output ke schema `sirah_prelabelled_v3.csv` (mirror manual schema), siap di-feed ke `relation_extraction.py`.
+- 🆕 `src/relation_extraction/build_comparison_report.py` — entity-level comparison NER v3 vs manual labelling per chunk.
+- ✏️ `src/relation_extraction/relation_extraction.py` — tambah CLI args (`--input`, `--out-nodes`, `--out-edges`) supaya reusable untuk v2 atau v3.
+
+### 3. Knowledge Graph v3 (built from NER inference)
+Perbandingan dengan v2 (built from manual labelling):
+
+| | v2 (manual) | **v3 (NER S3.2)** | Δ |
+|---|---:|---:|---|
+| Nodes total | 892 | **1280** | +44% |
+| PERSON | ~750 | 988 | +32% |
+| LOCATION | 75 | 83 | +11% |
+| EVENT | 36 | **44** | +22% |
+| TIME | ~30 | **165** | +450% |
+| Edges total | 322 | **491** | +52% |
+| INVOLVED_IN | 123 | 227 | +85% |
+| KELUARGA | 91 | 110 | +21% |
+| OCCURRED_ON | 36 | 47 | +31% |
+
+Top 10 PERSON v3: Muhammad (1387), Abu Bakar (172), Abu Sufyan bin Harb (165), Umar bin Al-Khaththab (128), Ibnu Hisyam (100), Abu Jahal (85), Abu Thalib (84), Aisyah (73), Ibnu Ishaq (67), Ali bin Abu Thalib (66).
+
+Top 10 EVENT v3: Perang Badr (66), Perang Uhud (55), Perang Khandaq (24), Perjanjian Hudaibiyah (13), Perang Khaibar (13), Perang Tabuk (8), Perang Hunain (6), Perang Bu'Ats (5), Perang Mu'Tah (5), Baiat Aqabah Kubra (4). **Perang Bu'Ats, Perang Mu'Tah, Perang Hunain ke-detect baru** (tidak ada di v2).
+
+### 4. Comparison Report SRL-NER vs Manual
+
+Output: `data/result/analysis/comparison_srl_vs_manual.md` + `comparison_misclassified_samples.csv`.
+
+Cakupan:
+- 800 common chunks (di kedua dataset)
+- **241 only-NER chunks** (manual ga label ini, NER cover) — bukti coverage scale-up.
+- 1 only-manual chunk.
+
+Per-label entity-level metrics:
+
+| Label | Manual | NER v3 | TP | FN | FP | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| PERSON | 2814 | 2850 | 2770 | 44 | 80 | 0.972 | 0.984 | **0.978** |
+| LOCATION | 957 | 973 | 941 | 16 | 32 | 0.967 | 0.983 | **0.975** |
+| EVENT | 159 | 161 | 147 | 12 | 14 | 0.913 | 0.925 | **0.919** |
+| TIME | 273 | 280 | 256 | 17 | 24 | 0.914 | 0.938 | **0.926** |
+| **MICRO** | 4203 | 4264 | 4114 | 89 | 150 | **0.965** | **0.979** | **0.972** |
+
+**Insight utama:**
+1. F1 0.92-0.98 di semua label — NER align kuat dengan manual.
+2. NER v3 cover **241 chunks tambahan** yang manual tidak pernah label (regex tidak match).
+3. FP partial match (mis. "Abu Bakar" vs "Abu Bakar Ash-Shiddiq") = 51 dari 150 FP → bukan true error, cuma boundary granularity berbeda.
+
+**Disclaimer (di report):** manual labelling **bukan ground truth absolut**. Dikerjakan via regex + keyword (`pre_labelling.py`), banyak entity valid yang ke-skip karena pattern tidak match. Sehingga "missed by NER" bisa berarti either NER beneran missed atau manual over-detect via regex agresif.
+
+### 5. Action item terbawa ke sesi berikutnya
+
+**Pre-bimbingan:**
+1. ⏳ Apply `event_period.py` ke nodes_v3.csv → assign period per EVENT.
+2. ⏳ Generate `import_sirah_v3.cypher` (Neo4j import script) dari nodes_v3 + edges_v3.
+3. ⏳ Re-run SNA (`sna_analysis.py`, `event_centrality.py`, `community_wordcloud.py`) di KG v3 — bandingkan dengan v2.
+4. ⏳ Visualisasi Neo4j (screenshot per-period, per-komunitas, 5 case study) — Bu Diana eksplisit prefer Neo4j daripada PNG static.
+5. ⏳ Slide bimbingan: 1 slide S3.2 winner + 1 slide comparison report + 5 slide deliverable Priority D + 1 slide rencana KG v3 update.
+6. ⏳ Manual validation 5-10 sample LLM verb extraction (cross-check ke teks Mubarakfuri).
+
+**Post-bimbingan / future work:**
+7. ⏳ 2 bug pending: `OCCURRED_AT weight=2.0` + `PRECEDES stale v1 mapping` (Fathul Makkah → Perang Uhud salah arah, masih ada di v3).
+8. ⏳ Scale-up LLM verb extraction (Opsi B 50 chunks via batch chat ~25 menit).
+
+### File baru / modified di sesi ini
+
+- 🆕 `src/pseudo_labelling/SRL-NER/srl_ner_sirah_inference_v3_colab.ipynb`
+- 🆕 `src/relation_extraction/build_v3_entity_from_token.py`
+- 🆕 `src/relation_extraction/build_v3_prelabelled_from_inference.py`
+- 🆕 `src/relation_extraction/build_comparison_report.py`
+- ✏️ `src/relation_extraction/relation_extraction.py` (CLI args)
+- 🆕 `data/result/pseudo-labelling/SRL-NER/inference/{sirah_predicted_v3_token.csv, sirah_predicted_v3_entity.csv, inference_runtime.json}`
+- 🆕 `data/result/manual_labelling/sirah_prelabelled_v3.csv`
+- 🆕 `data/result/relation_result/{nodes_v3.csv, edges_v3.csv}`
+- 🆕 `data/result/analysis/{comparison_srl_vs_manual.md, comparison_misclassified_samples.csv}`
+
+---
+
 ## [2026-05-22 → 2026-05-26] S3.1 λ_C Sweep + S3.2 Augmentation + Priority D Deliverables
 
 Sesi besar yang menyelesaikan **S3.1 sweep + S3.2 augmentation winner + 5 deliverables Priority D** dari bimbingan 2026-05-16. SRL-NER pipeline secara empirik **selesai mengalahkan S1 baseline** untuk pertama kali (S3.2 F1 entity = 0.9537 vs S1 = 0.9518).

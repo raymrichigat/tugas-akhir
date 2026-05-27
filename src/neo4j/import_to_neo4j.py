@@ -29,10 +29,13 @@ IN_NODES_V1 = RR_DIR / "nodes.csv"
 IN_EDGES_V1 = RR_DIR / "edges.csv"
 IN_NODES_V2 = RR_DIR / "nodes_v2.csv"
 IN_EDGES_V2 = RR_DIR / "edges_v2.csv"
+IN_NODES_V3 = RR_DIR / "nodes_v3.csv"
+IN_EDGES_V3 = RR_DIR / "edges_v3.csv"
 PERIOD_JSON = RR_DIR / "period_mapping.json"
 
 OUT_CYPHER_V1 = OUT_DIR / "import_sirah.cypher"
 OUT_CYPHER_V2 = OUT_DIR / "import_sirah_v2.cypher"
+OUT_CYPHER_V3 = OUT_DIR / "import_sirah_v3.cypher"
 
 
 def escape_cypher(s: str) -> str:
@@ -228,8 +231,8 @@ def import_via_driver(uri: str, user: str, password: str, cypher: str, clear: bo
 
 def main():
     parser = argparse.ArgumentParser(description="Import KG Sirah ke Neo4j")
-    parser.add_argument("--source", choices=["v1", "v2", "auto"], default="auto",
-                        help="Pilih data source: v1=nodes.csv, v2=nodes_v2.csv (default: auto-detect)")
+    parser.add_argument("--source", choices=["v1", "v2", "v3", "auto"], default="auto",
+                        help="Pilih data source: v1=nodes.csv, v2=nodes_v2.csv, v3=nodes_v3.csv (default: auto-detect, prefer v3>v2>v1)")
     parser.add_argument("--uri", help="Neo4j Bolt URI (contoh: bolt://localhost:7687)")
     parser.add_argument("--user", default="neo4j", help="Neo4j username")
     parser.add_argument("--password", help="Neo4j password")
@@ -242,16 +245,26 @@ def main():
 
     # Source selection
     if args.source == "auto":
-        use_v2 = IN_NODES_V2.exists() and IN_EDGES_V2.exists()
+        if IN_NODES_V3.exists() and IN_EDGES_V3.exists():
+            source = "v3"
+        elif IN_NODES_V2.exists() and IN_EDGES_V2.exists():
+            source = "v2"
+        else:
+            source = "v1"
     else:
-        use_v2 = (args.source == "v2")
+        source = args.source
 
-    if use_v2:
+    if source == "v3":
+        nodes_path, edges_path, out_path = IN_NODES_V3, IN_EDGES_V3, OUT_CYPHER_V3
+        print("\n  Source: v3 (NER S3.2 inference + Period nodes)")
+    elif source == "v2":
         nodes_path, edges_path, out_path = IN_NODES_V2, IN_EDGES_V2, OUT_CYPHER_V2
         print("\n  Source: v2 (apply_review_to_kg.py output) + Period nodes")
     else:
         nodes_path, edges_path, out_path = IN_NODES_V1, IN_EDGES_V1, OUT_CYPHER_V1
         print("\n  Source: v1 (raw relation_extraction output, no Period nodes)")
+
+    use_periods = source in ("v2", "v3")
 
     # 1. Baca data
     print("\n[1/3] Membaca nodes & edges...")
@@ -261,7 +274,7 @@ def main():
     print(f"  Edges: {len(edges_df)}")
 
     periods = None
-    if use_v2 and PERIOD_JSON.exists():
+    if use_periods and PERIOD_JSON.exists():
         with open(PERIOD_JSON, encoding="utf-8") as f:
             periods = json.load(f)
         print(f"  Periods: {len(periods)}")
@@ -332,9 +345,9 @@ def main():
     print("RETURN type(r), startNode(r).name, endNode(r).name, r.weight")
     print("ORDER BY r.weight DESC LIMIT 30;")
 
-    if use_v2:
+    if use_periods:
         print("")
-        print("--- Query khusus v2 (Period node) ---")
+        print("--- Query khusus v2/v3 (Period node) ---")
         print("")
         print("// Lihat semua period berurutan:")
         print('MATCH (p:Period) RETURN p.period_id, p.label, p.phase, p.page_start, p.page_end ORDER BY p.page_start;')
