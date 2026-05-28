@@ -20,16 +20,34 @@ Cara pakai:
   python sna_analysis.py
 """
 
+import argparse
 import pandas as pd
 import networkx as nx
 from pathlib import Path
 from collections import defaultdict
 
 # ── Konfigurasi ──────────────────────────────────────────────────────────────
-BASE_DIR = Path(r"E:\2_Kehidupan-Kuliah\10_tugas-akhir\repo-TA\TA_preprocess\TA_sirah")
-IN_NODES = BASE_DIR / "data" / "result" / "relation_result" / "nodes.csv"
-IN_EDGES = BASE_DIR / "data" / "result" / "relation_result" / "edges.csv"
-OUT_DIR = BASE_DIR / "data" / "result" / "analysis"
+BASE_DIR = Path(__file__).resolve().parents[2]
+RR_DIR = BASE_DIR / "data" / "result" / "relation_result"
+
+
+def resolve_paths(version: str):
+    """Pilih nodes/edges/out_dir berdasarkan version (v1|v2|v3)."""
+    if version == "v1":
+        nodes = RR_DIR / "nodes.csv"
+        edges = RR_DIR / "edges.csv"
+        out = BASE_DIR / "data" / "result" / "analysis"
+    elif version == "v2":
+        nodes = RR_DIR / "nodes_v2.csv"
+        edges = RR_DIR / "edges_v2.csv"
+        out = BASE_DIR / "data" / "result" / "analysis"
+    elif version == "v3":
+        nodes = RR_DIR / "nodes_v3.csv"
+        edges = RR_DIR / "edges_v3.csv"
+        out = BASE_DIR / "data" / "result" / "analysis" / "v3"
+    else:
+        raise ValueError(f"Unknown version: {version}")
+    return nodes, edges, out
 
 
 def load_graph(nodes_path, edges_path):
@@ -304,13 +322,23 @@ def visualize_network(G, metrics, community_map, out_dir):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="SNA — Sirah Nabawiyah")
+    parser.add_argument("--version", choices=["v1", "v2", "v3"], default="v3",
+                        help="Pilih versi nodes/edges (default: v3)")
+    args = parser.parse_args()
+
+    in_nodes, in_edges, out_dir = resolve_paths(args.version)
+
     print("=" * 60)
-    print("SOCIAL NETWORK ANALYSIS — Sirah Nabawiyah")
+    print(f"SOCIAL NETWORK ANALYSIS — Sirah Nabawiyah [{args.version}]")
     print("=" * 60)
+    print(f"  nodes : {in_nodes.name}")
+    print(f"  edges : {in_edges.name}")
+    print(f"  out   : {out_dir}")
 
     # 1. Load graph
     print("\n[1/5] Loading graph...")
-    G_full, nodes_df, edges_df = load_graph(IN_NODES, IN_EDGES)
+    G_full, nodes_df, edges_df = load_graph(in_nodes, in_edges)
 
     # 2. Build Person co-participation graph
     print("\n[2/5] Building Person co-participation graph...")
@@ -330,10 +358,10 @@ def main():
 
     # 5. Output
     print("\n[5/5] Generating output...")
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    save_metrics_csv(metrics, community_map, OUT_DIR)
-    generate_report(metrics, community_map, G_person, OUT_DIR)
-    visualize_network(G_person, metrics, community_map, OUT_DIR)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    save_metrics_csv(metrics, community_map, out_dir)
+    generate_report(metrics, community_map, G_person, out_dir)
+    visualize_network(G_person, metrics, community_map, out_dir)
 
     # Ringkasan
     print(f"\n{'='*60}")

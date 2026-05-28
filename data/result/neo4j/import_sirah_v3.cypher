@@ -1308,6 +1308,14 @@ MERGE (n:Time {name: "Bulan Muharram 7 H"}) SET n += {name: "Bulan Muharram 7 H"
 MERGE (n:Time {name: "Bulan Dzul Qa\'Dah 7 H"}) SET n += {name: "Bulan Dzul Qa\'Dah 7 H", node_id: "0f03b62a741c", frequency: 1};
 MERGE (n:Time {name: "Tanggal 28 Atau"}) SET n += {name: "Tanggal 28 Atau", node_id: "9a47f272c9e0", frequency: 1};
 MERGE (n:Time {name: "Tanggal 27 Januari"}) SET n += {name: "Tanggal 27 Januari", node_id: "9da44cd40f93", frequency: 1};
+MERGE (n:Event {name: "Kelahiran Nabi"}) SET n += {name: "Kelahiran Nabi", node_id: "abd83d2a0067", frequency: 29, periode_bab: "Nasab & Kelahiran Nabi", page_range: "73-93"};
+MERGE (n:Event {name: "Wahyu Pertama"}) SET n += {name: "Wahyu Pertama", node_id: "f4242a1814db", frequency: 15, periode_bab: "Awal Kenabian & Mandat Dakwah", page_range: "94-105"};
+MERGE (n:Event {name: "Hijrah Ke Habasyah"}) SET n += {name: "Hijrah Ke Habasyah", node_id: "9aa593607e6f", frequency: 13, periode_bab: "Dakwah Jahriyah & Tekanan Quraisy", page_range: "133-160"};
+MERGE (n:Event {name: "Pemboikotan Bani Hasyim"}) SET n += {name: "Pemboikotan Bani Hasyim", node_id: "ca40e2ba9d02", frequency: 9, periode_bab: "Dakwah Jahriyah & Tekanan Quraisy", page_range: "152-160"};
+MERGE (n:Event {name: "Tahun Berduka"}) SET n += {name: "Tahun Berduka", node_id: "fbf771ac3a38", frequency: 6, periode_bab: "Dakwah Jahriyah & Tekanan Quraisy", page_range: "165-175"};
+MERGE (n:Event {name: "Hijrah Ke Madinah"}) SET n += {name: "Hijrah Ke Madinah", node_id: "ffd80e80fffa", frequency: 26, periode_bab: "Hijrah ke Madinah", page_range: "214-232"};
+MERGE (n:Event {name: "Haji Wada\'"}) SET n += {name: "Haji Wada\'", node_id: "876f2449d4fc", frequency: 12, periode_bab: "Penaklukan Makkah hingga Akhir Kenabian", page_range: "596-610"};
+MERGE (n:Event {name: "Wafat Nabi"}) SET n += {name: "Wafat Nabi", node_id: "d179eb8ce072", frequency: 21, periode_bab: "Penaklukan Makkah hingga Akhir Kenabian", page_range: "601-610"};
 
 // -- Edges --
 MATCH (a:Person {name: "Jabalah Bin Al-Aiham"}), (b:Event {name: "Perang Yarmuk"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 1, r.halaman = "47-48", r.weight = 0.4, r.evidence = "...bagai kaki tangan imperium Romawi, hingga meletus Perang Yarmuk pada tahun 13 H. Raja mereka yang terakhir, Jabalah bin Al-Aiham dapat ditarik masuk ke dalam Islam pada masa Amir...", r.periode_bab = "Konteks Arab Jahiliyah";
@@ -1801,6 +1809,105 @@ MATCH (a:Event {name: "Perang Dzatur Riqa"}), (b:Event {name: "Perang Mu\'Tah"})
 MATCH (a:Event {name: "Perang Mu\'Tah"}), (b:Event {name: "Perang Hunain"}) MERGE (a)-[r:PRECEDES]->(b) SET r.frequency = 1, r.halaman = "502", r.weight = 1.0, r.evidence = "Perang Mu\'Tah (BAB: PERANG MU’TAH) -> Perang Hunain (BAB: PERANG HUNAIN)", r.periode_bab = "Perang Mu\'tah & Penaklukan Makkah";
 MATCH (a:Event {name: "Perang Hunain"}), (b:Event {name: "Perang Tha\'If"}) MERGE (a)-[r:PRECEDES]->(b) SET r.frequency = 1, r.halaman = "538", r.weight = 1.0, r.evidence = "Perang Hunain (BAB: PERANG HUNAIN) -> Perang Tha\'If (BAB: Perang Tha’if)", r.periode_bab = "Hunain, Tabuk & Puncak Kekuatan Islam";
 MATCH (a:Event {name: "Perang Tha\'If"}), (b:Event {name: "Perang Tabuk"}) MERGE (a)-[r:PRECEDES]->(b) SET r.frequency = 1, r.halaman = "544", r.weight = 1.0, r.evidence = "Perang Tha\'If (BAB: Perang Tha’if) -> Perang Tabuk (BAB: PERANG TABUK)", r.periode_bab = "Perang Uhud & Satuan Pasukan Pasca Uhud";
+MATCH (a:Person {name: "Abu Thalib"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 15, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Ibnu Hisyam"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 13, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Muhammad"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 12, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Abdul Muththalib"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 10, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Khadijah"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 10, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Halimah"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 9, r.halaman = "", r.weight = 0.95, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Al-Khadhri"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Ibnu Ishaq"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Jibril"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Kisra"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Hamzah bin Abdul Muththalib"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Ibrahim"}), (b:Event {name: "Kelahiran Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Event {name: "Kelahiran Nabi"}), (b:Location {name: "Makkah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 18, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Event {name: "Kelahiran Nabi"}), (b:Location {name: "Ka\'bah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 16, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Event {name: "Kelahiran Nabi"}), (b:Location {name: "Syam"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 9, r.halaman = "", r.weight = 0.95, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Event {name: "Kelahiran Nabi"}), (b:Location {name: "Zamzam"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Event {name: "Kelahiran Nabi"}), (b:Location {name: "Madinah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Event {name: "Kelahiran Nabi"}), (b:Location {name: "Aqabah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Event {name: "Kelahiran Nabi"}), (b:Location {name: "Baitul- Haram"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Nasab & Kelahiran Nabi";
+MATCH (a:Person {name: "Khadijah"}), (b:Event {name: "Wahyu Pertama"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 15, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Person {name: "Jibril"}), (b:Event {name: "Wahyu Pertama"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 12, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Person {name: "Muhammad"}), (b:Event {name: "Wahyu Pertama"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 4, r.halaman = "", r.weight = 0.7, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Person {name: "Ath-Thabari"}), (b:Event {name: "Wahyu Pertama"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Person {name: "Ibnu Hisyam"}), (b:Event {name: "Wahyu Pertama"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Person {name: "Ibnu Hajar"}), (b:Event {name: "Wahyu Pertama"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Person {name: "Al-Khadhri"}), (b:Event {name: "Wahyu Pertama"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Event {name: "Wahyu Pertama"}), (b:Location {name: "Gua Hira"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 7, r.halaman = "", r.weight = 0.8500000000000001, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Event {name: "Wahyu Pertama"}), (b:Location {name: "Makkah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 6, r.halaman = "", r.weight = 0.8, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Event {name: "Wahyu Pertama"}), (b:Location {name: "Jabal Nur"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Event {name: "Wahyu Pertama"}), (b:Time {name: "Ramadhan"}) MERGE (a)-[r:OCCURRED_ON]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Event {name: "Wahyu Pertama"}), (b:Time {name: "Lailatul-Qadar"}) MERGE (a)-[r:OCCURRED_ON]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Event {name: "Wahyu Pertama"}), (b:Time {name: "Lailatul-Qadr"}) MERGE (a)-[r:OCCURRED_ON]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Awal Kenabian & Mandat Dakwah";
+MATCH (a:Person {name: "Najasyi"}), (b:Event {name: "Hijrah Ke Habasyah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 26, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Isa bin Maryam"}), (b:Event {name: "Hijrah Ke Habasyah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Ibnu Ishaq"}), (b:Event {name: "Hijrah Ke Habasyah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Abu Thalib"}), (b:Event {name: "Hijrah Ke Habasyah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Event {name: "Hijrah Ke Habasyah"}), (b:Location {name: "Habasyah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 9, r.halaman = "", r.weight = 0.95, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Event {name: "Hijrah Ke Habasyah"}), (b:Location {name: "Makkah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 5, r.halaman = "", r.weight = 0.75, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Event {name: "Hijrah Ke Habasyah"}), (b:Location {name: "Masjidil Haram"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Event {name: "Hijrah Ke Habasyah"}), (b:Location {name: "Baitul-Haram"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Abu Thalib"}), (b:Event {name: "Pemboikotan Bani Hasyim"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 9, r.halaman = "", r.weight = 0.95, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Muhammad"}), (b:Event {name: "Pemboikotan Bani Hasyim"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 4, r.halaman = "", r.weight = 0.7, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Abu Jahal"}), (b:Event {name: "Pemboikotan Bani Hasyim"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 4, r.halaman = "", r.weight = 0.7, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Event {name: "Pemboikotan Bani Hasyim"}), (b:Location {name: "Makkah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 6, r.halaman = "", r.weight = 0.8, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Event {name: "Pemboikotan Bani Hasyim"}), (b:Location {name: "Ka\'bah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Abu Thalib"}), (b:Event {name: "Tahun Berduka"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 8, r.halaman = "", r.weight = 0.9, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Khadijah"}), (b:Event {name: "Tahun Berduka"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 6, r.halaman = "", r.weight = 0.8, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Abu Jahal"}), (b:Event {name: "Tahun Berduka"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Abdul Muththalib"}), (b:Event {name: "Tahun Berduka"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Event {name: "Tahun Berduka"}), (b:Location {name: "Habasyah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 4, r.halaman = "", r.weight = 0.7, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Event {name: "Tahun Berduka"}), (b:Location {name: "Makkah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Event {name: "Tahun Berduka"}), (b:Location {name: "Tha\'if"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Dakwah Jahriyah & Tekanan Quraisy";
+MATCH (a:Person {name: "Abu Bakar"}), (b:Event {name: "Hijrah Ke Madinah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 48, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Person {name: "Muhammad"}), (b:Event {name: "Hijrah Ke Madinah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 8, r.halaman = "", r.weight = 0.9, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Person {name: "Aisyah"}), (b:Event {name: "Hijrah Ke Madinah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 6, r.halaman = "", r.weight = 0.8, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Person {name: "Abu Ayyub"}), (b:Event {name: "Hijrah Ke Madinah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Person {name: "Zainab"}), (b:Event {name: "Hijrah Ke Madinah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Person {name: "Jibril"}), (b:Event {name: "Hijrah Ke Madinah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Person {name: "Ibnu Ishaq"}), (b:Event {name: "Hijrah Ke Madinah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Person {name: "Abu Jahal"}), (b:Event {name: "Hijrah Ke Madinah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Person {name: "Ali bin Abu Thalib"}), (b:Event {name: "Hijrah Ke Madinah"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Event {name: "Hijrah Ke Madinah"}), (b:Location {name: "Makkah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 17, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Event {name: "Hijrah Ke Madinah"}), (b:Location {name: "Madinah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 15, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Event {name: "Hijrah Ke Madinah"}), (b:Location {name: "Yaman"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Event {name: "Hijrah Ke Madinah"}), (b:Location {name: "Ka\'bah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Event {name: "Hijrah Ke Madinah"}), (b:Location {name: "Laut Merah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Event {name: "Hijrah Ke Madinah"}), (b:Location {name: "Qudaid"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Event {name: "Hijrah Ke Madinah"}), (b:Location {name: "Syam"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Hijrah ke Madinah";
+MATCH (a:Person {name: "Ibnu Hisyam"}), (b:Event {name: "Haji Wada\'"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Person {name: "Usamah bin Zaid"}), (b:Event {name: "Haji Wada\'"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Makkah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 5, r.halaman = "", r.weight = 0.75, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Ka\'bah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 4, r.halaman = "", r.weight = 0.7, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Mina"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 4, r.halaman = "", r.weight = 0.7, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Madinah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Dzul Hulaifah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Shafa"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Marwah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Arafah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Muzdalifah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Yaman"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Masjidil Haram"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Aqabah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Zamzam"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Al-Munawarah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Location {name: "Palestina"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Time {name: "Dzul Hijjah"}) MERGE (a)-[r:OCCURRED_ON]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Time {name: "Muharram"}) MERGE (a)-[r:OCCURRED_ON]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Time {name: "Rajab"}) MERGE (a)-[r:OCCURRED_ON]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Haji Wada\'"}), (b:Time {name: "Jumada"}) MERGE (a)-[r:OCCURRED_ON]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Person {name: "Abu Bakar"}), (b:Event {name: "Wafat Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 25, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Person {name: "Aisyah"}), (b:Event {name: "Wafat Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 13, r.halaman = "", r.weight = 1.0, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Person {name: "Muhammad"}), (b:Event {name: "Wafat Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 3, r.halaman = "", r.weight = 0.65, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Person {name: "Jibril"}), (b:Event {name: "Wafat Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Person {name: "Abu Thalhah"}), (b:Event {name: "Wafat Nabi"}) MERGE (a)-[r:INVOLVED_IN]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Wafat Nabi"}), (b:Location {name: "Khaibar"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Wafat Nabi"}), (b:Location {name: "Madinah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 2, r.halaman = "", r.weight = 0.6, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Wafat Nabi"}), (b:Location {name: "Aqabah"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Wafat Nabi"}), (b:Location {name: "Uhud"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
+MATCH (a:Event {name: "Wafat Nabi"}), (b:Location {name: "Jazirah Arab"}) MERGE (a)-[r:OCCURRED_AT]->(b) SET r.frequency = 1, r.halaman = "", r.weight = 0.55, r.evidence = "", r.periode_bab = "Penaklukan Makkah hingga Akhir Kenabian";
 
 // -- Event → Period (IN_PERIOD) --
 MATCH (e:Event {name: "Perang Badr"}), (p:Period {period_id: "P8"}) MERGE (e)-[:IN_PERIOD]->(p);
@@ -1847,7 +1954,13 @@ MATCH (e:Event {name: "Perang Bani Qainuqa"}), (p:Period {period_id: "P9"}) MERG
 MATCH (e:Event {name: "Perang Badr Shughra"}), (p:Period {period_id: "P9"}) MERGE (e)-[:IN_PERIOD]->(p);
 MATCH (e:Event {name: "Perang Bani Quraizhah"}), (p:Period {period_id: "P10"}) MERGE (e)-[:IN_PERIOD]->(p);
 MATCH (e:Event {name: "Perang Bani Al-Ashfar"}), (p:Period {period_id: "P12"}) MERGE (e)-[:IN_PERIOD]->(p);
-// IN_PERIOD relations created: 44
+MATCH (e:Event {name: "Kelahiran Nabi"}), (p:Period {period_id: "P1"}) MERGE (e)-[:IN_PERIOD]->(p);
+MATCH (e:Event {name: "Wahyu Pertama"}), (p:Period {period_id: "P2"}) MERGE (e)-[:IN_PERIOD]->(p);
+MATCH (e:Event {name: "Hijrah Ke Habasyah"}), (p:Period {period_id: "P4"}) MERGE (e)-[:IN_PERIOD]->(p);
+MATCH (e:Event {name: "Pemboikotan Bani Hasyim"}), (p:Period {period_id: "P4"}) MERGE (e)-[:IN_PERIOD]->(p);
+MATCH (e:Event {name: "Tahun Berduka"}), (p:Period {period_id: "P4"}) MERGE (e)-[:IN_PERIOD]->(p);
+MATCH (e:Event {name: "Hijrah Ke Madinah"}), (p:Period {period_id: "P6"}) MERGE (e)-[:IN_PERIOD]->(p);
+// IN_PERIOD relations created: 50
 
 // -- Selesai --
-// Total: 1280 nodes, 491 edges, 15 Period nodes
+// Total: 1288 nodes, 590 edges, 15 Period nodes

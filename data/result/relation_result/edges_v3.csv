@@ -490,3 +490,102 @@ Perang Dzatur Riqa;EVENT;PRECEDES;;Perang Mu'Tah;EVENT;;Perang Dzatur Riqa (BAB:
 Perang Mu'Tah;EVENT;PRECEDES;;Perang Hunain;EVENT;;Perang Mu'Tah (BAB: PERANG MU’TAH) -> Perang Hunain (BAB: PERANG HUNAIN);502;1;1.0;Perang Mu'tah & Penaklukan Makkah
 Perang Hunain;EVENT;PRECEDES;;Perang Tha'If;EVENT;;Perang Hunain (BAB: PERANG HUNAIN) -> Perang Tha'If (BAB: Perang Tha’if);538;1;1.0;Hunain, Tabuk & Puncak Kekuatan Islam
 Perang Tha'If;EVENT;PRECEDES;;Perang Tabuk;EVENT;;Perang Tha'If (BAB: Perang Tha’if) -> Perang Tabuk (BAB: PERANG TABUK);544;1;1.0;Perang Uhud & Satuan Pasukan Pasca Uhud
+Abu Thalib;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;15;1.0;Nasab & Kelahiran Nabi
+Ibnu Hisyam;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;13;1.0;Nasab & Kelahiran Nabi
+Muhammad;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;12;1.0;Nasab & Kelahiran Nabi
+Abdul Muththalib;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;10;1.0;Nasab & Kelahiran Nabi
+Khadijah;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;10;1.0;Nasab & Kelahiran Nabi
+Halimah;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;9;0.95;Nasab & Kelahiran Nabi
+Al-Khadhri;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;3;0.65;Nasab & Kelahiran Nabi
+Ibnu Ishaq;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;3;0.65;Nasab & Kelahiran Nabi
+Jibril;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;3;0.65;Nasab & Kelahiran Nabi
+Kisra;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;2;0.6;Nasab & Kelahiran Nabi
+Hamzah bin Abdul Muththalib;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;2;0.6;Nasab & Kelahiran Nabi
+Ibrahim;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;2;0.6;Nasab & Kelahiran Nabi
+Kelahiran Nabi;EVENT;OCCURRED_AT;;Makkah;LOCATION;000018-001;;;18;1.0;Nasab & Kelahiran Nabi
+Kelahiran Nabi;EVENT;OCCURRED_AT;;Ka'bah;LOCATION;000018-001;;;16;1.0;Nasab & Kelahiran Nabi
+Kelahiran Nabi;EVENT;OCCURRED_AT;;Syam;LOCATION;000018-001;;;9;0.95;Nasab & Kelahiran Nabi
+Kelahiran Nabi;EVENT;OCCURRED_AT;;Zamzam;LOCATION;000018-001;;;1;0.55;Nasab & Kelahiran Nabi
+Kelahiran Nabi;EVENT;OCCURRED_AT;;Madinah;LOCATION;000018-001;;;1;0.55;Nasab & Kelahiran Nabi
+Kelahiran Nabi;EVENT;OCCURRED_AT;;Aqabah;LOCATION;000018-001;;;1;0.55;Nasab & Kelahiran Nabi
+Kelahiran Nabi;EVENT;OCCURRED_AT;;Baitul- Haram;LOCATION;000018-001;;;1;0.55;Nasab & Kelahiran Nabi
+Khadijah;PERSON;INVOLVED_IN;;Wahyu Pertama;EVENT;000031-001;;;15;1.0;Awal Kenabian & Mandat Dakwah
+Jibril;PERSON;INVOLVED_IN;;Wahyu Pertama;EVENT;000031-001;;;12;1.0;Awal Kenabian & Mandat Dakwah
+Muhammad;PERSON;INVOLVED_IN;;Wahyu Pertama;EVENT;000031-001;;;4;0.7;Awal Kenabian & Mandat Dakwah
+Ath-Thabari;PERSON;INVOLVED_IN;;Wahyu Pertama;EVENT;000031-001;;;3;0.65;Awal Kenabian & Mandat Dakwah
+Ibnu Hisyam;PERSON;INVOLVED_IN;;Wahyu Pertama;EVENT;000031-001;;;3;0.65;Awal Kenabian & Mandat Dakwah
+Ibnu Hajar;PERSON;INVOLVED_IN;;Wahyu Pertama;EVENT;000031-001;;;2;0.6;Awal Kenabian & Mandat Dakwah
+Al-Khadhri;PERSON;INVOLVED_IN;;Wahyu Pertama;EVENT;000031-001;;;2;0.6;Awal Kenabian & Mandat Dakwah
+Wahyu Pertama;EVENT;OCCURRED_AT;;Gua Hira;LOCATION;000031-001;;;7;0.8500000000000001;Awal Kenabian & Mandat Dakwah
+Wahyu Pertama;EVENT;OCCURRED_AT;;Makkah;LOCATION;000031-001;;;6;0.8;Awal Kenabian & Mandat Dakwah
+Wahyu Pertama;EVENT;OCCURRED_AT;;Jabal Nur;LOCATION;000031-001;;;2;0.6;Awal Kenabian & Mandat Dakwah
+Wahyu Pertama;EVENT;OCCURRED_ON;;Ramadhan;TIME;000031-001;;;2;0.6;Awal Kenabian & Mandat Dakwah
+Wahyu Pertama;EVENT;OCCURRED_ON;;Lailatul-Qadar;TIME;000031-001;;;2;0.6;Awal Kenabian & Mandat Dakwah
+Wahyu Pertama;EVENT;OCCURRED_ON;;Lailatul-Qadr;TIME;000031-001;;;2;0.6;Awal Kenabian & Mandat Dakwah
+Najasyi;PERSON;INVOLVED_IN;;Hijrah Ke Habasyah;EVENT;000051-001;;;26;1.0;Dakwah Jahriyah & Tekanan Quraisy
+Isa bin Maryam;PERSON;INVOLVED_IN;;Hijrah Ke Habasyah;EVENT;000051-001;;;3;0.65;Dakwah Jahriyah & Tekanan Quraisy
+Ibnu Ishaq;PERSON;INVOLVED_IN;;Hijrah Ke Habasyah;EVENT;000051-001;;;2;0.6;Dakwah Jahriyah & Tekanan Quraisy
+Abu Thalib;PERSON;INVOLVED_IN;;Hijrah Ke Habasyah;EVENT;000051-001;;;2;0.6;Dakwah Jahriyah & Tekanan Quraisy
+Hijrah Ke Habasyah;EVENT;OCCURRED_AT;;Habasyah;LOCATION;000051-001;;;9;0.95;Dakwah Jahriyah & Tekanan Quraisy
+Hijrah Ke Habasyah;EVENT;OCCURRED_AT;;Makkah;LOCATION;000051-001;;;5;0.75;Dakwah Jahriyah & Tekanan Quraisy
+Hijrah Ke Habasyah;EVENT;OCCURRED_AT;;Masjidil Haram;LOCATION;000051-001;;;2;0.6;Dakwah Jahriyah & Tekanan Quraisy
+Hijrah Ke Habasyah;EVENT;OCCURRED_AT;;Baitul-Haram;LOCATION;000051-001;;;1;0.55;Dakwah Jahriyah & Tekanan Quraisy
+Abu Thalib;PERSON;INVOLVED_IN;;Pemboikotan Bani Hasyim;EVENT;000060-001;;;9;0.95;Dakwah Jahriyah & Tekanan Quraisy
+Muhammad;PERSON;INVOLVED_IN;;Pemboikotan Bani Hasyim;EVENT;000060-001;;;4;0.7;Dakwah Jahriyah & Tekanan Quraisy
+Abu Jahal;PERSON;INVOLVED_IN;;Pemboikotan Bani Hasyim;EVENT;000060-001;;;4;0.7;Dakwah Jahriyah & Tekanan Quraisy
+Pemboikotan Bani Hasyim;EVENT;OCCURRED_AT;;Makkah;LOCATION;000060-001;;;6;0.8;Dakwah Jahriyah & Tekanan Quraisy
+Pemboikotan Bani Hasyim;EVENT;OCCURRED_AT;;Ka'bah;LOCATION;000060-001;;;3;0.65;Dakwah Jahriyah & Tekanan Quraisy
+Abu Thalib;PERSON;INVOLVED_IN;;Tahun Berduka;EVENT;000065-001;;;8;0.9;Dakwah Jahriyah & Tekanan Quraisy
+Khadijah;PERSON;INVOLVED_IN;;Tahun Berduka;EVENT;000065-001;;;6;0.8;Dakwah Jahriyah & Tekanan Quraisy
+Abu Jahal;PERSON;INVOLVED_IN;;Tahun Berduka;EVENT;000065-001;;;2;0.6;Dakwah Jahriyah & Tekanan Quraisy
+Abdul Muththalib;PERSON;INVOLVED_IN;;Tahun Berduka;EVENT;000065-001;;;2;0.6;Dakwah Jahriyah & Tekanan Quraisy
+Tahun Berduka;EVENT;OCCURRED_AT;;Habasyah;LOCATION;000065-001;;;4;0.7;Dakwah Jahriyah & Tekanan Quraisy
+Tahun Berduka;EVENT;OCCURRED_AT;;Makkah;LOCATION;000065-001;;;3;0.65;Dakwah Jahriyah & Tekanan Quraisy
+Tahun Berduka;EVENT;OCCURRED_AT;;Tha'if;LOCATION;000065-001;;;1;0.55;Dakwah Jahriyah & Tekanan Quraisy
+Abu Bakar;PERSON;INVOLVED_IN;;Hijrah Ke Madinah;EVENT;000091-001;;;48;1.0;Hijrah ke Madinah
+Muhammad;PERSON;INVOLVED_IN;;Hijrah Ke Madinah;EVENT;000091-001;;;8;0.9;Hijrah ke Madinah
+Aisyah;PERSON;INVOLVED_IN;;Hijrah Ke Madinah;EVENT;000091-001;;;6;0.8;Hijrah ke Madinah
+Abu Ayyub;PERSON;INVOLVED_IN;;Hijrah Ke Madinah;EVENT;000091-001;;;3;0.65;Hijrah ke Madinah
+Zainab;PERSON;INVOLVED_IN;;Hijrah Ke Madinah;EVENT;000091-001;;;3;0.65;Hijrah ke Madinah
+Jibril;PERSON;INVOLVED_IN;;Hijrah Ke Madinah;EVENT;000091-001;;;2;0.6;Hijrah ke Madinah
+Ibnu Ishaq;PERSON;INVOLVED_IN;;Hijrah Ke Madinah;EVENT;000091-001;;;2;0.6;Hijrah ke Madinah
+Abu Jahal;PERSON;INVOLVED_IN;;Hijrah Ke Madinah;EVENT;000091-001;;;2;0.6;Hijrah ke Madinah
+Ali bin Abu Thalib;PERSON;INVOLVED_IN;;Hijrah Ke Madinah;EVENT;000091-001;;;2;0.6;Hijrah ke Madinah
+Hijrah Ke Madinah;EVENT;OCCURRED_AT;;Makkah;LOCATION;000091-001;;;17;1.0;Hijrah ke Madinah
+Hijrah Ke Madinah;EVENT;OCCURRED_AT;;Madinah;LOCATION;000091-001;;;15;1.0;Hijrah ke Madinah
+Hijrah Ke Madinah;EVENT;OCCURRED_AT;;Yaman;LOCATION;000091-001;;;2;0.6;Hijrah ke Madinah
+Hijrah Ke Madinah;EVENT;OCCURRED_AT;;Ka'bah;LOCATION;000091-001;;;1;0.55;Hijrah ke Madinah
+Hijrah Ke Madinah;EVENT;OCCURRED_AT;;Laut Merah;LOCATION;000091-001;;;1;0.55;Hijrah ke Madinah
+Hijrah Ke Madinah;EVENT;OCCURRED_AT;;Qudaid;LOCATION;000091-001;;;1;0.55;Hijrah ke Madinah
+Hijrah Ke Madinah;EVENT;OCCURRED_AT;;Syam;LOCATION;000091-001;;;1;0.55;Hijrah ke Madinah
+Ibnu Hisyam;PERSON;INVOLVED_IN;;Haji Wada';EVENT;000359-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Usamah bin Zaid;PERSON;INVOLVED_IN;;Haji Wada';EVENT;000359-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Makkah;LOCATION;000359-001;;;5;0.75;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Ka'bah;LOCATION;000359-001;;;4;0.7;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Mina;LOCATION;000359-001;;;4;0.7;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Madinah;LOCATION;000359-001;;;3;0.65;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Dzul Hulaifah;LOCATION;000359-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Shafa;LOCATION;000359-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Marwah;LOCATION;000359-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Arafah;LOCATION;000359-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Muzdalifah;LOCATION;000359-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Yaman;LOCATION;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Masjidil Haram;LOCATION;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Aqabah;LOCATION;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Zamzam;LOCATION;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Al-Munawarah;LOCATION;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_AT;;Palestina;LOCATION;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_ON;;Dzul Hijjah;TIME;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_ON;;Muharram;TIME;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_ON;;Rajab;TIME;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;OCCURRED_ON;;Jumada;TIME;000359-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Abu Bakar;PERSON;INVOLVED_IN;;Wafat Nabi;EVENT;000361-001;;;25;1.0;Penaklukan Makkah hingga Akhir Kenabian
+Aisyah;PERSON;INVOLVED_IN;;Wafat Nabi;EVENT;000361-001;;;13;1.0;Penaklukan Makkah hingga Akhir Kenabian
+Muhammad;PERSON;INVOLVED_IN;;Wafat Nabi;EVENT;000361-001;;;3;0.65;Penaklukan Makkah hingga Akhir Kenabian
+Jibril;PERSON;INVOLVED_IN;;Wafat Nabi;EVENT;000361-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Abu Thalhah;PERSON;INVOLVED_IN;;Wafat Nabi;EVENT;000361-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Wafat Nabi;EVENT;OCCURRED_AT;;Khaibar;LOCATION;000361-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Wafat Nabi;EVENT;OCCURRED_AT;;Madinah;LOCATION;000361-001;;;2;0.6;Penaklukan Makkah hingga Akhir Kenabian
+Wafat Nabi;EVENT;OCCURRED_AT;;Aqabah;LOCATION;000361-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Wafat Nabi;EVENT;OCCURRED_AT;;Uhud;LOCATION;000361-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Wafat Nabi;EVENT;OCCURRED_AT;;Jazirah Arab;LOCATION;000361-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian

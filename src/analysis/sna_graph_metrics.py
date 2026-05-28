@@ -332,16 +332,27 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--use-v1", action="store_true",
                     help="paksa pakai nodes.csv (bukan nodes_v2.csv)")
+    ap.add_argument("--version", choices=["v1", "v2", "v3"], default=None,
+                    help="Pilih versi nodes/edges (override --use-v1)")
     args = ap.parse_args()
 
-    if args.use_v1 or not (RR_DIR / "nodes_v2.csv").exists():
-        nodes_path = RR_DIR / "nodes.csv"
-        edges_path = RR_DIR / "edges.csv"
-        source_note = "v1 (`nodes.csv` + `edges.csv`) — periodisasi belum dibersihkan"
-    else:
+    if args.version == "v3":
+        nodes_path = RR_DIR / "nodes_v3.csv"
+        edges_path = RR_DIR / "edges_v3.csv"
+        source_note = "v3 (`nodes_v3.csv` + `edges_v3.csv`) — hasil NER S3.2 winner"
+        out_dir = OUT_DIR / "v3"
+    elif args.version == "v2" or (args.version is None and not args.use_v1
+                                   and (RR_DIR / "nodes_v2.csv").exists()):
         nodes_path = RR_DIR / "nodes_v2.csv"
         edges_path = RR_DIR / "edges_v2.csv"
         source_note = "v2 (`nodes_v2.csv` + `edges_v2.csv`) — sudah apply review periodisasi"
+        out_dir = OUT_DIR
+    else:
+        nodes_path = RR_DIR / "nodes.csv"
+        edges_path = RR_DIR / "edges.csv"
+        source_note = "v1 (`nodes.csv` + `edges.csv`) — periodisasi belum dibersihkan"
+        out_dir = OUT_DIR
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"[load] {nodes_path.name} + {edges_path.name}")
     edges_df = pd.read_csv(edges_path, sep=";", encoding="utf-8-sig").fillna("")
@@ -387,8 +398,8 @@ def main():
             print(f"  ARI({m1}, {m2}) = {v:.4f}")
 
     print("\n[report] generating...")
-    generate_report(metrics, community_runs, ari_matrix, OUT_DIR, source_note)
-    save_json(metrics, community_runs, ari_matrix, OUT_DIR)
+    generate_report(metrics, community_runs, ari_matrix, out_dir, source_note)
+    save_json(metrics, community_runs, ari_matrix, out_dir)
 
 
 if __name__ == "__main__":

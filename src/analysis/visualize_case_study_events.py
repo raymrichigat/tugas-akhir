@@ -200,13 +200,26 @@ def add_legend(fig: plt.Figure) -> None:
 
 
 def main() -> None:
+    import argparse
+    global NODES_CSV, EDGES_CSV, OUT_DIR
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--version", choices=["v2", "v3"], default="v3",
+                    help="Pilih versi nodes/edges (default: v3)")
+    args = ap.parse_args()
+
+    if args.version == "v3":
+        NODES_CSV = ROOT / "data" / "result" / "relation_result" / "nodes_v3.csv"
+        EDGES_CSV = ROOT / "data" / "result" / "relation_result" / "edges_v3.csv"
+        OUT_DIR = ROOT / "data" / "result" / "analysis" / "v3"
+
     nodes, edges = load_data()
     importance = compute_total_event_participation(edges)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     # 1. Save 5 individual PNGs
     print("=" * 60)
-    print("Generating individual sub-graph PNGs...")
+    print(f"Generating individual sub-graph PNGs [{args.version}]...")
     print("=" * 60)
     subgraphs: dict[str, nx.MultiGraph] = {}
     for event_name, period, page_range in EVENTS:

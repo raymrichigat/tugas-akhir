@@ -210,11 +210,26 @@ def compute_modularity_q(comm_map: dict[str, int]) -> float | None:
 
 
 def main():
+    import argparse
+    global SNA_CSV, EDGES_CSV, NODES_CSV, OUT_DIR, SUMMARY_MD
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--version", choices=["v2", "v3"], default="v3",
+                    help="Pilih versi nodes/edges (default: v3)")
+    args = ap.parse_args()
+
+    if args.version == "v3":
+        SNA_CSV = ROOT / "data" / "result" / "analysis" / "v3" / "sna_metrics.csv"
+        EDGES_CSV = ROOT / "data" / "result" / "relation_result" / "edges_v3.csv"
+        NODES_CSV = ROOT / "data" / "result" / "relation_result" / "nodes_v3.csv"
+        OUT_DIR = ROOT / "data" / "result" / "analysis" / "v3" / "community_wordclouds"
+        SUMMARY_MD = ROOT / "data" / "result" / "analysis" / "v3" / "community_wordclouds_summary.md"
+
     print("=" * 60)
-    print("COMMUNITY WORDCLOUD — Knowledge Graph Sirah")
+    print(f"COMMUNITY WORDCLOUD — Knowledge Graph Sirah [{args.version}]")
     print("=" * 60)
 
-    print("\n[1/5] loading sna_metrics + edges_v2...")
+    print(f"\n[1/5] loading sna_metrics + {EDGES_CSV.name}...")
     comm_map, sna_df = load_community_map(SNA_CSV)
     edges_df = load_evidence(EDGES_CSV)
     print(f"  persons in SNA: {len(comm_map)}")

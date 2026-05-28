@@ -6,6 +6,295 @@ Ringkasan sesi paling baru tetap ada di `CLAUDE.md`. File ini menyimpan riwayat 
 
 ---
 
+## [2026-05-28 malam] Lifecycle Events Enrichment + Validasi Tokoh + Manual Validation LLM POC
+
+Sesi lanjutan setelah pipeline v3 stabil. Fokus: address gap **EVENT count** dan validasi findings.
+
+### 1. Validasi tokoh "Amr Bin Umayyah" (rank #2 PR di v3)
+
+Investigasi tokoh yang muncul di rank #2 Person PR (di bawah Nabi). Verdict: **artifact metodologi, bukan real centrality.**
+
+**Bukti:**
+- Frequency=11, hanya 9 unique chunks
+- INVOLVED_IN ke 4 event mega: Perang Badr (63 person), Uhud (52), Khandaq (17), Tabuk (6)
+- Cek evidence text per chunk:
+  - Perang Badr: false — kalimat tentang Uqbah (yang ayahnya dibunuh Khubaib di Badr)
+  - Perang Uhud: false — kalimat perbandingan jumlah korban (Insiden Raji' vs Uhud)
+  - Perang Tabuk: false — Tabuk muncul sebagai timestamp wafat Najasyi
+  - Perang Khandaq: ✅ legit (survivor insiden Raji', hadir di Khandaq)
+- 3 dari 4 INVOLVED_IN salah → degree 119 inflated
+
+**Real role Amr (verified dari teks Mubarakfuri):**
+- Sahabat Bani Dhamrah, survivor insiden Raji'
+- **Kurir Nabi → Najasyi** (ke-capture benar di edge SAHABAT-Najasyi)
+- Misi ke Bani Asad bersama Salamah (ke-capture benar di edge SAHABAT-Salamah)
+- Hadir di Perang Khandaq (real)
+
+**Output:** `data/result/analysis/v3/validation_amr_bin_umayyah.md`
+
+**Implikasi metodologi:** proximity-based INVOLVED_IN over-generates false positives untuk Person yang punya 1 chunk dengan ko-okur multi-event. Solusi: LLM verb extraction (filter berdasarkan verb predicat real).
+
+### 2. Visualisasi: Cypher queries v3 + matplotlib case study
+
+- 🆕 `data/result/neo4j/visualization_queries_v3.cypher` — 20 query Cypher siap-paste ke Neo4j Browser:
+  - Q1-Q4: per-period sub-graphs (P8, P9, P11, overview)
+  - Q5-Q9: 5 case study events (Badr/Uhud/Khaibar/Hudaibiyah/Tabuk) dengan full ego
+  - Q10-Q12: per-community sub-graphs (3 komunitas terbesar)
+  - Q13-Q15: ego-network tokoh kunci (Muhammad/Abu Bakar/Abu Sufyan)
+  - Q16: PRECEDES chain (kronologi event)
+  - Q17-Q20: descriptive statistics
+- ✅ `src/analysis/visualize_case_study_events.py --version v3` — generate 5 PNG case study + 1 panel gabungan di `data/result/analysis/v3/case_study_*.png`.
+
+### 3. Manual validation 10 sample LLM verb extraction
+
+POC LLM verb extraction (existing dari sesi 2026-05-26) belum di-validate. Sesi ini cross-check 10 sample (5 EVENT + 5 triplet, mix high/low conf) dengan teks chunk + teks Mubarakfuri.
+
+**Hasil:**
+
+| Verdict | Count | % |
+|---|---:|---:|
+| ✅ VALID | 5 | 50% |
+| ⚠️ PARTIAL VALID | 4 | 40% |
+| ❌ WRONG | 1 | 10% |
+| **Effective valid** | **9/10** | **90%** |
+
+**Findings utama:**
+1. LLM bisa identify **micro-events** tanpa proper noun (Insiden Zamzam Abu Lahab vs Abu Rafi') — gap yang NER tidak bisa cover.
+2. Pattern false-positive: parallel construction inference, inferred verb, schema force-fit unary→binary.
+3. **Semantic predicate enrichment** — triplet punya predikat spesifik (MEMBUNUH/MEMUKUL/MENGUTUS) vs INVOLVED_IN generik.
+4. Estimasi scale-up full corpus: ~1770 EVENT candidate (40× current NER), cost ~$45 API.
+
+**Output:** `data/result/llm_verb_extraction/manual_validation_10samples.md`
+
+### 4. Lifecycle events enrichment (8 events) + re-run SNA
+
+Bu Diana di bimbingan 2026-05-16 catat: "event sangat sedikit jadi perlu ditambahkan lagi". Yang sudah dikerjakan via NER pure (44 EVENT) **masih miss life-cycle events Nabi** karena disebut dalam verb-construction ("beliau wafat") atau descriptive phrase ("malam turunnya wahyu pertama"), bukan noun phrase.
+
+**Pendekatan: Hybrid manual + auto-discover relations**
+
+Script baru: `src/relation_extraction/add_lifecycle_events.py`
+1. Manual definisi 8 event (label, period, page_range, anchor bab/sub-bab).
+2. Auto-discover INVOLVED_IN: scan PERSON di entity prediksi NER yang ko-okur di anchor chunks.
+3. Auto-discover OCCURRED_AT/ON: scan LOCATION/TIME yang ko-okur.
+4. IN_PERIOD ditambah saat regenerate Cypher.
+5. Filter: PERSON min count 2 + top-30, LOCATION/TIME top-15.
+
+**8 events di-add:**
+
+| Event | Anchor chunks | Person | Loc | Time |
+|---|---:|---:|---:|---:|
+| Kelahiran Nabi | 29 | 12 | 7 | 0 |
+| Wahyu Pertama | 15 | 7 | 3 | 3 |
+| Hijrah Ke Habasyah | 13 | 4 | 4 | 0 |
+| Pemboikotan Bani Hasyim | 9 | 3 | 2 | 0 |
+| Tahun Berduka | 6 | 4 | 3 | 0 |
+| Hijrah Ke Madinah | 26 | 9 | 7 | 0 |
+| Haji Wada' | 12 | 2 | 15 | 4 |
+| Wafat Nabi | 21 | 5 | 5 | 0 |
+
+**Total +99 edges** (46 INVOLVED_IN + 44 OCCURRED_AT + 7 OCCURRED_ON + filtering).
+
+**Bug yang ditemukan + fixed:**
+- Initial run miss 2 event (Pemboikotan, Wafat Nabi) karena `page_filter` salah tebak (asumsi 160-173, real 152-156). Fix: lebarkan range filter sesuai chunk halaman aktual. Rollback dari `.bak2` lalu re-run.
+
+**Impact ke KG metrics:**
+
+| | Pre-lifecycle | Post-lifecycle | Δ |
+|---|---:|---:|---|
+| Total nodes | 1280 | **1288** | +0.6% |
+| EVENT count | 44 | **52** | **+18%** |
+| Total edges | 491 | **590** | +20% |
+| Period dengan EVENT | 12/15 | **14/15** | P1 + P6 sekarang ada anchor |
+| Person co-participation nodes | 254 | **261** | +3% |
+| Person co-participation edges | 3562 | **4096** | +15% |
+| Density | 0.111 | **0.121** | +9% |
+| Avg clustering | 0.552 | **0.567** | +3% |
+| Transitivity | 0.810 | 0.796 | -2% |
+| Louvain modularity Q | 0.351 | **0.364** | +4% |
+| Louvain communities | 19 | 16 | konsolidasi |
+
+**Top 10 Event PR — major shift dari 100% peperangan ke balanced:**
+
+| Rank | Pre-lifecycle | Post-lifecycle |
+|---|---|---|
+| 1 | Perang Badr | Perang Badr |
+| 2 | Perang Uhud | Perang Uhud |
+| 3 | Perang Khandaq | Perang Khandaq |
+| 4 | Baiat Aqabah Kubra | **Hijrah Ke Madinah** ✨ |
+| 5 | Perang Khaibar | **Kelahiran Nabi** ✨ |
+| 6 | Perang Dzul Usyairah | **Wafat Nabi** ✨ |
+| 7 | Perang Dzatur Riqa | **Wahyu Pertama** ✨ |
+| 8 | Perjanjian Hudaibiyah | Baiat Aqabah Kubra |
+| 9 | Perang Bani Al-Ashfar | **Pemboikotan Bani Hasyim** ✨ |
+| 10 | Perang Tha'If | Perang Bani Al-Ashfar |
+
+5 dari 10 top event sekarang life-cycle Nabi → **balanced narrative** (kelahiran-wahyu-hijrah-pemboikotan-wafat), bukan cuma peperangan.
+
+**Top 10 Person PR — Khulafa Rasyidin lebih representatif:**
+- Abu Bakar: rank 5 → **4**
+- Aisyah: rank 6 → **5**
+- Amr Bin Umayyah: rank 2 → **3** (artifact tetap, tapi tergeser oleh Abu Jahal yang naik ke rank 2)
+
+### 5. Output yang ter-update di sesi ini
+
+```
+data/result/relation_result/
+├── nodes_v3.csv                  +8 EVENT (1280 → 1288)
+├── nodes_v3.csv.bak2             backup pre-lifecycle
+├── edges_v3.csv                  +99 edges (491 → 590)
+└── edges_v3.csv.bak2             backup pre-lifecycle
+
+data/result/neo4j/
+├── import_sirah_v3.cypher        regenerate (52 Event + 65 IN_PERIOD)
+└── visualization_queries_v3.cypher  🆕 20 query templates
+
+data/result/analysis/v3/
+├── sna_metrics.csv               re-computed
+├── sna_summary.md                re-computed
+├── sna_person_network.png        re-rendered (261 nodes)
+├── graph_metrics_v2.md/json      re-computed (Q=0.364)
+├── event_centrality.csv/md       re-computed (top-10 balanced)
+├── event_network.png             re-rendered
+├── community_wordclouds_summary.md  re-computed (16 comm, 8 eligible)
+├── community_wordclouds/         re-rendered (8 PNG)
+├── case_study_*.png (5 + panel)  re-rendered
+└── validation_amr_bin_umayyah.md 🆕 verdict artifact
+
+data/result/llm_verb_extraction/
+└── manual_validation_10samples.md  🆕 90% effective valid
+
+src/relation_extraction/
+└── add_lifecycle_events.py       🆕 idempotent script
+
+src/analysis/
+├── sna_analysis.py               +flag --version
+├── sna_graph_metrics.py          +flag --version
+├── event_centrality.py           +flag --version
+├── community_wordcloud.py        +flag --version
+└── visualize_case_study_events.py  +flag --version
+```
+
+### 6. Action item yang tersisa pre-bimbingan
+
+| # | Item | Status |
+|---|---|---|
+| 1-3 | Period mapping + Cypher v3 + SNA re-run | ✅ |
+| 4 | Visualisasi (Cypher queries + matplotlib PNG) | ✅ |
+| 5 | Validasi tokoh "Amr Bin Umayyah" | ✅ verdict: artifact |
+| 6 | Manual validation 10 sample LLM verb extraction | ✅ 90% effective |
+| 7 | Lifecycle events enrichment | ✅ 8 events, +18% EVENT count |
+| 8 | Slide bimbingan deck | ⏳ |
+| 9 | Sub-DBMS Neo4j v2 vs v3 untuk komparasi visual | ⏳ (opsional di Bu Diana side) |
+
+### Catatan honest
+
+- **Lifecycle events di-add via hybrid manual + auto-discover**, bukan pure NER. Ini **inkonsisten dengan claim "v3 = pure NER output"** sebelumnya. Perlu honest disclosure di Bab 4: "v3 di-enrich dengan 8 manual-defined lifecycle events karena NER S3.2 tidak bisa capture event yang disebut dalam verb-construction; relasi-relasinya tetap di-discover dari NER predictions yang muncul di anchor chunks."
+- **Amr Bin Umayyah artifact tetap ada** — enrichment lifecycle hanya nge-shift dia 1 rank turun, tapi root cause (proximity-based INVOLVED_IN over-extraction) belum di-fix. Solusinya tetap LLM verb extraction (future work).
+- **Page filter manual** untuk anchor chunks rentan kalau bab Sirah versi lain punya numbering berbeda. Untuk reproduce, dependency ke `sirah_chunks_final.csv` Mubarakfuri terjemahan Kathur Suhardi.
+
+---
+
+## [2026-05-28 sore] Period Mapping v3 + Cypher v3 + SNA Re-run di KG v3
+
+Lanjutan sesi pagi. Pipeline post-NER (period mapping → Neo4j → SNA) di-apply ulang ke KG v3 supaya ada output yang konsisten dengan inference S3.2 winner.
+
+### 1. Apply period mapping ke nodes_v3 + edges_v3
+- Script: `src/relation_extraction/apply_period_to_v3.py` (sudah ada dari sesi pagi).
+- Strategi: EVENT yang ada di v2 → copy `page_range` curated; EVENT baru di v3 → derive dari `chunk_ids` (min-max halaman).
+- Hasil: 44 EVENT semua dapat `periode_bab` (0 unmapped). Distribusi: Perang Uhud period (11), Perang Badr period (9), Dakwah luar Makkah (5), Mu'tah/Penaklukan Makkah (3), Khandaq/Bani Mushthaliq (3), Hudaibiyah (3), dst.
+- Backup `.bak` disimpan untuk safety.
+
+### 2. Generate `import_sirah_v3.cypher` (Neo4j)
+- Script: `src/neo4j/import_to_neo4j.py` (sudah multi-version, tinggal jalan).
+- Output: `data/result/neo4j/import_sirah_v3.cypher` — 988 Person + 44 Event + 15 Period + 46 IN_PERIOD + constraints. Header masih `[v2 (with Period nodes)]` (kosmetik, struktur sama dengan v2).
+
+### 3. Re-run SNA scripts di KG v3
+Aku tambahkan CLI flag `--version v3` ke 4 script utama (sebelumnya hard-code `nodes_v2.csv`). Output ke `data/result/analysis/v3/`.
+
+**Perubahan kode:**
+- `src/analysis/sna_analysis.py` — argparse `--version {v1,v2,v3}`, default v3, `BASE_DIR` dari `Path(__file__)` (bukan hard-code Windows path).
+- `src/analysis/sna_graph_metrics.py` — tambah flag `--version` (override `--use-v1` lama). Output dir auto switch ke `v3/` subfolder.
+- `src/analysis/event_centrality.py` — argparse `--version {v2,v3}` via rebind `IN_NODES/IN_EDGES/OUT_DIR` di `main()` (minimal-change global).
+- `src/analysis/community_wordcloud.py` — same pattern, rebind 5 path globals.
+
+**Hasil run di v3** (vs v2 untuk konteks):
+
+| Metric | v2 | **v3** | Δ |
+|---|---:|---:|---|
+| Person nodes (co-participation) | ~120-an* | **254** | scale-up signifikan |
+| Person edges | ~? | **3562** | jauh lebih dense |
+| Density | 0.086 | **0.111** | +29% |
+| Avg clustering | (n/a quick) | **0.552** | high |
+| Transitivity | 0.77 | **0.81** | +5% |
+| Avg shortest path (giant) | 2.47 | **2.44** | small-world preserved |
+| Components | 8 | **10** | sedikit lebih banyak |
+| Giant component ratio | 90.8% | **92.5%** | naik tipis |
+| Louvain modularity Q | 0.327 | **0.351** | +7% |
+| Greedy modularity Q | 0.320 | **0.321** | flat |
+| ARI(Louvain, Greedy) | (?) | **0.754** | tinggi → kedua metode konsisten |
+| Communities (Louvain) | (~16) | **19** | 3 komunitas baru |
+
+\* angka v2 dari `graph_metrics_v2.md` lama (di folder analysis root).
+
+**Top 10 Person by PageRank di v3:**
+1. Muhammad (PR=0.0381, deg=162)
+2. Amr Bin Umayyah (PR=0.0148)
+3. Abdullah Bin Ubay (PR=0.0142)
+4. Abu Jahal (PR=0.0134)
+5. Abu Bakar (PR=0.0133)
+6. Aisyah (PR=0.0130)
+7. Ali bin Abu Thalib (PR=0.0129)
+8. Utsman Bin Affan (PR=0.0119)
+9. Abu Sufyan bin Harb (PR=0.0116)
+10. Umar bin Al-Khaththab (PR=0.0108)
+
+Komposisi top-10 sejalan dengan ekspektasi narasi Sirah (Nabi + 4 Khulafa Rasyidin masuk top-10, pemimpin musuh Quraisy juga tinggi).
+
+**Top 10 Event by PageRank di v3** (event_centrality):
+1. Perang Badr (PR=0.0816, deg=28)
+2. Perang Uhud (0.0692, 28)
+3. Perang Khandaq (0.0541, 27)
+4. Baiat Aqabah Kubra (0.0371, 22)
+5. Perang Khaibar (0.0368, 22)
+6. Perang Dzul Usyairah (0.0354, 24)
+7. Perang Dzatur Riqa (0.0335, 22)
+8. Perjanjian Hudaibiyah (0.0331, 23)
+9. Perang Bani Al-Ashfar (0.0327, 22)
+10. Perang Tha'If (0.0322, 23)
+
+44 event nodes, 278 event-event edges (273 co-participation + 15 PRECEDES merge).
+
+**Community wordcloud v3:** 19 komunitas total, 10 eligible (size ≥3). Komunitas terbesar 89 + 61 + 57 anggota (greedy) atau 80+67+61 (louvain).
+
+### 4. Output v3 tersimpan
+```
+data/result/analysis/v3/
+├── sna_metrics.csv
+├── sna_summary.md
+├── sna_person_network.png
+├── graph_metrics_v2.md          (filename masih *_v2.md kosmetik, isi v3)
+├── graph_metrics_v2.json
+├── event_centrality.csv
+├── event_centrality_summary.md
+├── event_network.png
+├── community_wordclouds_summary.md
+└── community_wordclouds/         (PNG per-community)
+```
+
+### 5. Action item yang masih pending
+- `case_study_events.py`, `entity_frequency_per_period.py`, `edge_period_cooccurrence.py` — belum di-flag `--version v3` (low priority, sample 5 event sudah di v2).
+- Visualisasi Neo4j manual via Browser (Bu Diana eksplisit minta screenshot per-period, per-komunitas, 5 case study).
+- Header cypher v3 masih ditulis `[v2 (with Period nodes)]` — kosmetik, fix nanti kalau perlu.
+- Slide bimbingan + manual validation 5-10 sample LLM verb extraction.
+
+### Catatan honest
+- Density v3 (0.111) tinggi karena NER cover **2× lebih banyak Person** dari manual labelling, otomatis lebih banyak co-participation pair via INVOLVED_IN.
+- Modularity Q naik dari 0.327 → 0.351 menarik — komunitas v3 **lebih distinct** meski jumlah node lebih banyak. Hipotesis: NER scale-up tambah Person yang berperan di event spesifik (clusters), bukan di banyak event silang.
+- ARI(Louvain, Greedy) = 0.754 di v3 lebih tinggi dari v2 (kemungkinan sekitar 0.6-0.7) → struktur komunitas lebih stabil ke pilihan algoritma.
+- "Amr Bin Umayyah" rank #2 by PR mengejutkan — perlu validasi: ini tokoh sebenarnya prominent (kurir Nabi ke Najasyi) atau efek false-positive PERSON dari NER yang ke-cluster ke event utama.
+
+---
+
 ## [2026-05-28] Inference S3.2 ke Seluruh Sirah + KG v3 + Comparison Report
 
 Sesi yang selesai-kan **end-to-end pipeline** dari NER (S3.2 winner) sampai Knowledge Graph baru. Deliverable utama bimbingan Bu Diana ("pipeline running end-to-end + comparison report SRL-NER vs manual labelling").

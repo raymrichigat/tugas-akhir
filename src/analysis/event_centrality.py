@@ -322,11 +322,24 @@ def visualize(G: nx.Graph, metrics: dict[str, dict],
 
 
 def main():
+    import argparse
+    global IN_NODES, IN_EDGES, OUT_DIR
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--version", choices=["v2", "v3"], default="v3",
+                    help="Pilih versi nodes/edges (default: v3)")
+    args = ap.parse_args()
+
+    if args.version == "v3":
+        IN_NODES = ROOT / "data" / "result" / "relation_result" / "nodes_v3.csv"
+        IN_EDGES = ROOT / "data" / "result" / "relation_result" / "edges_v3.csv"
+        OUT_DIR = ROOT / "data" / "result" / "analysis" / "v3"
+
     print("=" * 60)
-    print("EVENT CENTRALITY — Knowledge Graph Sirah")
+    print(f"EVENT CENTRALITY — Knowledge Graph Sirah [{args.version}]")
     print("=" * 60)
 
-    print("\n[1/5] loading nodes_v2.csv + edges_v2.csv...")
+    print(f"\n[1/5] loading {IN_NODES.name} + {IN_EDGES.name}...")
     nodes_df, edges_df = load_data()
     print(f"  nodes={len(nodes_df)}  edges={len(edges_df)}")
 

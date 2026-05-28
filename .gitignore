@@ -40,3 +40,4 @@ instruksi.txt
 
 # Backup files dari script (idempotent backup .bak sebelum overwrite)
 *.csv.bak
+*.csv.bak2
