@@ -475,21 +475,6 @@ Ustman Bin Affan;PERSON;KELUARGA;pasangan;Aisyah;PERSON;000385-002;...rbesan den
 Muhammad;PERSON;KELUARGA;pasangan;Juwairiyah;PERSON;000385-003;...gi melancarkan permusuhan setelah beliau menikahi Juwairiyah dan Shafiyah Bahkan Juwairiyah merupakan wanita yang paling banyak mendatangkan barakah bagi kaumnya. Setelah dia dinikahi Rasulullah , para sahabat membebaskan 100 keluarga dari kaum...;613-618;1;0.55;
 Muhammad;PERSON;KELUARGA;anak;Zainab;PERSON;000385-005;...mengenyahkan kepercayaan ini, Allah memerintahkan Rasulullah untuk menikahi putri bibi beliau, Zainab binti Jahsy, yang sebelumnya menjadi istri Zaid. Karena tidak ada kecocokan antara Zaid dan Zainab, maka Zaid ada niat untuk menceraikannya.;613-618;1;0.55;
 Zaid bin Haritsah;PERSON;KELUARGA;anak;Zainab;PERSON;000385-005;...Zainab binti Jahsy, yang sebelumnya menjadi istri Zaid. Karena tidak ada kecocokan antara Zaid dan Zainab, maka Zaid ada niat untuk menceraikannya.;613-618;1;0.55;
-Perang Fijar;EVENT;PRECEDES;;Baiat Aqabah;EVENT;;Perang Fijar (BAB: Perang Fijar) -> Baiat Aqabah (BAB: BAIAT AQABAH PERTAMA);87;1;1.0;Nasab & Kelahiran Nabi
-Baiat Aqabah;EVENT;PRECEDES;;Baiat Aqabah Kubra;EVENT;;Baiat Aqabah (BAB: BAIAT AQABAH PERTAMA) -> Baiat Aqabah Kubra (BAB: BAIAT AQABAH KEDUA);198;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
-Baiat Aqabah Kubra;EVENT;PRECEDES;;Perang Badr;EVENT;;Baiat Aqabah Kubra (BAB: BAIAT AQABAH KEDUA) -> Perang Badr (BAB: Satuan-satuan Pasukan Sebelum Perang Badr);203;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
-Perang Badr;EVENT;PRECEDES;;Fathul Makkah;EVENT;;Perang Badr (BAB: Satuan-satuan Pasukan Sebelum Perang Badr) -> Fathul Makkah (BAB: Peringatan di Makkah);256;1;1.0;Perang Badr & Dampaknya
-Fathul Makkah;EVENT;PRECEDES;;Perang Uhud;EVENT;;Fathul Makkah (BAB: Peringatan di Makkah) -> Perang Uhud (BAB: AKTIVITAS PASUKAN ANTARA PERANG BADR DAN PERANG UHUD);267;1;1.0;Perang Mu'tah & Penaklukan Makkah
-Perang Uhud;EVENT;PRECEDES;;Perang Asafan;EVENT;;Perang Uhud (BAB: AKTIVITAS PASUKAN ANTARA PERANG BADR DAN PERANG UHUD) -> Perang Asafan (BAB: Perang As-Sawiq);305;1;1.0;Perang Uhud & Satuan Pasukan Pasca Uhud
-Perang Asafan;EVENT;PRECEDES;;Perang Khandaq;EVENT;;Perang Asafan (BAB: Perang As-Sawiq) -> Perang Khandaq (BAB: Perang Burhan);315;1;1.0;Perang Uhud & Satuan Pasukan Pasca Uhud
-Perang Khandaq;EVENT;PRECEDES;;Perang Bani Nadhir;EVENT;;Perang Khandaq (BAB: Perang Burhan) -> Perang Bani Nadhir (BAB: Perang Bani Nadhir);321;1;1.0;Perang Khandaq hingga Bani Mushthaliq
-Perang Bani Nadhir;EVENT;PRECEDES;;Perjanjian Hudaibiyah;EVENT;;Perang Bani Nadhir (BAB: Perang Bani Nadhir) -> Perjanjian Hudaibiyah (BAB: PERJANJIAN HUDAIBIYAH);382;1;1.0;Perang Uhud & Satuan Pasukan Pasca Uhud
-Perjanjian Hudaibiyah;EVENT;PRECEDES;;Perang Khaibar;EVENT;;Perjanjian Hudaibiyah (BAB: PERJANJIAN HUDAIBIYAH) -> Perang Khaibar (BAB: PERANG KHAIBAR DAN WADIL QURA);433;1;1.0;Hudaibiyah & Babak Baru Diplomasi
-Perang Khaibar;EVENT;PRECEDES;;Perang Dzatur Riqa;EVENT;;Perang Khaibar (BAB: PERANG KHAIBAR DAN WADIL QURA) -> Perang Dzatur Riqa (BAB: Perang Dzatur Riqa’);473;1;1.0;Hudaibiyah & Babak Baru Diplomasi
-Perang Dzatur Riqa;EVENT;PRECEDES;;Perang Mu'Tah;EVENT;;Perang Dzatur Riqa (BAB: Perang Dzatur Riqa’) -> Perang Mu'Tah (BAB: PERANG MU’TAH);493;1;1.0;Perang Uhud & Satuan Pasukan Pasca Uhud
-Perang Mu'Tah;EVENT;PRECEDES;;Perang Hunain;EVENT;;Perang Mu'Tah (BAB: PERANG MU’TAH) -> Perang Hunain (BAB: PERANG HUNAIN);502;1;1.0;Perang Mu'tah & Penaklukan Makkah
-Perang Hunain;EVENT;PRECEDES;;Perang Tha'If;EVENT;;Perang Hunain (BAB: PERANG HUNAIN) -> Perang Tha'If (BAB: Perang Tha’if);538;1;1.0;Hunain, Tabuk & Puncak Kekuatan Islam
-Perang Tha'If;EVENT;PRECEDES;;Perang Tabuk;EVENT;;Perang Tha'If (BAB: Perang Tha’if) -> Perang Tabuk (BAB: PERANG TABUK);544;1;1.0;Perang Uhud & Satuan Pasukan Pasca Uhud
 Abu Thalib;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;15;1.0;Nasab & Kelahiran Nabi
 Ibnu Hisyam;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;13;1.0;Nasab & Kelahiran Nabi
 Muhammad;PERSON;INVOLVED_IN;;Kelahiran Nabi;EVENT;000018-001;;;12;1.0;Nasab & Kelahiran Nabi
@@ -589,3 +574,25 @@ Wafat Nabi;EVENT;OCCURRED_AT;;Madinah;LOCATION;000361-001;;;2;0.6;Penaklukan Mak
 Wafat Nabi;EVENT;OCCURRED_AT;;Aqabah;LOCATION;000361-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
 Wafat Nabi;EVENT;OCCURRED_AT;;Uhud;LOCATION;000361-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
 Wafat Nabi;EVENT;OCCURRED_AT;;Jazirah Arab;LOCATION;000361-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Perang Fijar;EVENT;PRECEDES;;Wahyu Pertama;EVENT;;Perang Fijar -> Wahyu Pertama (chronology Sirah Mubarakfuri);87;1;1.0;Awal Kenabian & Mandat Dakwah
+Wahyu Pertama;EVENT;PRECEDES;;Hijrah Ke Habasyah;EVENT;;Wahyu Pertama -> Hijrah Ke Habasyah (chronology Sirah Mubarakfuri);95;1;1.0;Dakwah Jahriyah & Tekanan Quraisy
+Hijrah Ke Habasyah;EVENT;PRECEDES;;Pemboikotan Bani Hasyim;EVENT;;Hijrah Ke Habasyah -> Pemboikotan Bani Hasyim (chronology Sirah Mubarakfuri);135;1;1.0;Dakwah Jahriyah & Tekanan Quraisy
+Pemboikotan Bani Hasyim;EVENT;PRECEDES;;Tahun Berduka;EVENT;;Pemboikotan Bani Hasyim -> Tahun Berduka (chronology Sirah Mubarakfuri);153;1;1.0;Dakwah Jahriyah & Tekanan Quraisy
+Tahun Berduka;EVENT;PRECEDES;;Isra' Dan Mi'Raj;EVENT;;Tahun Berduka -> Isra' Dan Mi'Raj (chronology Sirah Mubarakfuri);168;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
+Isra' Dan Mi'Raj;EVENT;PRECEDES;;Baiat Aqabah;EVENT;;Isra' Dan Mi'Raj -> Baiat Aqabah (chronology Sirah Mubarakfuri);191;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
+Baiat Aqabah;EVENT;PRECEDES;;Baiat Aqabah Kubra;EVENT;;Baiat Aqabah -> Baiat Aqabah Kubra (chronology Sirah Mubarakfuri);198;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
+Baiat Aqabah Kubra;EVENT;PRECEDES;;Hijrah Ke Madinah;EVENT;;Baiat Aqabah Kubra -> Hijrah Ke Madinah (chronology Sirah Mubarakfuri);203;1;1.0;Hijrah ke Madinah
+Hijrah Ke Madinah;EVENT;PRECEDES;;Perang Badr;EVENT;;Hijrah Ke Madinah -> Perang Badr (chronology Sirah Mubarakfuri);220;1;1.0;Membangun Masyarakat Madinah
+Perang Badr;EVENT;PRECEDES;;Perang Uhud;EVENT;;Perang Badr -> Perang Uhud (chronology Sirah Mubarakfuri);304;1;1.0;Perang Badr & Dampaknya
+Perang Uhud;EVENT;PRECEDES;;Perang Bani Nadhir;EVENT;;Perang Uhud -> Perang Bani Nadhir (chronology Sirah Mubarakfuri);374;1;1.0;Perang Uhud & Satuan Pasukan Pasca Uhud
+Perang Bani Nadhir;EVENT;PRECEDES;;Perang Khandaq;EVENT;;Perang Bani Nadhir -> Perang Khandaq (chronology Sirah Mubarakfuri);386;1;1.0;Perang Khandaq hingga Bani Mushthaliq
+Perang Khandaq;EVENT;PRECEDES;;Perang Bani Mushthaliq;EVENT;;Perang Khandaq -> Perang Bani Mushthaliq (chronology Sirah Mubarakfuri);410;1;1.0;Perang Khandaq hingga Bani Mushthaliq
+Perang Bani Mushthaliq;EVENT;PRECEDES;;Perjanjian Hudaibiyah;EVENT;;Perang Bani Mushthaliq -> Perjanjian Hudaibiyah (chronology Sirah Mubarakfuri);432;1;1.0;Hudaibiyah & Babak Baru Diplomasi
+Perjanjian Hudaibiyah;EVENT;PRECEDES;;Perang Khaibar;EVENT;;Perjanjian Hudaibiyah -> Perang Khaibar (chronology Sirah Mubarakfuri);450;1;1.0;Hudaibiyah & Babak Baru Diplomasi
+Perang Khaibar;EVENT;PRECEDES;;Perang Mu'Tah;EVENT;;Perang Khaibar -> Perang Mu'Tah (chronology Sirah Mubarakfuri);492;1;1.0;Perang Mu'tah & Penaklukan Makkah
+Perang Mu'Tah;EVENT;PRECEDES;;Fathul Makkah;EVENT;;Perang Mu'Tah -> Fathul Makkah (chronology Sirah Mubarakfuri);502;1;1.0;Perang Mu'tah & Penaklukan Makkah
+Fathul Makkah;EVENT;PRECEDES;;Perang Hunain;EVENT;;Fathul Makkah -> Perang Hunain (chronology Sirah Mubarakfuri);530;1;1.0;Hunain, Tabuk & Puncak Kekuatan Islam
+Perang Hunain;EVENT;PRECEDES;;Perang Tha'If;EVENT;;Perang Hunain -> Perang Tha'If (chronology Sirah Mubarakfuri);538;1;1.0;Hunain, Tabuk & Puncak Kekuatan Islam
+Perang Tha'If;EVENT;PRECEDES;;Perang Tabuk;EVENT;;Perang Tha'If -> Perang Tabuk (chronology Sirah Mubarakfuri);544;1;1.0;Hunain, Tabuk & Puncak Kekuatan Islam
+Perang Tabuk;EVENT;PRECEDES;;Haji Wada';EVENT;;Perang Tabuk -> Haji Wada' (chronology Sirah Mubarakfuri);580;1;1.0;Penaklukan Makkah hingga Akhir Kenabian
+Haji Wada';EVENT;PRECEDES;;Wafat Nabi;EVENT;;Haji Wada' -> Wafat Nabi (chronology Sirah Mubarakfuri);605;1;1.0;Penaklukan Makkah hingga Akhir Kenabian

@@ -112,28 +112,28 @@
 Tokoh utama: Muhammad, Abu Jahal, Abu Bakar, Aisyah, Ali bin Abu Thalib, Hamzah bin Abdul Muththalib, Umayyah Bin Khalaf, Khadijah, Ka'B, Zainab
 
 ### Komunitas 2 (61 anggota)
-Tokoh utama: Ali Bin Abu Thalib, Umar Bin Al-Khaththab, Abu Lahab, Ikrimah Bin Abu Jahl, Abu Musa, Abu Hurairah, Ibnu Ummi, Najasyi, Hakim Bin Hizam, Ummul Fadhl
+Tokoh utama: Ali Bin Abu Thalib, Umar Bin Al-Khaththab, Abu Lahab, Ikrimah Bin Abu Jahl, Abu Hurairah, Abu Musa, Ibnu Ummi, Najasyi, Hakim Bin Hizam, Ummul Fadhl
 
 ### Komunitas 3 (61 anggota)
 Tokoh utama: Amr Bin Umayyah, Abdullah Bin Ubay, Utsman Bin Affan, Abu Sufyan bin Harb, Umar bin Al-Khaththab, Abdullah Bin Jahsy, Abu Azzah, Mush'Ab Bin Umair, Abu Sa'Id, Jabir Bin Abdullah
 
 ### Komunitas 4 (13 anggota)
-Tokoh utama: Abdullah Bin Atik, Jabir bin Abdullah, Sa'D Bin Mu'Adz, Ka'B Bin Zaid Bin An-Najjar, Ibnu Sa'D, Huyai Bin Akhthab, Al-Mundzir Bin Uqbah Bin Amir, Ka'B Bin Asad, Zainab Binti Jahsy, Qais Bin Al-Aslat
+Tokoh utama: Abdullah Bin Atik, Jabir bin Abdullah, Sa'D Bin Mu'Adz, Ka'B Bin Asad, Zainab Binti Jahsy, Huyai Bin Akhthab, Qais Bin Al-Aslat, Ibnu Sa'D, Ka'B Bin Zaid Bin An-Najjar, Al-Mundzir Bin Uqbah Bin Amir
 
 ### Komunitas 5 (5 anggota)
-Tokoh utama: Amr Bin Al-Hadhrami, Abdullah Bin Al-Mughirah, Utbah bin Rabi'ah, Amir Bin Al-Hadhrami, Al-Hakam Bin Kaisan
+Tokoh utama: Amr Bin Al-Hadhrami, Abdullah Bin Al-Mughirah, Amir Bin Al-Hadhrami, Utbah bin Rabi'ah, Al-Hakam Bin Kaisan
 
 ### Komunitas 6 (3 anggota)
 Tokoh utama: Mush'Ab, Abu Aziz Bin Umair, As'Ad Bin Zurarah
 
 ### Komunitas 7 (3 anggota)
-Tokoh utama: Syurahbil Bin Hasyim, Abu Zaid, Amr Bin Abdi
+Tokoh utama: Syurahbil Bin Hasyim, Amr Bin Abdi, Abu Zaid
 
 ### Komunitas 8 (3 anggota)
 Tokoh utama: Tumadhir Bin Al-Ashba, Sa'D Bin Bakr, Ummu Abi Salamah
 
 ### Komunitas 9 (2 anggota)
-Tokoh utama: Bukhtanashar, Jursyum Bin Jalhamah
+Tokoh utama: Jursyum Bin Jalhamah, Bukhtanashar
 
 ### Komunitas 10 (2 anggota)
 Tokoh utama: Kurs Bin Jabir, Sa'D Bin Mua'Dz
@@ -142,10 +142,10 @@ Tokoh utama: Kurs Bin Jabir, Sa'D Bin Mua'Dz
 Tokoh utama: Haritsah Bin Tsa'Labah, Haritsah Bin Amr
 
 ### Komunitas 12 (2 anggota)
-Tokoh utama: Bakr Bin Wa'Il, Hanifah Bin Sha'B Bin Ali Bin Bakr
+Tokoh utama: Hanifah Bin Sha'B Bin Ali Bin Bakr, Bakr Bin Wa'Il
 
 ### Komunitas 13 (2 anggota)
-Tokoh utama: Salma Binti Amru, Adi Bin An-Najjar
+Tokoh utama: Adi Bin An-Najjar, Salma Binti Amru
 
 ### Komunitas 14 (2 anggota)
 Tokoh utama: Usamah Bin Zaid, Mirdas Bin Nuhaik
