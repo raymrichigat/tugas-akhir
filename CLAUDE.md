@@ -153,7 +153,13 @@ TA_sirah/
 | Lifecycle events enrichment (8 events) | ✅ **Selesai 2026-05-28 malam** — `add_lifecycle_events.py` (hybrid manual + auto-discover). +8 EVENT (Kelahiran Nabi, Wahyu Pertama, Hijrah ke Habasyah, Pemboikotan Bani Hasyim, Tahun Berduka, Hijrah ke Madinah, Haji Wada', Wafat Nabi). +99 edges auto-discovered (46 INVOLVED_IN + 44 OCCURRED_AT + 7 OCCURRED_ON + 2 IN_PERIOD baru). EVENT count 44→52 (+18%). Period dengan EVENT 12/15→14/15. Louvain Q 0.351→0.364. **Top 10 Event PR sekarang balanced narrative** (5 dari 10 = lifecycle: Hijrah Madinah, Kelahiran, Wafat, Wahyu Pertama, Pemboikotan), bukan 100% peperangan. |
 | Visualisasi Neo4j (Cypher + matplotlib) | ✅ **Selesai 2026-05-28 malam** — `visualization_queries_v3.cypher` (20 query: per-period, 5 case study, per-community, ego-network, descriptive stats) + `case_study_*.png` (5 PNG + panel) re-rendered ke v3 enriched. |
 
-### Catatan progres terakhir (sesi: 2026-05-30 — Cleanup node KG v3)
+### Catatan progres terakhir (sesi: 2026-06-03 — Deliverable bimbingan 4 Juni + skenario G7/G8)
+
+Disiapkan dokumen tunggal siap-tampil **`docs/bimbingan/2026-06-04.md`** (4 bagian): **A** interpretasi graf (apa yang diperoleh, bukan sekadar angka); **B** tabel skenario NER (tangga S1→S2→S3, winner F1 0,9537 — gain murni di kelas minoritas/macro-avg via augmentasi, contrastive sendiri tak menggerakkan minoritas); **C** rancangan + hasil skenario graf **G1–G8** (top-10 siap Bab 4 + glosarium istilah bahasa awam + perbandingan v2↔v3); **D** studi kasus QASiNa (9,6% upper-bound). Dua skenario graf baru dihitung via `src/analysis/scenario_g7_g8.py`: **G7 lokasi sentral** (weighted_degree: Madinah 684 > Makkah 595; betweenness degenerate krn graf lokasi padat) & **G8 keberagaman fase tokoh** (Muhammad 6/6 fase; Ali 8 event tapi cuma 2 fase). Catatan penyajian NER: λ-sweep & S3.1 dikeluarkan dari tabel skenario (tuning, bukan skenario), S2 pakai angka run terkontrol 0,9522 + disclosure varians run-to-run, S3.2→S3.
+
+> Detail lengkap di `progress_log.md` → `[2026-06-03]`.
+
+### Catatan progres 2026-05-30 — Cleanup node KG v3
 
 **Cleanup node v3 — alias merge + filter false-positive.** Menutup gap pipeline: jalur inference NER tidak pernah melewati alias clustering (yang ada di jalur v2). Script baru `src/relation_extraction/clean_v3_nodes.py` (idempotent, `--apply`, backup `.bak_clean`) menjalankan 4 operasi di tahap konstruksi KG (BUKAN ubah evaluasi NER — F1 0.9537/0.972 tidak berubah):
 - **OP1** alias_map case-insensitive (~70 rename: Rasulullah→Muhammad, Ali Bin Abi Thalib→Ali bin Abu Thalib).

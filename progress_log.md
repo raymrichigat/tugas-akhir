@@ -1018,3 +1018,26 @@ Sesi setelah fix PRECEDES. Menutup **gap pipeline v3**: jalur inference NER (`bu
 ### Catatan untuk Bab 3/4 (disclosure)
 - Cleanup = langkah **normalisasi entity pasca-inferensi** (alias + filter). Pipeline sudah punya filter sejenis (`relation_extraction.py` guards baris 567/595/623 + confidence≥0.7). Bukan metode baru — perluasan langkah pembersihan yang sudah ada, di-disclose dengan tabel before/after.
 - Filter rule-based (daftar eksplisit `{perang, malam, peperangan}`), bukan ad-hoc cherry-pick.
+
+---
+
+## [2026-06-03] Deliverable bimbingan 4 Juni + skenario graf G7/G8
+
+> Menyiapkan SEMUA deliverable bimbingan Bu Diana **Kamis 4 Juni 2026** dalam satu dokumen siap-tampil: `docs/bimbingan/2026-06-04.md`. Semua angka diverifikasi dari file output (bukan ingatan).
+
+### Dokumen deliverable (`docs/bimbingan/2026-06-04.md`) — 4 bagian
+- **A — Interpretasi hasil graf** ("apa yang diperoleh", bukan sekadar angka): Muhammad-sentris (betweenness 4× #2), small-world (avg path 2,35), Q=0,35 moderate & robust (ARI 0,74), artifact Amr bin Umayyah, kepadatan graf = kepadatan teks, efek normalisasi alias (Ali #7→#2).
+- **B — Tabel skenario NER** (tangga S1→S2→S3 + per-kelas + macro-avg). Winner **S3 (=S3.2) F1 0,9537**. Temuan dipertajam: contrastive (S2) TAK menggerakkan kelas minoritas (EVENT +0,003, TIME 0,000); lonjakan baru di augmentasi S3 (EVENT +0,075, TIME +0,065, **macro +0,0345**). S2 dilaporkan dengan angka run terkontrol (0,9522, config SCL λ=0,3 identik) + disclosure varians run-to-run. JSCL dipertahankan di B.2.1.
+- **C — Rancangan + hasil skenario graf (G1–G8)** + glosarium istilah bahasa awam (C.1.1) + tabel top-10 siap Bab 4 + perbandingan v2↔v3.
+- **D — Studi kasus QASiNa**: 48/500 (9,6%) upper-bound + benang merah ke artifact A (akar sama: `INVOLVED_IN` proximity kasar → solusi LLM verb extraction).
+
+### Skenario graf G7 & G8 dihitung (`src/analysis/scenario_g7_g8.py`)
+Dua skenario baru (request mahasiswa, mengganti rekomendasi awal "dominasi lokasi per fase"):
+- **G7 — Lokasi sentral**: graf lokasi (2 lokasi terhubung bila berbagi tokoh lewat peristiwa), 35 node / 437 edge / **density 0,73**. Betweenness DEGENERATE (graf terlalu padat — Muhammad menyambungkan hampir semua lokasi) → pakai weighted_degree: **Madinah 684 > Makkah 595 > Habasyah 505**. Artifact: Yatsrib (nama lama Madinah) tampil terpisah → kandidat cleanup lanjutan.
+- **G8 — Keberagaman fase tokoh**: jumlah fase Sirah unik per tokoh (`INVOLVED_IN` → event → `periode_bab` → fase). **Muhammad 6/6 fase**, Abu Bakar & Aisyah 4, **Ali 8 event tapi cuma 2 fase** (intens-terfokus). Override label custom "Penaklukan Makkah hingga Akhir Kenabian" → Fase VI (46/46 event terpetakan). Artifact: Ibnu Hisyam #5 (perawi, bukan partisipan historis).
+- Output: `data/result/analysis/v3/scenario_g7_g8.md`.
+
+### Iterasi penyajian skenario NER (atas masukan mahasiswa)
+- λ-sweep dikeluarkan dari tabel perbandingan skenario (itu tuning hyperparameter, bukan skenario setara).
+- S3.1 dibuang sebagai baris terpisah; angkanya (config SCL λ=0,3 identik dengan S2a) dipakai sebagai **hasil S2** (run terkontrol), dengan disclosure varians run-to-run (`seed=42` di-set tapi determinisme GPU tidak; lihat B.5).
+- Rename **S3.2 → S3**; penamaan dijembatani ke "S3.2 winner" di `seqeval_results.md`/CLAUDE.md.
