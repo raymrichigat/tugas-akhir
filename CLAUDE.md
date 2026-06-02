@@ -153,27 +153,35 @@ TA_sirah/
 | Lifecycle events enrichment (8 events) | ✅ **Selesai 2026-05-28 malam** — `add_lifecycle_events.py` (hybrid manual + auto-discover). +8 EVENT (Kelahiran Nabi, Wahyu Pertama, Hijrah ke Habasyah, Pemboikotan Bani Hasyim, Tahun Berduka, Hijrah ke Madinah, Haji Wada', Wafat Nabi). +99 edges auto-discovered (46 INVOLVED_IN + 44 OCCURRED_AT + 7 OCCURRED_ON + 2 IN_PERIOD baru). EVENT count 44→52 (+18%). Period dengan EVENT 12/15→14/15. Louvain Q 0.351→0.364. **Top 10 Event PR sekarang balanced narrative** (5 dari 10 = lifecycle: Hijrah Madinah, Kelahiran, Wafat, Wahyu Pertama, Pemboikotan), bukan 100% peperangan. |
 | Visualisasi Neo4j (Cypher + matplotlib) | ✅ **Selesai 2026-05-28 malam** — `visualization_queries_v3.cypher` (20 query: per-period, 5 case study, per-community, ego-network, descriptive stats) + `case_study_*.png` (5 PNG + panel) re-rendered ke v3 enriched. |
 
-### Catatan progres terakhir (sesi: 2026-05-28 malam — Lifecycle Enrichment + Validasi)
+### Catatan progres terakhir (sesi: 2026-05-30 — Cleanup node KG v3)
 
-**KG v3 enriched dengan 8 lifecycle events + 99 edges auto-discovered.** Top 10 Event PR sekarang balanced narrative (5 dari 10 = life-cycle: Kelahiran/Wahyu Pertama/Hijrah Madinah/Wafat/Pemboikotan), bukan 100% peperangan.
+**Cleanup node v3 — alias merge + filter false-positive.** Menutup gap pipeline: jalur inference NER tidak pernah melewati alias clustering (yang ada di jalur v2). Script baru `src/relation_extraction/clean_v3_nodes.py` (idempotent, `--apply`, backup `.bak_clean`) menjalankan 4 operasi di tahap konstruksi KG (BUKAN ubah evaluasi NER — F1 0.9537/0.972 tidak berubah):
+- **OP1** alias_map case-insensitive (~70 rename: Rasulullah→Muhammad, Ali Bin Abi Thalib→Ali bin Abu Thalib).
+- **OP2** case-dedup (~36 merge: Perang Bu'Ats→Perang Bu'ats, Tha'If→Tha'if).
+- **OP3** drop generic EVENT FP (`Perang`, `Malam`, `Peperangan` — manifestasi precision EVENT 0.913).
+- **OP4** fix mislabel `Jabal Uhud` (EVENT→alias LOCATION `Uhud`).
+- REVIEW (disengaja TIDAK di-merge, keputusan historis): Baiat Aqabah~Kubra, Isra' Mi'raj~Mi'Raj, Perang Badr~Badr Kubra/Ula.
 
-**Hasil utama (KG v3 enriched):**
+**Hasil utama (perbandingan):**
 
-| | v2 (manual) | v3 NER | **v3 enriched** | Δ |
-|---|---:|---:|---:|---|
-| Nodes total | 892 | 1280 | **1288** | +44% vs v2 |
-| EVENT | 36 | 44 | **52** | +44% vs v2, +18% vs v3 NER |
-| Edges total | 322 | 491 | **590** | +83% vs v2 |
-| Person graph density | 0.086 | 0.111 | **0.121** | +41% vs v2 |
-| Louvain Q | 0.327 | 0.351 | **0.364** | +11% vs v2 |
-| Communities | ~16 | 19 | **16** | konsolidasi |
-| Period dengan EVENT | (n/a) | 12/15 | **14/15** | P1+P6 ada anchor |
+| | v3 enriched | **v3 cleaned (2026-05-30)** |
+|---|---:|---:|
+| Nodes total | 1288 | **1191** |
+| EVENT | 52 | **46** |
+| Edges total | 590/597 | **585** |
+| PERSON node | ~988 | **899** |
+| Person graph nodes / edges | 261 / 4096 | **239 / 3277** |
+| Density | 0.121 | **0.1152** |
+| Louvain Q (proper) | 0.364 | **0.3499** |
+| Communities | 16 | **11–12** |
 
-**Top 10 Person PR (v3 enriched):**
-Muhammad → Abu Jahal → **Abu Bakar** (rank ↑1) → **Aisyah** (rank ↑1) → Amr Bin Umayyah (rank ↓1, artifact tetap) → Abdullah Bin Ubay → Ali → Utsman → Abu Sufyan → Umar.
+**Top 10 Person PR (v3 cleaned):**
+Muhammad → **Ali bin Abu Thalib** (⬆ dari ~#7 — efek konsolidasi alias) → Abu Bakar → **Amr Bin Umayyah** (⬇ ke #4, artifact ter-mitigasi) → Abu Jahal → Abdullah bin Ubay → Aisyah → Umar → Utsman → Abu Sufyan. **Temuan:** alias merge memperbaiki centrality, bukan cuma kosmetik.
 
-**Top 10 Event PR (v3 enriched):**
-Perang Badr → Uhud → Khandaq → **Hijrah Ke Madinah** ✨ → **Kelahiran Nabi** ✨ → **Wafat Nabi** ✨ → **Wahyu Pertama** ✨ → Baiat Aqabah Kubra → **Pemboikotan Bani Hasyim** ✨ → Perang Bani Al-Ashfar.
+**Top 10 Event PR (v3 cleaned):**
+Perang Badr → Uhud → Khandaq → **Hijrah Ke Madinah** ✨ → **Kelahiran Nabi** ✨ → **Wafat Nabi** ✨ → Baiat Aqabah Kubra → **Wahyu Pertama** ✨ → Perang Dzul Usyairah → **Pemboikotan Bani Hasyim** ✨. (5 lifecycle tetap di top-10 → balanced narrative dipertahankan.)
+
+> Detail lengkap di `progress_log.md` → `[2026-05-30] Cleanup node KG v3`.
 
 **Findings utama:**
 1. **Validasi Amr Bin Umayyah:** rank #2 PR adalah artifact (3 dari 4 INVOLVED_IN false-positive). Real role: kurir Nabi → Najasyi. Akar masalah: proximity-based INVOLVED_IN over-extraction.

@@ -6,7 +6,7 @@
 
 ## Tentang Q-value Louvain (Modularity)
 
-**Q (recomputed, weighted) = `0.3365`**
+**Q (recomputed, weighted) = `0.3328`**
 
 Modularity Q (Newman & Girvan 2004) mengukur seberapa kuat struktur komunitas dibanding edge yang acak (random rewiring null model):
 - **Q ≈ 0**     : tidak ada struktur komunitas (graf homogen / acak).
@@ -14,92 +14,72 @@ Modularity Q (Newman & Girvan 2004) mengukur seberapa kuat struktur komunitas di
 - **Q ≈ 0.4-0.7**: struktur kuat — clear-cut komunitas.
 - **Q > 0.7**   : sangat kuat (jarang di network natural).
 
-Interpretasi untuk Sirah: Q=0.336 → **moderate** — struktur komunitas ada tapi tidak clear-cut. Banyak Person punya koneksi ke beberapa komunitas, konsisten dengan Sirah dimana sahabat (mis. Abu Bakar, Umar) berinteraksi luas lintas fase historis.
+Interpretasi untuk Sirah: Q=0.333 → **moderate** — struktur komunitas ada tapi tidak clear-cut. Banyak Person punya koneksi ke beberapa komunitas, konsisten dengan Sirah dimana sahabat (mis. Abu Bakar, Umar) berinteraksi luas lintas fase historis.
 
 Untuk konteks: di S2 graf-pengujian sebelumnya, Louvain proper Q=0.327 vs Greedy Q=0.320 vs Girvan-Newman Q=0.024. Louvain proper > Girvan-Newman konsisten — algoritma divisive Girvan-Newman tidak cocok untuk dense graph.
 
 
 ## Komunitas yang Di-render Wordcloud
 
-Filter: minimal 3 anggota. 8 dari 16 komunitas memenuhi syarat. 8 komunitas dengan <3 anggota di-skip (korpus evidence terlalu kecil).
+Filter: minimal 3 anggota. 6 dari 12 komunitas memenuhi syarat. 6 komunitas dengan <3 anggota di-skip (korpus evidence terlalu kecil).
 
-### Komunitas 0 — 97 anggota, 158 evidence
+### Komunitas 0 — 93 anggota, 161 evidence
 
 ![wordcloud 0](data/result/analysis/v3/community_wordclouds/community_00.png)
 
-**Top tokoh (PageRank):** Muhammad, Abu Jahal, Abu Bakar, Aisyah, Ali bin Abu Thalib, Hamzah bin Abdul Muththalib, Umayyah Bin Khalaf, Khadijah
+**Top tokoh (PageRank):** Muhammad, Ali bin Abu Thalib, Abu Bakar, Abu Jahal, Aisyah, Hamzah bin Abdul Muththalib, Ka'b bin Malik, Khadijah
 
-**Top tokens:** perang(71), allah(33), orang-orang(32), bakar(28), demi(22), umayyah(21), khalaf(21), makkah(20), aisyah(20), bulan(19)
+**Top tokens:** perang(72), allah(31), ali(31), bakar(28), orang-orang(26), thalib(23), bulan(22), aisyah(20), binti(20), membunuh(19)
 
 **Interpretasi (manual fill):** _[isi manual berdasarkan top tokens + tokoh utama — fase apa, tema apa, lokasi dominan]_
 
-### Komunitas 1 — 61 anggota, 99 evidence
+### Komunitas 1 — 60 anggota, 108 evidence
 
 ![wordcloud 1](data/result/analysis/v3/community_wordclouds/community_01.png)
 
-**Top tokoh (PageRank):** Ali Bin Abu Thalib, Umar Bin Al-Khaththab, Abu Lahab, Ikrimah Bin Abu Jahl, Abu Hurairah, Abu Musa, Ibnu Ummi, Najasyi
+**Top tokoh (PageRank):** Amr Bin Umayyah, Abdullah bin Ubay bin Salul, Umar bin Al-Khaththab, Utsman bin Affan, Abu Sufyan bin Harb, Abdullah bin Jahsy, Abu Azzah, Jabir bin Abdullah
 
-**Top tokens:** perang(90), badr(59), ali(27), thalib(21), umayyah(19), bulan(18), peperangan(18), quraisy(17), orang-orang(15), madinah(13)
+**Top tokens:** perang(72), uhud(47), ummu(22), umar(21), orang(21), orang-orang(20), umair(17), abdullah(17), waktu(16), sa'id(16)
 
 **Interpretasi (manual fill):** _[isi manual berdasarkan top tokens + tokoh utama — fase apa, tema apa, lokasi dominan]_
 
-### Komunitas 2 — 61 anggota, 97 evidence
+### Komunitas 2 — 55 anggota, 84 evidence
 
 ![wordcloud 2](data/result/analysis/v3/community_wordclouds/community_02.png)
 
-**Top tokoh (PageRank):** Amr Bin Umayyah, Abdullah Bin Ubay, Utsman Bin Affan, Abu Sufyan bin Harb, Umar bin Al-Khaththab, Abdullah Bin Jahsy, Abu Azzah, Mush'Ab Bin Umair
+**Top tokoh (PageRank):** Zaid bin Haritsah, Abu Lahab, Ikrimah bin Abu Jahal, Abu Hurairah, Abu Musa, Ibnu Ummi, Najasyi, Hakim Bin Hizam
 
-**Top tokens:** perang(68), uhud(49), ummu(20), orang(18), orang-orang(17), abdullah(16), al-barra(16), sa'id(15), al-khudri(15), waktu(14)
+**Top tokens:** perang(79), badr(56), umayyah(23), bulan(18), quraisy(17), makkah(14), peperangan(14), zaid(13), ali(12), abdurrahman(12)
 
 **Interpretasi (manual fill):** _[isi manual berdasarkan top tokens + tokoh utama — fase apa, tema apa, lokasi dominan]_
 
-### Komunitas 3 — 13 anggota, 16 evidence
+### Komunitas 3 — 11 anggota, 13 evidence
 
 ![wordcloud 3](data/result/analysis/v3/community_wordclouds/community_03.png)
 
-**Top tokoh (PageRank):** Abdullah Bin Atik, Jabir bin Abdullah, Sa'D Bin Mu'Adz, Huyai Bin Akhthab, Ibnu Sa'D, Ka'B Bin Zaid Bin An-Najjar, Al-Mundzir Bin Uqbah Bin Amir, Ka'B Bin Asad
+**Top tokoh (PageRank):** Abdullah Bin Atik, Sa'd bin Mu'adz, Ibnu Sa'd, Al-Mundzir Bin Uqbah Bin Amir, Huyai Bin Akhthab, Qais Bin Al-Aslat, Ka'B Bin Asad, Zainab Binti Jahsy
 
-**Top tokens:** perang(10), khandaq(6), pasukan(6), ahzab(6), seorang(4), dzul(4), sa'd(4), abdullah(4), peristiwa(4), terjadi(4)
+**Top tokens:** perang(11), ahzab(6), khandaq(5), sa'd(5), seorang(4), terjadi(4), sementara(4), bulan(4), dzul(4), abdullah(4)
 
 **Interpretasi (manual fill):** _[isi manual berdasarkan top tokens + tokoh utama — fase apa, tema apa, lokasi dominan]_
 
-### Komunitas 4 — 5 anggota, 4 evidence
+### Komunitas 4 — 5 anggota, 5 evidence
 
 ![wordcloud 4](data/result/analysis/v3/community_wordclouds/community_04.png)
 
-**Top tokoh (PageRank):** Amr Bin Al-Hadhrami, Abdullah Bin Al-Mughirah, Utbah bin Rabi'ah, Amir Bin Al-Hadhrami, Al-Hakam Bin Kaisan
+**Top tokoh (PageRank):** Amar bin Al-Hadhrami, Abdullah Bin Al-Mughirah, Utbah bin Rabi'ah, Al-Hakam Bin Kaisan, Amir Bin Al-Hadhrami
 
-**Top tokens:** al-hadhrami(6), al-mughirah(4), amr(3), jahl(3), utsman(2), naufal(2), kedua(2), abdullah(2), al-hakam(2), kaisan(2)
+**Top tokens:** al-hadhrami(6), al-mughirah(4), amr(3), demi(3), allah(3), jahl(3), utsman(2), naufal(2), kedua(2), abdullah(2)
 
 **Interpretasi (manual fill):** _[isi manual berdasarkan top tokens + tokoh utama — fase apa, tema apa, lokasi dominan]_
 
-### Komunitas 5 — 3 anggota, 3 evidence
+### Komunitas 5 — 3 anggota, 2 evidence
 
 ![wordcloud 5](data/result/analysis/v3/community_wordclouds/community_05.png)
 
-**Top tokoh (PageRank):** Mush'Ab, Abu Aziz Bin Umair, As'Ad Bin Zurarah
-
-**Top tokens:** mush'ab(4), umair(4), aziz(3), peperangan(2), al-abdari(2), melewati(2), saudaranya(2), sebelah(2), tangannya(2), sedang(2)
-
-**Interpretasi (manual fill):** _[isi manual berdasarkan top tokens + tokoh utama — fase apa, tema apa, lokasi dominan]_
-
-### Komunitas 6 — 3 anggota, 2 evidence
-
-![wordcloud 6](data/result/analysis/v3/community_wordclouds/community_06.png)
-
-**Top tokoh (PageRank):** Syurahbil Bin Hasyim, Abu Zaid, Amr Bin Abdi
+**Top tokoh (PageRank):** Syurahbil Bin Hasyim, Amr Bin Abdi, Abu Zaid
 
 **Top tokens:** bendera(4), beralih(4), tangan(4), al-abdari(4), dibunuh(4), quzman(4), zaid(2), amr(2), abdi(2), manaf(2)
-
-**Interpretasi (manual fill):** _[isi manual berdasarkan top tokens + tokoh utama — fase apa, tema apa, lokasi dominan]_
-
-### Komunitas 7 — 3 anggota, 2 evidence
-
-![wordcloud 7](data/result/analysis/v3/community_wordclouds/community_07.png)
-
-**Top tokoh (PageRank):** Tumadhir Bin Al-Ashba, Ummu Abi Salamah, Sa'D Bin Bakr
-
-**Top tokens:** masuk(2), islam(2), abdurrahman(2), menikahi(2), tumadhir(2), al-ashba(2), berjuluk(2), ummu(2), abi(2), salamah(2)
 
 **Interpretasi (manual fill):** _[isi manual berdasarkan top tokens + tokoh utama — fase apa, tema apa, lokasi dominan]_
 

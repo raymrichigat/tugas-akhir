@@ -967,3 +967,54 @@ Dosen memberikan 4 poin revisi yang semuanya sudah diimplementasikan:
 - OCR artifact "An- Nu'man" (spasi setelah hyphen): fixed `_EXTEND_RE` dengan `\s*`
 - Jaro-Winkler terlalu agresif (559 mappings): threshold dinaikkan 0.85→0.93, ditambah 4 guards + EXCLUDE_PAIRS
 - False positive alias "Abu Bakrah"→"Abu Bakar", "Perang Badr Kubra"→"Perang Badr Shughra": fixed via EXCLUDE_PAIRS
+
+---
+
+## [2026-05-30] Cleanup node KG v3 — alias merge + filter false-positive
+
+Sesi setelah fix PRECEDES. Menutup **gap pipeline v3**: jalur inference NER (`build_v3_prelabelled_from_inference.py` → `relation_extraction.py`) **tidak pernah melewati alias clustering** yang ada di jalur v2, sehingga node v3 punya (a) duplikat ejaan tak ter-merge, (b) EVENT false-positive kata-benda-umum, (c) 1 mislabel.
+
+### Akar masalah (didiagnosis sesi ini)
+- `alias_map.json` (Jaro-Winkler, bukan Jaccard — Jaccard itu JSCL di S2) di-generate 15 Apr dari `manual_labelling/sirah_prelabelled.csv`, **sebelum** inference v3 (28 Mei).
+- **Tidak ada script v3 yang memanggil `alias_map.json`** (grep konfirmasi: hanya dibaca di dalam `alias_clustering` sendiri).
+- Mismatch casing: v3 Title-Case (hasil `.title()`) vs canonical alias_map.
+- Generic FP (`Perang`, `Malam`, `Peperangan`) = manifestasi precision EVENT 0.913 (~9% FP). `Malam` dari "malam Mi'raj", `Perang` dari teks OCR rusak "saat Perang [Badr] Setiap kali", `Peperangan` dari "peperangan Al-Umawi".
+- `Jabal Uhud` (gunung) salah label EVENT, 0 edge, padahal sudah ada LOCATION `Uhud` (freq 20).
+
+### Solusi: `src/relation_extraction/clean_v3_nodes.py` (idempotent, `--apply`, backup `.bak_clean`)
+4 operasi di TAHAP KONSTRUKSI KG (hilir) — **bukan** mengubah evaluasi NER. Output mentah `sirah_predicted_v3_entity.csv` tidak disentuh; F1 NER (0.9537 test / 0.972 vs manual) tidak berubah.
+- **OP1 alias_map** (case-insensitive): ~70 rename (Rasulullah/Muhammad Bin Abdullah→Muhammad, Ali Bin Abi Thalib→Ali bin Abu Thalib, dst).
+- **OP2 case-dedup**: ~36 merge (Perang Bu'Ats+Perang Bu'ats→Perang Bu'ats, Tha'If→Tha'if, Ka'Bah→Ka'bah). Casing canonical alias_map menang (kurasi manual).
+- **OP3 drop generik**: `Perang`, `Malam`, `Peperangan` (+10 edge palsu, mis. 7 INVOLVED_IN ke "Perang").
+- **OP4 fix mislabel**: `Jabal Uhud` (EVENT) di-drop, dicatat sebagai alias LOCATION `Uhud`.
+- **REVIEW (TIDAK di-merge — keputusan historis manual, disetujui konservatif):** Baiat Aqabah~Baiat Aqabah Kubra, Isra' Mi'raj~Mi'Raj, Perang Badr~Perang Badr Kubra, Perang Badr~Perang Badr Ula. Default biarkan terpisah sampai cek teks Mubarakfuri.
+
+### Dampak (sebelum → sesudah)
+| | v3 enriched | **v3 cleaned** |
+|---|---:|---:|
+| Total nodes | 1288 | **1191** (−97) |
+| EVENT | 52 | **46** |
+| Edges KG | 597 | **585** |
+| PERSON node (CSV) | ~988 | **899** |
+| Person graph nodes | 261 | **239** |
+| Person graph edges | 4096 | **3277** |
+| Density | 0.121 | **0.1152** |
+| Transitivity | 0.80 | **0.7879** |
+| Giant ratio | 0.935 | **0.9372** |
+| Louvain Q (proper) | 0.364 | **0.3499** |
+| Komunitas | 16 | **11–12** |
+
+**Top 10 Person PR (v3 cleaned):** Muhammad → **Ali bin Abu Thalib** (⬆ dari ~#7, efek konsolidasi alias) → Abu Bakar → **Amr Bin Umayyah** (⬇ ke #4, artifact ter-mitigasi) → Abu Jahal → Abdullah bin Ubay → Aisyah → Umar → Utsman → Abu Sufyan.
+
+**Top 10 Event PR (v3 cleaned):** Perang Badr → Perang Uhud → Perang Khandaq → Hijrah Ke Madinah → Kelahiran Nabi → Wafat Nabi → Baiat Aqabah Kubra → Wahyu Pertama → Perang Dzul Usyairah → Pemboikotan Bani Hasyim. (5 lifecycle tetap di top-10 → balanced narrative dipertahankan.)
+
+**Temuan penting:** alias merge bukan cuma kosmetik — ia **memperbaiki centrality**. Ali naik ke #2 (sesuai ekspektasi historis), artifact Amr turun ke #4. Ini bukti tambahan bahwa gap alias di pipeline v3 punya konsekuensi metodologis nyata.
+
+### File ter-update
+- `clean_v3_nodes.py` (baru), `nodes_v3.csv` + `edges_v3.csv` (cleaned, backup `.bak_clean`)
+- `import_sirah_v3.cypher` (regen: 899 Person + 46 Event + 81 Location + 165 Time)
+- `data/result/analysis/v3/*` (sna_summary, graph_metrics, event_centrality, community_wordclouds — semua re-run)
+
+### Catatan untuk Bab 3/4 (disclosure)
+- Cleanup = langkah **normalisasi entity pasca-inferensi** (alias + filter). Pipeline sudah punya filter sejenis (`relation_extraction.py` guards baris 567/595/623 + confidence≥0.7). Bukan metode baru — perluasan langkah pembersihan yang sudah ada, di-disclose dengan tabel before/after.
+- Filter rule-based (daftar eksplisit `{perang, malam, peperangan}`), bukan ad-hoc cherry-pick.
