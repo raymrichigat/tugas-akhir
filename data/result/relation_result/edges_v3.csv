@@ -562,12 +562,13 @@ Wafat Nabi;EVENT;OCCURRED_AT;;Madinah;LOCATION;000361-001;;;2;0.6;Penaklukan Mak
 Wafat Nabi;EVENT;OCCURRED_AT;;Aqabah;LOCATION;000361-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
 Wafat Nabi;EVENT;OCCURRED_AT;;Uhud;LOCATION;000361-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
 Wafat Nabi;EVENT;OCCURRED_AT;;Jazirah Arab;LOCATION;000361-001;;;1;0.55;Penaklukan Makkah hingga Akhir Kenabian
+Kelahiran Nabi;EVENT;PRECEDES;;Perang Fijar;EVENT;;Kelahiran Nabi -> Perang Fijar (chronology Sirah Mubarakfuri);73;1;1.0;Nasab & Kelahiran Nabi
 Perang Fijar;EVENT;PRECEDES;;Wahyu Pertama;EVENT;;Perang Fijar -> Wahyu Pertama (chronology Sirah Mubarakfuri);87;1;1.0;Awal Kenabian & Mandat Dakwah
 Wahyu Pertama;EVENT;PRECEDES;;Hijrah Ke Habasyah;EVENT;;Wahyu Pertama -> Hijrah Ke Habasyah (chronology Sirah Mubarakfuri);95;1;1.0;Dakwah Jahriyah & Tekanan Quraisy
 Hijrah Ke Habasyah;EVENT;PRECEDES;;Pemboikotan Bani Hasyim;EVENT;;Hijrah Ke Habasyah -> Pemboikotan Bani Hasyim (chronology Sirah Mubarakfuri);135;1;1.0;Dakwah Jahriyah & Tekanan Quraisy
 Pemboikotan Bani Hasyim;EVENT;PRECEDES;;Tahun Berduka;EVENT;;Pemboikotan Bani Hasyim -> Tahun Berduka (chronology Sirah Mubarakfuri);153;1;1.0;Dakwah Jahriyah & Tekanan Quraisy
-Tahun Berduka;EVENT;PRECEDES;;Isra' Mi'raj;EVENT;;Tahun Berduka -> Isra' Dan Mi'Raj (chronology Sirah Mubarakfuri);168;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
-Isra' Mi'raj;EVENT;PRECEDES;;Baiat Aqabah;EVENT;;Isra' Dan Mi'Raj -> Baiat Aqabah (chronology Sirah Mubarakfuri);191;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
+Tahun Berduka;EVENT;PRECEDES;;Isra' Mi'raj;EVENT;;Tahun Berduka -> Isra' Mi'raj (chronology Sirah Mubarakfuri);168;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
+Isra' Mi'raj;EVENT;PRECEDES;;Baiat Aqabah;EVENT;;Isra' Mi'raj -> Baiat Aqabah (chronology Sirah Mubarakfuri);191;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
 Baiat Aqabah;EVENT;PRECEDES;;Baiat Aqabah Kubra;EVENT;;Baiat Aqabah -> Baiat Aqabah Kubra (chronology Sirah Mubarakfuri);198;1;1.0;Dakwah di Luar Makkah & Isra Mi'raj
 Baiat Aqabah Kubra;EVENT;PRECEDES;;Hijrah Ke Madinah;EVENT;;Baiat Aqabah Kubra -> Hijrah Ke Madinah (chronology Sirah Mubarakfuri);203;1;1.0;Hijrah ke Madinah
 Hijrah Ke Madinah;EVENT;PRECEDES;;Perang Badr;EVENT;;Hijrah Ke Madinah -> Perang Badr (chronology Sirah Mubarakfuri);220;1;1.0;Membangun Masyarakat Madinah

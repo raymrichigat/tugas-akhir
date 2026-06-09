@@ -38,6 +38,10 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 RR_DIR = BASE_DIR / "data" / "result" / "relation_result"
 OUT_DIR = BASE_DIR / "data" / "result" / "analysis"
 
+# Lihat sna_analysis.py: filter co-mention lemah (INVOLVED_IN weight < 0.3)
+# lalu bobot co-participation = Σ min(w1, w2). Harus konsisten dgn sna_analysis.
+WEIGHT_THRESHOLD = 0.3
+
 
 # ── Graph build (reuse logic dari sna_analysis.py) ───────────────────────────
 def build_person_graph(edges_df: pd.DataFrame) -> nx.Graph:
@@ -46,23 +50,29 @@ def build_person_graph(edges_df: pd.DataFrame) -> nx.Graph:
 
     Edge dibangun dari:
       1. Co-participation: dua Person yang INVOLVED_IN event yang sama → edge
-         (weight = jumlah shared events)
+         (hanya weight >= WEIGHT_THRESHOLD; bobot = Σ min(w1, w2) per event)
       2. Relasi Person-Person langsung (KELUARGA, SAHABAT, MUSUH) → edge atau
          tambahan weight kalau edge sudah ada
     """
-    involved_in = edges_df[edges_df["relation_type"] == "INVOLVED_IN"]
-    event_persons: dict[str, set] = defaultdict(set)
-    for _, row in involved_in.iterrows():
-        event_persons[row["target_name"]].add(row["source_name"])
+    involved_in = edges_df[edges_df["relation_type"] == "INVOLVED_IN"].copy()
+    involved_in["weight"] = pd.to_numeric(
+        involved_in["weight"], errors="coerce").fillna(WEIGHT_THRESHOLD)
+    involved_in = involved_in[involved_in["weight"] >= WEIGHT_THRESHOLD]
 
-    copart_weights: dict[tuple, int] = defaultdict(int)
-    for persons in event_persons.values():
-        for p1, p2 in combinations(sorted(persons), 2):
-            copart_weights[(p1, p2)] += 1
+    event_person_w: dict[str, dict] = defaultdict(dict)
+    for _, row in involved_in.iterrows():
+        ev, p, w = row["target_name"], row["source_name"], float(row["weight"])
+        if p not in event_person_w[ev] or w > event_person_w[ev][p]:
+            event_person_w[ev][p] = w
+
+    copart_weights: dict[tuple, float] = defaultdict(float)
+    for pw in event_person_w.values():
+        for p1, p2 in combinations(sorted(pw.keys()), 2):
+            copart_weights[(p1, p2)] += min(pw[p1], pw[p2])
 
     G = nx.Graph()
     for (p1, p2), w in copart_weights.items():
-        G.add_edge(p1, p2, weight=w, relation_type="CO_PARTICIPATION")
+        G.add_edge(p1, p2, weight=round(w, 3), relation_type="CO_PARTICIPATION")
 
     person_rels = edges_df[edges_df["relation_type"].isin(["KELUARGA", "SAHABAT", "MUSUH"])]
     for _, row in person_rels.iterrows():

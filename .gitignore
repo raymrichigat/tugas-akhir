@@ -42,3 +42,7 @@ instruksi.txt
 *.csv.bak
 *.csv.bak2
 *.csv.bak*
+*.md.bak*
+
+# Bundle data sementara untuk upload Colab (regeneratable)
+corrected_gold_data_*.zip

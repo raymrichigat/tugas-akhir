@@ -153,6 +153,34 @@ TA_sirah/
 | Lifecycle events enrichment (8 events) | ✅ **Selesai 2026-05-28 malam** — `add_lifecycle_events.py` (hybrid manual + auto-discover). +8 EVENT (Kelahiran Nabi, Wahyu Pertama, Hijrah ke Habasyah, Pemboikotan Bani Hasyim, Tahun Berduka, Hijrah ke Madinah, Haji Wada', Wafat Nabi). +99 edges auto-discovered (46 INVOLVED_IN + 44 OCCURRED_AT + 7 OCCURRED_ON + 2 IN_PERIOD baru). EVENT count 44→52 (+18%). Period dengan EVENT 12/15→14/15. Louvain Q 0.351→0.364. **Top 10 Event PR sekarang balanced narrative** (5 dari 10 = lifecycle: Hijrah Madinah, Kelahiran, Wafat, Wahyu Pertama, Pemboikotan), bukan 100% peperangan. |
 | Visualisasi Neo4j (Cypher + matplotlib) | ✅ **Selesai 2026-05-28 malam** — `visualization_queries_v3.cypher` (20 query: per-period, 5 case study, per-community, ego-network, descriptive stats) + `case_study_*.png` (5 PNG + panel) re-rendered ke v3 enriched. |
 
+### Catatan progres terakhir (sesi: 2026-06-09 — EDA + Error Analysis NER untuk revisi bimbingan 5 Juni)
+
+Revisi bimbingan **2026-06-05** (next bimbingan **11 Juni**) minta: EDA, analisis kelas rendah, pembahasan error (bukan cuma angka), + skenario baru (model lain, weighted-CE, POS-tag, parafrase). Fokus sesi ini = **EDA + error analysis (no-GPU, selesai)**; skenario baru = rancangan (GPU tersedia).
+
+**Output baru:**
+- **EDA** — `src/analysis/eda_ner_dataset.py` → `data/result/analysis/eda/` (eda_ner_dataset.md + 2 chart). Temuan: `text_id`=chunk (1.094 chunk), EVENT 2,7%/TIME 4,2% (test) = minoritas, **imbalance ≈25:1**. `pos_tag` di CSV semua `NN` (placeholder — belum dipakai).
+- **Error analysis** — `src/pseudo_labelling/SRL-NER/error_analysis.py` → `data/result/analysis/error_analysis/` (report + confusion PNG + error_examples.md + test_predictions.csv). Re-predict test lokal pakai model pemenang S3.2 iter-4 (bobot ada di disk; F1 recompute 0,9498 ≈ resmi 0,9537).
+- **Deliverable** — `docs/bimbingan/2026-06-11.md` (5 bagian, peta revisi→status).
+
+**Temuan kunci (untuk Bab 4 pembahasan):**
+1. Error NER **didominasi deteksi (miss/over), BUKAN misklasifikasi tipe** — confusion antar-kelas hanya ~5 token. Model paham 4 tipe; masalahnya boundary/detection.
+2. **Inkonsistensi gold** (manual labelling semi-auto keyed kapitalisasi): `Perang` kapital **40/40→EVENT** vs `perang` kecil **26/26→O**. Model deteksi lowercase → "FP" yang sebetulnya benar ⟹ precision EVENT/TIME ter-*underestimate*.
+3. **Artefak OCR** = boundary error: % token entitas gold ber-tanda-baca-nempel LOCATION 45,7% / EVENT 28% / TIME 18,5% / PERSON 16,4%.
+4. Model **over-deteksi** keseluruhan: 1.804 pred > 1.759 gold (49 chunk over vs 18 under).
+5. F1 per-kelas mengikuti urutan jumlah data persis (EVENT<TIME<LOCATION<PERSON) → few-shot = faktor utama.
+
+**Verifikasi model skenario C:** `cahya/bert-base-indonesian-1.5G` & `cahya/distilbert-base-indonesian` **ada di HF**, tapi **uncased** (vs IndoBERT cased) → ganti = hilangkan sinyal kapital (eksperimen relevan dgn temuan #2). **Belum di-scaffold/run.**
+
+### Catatan progres terakhir (sesi: 2026-06-05 — Interpretasi visual Neo4j + sync angka weighted + PRECEDES Kelahiran)
+
+Deliverable `docs/bimbingan/2026-06-04.md` **Bagian A direstruktur jadi visualisasi-first dari Neo4j** (A.0 panduan baca → A.1 ego Muhammad → A.2 komunitas → A.3 studi kasus → A.4 periode → A.5 PRECEDES; metrik lama turun jadi **Lampiran A.6–A.10**). Screenshot Neo4j ditafsir dari gambar asli (folder `docs/bimbingan/screenshots/` + `README.md` checklist). **Temuan visual:** Neo4j Browser mewarnai **per-LABEL** bukan per-komunitas (untuk komunitas → pakai PNG matplotlib `sna_person_network.png`); perbandingan ego **Muhammad (40+) vs Abu Bakar (16) vs Abu Sufyan (8)** = bukti sentralitas visual paling kuat.
+
+**⚠️ SYNC ANGKA (supersede angka count-based di tabel "v3 cleaned" 2026-05-30 di bawah):** graf Person SNA sekarang **WEIGHTED** (threshold INVOLVED_IN ≥0,3 + bobot pasangan Σ min(w₁,w₂)). **Angka resmi deliverable: graf Person 208 node / 1832 edge, density 0,085, Louvain 15 komunitas Q=0,385, ARI 0,78.** (Angka lama 239 node / 11–12 komunitas / Q 0,350 = count-based, **USANG**.) Amr Bin Umayyah artifact #4→#18, Khadijah masuk top-10. **Jangan tertukar 2 graf:** KG penuh = **1191 node / 586 edge**; graf Person SNA (proyeksi co-participation) = **208 node / 1832 edge**.
+
+**PRECEDES (2026-06-05):** ditambah `Kelahiran Nabi → Perang Fijar` di `fix_precedes_v3.py` + re-run → rantai **24 event / 23 panah** (Kelahiran → … → Wafat Nabi). Sekalian fix bug laten nama node `Isra' Mi'raj` (sebelumnya ter-skip krn nama usang "Isra' Dan Mi'Raj" di script). KG penuh 585→**586 edge**. Cypher v3 di-regenerate. Backup CSV: `edges_v3.csv.bak_precedes_kelahiran`.
+
+---
+
 ### Catatan progres terakhir (sesi: 2026-06-03 — Deliverable bimbingan 4 Juni + skenario G7/G8)
 
 Disiapkan dokumen tunggal siap-tampil **`docs/bimbingan/2026-06-04.md`** (4 bagian): **A** interpretasi graf (apa yang diperoleh, bukan sekadar angka); **B** tabel skenario NER (tangga S1→S2→S3, winner F1 0,9537 — gain murni di kelas minoritas/macro-avg via augmentasi, contrastive sendiri tak menggerakkan minoritas); **C** rancangan + hasil skenario graf **G1–G8** (top-10 siap Bab 4 + glosarium istilah bahasa awam + perbandingan v2↔v3); **D** studi kasus QASiNa (9,6% upper-bound). Dua skenario graf baru dihitung via `src/analysis/scenario_g7_g8.py`: **G7 lokasi sentral** (weighted_degree: Madinah 684 > Makkah 595; betweenness degenerate krn graf lokasi padat) & **G8 keberagaman fase tokoh** (Muhammad 6/6 fase; Ali 8 event tapi cuma 2 fase). Catatan penyajian NER: λ-sweep & S3.1 dikeluarkan dari tabel skenario (tuning, bukan skenario), S2 pakai angka run terkontrol 0,9522 + disclosure varians run-to-run, S3.2→S3.
@@ -226,7 +254,7 @@ Perang Badr → Uhud → Khandaq → **Hijrah Ke Madinah** ✨ → **Kelahiran N
 
 **Post-bimbingan / future work:**
 10. ⏳ Scale-up LLM verb extraction (Opsi B 50 chunks via batch chat ~25 menit, atau Opsi C full corpus via API ~$45).
-11. ⏳ 2 bug pending: `OCCURRED_AT weight=2.0` + `PRECEDES stale v1 mapping` (Fathul Makkah → Perang Uhud salah arah, masih ada di v3).
+11. ⏳ 1 bug pending: `OCCURRED_AT weight=2.0`. (`PRECEDES stale v1 mapping` ✅ **RESOLVED** 2026-06-05 — rantai kronologi benar via `fix_precedes_v3.py`, Kelahiran Nabi disambung; bug "Fathul Makkah→Uhud" tidak ada lagi di v3.)
 12. ⏳ Validasi tambahan top-50 PR Person — cocokkan dengan literatur Sirah untuk identify other artifacts.
 13. ⏳ `case_study_events.py`, `entity_frequency_per_period.py`, `edge_period_cooccurrence.py` — belum di-flag `--version v3` (low priority).
 

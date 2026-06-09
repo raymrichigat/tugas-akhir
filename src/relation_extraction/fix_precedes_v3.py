@@ -20,7 +20,7 @@ Strategi quick fix:
 5. Re-generate Cypher v3
 
 Source-of-truth chronology (terjemahan Mubarakfuri Kathur Suhardi):
-  - Pra-nubuwah: Perang Fijar (~590 M)
+  - Lahir & masa kecil: Kelahiran Nabi (570 M) -> Perang Fijar (~590 M)
   - Nubuwah Makkah: Wahyu Pertama (610) -> Hijrah Habasyah (615) -> Pemboikotan
     (617-620) -> Tahun Berduka (620) -> Baiat Aqabah (621) -> Baiat Aqabah
     Kubra (622) -> Hijrah Madinah (622, akhir 13 Nubuwah)
@@ -49,13 +49,15 @@ NODES_V3 = ROOT / "data" / "result" / "relation_result" / "nodes_v3.csv"
 # Chronology yang benar - urutan persis sesuai sejarah Sirah
 # Format: (source_event, target_event, page_anchor_for_evidence, period_label)
 PRECEDES_CHRONOLOGY = [
+    # Lahir & masa kecil (lifecycle — disambung ke kepala rantai 2026-06-05)
+    ("Kelahiran Nabi", "Perang Fijar", 73, "Nasab & Kelahiran Nabi"),
     # Pra-nubuwah & Makkah
     ("Perang Fijar", "Wahyu Pertama", 87, "Awal Kenabian & Mandat Dakwah"),
     ("Wahyu Pertama", "Hijrah Ke Habasyah", 95, "Dakwah Jahriyah & Tekanan Quraisy"),
     ("Hijrah Ke Habasyah", "Pemboikotan Bani Hasyim", 135, "Dakwah Jahriyah & Tekanan Quraisy"),
     ("Pemboikotan Bani Hasyim", "Tahun Berduka", 153, "Dakwah Jahriyah & Tekanan Quraisy"),
-    ("Tahun Berduka", "Isra' Dan Mi'Raj", 168, "Dakwah di Luar Makkah & Isra Mi'raj"),
-    ("Isra' Dan Mi'Raj", "Baiat Aqabah", 191, "Dakwah di Luar Makkah & Isra Mi'raj"),
+    ("Tahun Berduka", "Isra' Mi'raj", 168, "Dakwah di Luar Makkah & Isra Mi'raj"),
+    ("Isra' Mi'raj", "Baiat Aqabah", 191, "Dakwah di Luar Makkah & Isra Mi'raj"),
     ("Baiat Aqabah", "Baiat Aqabah Kubra", 198, "Dakwah di Luar Makkah & Isra Mi'raj"),
     ("Baiat Aqabah Kubra", "Hijrah Ke Madinah", 203, "Hijrah ke Madinah"),
     # Madinah peperangan utama

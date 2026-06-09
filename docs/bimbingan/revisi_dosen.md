@@ -150,3 +150,39 @@ Catatan raw dari pertemuan revisi dengan Bu Diana. Format: bullet point pendek a
 12. **Update CLAUDE.md** + mulai pembukuan Bab 4
 
 > Propagasi: ringkasan masuk ke `bimbingan_template.md` (Section 0 status + Section 5 pertanyaan dengan jawaban), `../skenario/srl_ner.md` (update §S3 dengan tune λ_C dulu + deadline + Mention Replacement plan), `../../CLAUDE.md` (Catatan progres terakhir + tabel skenario aktif). Detail mentah tetap di `2026-05-16_outcome.md`.
+
+---
+
+## Putaran 6 — 2026-06-05 (Bimbingan Aktual)
+
+> Bimbingan setelah deliverable 4 Juni. Next bimbingan: **11 Juni 2026**. Nada catatan dosen tegas ("jangan nunggu disuruh, ulik-ulik sendiri") — maksudnya minta mahasiswa lebih proaktif eksplorasi skenario, bukan menunggu instruksi.
+
+**EDA & dataset**
+- Tambahkan **EDA**: informasi dataset bagaimana, **tahapan pembentukan data**, **menampilkan data** (contoh).
+
+**Penambahan skenario (proaktif — "jangan nunggu disuruh, ulik-ulik parameter, analisis hasilnya")**
+- **Model lain**: cahya-bert, distil-bert (kalau ada versi Indonesia), atau model lain bila ada.
+- **Handle imbalance** dibandingkan eksplisit: **weighted cross-entropy**, **CL (contrastive)**, **augmentasi**.
+- **POS-tag**: uji apakah penggunaan POS-tag *sebelum* masuk model berpengaruh.
+- Eksplorasi mandiri: variasi/ubah parameter → analisis bagaimana hasilnya.
+
+**Bagian Analisis**
+- Data yang rendah itu di **label/kelas apa**, dan **kenapa** terjadi seperti itu.
+
+**Bagian Pembahasan (tidak hanya nilai → mengarah ke data)**
+- Analisis NER: yang **performa rendah / misklasifikasi / tidak terdeteksi** itu **karena apa**.
+- Cek: satu kalimat di ground truth ada **3 entitas tapi terdeteksi 2** (atau sebaliknya).
+- Yang **misklasifikasi** → cari tahu **mengapa** hasilnya seperti itu.
+
+**Tambahan informasi (klarifikasi teknik)**
+- Teknik augmentasi: **coba parafrase**.
+- **Augmentasi = menambah data secara riil**; **CL = mirip pembobotan** (bentuk representasi, bukan tambah data) → komplementer.
+- Pertanyaan terbuka: **apakah bobot CL perlu menggunakan weighted** (per-kelas)?
+
+**Status penanganan (per 2026-06-09)**
+- ✅ EDA selesai → `data/result/analysis/eda/` (script `src/analysis/eda_ner_dataset.py`).
+- ✅ Analisis kelas rendah + pembahasan error selesai → `data/result/analysis/error_analysis/` (script `src/pseudo_labelling/SRL-NER/error_analysis.py`).
+- ✅ Deliverable siap-tampil → `2026-06-11.md` (5 bagian).
+- 🔄 Skenario baru (weighted-CE / parafrase / POS-tag / model cahya & distilbert) = rancangan + run awal (GPU tersedia).
+
+> Propagasi: deliverable di `2026-06-11.md`; ringkas progres ke `../../CLAUDE.md`. Temuan kunci: error NER didominasi **deteksi (miss/over)** bukan misklasifikasi tipe; sebagian FP EVENT/TIME = **inkonsistensi gold** (semi-auto keyed kapitalisasi `Perang` 40/40 vs `perang` 26/26); artefak OCR (tanda baca nempel, token kepecah) = sumber boundary error (LOCATION 45,7%).

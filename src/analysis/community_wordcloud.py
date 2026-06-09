@@ -173,19 +173,30 @@ def compute_modularity_q(comm_map: dict[str, int]) -> float | None:
 
     edges_df = load_evidence(EDGES_CSV)
     involved = edges_df[edges_df["relation_type"] == "INVOLVED_IN"]
-    event_persons: dict[str, set[str]] = defaultdict(set)
+    # Threshold + weighted co-participation (konsisten dgn sna_analysis.py):
+    # buang co-mention lemah, bobot pasangan = Σ min(w1, w2) per event bersama.
+    WEIGHT_THRESHOLD = 0.3
+    event_person_w: dict[str, dict[str, float]] = defaultdict(dict)
     for _, row in involved.iterrows():
-        event_persons[row["target_name"]].add(row["source_name"])
+        try:
+            w = float(row.get("weight", WEIGHT_THRESHOLD))
+        except (TypeError, ValueError):
+            w = WEIGHT_THRESHOLD
+        if w < WEIGHT_THRESHOLD:
+            continue
+        ev, p = row["target_name"], row["source_name"]
+        if p not in event_person_w[ev] or w > event_person_w[ev][p]:
+            event_person_w[ev][p] = w
 
     G = nx.Graph()
-    copart: dict[tuple[str, str], int] = defaultdict(int)
-    for ev, ps in event_persons.items():
-        ps_list = sorted(ps)
+    copart: dict[tuple[str, str], float] = defaultdict(float)
+    for ev, pw in event_person_w.items():
+        ps_list = sorted(pw.keys())
         for i in range(len(ps_list)):
             for j in range(i + 1, len(ps_list)):
-                copart[(ps_list[i], ps_list[j])] += 1
+                copart[(ps_list[i], ps_list[j])] += min(pw[ps_list[i]], pw[ps_list[j]])
     for (p1, p2), w in copart.items():
-        G.add_edge(p1, p2, weight=w)
+        G.add_edge(p1, p2, weight=round(w, 3))
 
     person_rels = edges_df[edges_df["relation_type"].isin(["KELUARGA", "SAHABAT", "MUSUH"])]
     for _, row in person_rels.iterrows():

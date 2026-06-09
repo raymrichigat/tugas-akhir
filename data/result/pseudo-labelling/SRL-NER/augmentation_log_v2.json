@@ -15,12 +15,12 @@
   },
   "stats": {
     "original_sentences": 599,
-    "minor_sentences": 141,
-    "augmentable_sentences": 130,
-    "augmented_sentences": 260,
+    "minor_sentences": 145,
+    "augmentable_sentences": 134,
+    "augmented_sentences": 268,
     "original_tokens": 102884,
-    "augmented_tokens": 47122,
-    "mean_replacements_per_variant": 4.7615384615384615
+    "augmented_tokens": 48359,
+    "mean_replacements_per_variant": 4.746268656716418
   },
   "skip_reasons": {
     "quran_reference": 7,
@@ -32,11 +32,11 @@
     "pool_dropped_broken_event": 1
   },
   "augmentation_diagnostics": {
-    "replaced_TIME": 92,
-    "protected_source_PERSON": 534,
-    "replaced_PERSON": 474,
-    "replaced_LOCATION": 468,
-    "replaced_EVENT": 204,
+    "replaced_TIME": 93,
+    "protected_source_PERSON": 542,
+    "replaced_PERSON": 493,
+    "replaced_LOCATION": 479,
+    "replaced_EVENT": 207,
     "broken_event_skipped": 2
   },
   "pool_sizes_per_period": {
@@ -116,13 +116,13 @@
       "PERSON": 52,
       "LOCATION": 10,
       "TIME": 3,
-      "EVENT": 3
+      "EVENT": 4
     },
     "P13": {
       "PERSON": 53,
       "LOCATION": 9,
       "TIME": 8,
-      "EVENT": 4
+      "EVENT": 5
     },
     "P14": {
       "PERSON": 43,
@@ -132,26 +132,26 @@
     }
   },
   "pre_augment_label_distribution": {
-    "O": 95302,
+    "O": 95292,
     "B-TIME": 233,
     "I-TIME": 433,
     "B-PERSON": 2884,
     "I-PERSON": 2675,
     "B-LOCATION": 985,
     "I-LOCATION": 72,
-    "B-EVENT": 144,
-    "I-EVENT": 156
+    "B-EVENT": 148,
+    "I-EVENT": 162
   },
   "post_augment_label_distribution": {
-    "O": 138152,
-    "B-TIME": 367,
-    "I-TIME": 712,
-    "B-PERSON": 4078,
-    "I-PERSON": 3939,
-    "B-LOCATION": 1675,
+    "O": 139264,
+    "B-TIME": 371,
+    "I-TIME": 722,
+    "B-PERSON": 4112,
+    "I-PERSON": 3978,
+    "B-LOCATION": 1679,
     "I-LOCATION": 198,
-    "B-EVENT": 414,
-    "I-EVENT": 471
+    "B-EVENT": 426,
+    "I-EVENT": 493
   },
   "augmented_text_ids": [
     "000354-001-aug1",

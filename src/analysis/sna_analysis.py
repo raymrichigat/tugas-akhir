@@ -30,6 +30,12 @@ from collections import defaultdict
 BASE_DIR = Path(__file__).resolve().parents[2]
 RR_DIR = BASE_DIR / "data" / "result" / "relation_result"
 
+# Threshold weight relasi INVOLVED_IN untuk membangun graf co-participation.
+# Edge co-mention lemah (<0.3 = proximity jauh & di luar BAB utama) dibuang agar
+# tidak membentuk clique palsu di event ramai (lihat kasus Amr Bin Umayyah,
+# docs/bimbingan/2026-06-04 A.1.3). Co-participation lalu di-bobot Σ min(w1, w2).
+WEIGHT_THRESHOLD = 0.3
+
 
 def resolve_paths(version: str):
     """Pilih nodes/edges/out_dir berdasarkan version (v1|v2|v3)."""
@@ -79,34 +85,43 @@ def load_graph(nodes_path, edges_path):
 def build_person_coparticipation_graph(edges_df):
     """
     Bangun subgraph Person-only: dua person terhubung jika sama-sama
-    INVOLVED_IN event yang sama. Edge weight = jumlah shared events.
+    INVOLVED_IN event yang sama (hanya relasi dengan weight >= WEIGHT_THRESHOLD).
+    Edge weight = Σ min(w1, w2) atas event bersama, di mana w = weight relasi
+    INVOLVED_IN (proximity + period) tiap person ke event tsb.
     Juga termasuk relasi Person-Person langsung (KELUARGA, SAHABAT, MUSUH).
     """
-    # 1. Co-participation via shared events
-    involved_in = edges_df[edges_df["relation_type"] == "INVOLVED_IN"]
+    # 1. Co-participation via shared events (threshold + weighted)
+    #    Hanya INVOLVED_IN dengan weight >= WEIGHT_THRESHOLD yang dipakai;
+    #    bobot pasangan = Σ min(w1, w2) per event bersama (bukan hitung event).
+    involved_in = edges_df[edges_df["relation_type"] == "INVOLVED_IN"].copy()
+    involved_in["weight"] = pd.to_numeric(
+        involved_in["weight"], errors="coerce").fillna(WEIGHT_THRESHOLD)
+    involved_in = involved_in[involved_in["weight"] >= WEIGHT_THRESHOLD]
 
-    # Group by target (event) → list of persons
-    event_persons = defaultdict(set)
+    # event → {person: weight terkuat person itu ke event}
+    event_person_w = defaultdict(dict)
     for _, row in involved_in.iterrows():
-        event_persons[row["target_name"]].add(row["source_name"])
+        ev, p, w = row["target_name"], row["source_name"], float(row["weight"])
+        if p not in event_person_w[ev] or w > event_person_w[ev][p]:
+            event_person_w[ev][p] = w
 
-    # Build co-participation edges
-    copart_weights = defaultdict(int)
+    # Build co-participation edges: weight = Σ min(w1, w2) per shared event
+    copart_weights = defaultdict(float)
     copart_events = defaultdict(set)
-    for event_name, persons in event_persons.items():
-        persons_list = sorted(persons)
+    for event_name, pw in event_person_w.items():
+        persons_list = sorted(pw.keys())
         for i in range(len(persons_list)):
             for j in range(i + 1, len(persons_list)):
-                pair = (persons_list[i], persons_list[j])
-                copart_weights[pair] += 1
-                copart_events[pair].add(event_name)
+                p1, p2 = persons_list[i], persons_list[j]
+                copart_weights[(p1, p2)] += min(pw[p1], pw[p2])
+                copart_events[(p1, p2)].add(event_name)
 
     G = nx.Graph()
 
     # Tambah co-participation edges
     for (p1, p2), weight in copart_weights.items():
         events = " | ".join(sorted(copart_events[(p1, p2)]))
-        G.add_edge(p1, p2, weight=weight, shared_events=events,
+        G.add_edge(p1, p2, weight=round(weight, 3), shared_events=events,
                     relation_type="CO_PARTICIPATION")
 
     # 2. Tambah relasi Person-Person langsung

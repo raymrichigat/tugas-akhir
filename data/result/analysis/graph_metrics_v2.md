@@ -7,19 +7,19 @@
 
 | Metric | Value | Interpretasi |
 |---|---:|---|
-| n_nodes | 163 | Jumlah Person (node) di graf |
-| n_edges | 1135 | Jumlah relasi (co-participation + Person-Person) |
-| average_degree | 13.93 | Rata-rata koneksi per orang |
-| density | 0.0860 | Rasio actual edges vs possible edges (0=sparse, 1=complete graph) |
-| average_clustering_coefficient | 0.4496 | Rata-rata seberapa cluster tetangga tiap node (lokal) |
-| transitivity_global | 0.7723 | Global clustering: rasio segitiga / triplet (kohesi keseluruhan) |
-| degree_assortativity | -0.0576 | Positif = high-degree connect to high-degree; negatif = high connect to low (hub-and-spoke) |
-| n_components | 8 | Jumlah connected components (kalau >1, graf tidak fully connected) |
-| giant_component_size | 148 | Ukuran komponen terbesar |
-| giant_component_ratio | 0.9080 | % node dalam giant component |
+| n_nodes | 147 | Jumlah Person (node) di graf |
+| n_edges | 696 | Jumlah relasi (co-participation + Person-Person) |
+| average_degree | 9.47 | Rata-rata koneksi per orang |
+| density | 0.0649 | Rasio actual edges vs possible edges (0=sparse, 1=complete graph) |
+| average_clustering_coefficient | 0.3716 | Rata-rata seberapa cluster tetangga tiap node (lokal) |
+| transitivity_global | 0.7175 | Global clustering: rasio segitiga / triplet (kohesi keseluruhan) |
+| degree_assortativity | -0.0981 | Positif = high-degree connect to high-degree; negatif = high connect to low (hub-and-spoke) |
+| n_components | 9 | Jumlah connected components (kalau >1, graf tidak fully connected) |
+| giant_component_size | 129 | Ukuran komponen terbesar |
+| giant_component_ratio | 0.8776 | % node dalam giant component |
 | giant_diameter | 6 | Diameter giant component (jarak terjauh dua node) |
 | giant_radius | 3 | Radius giant component |
-| giant_avg_shortest_path | 2.47 | Rata-rata path length di giant component |
+| giant_avg_shortest_path | 2.58 | Rata-rata path length di giant component |
 
 ## 2. Community Detection Comparison
 
@@ -32,9 +32,9 @@ Bandingkan **3 metode community detection**:
 
 | Method | n_communities | Modularity Q | Catatan |
 |---|---:|---:|---|
-| louvain | 13 | 0.3269 | Standar emas balanced quality+speed |
-| greedy | 15 | 0.3196 | Faster tapi quality lebih rendah; legacy di `sna_analysis.py` |
-| girvan_newman | 16 | 0.0239 | Slow tapi interpretable (edge-betweenness based) |
+| louvain | 17 | 0.3702 | Standar emas balanced quality+speed |
+| greedy | 19 | 0.3541 | Faster tapi quality lebih rendah; legacy di `sna_analysis.py` |
+| girvan_newman | 16 | 0.0845 | Slow tapi interpretable (edge-betweenness based) |
 
 ### 2.2 Pairwise Adjusted Rand Index (ARI)
 
@@ -43,33 +43,37 @@ ARI tinggi → metode-metode menemukan struktur komunitas yang serupa.
 
 | Method | louvain | greedy | girvan_newman |
 |---|---:|---:|---:|
-| louvain | 1.0000 | 0.5616 | 0.1332 |
-| greedy | 0.5616 | 1.0000 | 0.3075 |
-| girvan_newman | 0.1332 | 0.3075 | 1.0000 |
+| louvain | 1.0000 | 0.6399 | 0.1966 |
+| greedy | 0.6399 | 1.0000 | 0.2258 |
+| girvan_newman | 0.1966 | 0.2258 | 1.0000 |
 
 ### 2.3 Top members per community (louvain, top modularity)
 
-Method pemenang berdasarkan modularity: **louvain** (Q=0.3269, 13 komunitas).
+Method pemenang berdasarkan modularity: **louvain** (Q=0.3702, 17 komunitas).
 
-- **C1** (50 anggota): Abd bin Al-Julunda, Abrahah, Abul Huqaiq, Adam, Adi bin Hatim, Al-Harits bin Abdi, Al-Miqdad bin Amr, Al-Mundzir bin Amr bin Khunais (+42 lagi)
-- **C2** (39 anggota): Abdullah bin Jahsy, Abdullah bin Uraiqith, Abu Azzah, Abu Bakar, Abu Jahal, Abu Salamah bin Abdul Asad, Abu Shafwan, Abu Sufyan bin Al-Harits bin Abdul Muththalib (+31 lagi)
-- **C3** (33 anggota): Abdullah bin Abbas, Abdullah bin Abu Rabi'ah, Abdurrahman bin Auf, Abu Hurairah, Abu Lahab, Abu Lubabah bin Abdul, Abu Musa, Abu Rasulullah (+25 lagi)
-- **C4** (21 anggota): Abdullah bin Atik, Abdullah bin Ubay bin Salul, Abdullah bin Unais, Abu Aziz, Abu Rafi', Al-Mundzir bin Uqbah bin Amir, Ali bin Abu Thalib, Az-Zubair bin Al-Awwam (+13 lagi)
-- **C5** (3 anggota): Abdullah bin Al-Mughirah, Al-Hakam bin Kaisan, Amar bin Al-Hadhrami
-- **C6** (3 anggota): Abu Zaid, Amr bin Abdi, Syurahbil bin Hasyim
-- **C7** (2 anggota): Haritsah bin Amr, Haritsah bin Tsa'labah
-- **C8** (2 anggota): Bakr bin Wa'il, Hanifah bin Sha'b bin Ali bin Bakr
-- **C9** (2 anggota): Adi bin An-Najjar, Salma binti Amru
-- **C10** (2 anggota): Abdul Muththalib, Fathimah binti Amr bin A'idz bin Imran bin Makhzum bin Yaqzhah bin Murrah
-- **C11** (2 anggota): Mirdas bin Nuhaik, Usamah bin Zaid
-- **C12** (2 anggota): Nu'aim bin Ma'ud, Sulaith bin An- Nu'man
-- **C13** (2 anggota): Abu Bashir, Abu Jandal
+- **C1** (41 anggota): Abd bin Al-Julunda, Abdullah bin Uraiqith, Abu Bakar, Abu Hurairah, Abu Musa, Abu Sufyan bin Al-Harits bin Abdul Muththalib, Abu Thalib, Abul Huqaiq (+33 lagi)
+- **C2** (32 anggota): Abdullah bin Jahsy, Abu Azzah, Abu Jahal, Abu Salamah bin Abdul Asad, Abu Shafwan, Abu Sufyan bin Harb, Abul Hakam, Aisyah (+24 lagi)
+- **C3** (24 anggota): Abdullah bin Abbas, Abdullah bin Abu Rabi'ah, Abdurrahman bin Auf, Abu Lahab, Abu Lubabah bin Abdul, Al-Abbas bin Abdul Muththalib, Amr bin Al-Ash, Hamzah bin Abdul Muththalib (+16 lagi)
+- **C4** (14 anggota): Abdullah bin Ubay bin Salul, Abu Aziz, Al-Mundzir bin Uqbah bin Amir, Ali bin Abu Thalib, Huyai bin Akhthab, Jabir bin Abdullah, Mush'ab bin Umair, Sa'd bin Bakr (+6 lagi)
+- **C5** (6 anggota): Al-Mundzir bin Amr bin Khunais, Rifa'ah bin Abdul Mundzir, Sa'd bin Khaitsamah bin Al-Harits, Sa'd bin Ubadah bin Dulaim, Ubadah bin Ash-Shamit bin Qais, Usaid bin Hudhair bin Sammak
+- **C6** (4 anggota): Ibrahim, Isma'il, Mudhadh bin Amr, Muhammad bin Abdullah bin Abdul Muththalib bin Hasyim
+- **C7** (3 anggota): Khadijah, Waraqah bin Naufal, Zaid bin Haritsah bin Syurahbil
+- **C8** (3 anggota): Abdullah bin Al-Mughirah, Al-Hakam bin Kaisan, Amar bin Al-Hadhrami
+- **C9** (3 anggota): Abu Zaid, Amr bin Abdi, Syurahbil bin Hasyim
+- **C10** (3 anggota): Abdullah bin Atik, Abdullah bin Unais, Abu Rafi'
+- **C11** (2 anggota): Haritsah bin Amr, Haritsah bin Tsa'labah
+- **C12** (2 anggota): Bakr bin Wa'il, Hanifah bin Sha'b bin Ali bin Bakr
+- **C13** (2 anggota): Adi bin An-Najjar, Salma binti Amru
+- **C14** (2 anggota): Abdul Muththalib, Fathimah binti Amr bin A'idz bin Imran bin Makhzum bin Yaqzhah bin Murrah
+- **C15** (2 anggota): Mirdas bin Nuhaik, Usamah bin Zaid
+- **C16** (2 anggota): Nu'aim bin Ma'ud, Sulaith bin An- Nu'man
+- **C17** (2 anggota): Abu Bashir, Abu Jandal
 
 ## 3. Klaim yang Bisa Dipertahankan (untuk Bab 4)
 
-- Knowledge Graph Sirah ini punya **163 Person** dengan **1135 relasi** (density 0.0860).
-- Struktur komunitas terdeteksi: **13 kelompok** (modularity 0.3269) — menunjukkan adanya **faksi/kelompok diskursus** yang berbeda.
-- Clustering coefficient 0.4496 (lokal) vs 0.7723 (global) — interpretasi: banyak tetangga node yang juga saling terhubung (kohesi lokal tinggi).
-- Degree assortativity -0.0576: mendekati neutral.
+- Knowledge Graph Sirah ini punya **147 Person** dengan **696 relasi** (density 0.0649).
+- Struktur komunitas terdeteksi: **17 kelompok** (modularity 0.3702) — menunjukkan adanya **faksi/kelompok diskursus** yang berbeda.
+- Clustering coefficient 0.3716 (lokal) vs 0.7175 (global) — interpretasi: banyak tetangga node yang juga saling terhubung (kohesi lokal tinggi).
+- Degree assortativity -0.0981: mendekati neutral.
 
-- ARI antara Louvain & Greedy: 0.5616 (agreement moderat — metode menghasilkan struktur yang berbeda, perlu pertimbangan saat klaim komunitas).
+- ARI antara Louvain & Greedy: 0.6399 (agreement moderat — metode menghasilkan struktur yang berbeda, perlu pertimbangan saat klaim komunitas).
