@@ -46,3 +46,10 @@ instruksi.txt
 
 # Bundle data sementara untuk upload Colab (regeneratable)
 corrected_gold_data_*.zip
+
+# Training outputs lokal hasil run (model + config + tokenizer, total belasan GB — share via Drive/HF)
+data/result/pseudo-labelling/SRL-NER/done_running/
+
+# Backup & bundle data lokal (redundant dgn file gold yang sudah tracked, regeneratable)
+data/result/_verify_backup_*/
+data/result/pseudo-labelling/SRL-NER/corrected_gold_data_*/
