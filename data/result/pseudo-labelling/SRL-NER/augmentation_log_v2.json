@@ -15,12 +15,12 @@
   },
   "stats": {
     "original_sentences": 599,
-    "minor_sentences": 145,
-    "augmentable_sentences": 134,
-    "augmented_sentences": 268,
+    "minor_sentences": 147,
+    "augmentable_sentences": 136,
+    "augmented_sentences": 272,
     "original_tokens": 102884,
-    "augmented_tokens": 48359,
-    "mean_replacements_per_variant": 4.746268656716418
+    "augmented_tokens": 49136,
+    "mean_replacements_per_variant": 4.863970588235294
   },
   "skip_reasons": {
     "quran_reference": 7,
@@ -32,11 +32,11 @@
     "pool_dropped_broken_event": 1
   },
   "augmentation_diagnostics": {
-    "replaced_TIME": 93,
-    "protected_source_PERSON": 542,
-    "replaced_PERSON": 493,
-    "replaced_LOCATION": 479,
-    "replaced_EVENT": 207,
+    "replaced_TIME": 90,
+    "protected_source_PERSON": 550,
+    "replaced_PERSON": 518,
+    "replaced_LOCATION": 497,
+    "replaced_EVENT": 218,
     "broken_event_skipped": 2
   },
   "pool_sizes_per_period": {
@@ -56,13 +56,13 @@
       "PERSON": 10,
       "LOCATION": 4,
       "TIME": 8,
-      "EVENT": 1
+      "EVENT": 2
     },
     "P3": {
       "PERSON": 28,
       "LOCATION": 1,
       "TIME": 0,
-      "EVENT": 0
+      "EVENT": 1
     },
     "P4": {
       "PERSON": 61,
@@ -74,7 +74,7 @@
       "PERSON": 83,
       "LOCATION": 16,
       "TIME": 6,
-      "EVENT": 10
+      "EVENT": 11
     },
     "P6": {
       "PERSON": 39,
@@ -132,26 +132,26 @@
     }
   },
   "pre_augment_label_distribution": {
-    "O": 95292,
+    "O": 95277,
     "B-TIME": 233,
     "I-TIME": 433,
     "B-PERSON": 2884,
     "I-PERSON": 2675,
     "B-LOCATION": 985,
     "I-LOCATION": 72,
-    "B-EVENT": 148,
+    "B-EVENT": 163,
     "I-EVENT": 162
   },
   "post_augment_label_distribution": {
-    "O": 139264,
+    "O": 139983,
     "B-TIME": 371,
-    "I-TIME": 722,
-    "B-PERSON": 4112,
-    "I-PERSON": 3978,
-    "B-LOCATION": 1679,
-    "I-LOCATION": 198,
-    "B-EVENT": 426,
-    "I-EVENT": 493
+    "I-TIME": 713,
+    "B-PERSON": 4148,
+    "I-PERSON": 3953,
+    "B-LOCATION": 1683,
+    "I-LOCATION": 202,
+    "B-EVENT": 471,
+    "I-EVENT": 496
   },
   "augmented_text_ids": [
     "000354-001-aug1",
@@ -186,6 +186,8 @@
     "000080-001-aug2",
     "000080-010-aug1",
     "000080-010-aug2",
+    "000080-011-aug1",
+    "000080-011-aug2",
     "000080-003-aug1",
     "000080-003-aug2",
     "000080-002-aug1",
@@ -201,8 +203,6 @@
     "000358-005-aug1",
     "000358-005-aug2",
     "000358-003-aug1",
-    "000358-003-aug2",
-    "000099-001-aug1",
-    "000099-001-aug2"
+    "000358-003-aug2"
   ]
 }

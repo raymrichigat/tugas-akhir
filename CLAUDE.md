@@ -5,7 +5,7 @@ Membangun Knowledge Graph dari teks Sirah Nabawiyah (Bahasa Indonesia) menggunak
 
 **Sumber data:** Buku "Sirah Nabawiyah" oleh Syaikh Shafiyyurrahman Al-Mubarakfuri, terjemahan Kathur Suhardi (633 halaman, Bahasa Indonesia)
 
-> **Catatan revisi 2026-05-03:** LLM-NER **tidak jadi digunakan** (keputusan Bu Diana). Fokus penuh ke **SRL-NER** saja. Folder `src/pseudo_labelling/LLM-NER/` dipertahankan sebagai arsip eksplorasi, tidak masuk pipeline final.
+> **Catatan revisi 2026-05-03:** LLM-NER **tidak jadi digunakan** (keputusan Bu Diana). Fokus penuh ke **SRL-NER** saja. Folder LLM-NER **dipindah ke `lama/src/pseudo_labelling/LLM-NER/`** (cleanup repo 2026-06-10) sebagai arsip eksplorasi, tidak masuk pipeline final.
 
 ---
 
@@ -14,7 +14,7 @@ Membangun Knowledge Graph dari teks Sirah Nabawiyah (Bahasa Indonesia) menggunak
 - **Database:** Neo4j (Knowledge Graph)
 - **OCR:** PaddleOCR (`ocr_paddle.py`)
 - **NER:** **SRL-based** saja (Semantic Role Labeling, BERT iterative self-training).
-  - LLM-NER (QLoRA, mengikuti thesis Andrian) sudah diimplementasikan tapi **tidak dipakai** per revisi 2026-05-03 — disimpan di `src/pseudo_labelling/LLM-NER/` sebagai arsip.
+  - LLM-NER (QLoRA, mengikuti thesis Andrian) sudah diimplementasikan tapi **tidak dipakai** per revisi 2026-05-03 — disimpan di `lama/src/pseudo_labelling/LLM-NER/` sebagai arsip (dipindah dari src/ saat cleanup 2026-06-10).
 - **SNA:** NetworkX
   - **Node-level (centrality):** degree, betweenness, closeness, PageRank
   - **Graph-level:** density, average clustering coefficient, ukuran network, komponen
@@ -93,22 +93,8 @@ TA_sirah/
     ├── alias_clustering/
     │   └── alias_clustering.py        ← clustering variasi nama entitas (manual + Jaro-Winkler)
     ├── pseudo_labelling/
-    |   ├── LLM-NER/                          ← ❌ DEPRECATED (lihat DEPRECATED.md)
-    |   |   ├── DEPRECATED.md                 ← penanda dibatalkan (revisi 2026-05-03)
-    |   |   ├── PENJELASAN_THESIS_ANDRIAN.md  ← referensi metodologi Andrian (arsip)
-    |   |   ├── asli/                          ← penerapan asli Andrian (baseline supervised)
-    |   |   |   ├── llm_ner_sirah.py
-    |   |   |   ├── llm_ner_sirah_colab.ipynb
-    |   |   |   ├── llm_ner_sirah_kaggle.ipynb
-    |   |   |   └── _build_notebooks.py
-    |   |   └── pseudo/                        ← versi TA: + iterative self-training
-    |   |       ├── llm_ner_sirah.py           ← copy untuk import
-    |   |       ├── llm_ner_sirah_selftraining.py  ← ★ kontribusi self-training
-    |   |       ├── llm_ner_sirah_colab.ipynb
-    |   |       ├── llm_ner_sirah_kaggle.ipynb
-    |   |       ├── README_SELFTRAINING.md
-    |   |       └── _build_notebooks.py
-    |   ├── SRL-NER/
+    |   ├── (LLM-NER/ → dipindah ke lama/src/pseudo_labelling/LLM-NER/ — arsip deprecated, cleanup 2026-06-10)
+    |   ├── SRL-NER/                          ← (scaffolding _build_*/patch_* dipindah ke lama/, cleanup 2026-06-10)
     ├── relation_extraction/
     │   ├── relation_extraction.py     ← ekstraksi relasi weighted + Person-Person + Event chronology
     │   └── period_mapping.py          ← mapping EVENT → BAB utama (fuzzy match TOC)
@@ -131,7 +117,7 @@ TA_sirah/
 | Alias Clustering | ✅ Selesai (143 alias, 109 clusters → `alias_map.json`) |
 | Konversi seed → format BERT (CoNLL) | ✅ Selesai (`prepare_bert_data.py`) |
 | NER Pipeline (SRL-based, BERT iterative self-training) | ✅ **S1 ✅ + S2 ✅ + S3.1 ✅ + S3.2 ✅ (selesai 2026-05-26).** Final winner: **S3.2-scl-aug-iter4 = TEST F1 entity 0.9537** (melampaui S1=0.9518 dengan +0.0019). EVENT melonjak 0.7708→0.8454 (+0.0746). Augmentation v2 + λ_C=0.3 winning combo. Detail seqeval di `data/result/pseudo-labelling/SRL-NER/seqeval_results.md`. |
-| NER Pipeline (LLM-based, Instruction Fine-Tuning + QLoRA) | ❌ **Tidak jadi dipakai** (revisi 2026-05-03). Arsip + `DEPRECATED.md` di `src/pseudo_labelling/LLM-NER/`. |
+| NER Pipeline (LLM-based, Instruction Fine-Tuning + QLoRA) | ❌ **Tidak jadi dipakai** (revisi 2026-05-03). Arsip + `DEPRECATED.md` di `lama/src/pseudo_labelling/LLM-NER/` (dipindah 2026-06-10). |
 | Periodisasi top-down (`period_mapping.json`) | ✅ **Baru 2026-05-12** — 15 period (P0-P14), 6 phase, 56 BAB ter-grouped semantically. Menggantikan fuzzy match BAB lama. Module: `src/relation_extraction/event_period.py`. |
 | Manual review event → period (K/F/R/ADD curation) | ✅ Selesai (2026-05-12, `event_period_review_v2.csv`). 19 K + 10 F + 12 R + 7 ADD applied via `apply_review_to_kg.py` → `nodes_v2.csv` + `edges_v2.csv`. |
 | Temporal Detection (intra-sentence) | ✅ **Selesai 2026-05-12** (rule-based, terbatas). 9835 kalimat → 3 unique relations (1 confirmed by page-order, 2 narrative co-mention). Yield rendah → struktur naratif Sirah ordering implicit. Script: `detect_temporal_relations.py`. |

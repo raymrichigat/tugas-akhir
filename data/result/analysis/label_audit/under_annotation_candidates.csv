@@ -20,42 +20,41 @@ sa'd bin mu,21,2,0.1
 utbah,20,8,0.4
 muharram,19,1,0.05
 bulan muharram,17,6,0.35
-bulan syawwal,16,7,0.44
 abu na,16,1,0.06
+bulan syawwal,16,7,0.44
 bulan shafar,14,5,0.36
-dzul hijjah,13,3,0.23
+khandaq,13,2,0.15
 sya'ban,13,2,0.15
 usamah,13,6,0.46
-khandaq,13,2,0.15
+dzul hijjah,13,3,0.23
 rajab,11,1,0.09
-bulan rajab,10,5,0.5
 penaklukan makkah,10,1,0.1
+bulan rajab,10,5,0.5
 baiat aqabah,9,2,0.22
 abu sa,8,2,0.25
-abu jahl,7,3,0.43
 hari tasyriq,7,3,0.43
-abul huqaiq,7,2,0.29
 muth'im bin adi,7,1,0.14
-bulan dzul hijjah,6,3,0.5
-perang bu,6,1,0.17
+abul huqaiq,7,2,0.29
+abu jahl,7,3,0.43
 rabi'ul akhir,6,2,0.33
+bulan dzul hijjah,6,3,0.5
 utbah bin rabi,6,3,0.5
+perang bu,6,1,0.17
 ibnu sa,5,1,0.2
-asad bin abdul uzza,5,2,0.4
 ibnu qami,5,1,0.2
+asad bin abdul uzza,5,2,0.4
 shafiyyah,4,2,0.5
+bulan rabi'ul akhir,4,1,0.25
+khabbab,4,1,0.25
+hasan,4,2,0.5
 abu sa'd,4,2,0.5
 mi'raj,4,2,0.5
-perang mu'tah,4,2,0.5
-khabbab,4,1,0.25
-al-muththalib bin abdi,4,2,0.5
-hasan,4,2,0.5
-bulan rabi'ul akhir,4,1,0.25
 amir bin sha'sha,4,1,0.25
-nadhr bin al-harits,3,1,0.33
+al-muththalib bin abdi,4,2,0.5
 al-ash bin wa,3,1,0.33
-tahun 11 h,3,1,0.33
 tsabit bin qais,3,1,0.33
+tahun 11 h,3,1,0.33
+nadhr bin al-harits,3,1,0.33
 abu awanah,3,1,0.33
 harun,3,1,0.33
 aban bin sa'id,3,1,0.33
