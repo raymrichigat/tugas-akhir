@@ -13,11 +13,18 @@
 | S4 | Augmentation (mention replacement v2) | tambah data riil | lama ✓ (eks-S3.2, winner) |
 
 **Grup B — Perbandingan backbone** (pakai config terbaik Grup A):
-| Backbone | Casing | Catatan |
-|---|---|---|
-| `indobenchmark/indobert-base-p1` | cased | baseline sekarang (vocab 31.923) |
-| `cahya/bert-base-indonesian-1.5G` | **uncased** | vocab 32.000 |
-| `cahya/distilbert-base-indonesian` | **uncased** | lebih kecil/cepat |
+
+> **Koreksi 2026-06-15:** baseline aktual = **`indolem/indobert-base-uncased` (UNCASED)** — terverifikasi di notebook S1 (`done_running/S1_baseline/notebook/...`, line tokenizer + model_name). Klaim sebelumnya "baseline = indobenchmark cased" **keliru**. Maka semua backbone di bawah adalah **pembanding tambahan**, bukan baseline. Model **cased** (`indobenchmark/indobert-base-p1`) adalah satu-satunya yang benar-benar mengisolasi efek kapitalisasi (baseline + 2 cahya di bawah semuanya uncased).
+
+| Backbone | Casing | Peran | Notebook | Asal |
+|---|---|---|---|---|
+| `indolem/indobert-base-uncased` | uncased | **BASELINE (S1)** | `srl_ner_sirah_0.9_colab.ipynb` | base live |
+| `indobenchmark/indobert-base-p1` | **cased** | pembanding inti casing | `srl_ner_sirah_GrupB_cased_colab.ipynb` | regen 2026-06-15 |
+| `cahya/bert-base-indonesian-1.5G` | uncased | pembanding antar-model uncased | `srl_ner_sirah_GrupB_cahya_colab.ipynb` | manual 2026-06-10 |
+| `cahya/distilbert-base-indonesian` | uncased | uncased, lebih kecil/cepat | `srl_ner_sirah_GrupB_distilbert_colab.ipynb` | manual 2026-06-10 |
+| `cahya/roberta-base-indonesian-1.5G` | case-preserving (BPE) | pembanding **arsitektur** (BERT vs RoBERTa) | `srl_ner_sirah_GrupB_roberta_colab.ipynb` | regen 2026-06-15 |
+
+> Notebook digenerate oleh `src/pseudo_labelling/SRL-NER/build_grupB_backbone.py` (`cased` / `cahya` / `cahya-distil` / `roberta`) — pure swap `MODEL_NAME` dari **base live `srl_ner_sirah_0.9_colab.ipynb`** (yang sudah ber-patch "auto-detect iterasi terakhir" + runtime timer). Script otomatis: strip `metadata.widgets` (anti-bloat), dan khusus `roberta` menambah `add_prefix_space=True` di sel tokenizer (wajib untuk byte-level BPE + `is_split_into_words=True`). Output Colab diisolasi ke `output_<slug>`. `GrupB_cahya` & `GrupB_distilbert` dibuat manual 2026-06-10 dari base yang sama → tidak perlu regenerate.
 
 **Grup C — Ablation POS-tag**: config terbaik **dengan** vs **tanpa** POS-tag riil.
 
@@ -66,9 +73,12 @@ class WeightedLossTrainer(Trainer):
 
 Cukup ganti `MODEL_NAME` + tokenizer; pipeline lain identik.
 ```python
-# MODEL_NAME = "indobenchmark/indobert-base-p1"          # baseline (cased)
-MODEL_NAME = "cahya/bert-base-indonesian-1.5G"           # atau "cahya/distilbert-base-indonesian"
+# MODEL_NAME = "indolem/indobert-base-uncased"           # BASELINE aktual (uncased)
+MODEL_NAME = "indobenchmark/indobert-base-p1"            # pembanding cased (isolasi casing)
+# MODEL_NAME = "cahya/bert-base-indonesian-1.5G"         # atau "cahya/distilbert-base-indonesian" (uncased)
 ```
+
+> ⚠️ **Hanya pakai backbone berupa BASE LM (foundation), bukan model yang sudah di-fine-tune NER** (mis. `*-NER`, `*-ner-v*`). Model yang sudah NER membawa skema label lain (umumnya PER/ORG/LOC tanpa EVENT/TIME) → itu skenario *transfer learning*, **bukan** perbandingan backbone, dan harus diframe terpisah. Lihat catatan di bawah.
 **Catatan penting (nyambung temuan kapitalisasi):** model `cahya` **uncased** → huruf dikecilkan, sinyal kapital hilang. Ini justru eksperimen menarik: menguji seberapa besar NER bergantung pada kapitalisasi. Pastikan `AutoTokenizer.from_pretrained(MODEL_NAME)` (do_lower_case otomatis ikut model). DistilBERT: kelas `AutoModelForTokenClassification` tetap jalan, lebih cepat.
 
 ---
