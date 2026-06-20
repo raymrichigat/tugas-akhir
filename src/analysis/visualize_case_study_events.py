@@ -45,6 +45,12 @@ EVENTS = [
     ("Perang Tabuk", "P13", "558-571"),
 ]
 
+# Ambang weight relasi INVOLVED_IN, DISAMAKAN dengan graf final SNA
+# (src/analysis/sna_analysis.py WEIGHT_THRESHOLD). Person dengan co-mention lemah
+# (<0.3 = proximity jauh & di luar BAB utama) tidak dihitung sebagai peserta event,
+# supaya jumlah Person di tiap sub-graf konsisten dengan Tabel studi kasus.
+WEIGHT_THRESHOLD = 0.3
+
 EDGE_STYLES = {
     "INVOLVED_IN": {"color": "#888888", "width": 0.8, "alpha": 0.35, "style": "solid"},
     "KELUARGA":    {"color": "#d62728", "width": 2.0, "alpha": 0.85, "style": "solid"},
@@ -61,13 +67,23 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
     return nodes, edges
 
 
+def _involved_in_filtered(edges: pd.DataFrame) -> pd.DataFrame:
+    """INVOLVED_IN Person->Event dengan weight >= WEIGHT_THRESHOLD (konsisten SNA)."""
+    inv = edges[
+        (edges["relation_type"] == "INVOLVED_IN")
+        & (edges["source_label"] == "PERSON")
+        & (edges["target_label"] == "EVENT")
+    ].copy()
+    inv["weight"] = pd.to_numeric(inv["weight"], errors="coerce").fillna(WEIGHT_THRESHOLD)
+    return inv[inv["weight"] >= WEIGHT_THRESHOLD]
+
+
 def compute_total_event_participation(edges: pd.DataFrame) -> dict[str, int]:
     """Berapa banyak event yang di-INVOLVED_IN oleh tiap Person (proxy importance)."""
-    inv = edges[edges["relation_type"] == "INVOLVED_IN"]
+    inv = _involved_in_filtered(edges)
     counts: dict[str, int] = defaultdict(int)
     for _, r in inv.iterrows():
-        if r["source_label"] == "PERSON" and r["target_label"] == "EVENT":
-            counts[r["source_name"]] += 1
+        counts[r["source_name"]] += 1
     return dict(counts)
 
 
@@ -75,13 +91,9 @@ def build_subgraph(event_name: str, edges: pd.DataFrame) -> tuple[nx.MultiGraph,
     """Bangun subgraf untuk satu event: event + person yang INVOLVED_IN + direct P-P relations."""
     G = nx.MultiGraph()
 
-    # 1. Person yang INVOLVED_IN ke event ini
-    inv = edges[
-        (edges["relation_type"] == "INVOLVED_IN")
-        & (edges["target_name"] == event_name)
-        & (edges["source_label"] == "PERSON")
-        & (edges["target_label"] == "EVENT")
-    ]
+    # 1. Person yang INVOLVED_IN ke event ini (weight >= WEIGHT_THRESHOLD, konsisten SNA)
+    inv = _involved_in_filtered(edges)
+    inv = inv[inv["target_name"] == event_name]
     persons = set(inv["source_name"].unique())
 
     if not persons:
