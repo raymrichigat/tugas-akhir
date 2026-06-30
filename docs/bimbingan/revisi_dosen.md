@@ -186,3 +186,26 @@ Catatan raw dari pertemuan revisi dengan Bu Diana. Format: bullet point pendek a
 - 🔄 Skenario baru (weighted-CE / parafrase / POS-tag / model cahya & distilbert) = rancangan + run awal (GPU tersedia).
 
 > Propagasi: deliverable di `2026-06-11.md`; ringkas progres ke `../../CLAUDE.md`. Temuan kunci: error NER didominasi **deteksi (miss/over)** bukan misklasifikasi tipe; sebagian FP EVENT/TIME = **inkonsistensi gold** (semi-auto keyed kapitalisasi `Perang` 40/40 vs `perang` 26/26); artefak OCR (tanda baca nempel, token kepecah) = sumber boundary error (LOCATION 45,7%).
+
+---
+
+## Putaran 7 — 2026-06-12 (Bimbingan Aktual)
+
+> Fokus: interpretasi & validasi graf (SNA). Semua poin mengarah ke **Bab 4** (analisis jaringan), tidak menyentuh Bab 1. Catatan mentah + action item lengkap di `2026-06-12.md`. Semua analisis no-GPU (dari `nodes_v3.csv` + `edges_v3.csv`).
+
+**Graf — Identifikasi komunitas**
+- Jelaskan komunitas yang terbentuk itu kelompok apa (anggota + tema), bukan sekadar jumlahnya. (Sudah ada deteksi + wordcloud dari Putaran 5; tinggal dirapikan jadi narasi/tabel per komunitas.)
+
+**Graf — Nama tanpa keterlibatan**
+- Ada PERSON yang muncul sebagai node tapi tidak punya relasi keterlibatan (`INVOLVED_IN`). Cek: ketiadaan keterlibatan itu nyata atau gap ekstraksi. Logikanya, kalau seseorang disebut, mestinya terlibat dalam sesuatu.
+- Action: cari node PERSON degree 0 / tanpa `INVOLVED_IN`, telusuri ke teks asal, simpulkan nyata vs artefak.
+
+**Graf — Tokoh tak dikenal tiba-tiba sentral**
+- Nama tak familiar yang muncul tinggi di centrality perlu dianalisis: kenapa muncul, nyata atau artefak.
+- Sudah tervalidasi 1 kasus: **Amr Bin Umayyah** = artefak (over-ekstraksi `INVOLVED_IN` proximity). Action: generalisasi ke top-N centrality, cek silang ke teks/literatur Sirah.
+
+**Benang merah:** "nama tanpa keterlibatan" (under) dan "tiba-tiba sentral" (over) sama-sama soal kualitas relasi `INVOLVED_IN` berbasis proximity. Jadikan satu alur pembahasan keterbatasan graf di Bab 4 (sejalan Putaran 6: pembahasan mengarah ke data).
+
+**Status (per 2026-06-16):** baru dicatat, belum dikerjakan. Prioritas setelah Bab 1 dibukukan.
+
+> Propagasi: detail di `2026-06-12.md`; ringkas ke `../../CLAUDE.md` + memory.

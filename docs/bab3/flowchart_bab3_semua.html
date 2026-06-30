@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowchart Bab 3 - Konstruksi Basis Data Graf Sirah Nabawiyah</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #1a237e;
+            border-bottom: 3px solid #1a237e;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #283593;
+            background-color: #e8eaf6;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 40px;
+        }
+        .mermaid {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        .note {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 10px 15px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .page-break {
+            page-break-after: always;
+            margin: 50px 0;
+            border-top: 2px dashed #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flowchart Bab 3 - Metodologi<br/>
+    <small style="font-size: 16px; font-weight: normal;">Konstruksi Basis Data Graf Sirah Nabawiyah Berbasis NER</small></h1>
+
+    <div class="note">
+        <strong>Petunjuk:</strong> Klik kanan pada setiap flowchart dan pilih "Save image as..." untuk menyimpan sebagai gambar PNG yang bisa dimasukkan ke dokumen.<br/>
+        <strong>Catatan sinkronisasi:</strong> Diagram ini sudah diselaraskan dengan <code>docs/bab3/metodologi.md</code> (penelitian memakai SRL-NER saja, LLM-NER dibatalkan; satu knowledge graph).
+    </div>
+
+    <!-- GAMBAR 3.2 - PREPARASI DATASET -->
+    <h2>Gambar 3.2 - Diagram Alir Preparasi Dataset (3.2)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Dokumen PDF<br/>Sirah Nabawiyah<br/>(hasil pindai)"/]
+
+        A1 --> A2["<b>Langkah 1:</b><br/>Render PDF ke Citra<br/>(PyMuPDF)"]
+
+        A2 --> A3["<b>Langkah 2:</b><br/>Ekstraksi Teks dengan OCR<br/>(PaddleOCR - Bahasa Indonesia)"]
+
+        A3 --> A4[/"Teks per Halaman<br/>(page_001.txt, dst)"/]
+
+        TOC[/"Daftar Isi Acuan<br/>(toc_groundtruth.json)"/]
+
+        A4 --> A6["<b>Langkah 3: Ekstraksi Dokumen</b><br/>Segmentasi berdasarkan TOC<br/>(exact + fuzzy match 0,92),<br/>pembersihan footer,<br/>penggabungan teks per sub-bab"]
+        TOC --> A6
+
+        A6 --> A7[/"Dokumen Terstruktur<br/>(document_full.json)"/]
+
+        A7 --> A8["<b>Langkah 4: Konversi ke CSV</b><br/>Flatten JSON,<br/>ringkas halaman jadi rentang"]
+
+        A8 --> A9[/"Dataset CSV<br/>(sirah_simple.csv)"/]
+
+        A9 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A4 fill:#fff9c4
+        style TOC fill:#fff9c4
+        style A7 fill:#fff9c4
+        style A9 fill:#c8e6c9
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- GAMBAR 3.3 - PREPROCESSING -->
+    <h2>Gambar 3.3 - Diagram Alir Preprocessing Data (3.3)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Dataset CSV<br/>(sirah_simple.csv)"/]
+
+        A1 --> A2["<b>Langkah 1:</b><br/>Penyaringan Baris Tidak Relevan<br/>Hapus UNKNOWN BAB,<br/>bibliografi / daftar pustaka"]
+
+        A2 --> A3["<b>Langkah 2:</b><br/>Pembersihan Ringan<br/>Hapus karakter non-printable & simbol noise,<br/>normalisasi apostrof / ain,<br/>perbaiki spasi Al- / Ar-"]
+
+        A3 --> A4["<b>Langkah 3:</b><br/>Pembersihan Gibberish<br/>Tingkat token, segmen, dan kalimat"]
+
+        A4 --> A5["<b>Langkah 4:</b><br/>Hapus Baris Kosong<br/>setelah pembersihan"]
+
+        A5 --> A6[/"Dataset CSV Bersih<br/>(sirah_simple_clean.csv)"/]
+
+        A6 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A6 fill:#c8e6c9
+    </div>
+
+    <!-- GAMBAR 3.4 - CHUNKING -->
+    <h2>Gambar 3.4 - Diagram Alir Chunking (3.4)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Dataset CSV Bersih<br/>(sirah_simple_clean.csv)"/]
+
+        A1 --> A2["<b>Langkah 1:</b><br/>Segmentasi Kalimat<br/>Berdasarkan tanda . ? !"]
+
+        A2 --> A3["<b>Langkah 2:</b><br/>Penggabungan Kalimat Menjadi Chunk<br/>Maks. 1500 karakter,<br/>tidak memotong kalimat"]
+
+        A3 --> A4["<b>Langkah 3:</b><br/>Penerapan Overlap<br/>1 kalimat terakhir diulang"]
+
+        A4 --> A5["<b>Langkah 4:</b><br/>Pemberian Identitas & Metadata<br/>chunk_id, doc_id, chunk_index,<br/>judul_bab, judul_sub_bab, halaman"]
+
+        A5 --> A6["<b>Langkah 5:</b><br/>Ekspor Hasil Chunking"]
+
+        A6 --> A7[/"Dataset Chunk<br/>(sirah_chunks_final.csv)"/]
+
+        A7 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A7 fill:#c8e6c9
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- GAMBAR 3.5 - PELABELAN DATA -->
+    <h2>Gambar 3.5 - Diagram Alir Pelabelan Data (3.5)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Dataset Chunk<br/>(sirah_chunks_final.csv)"/]
+
+        A1 --> A2["<b>Langkah 1: Pelabelan Awal Semi-Otomatis</b><br/>Pencocokan kamus (gazetteer)<br/>+ pola regex per tipe"]
+
+        A2 --> A2a["PERSON<br/>kamus + pola nasab<br/>(bin/binti, Abu/Ummu/Ibnu)"]
+        A2 --> A2b["EVENT<br/>kamus + pola<br/>Perang/Ghazwah [Nama]"]
+        A2 --> A2c["LOCATION<br/>kamus tempat"]
+        A2 --> A2d["TIME<br/>pola ungkapan waktu<br/>+ bulan Hijriah"]
+
+        A2a --> A3["Deduplikasi kandidat<br/>(rentang terpanjang)"]
+        A2b --> A3
+        A2c --> A3
+        A2d --> A3
+
+        A3 --> A3o[/"Pra-anotasi<br/>(sirah_prelabelled.csv)"/]
+
+        A3o --> A4["<b>Langkah 2: Koreksi Manual</b><br/>Tambah/buang entitas,<br/>perbaiki batas, 4 label"]
+
+        A4 --> A5["<b>Langkah 3: Konversi ke BIO + Pembagian Data</b><br/>Tokenisasi + tag B/I/O,<br/>split stratified per bab"]
+
+        A5 --> A6[/"Data Latih (Seed) 70%"/]
+        A5 --> A7[/"Data Uji (Ground Truth) 30%"/]
+        A5 --> A8[/"Data Tak Berlabel<br/>(chunk di luar seed)"/]
+
+        A6 --> FINISH([Selesai])
+        A7 --> FINISH
+        A8 --> FINISH
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A3o fill:#fff9c4
+        style A6 fill:#c8e6c9
+        style A7 fill:#bbdefb
+        style A8 fill:#ffe0b2
+        style A2a fill:#ffccbc
+        style A2b fill:#d1c4e9
+        style A2c fill:#b2dfdb
+        style A2d fill:#f0f4c3
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- GAMBAR 3.6 - EKSTRAKSI ENTITAS (ITERATIVE SELF-TRAINING) -->
+    <h2>Gambar 3.6 - Diagram Alir Ekstraksi Entitas dengan Iterative Self-Training (3.6)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Data Seed (train) +<br/>Data Tak Berlabel"/]
+
+        A1 --> A2["<b>Langkah 1:</b><br/>Fine-tuning IndoBERT<br/>(token classification, skema BIO)<br/>pada data seed"]
+
+        A2 --> A3["<b>Langkah 2:</b><br/>Prediksi label pada<br/>pool data tak berlabel"]
+
+        A3 --> A4{"Ada kalimat dengan rata-rata<br/>keyakinan entitas ≥ 0,9<br/>dan iterasi ≤ 6 ?"}
+
+        A4 -->|Ya| A5["Tambahkan pseudo-label<br/>ke data latih"]
+        A5 --> A6["Latih ulang model +<br/>simpan model terbaik<br/>(seqeval F1 pada data uji)"]
+        A6 --> A3
+
+        A4 -->|"Tidak / iterasi maksimum"| A7["<b>Langkah 3:</b><br/>Prediksi entitas seluruh chunk<br/>tak berlabel dengan model terbaik"]
+
+        A7 --> A8["<b>Langkah 4:</b><br/>Gabungkan entitas<br/>(anotasi manual train+test<br/>diprioritaskan atas prediksi)"]
+
+        A8 --> A9[/"Entitas Gabungan<br/>Seluruh Chunk (entities_all)"/]
+
+        A9 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A4 fill:#ffccbc
+        style A9 fill:#c8e6c9
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- GAMBAR 3.7 - ALIAS CLUSTERING -->
+    <h2>Gambar 3.7 - Diagram Alir Penyatuan Nama Entitas / Alias Clustering (3.7)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Entitas Hasil NER<br/>(entities_all)"/]
+
+        A1 --> A2["<b>Tahap 1:</b><br/>Manual Clusters<br/>Kelompokkan entitas yang pasti sama<br/>berdasarkan pengetahuan domain"]
+
+        A2 --> A2a["PERSON:<br/>Rasulullah = Muhammad,<br/>Umar = Umar bin Al-Khaththab, dst."]
+        A2 --> A2b["LOCATION:<br/>Tha'if = Thaif,<br/>Yatsrib = Madinah"]
+        A2 --> A2c["EVENT:<br/>Perang Khandaq = Perang Ahzab, dst."]
+
+        A2a --> A3["<b>Tahap 2:</b><br/>Jaro-Winkler Similarity<br/>(threshold = 0,93)"]
+        A2b --> A3
+        A2c --> A3
+
+        A3 --> A3g{"Guard:<br/>Pembeda setelah prefiks &gt; 0,90?<br/>Patronimik (bin/binti) cocok?<br/>Rasio panjang &ge; 0,80?<br/>Bukan exclude pair?"}
+
+        A3g -->|Lolos semua guard| A4["Petakan ke nama kanonik<br/>yang lebih frekuen"]
+        A3g -->|Tidak lolos| A5["Skip pasangan<br/>(beda orang/tempat)"]
+
+        A4 --> A6["<b>Tahap 3:</b><br/>Generate Output"]
+        A5 --> A6
+
+        A6 --> A7[/"alias_map.json<br/>(variasi to kanonik)"/]
+        A6 --> A8[/"alias_clusters.md<br/>(laporan review)"/]
+
+        A7 --> FINISH([Selesai])
+        A8 --> FINISH
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A3g fill:#ffccbc
+        style A5 fill:#ffcdd2
+        style A7 fill:#c8e6c9
+        style A8 fill:#c8e6c9
+        style A2a fill:#ffccbc
+        style A2b fill:#b2dfdb
+        style A2c fill:#d1c4e9
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- GAMBAR 3.8 - PEMBENTUKAN RELASI -->
+    <h2>Gambar 3.8 - Diagram Alir Pembentukan Relasi (3.8.1)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Entitas Hasil NER<br/>(entities_all)"/]
+
+        A0[/"alias_map.json"/]
+
+        A1 --> A1a["<b>Langkah 1:</b><br/>Normalisasi Nama Entitas<br/>via Alias Map"]
+        A0 --> A1a
+
+        A1a --> A2["<b>Langkah 2:</b><br/>Identifikasi pasangan entitas<br/>co-occurrence (1 kalimat / &lt; 200 karakter),<br/>Event sebagai pusat keterhubungan"]
+
+        A2 --> A3["<b>Langkah 3:</b><br/>Penentuan Tipe Relasi"]
+
+        A3 --> B1["Person to Event<br/><b>INVOLVED_IN</b>"]
+        A3 --> B2["Event to Location<br/><b>OCCURRED_AT</b>"]
+        A3 --> B3["Event to Time<br/><b>OCCURRED_ON</b>"]
+        A3 --> B4["Person to Person<br/><b>KELUARGA / SAHABAT / MUSUH</b><br/>(pola kata pemicu)"]
+
+        B1 --> C1["<b>Langkah 4:</b><br/>Guard anti-false-positive<br/>(tolak konteks perpindahan,<br/>perawi/penulis, konteks wafat)"]
+        B2 --> C1
+        B3 --> C1
+        B4 --> C1
+
+        C1 --> C2["<b>Langkah 5:</b><br/>Simpan Provenance<br/>chunk_id, halaman, evidence"]
+
+        C2 --> C3["<b>Langkah 6:</b><br/>Deduplikasi + Pembobotan (weight)"]
+
+        C3 --> C4["<b>Langkah 7:</b><br/>Ekspor Node & Edge"]
+
+        C4 --> D1[/"nodes.csv"/]
+        C4 --> D2[/"edges.csv"/]
+
+        D1 --> FINISH([Selesai])
+        D2 --> FINISH
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A0 fill:#e8eaf6
+        style B1 fill:#ffccbc
+        style B2 fill:#b2dfdb
+        style B3 fill:#f0f4c3
+        style B4 fill:#d1c4e9
+        style D1 fill:#c8e6c9
+        style D2 fill:#c8e6c9
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- GAMBAR 3.9 - PERIODISASI PERISTIWA -->
+    <h2>Gambar 3.9 - Diagram Alir Periodisasi Peristiwa (3.8.2)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Node EVENT +<br/>Daftar Isi (rentang halaman)"/]
+
+        A1 --> A2["<b>Langkah 1:</b><br/>Pengelompokan bab menjadi periode<br/>secara top-down (P0 - P14)"]
+
+        A2 --> A3["<b>Langkah 2:</b><br/>Petakan tiap EVENT ke bab dominan<br/>kemunculannya to periode + page_range"]
+
+        A3 --> A4["<b>Langkah 3:</b><br/>Urutkan event frekuen (frequency &ge; 2)<br/>menurut halaman bab"]
+
+        A4 --> A5["<b>Langkah 4:</b><br/>Bentuk relasi PRECEDES<br/>antar event berurutan"]
+
+        A5 --> A6[/"period_mapping.json<br/>+ relasi PRECEDES"/]
+
+        A6 --> FINISH([Selesai])
+
+        N1["Catatan: sebagian lifecycle events<br/>(mis. wafat, wahyu pertama) ditambah manual<br/>karena tidak tertangkap NER -<br/>disclosure pada Bab 4"]
+        A3 -.-> N1
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style A6 fill:#c8e6c9
+        style N1 fill:#fff3e0,stroke:#ff9800,stroke-dasharray: 5 5
+    </div>
+
+    <!-- GAMBAR 3.10 - KONSTRUKSI KNOWLEDGE GRAPH -->
+    <h2>Gambar 3.10 - Diagram Alir Konstruksi Knowledge Graph di Neo4j (3.8.3)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"nodes.csv + edges.csv<br/>+ definisi periode"/]
+
+        A1 --> A2["<b>Langkah 1:</b><br/>Perancangan Skema Graf"]
+
+        A2 --> B1["Label Node:<br/>Person, Event,<br/>Location, Time, Period"]
+        A2 --> B2["Tipe Relasi:<br/>INVOLVED_IN, OCCURRED_AT,<br/>OCCURRED_ON, IN_PERIOD,<br/>KELUARGA, SAHABAT, MUSUH, PRECEDES"]
+
+        B1 --> C1["<b>Langkah 2:</b><br/>Inisialisasi Neo4j +<br/>Constraint keunikan (name)"]
+        B2 --> C1
+
+        C1 --> C2["<b>Langkah 3:</b><br/>Import Node (MERGE)"]
+
+        C2 --> C3["<b>Langkah 4:</b><br/>Import Relationship (MERGE)"]
+
+        C3 --> C4["<b>Langkah 5:</b><br/>Hubungkan Event to Period<br/>(IN_PERIOD)"]
+
+        C4 --> F1[/"Knowledge Graph Neo4j"/]
+
+        F1 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style F1 fill:#c8e6c9
+        style B1 fill:#e1bee7
+        style B2 fill:#e1bee7
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- GAMBAR 3.11 - EVALUASI HASIL EKSTRAKSI NER -->
+    <h2>Gambar 3.11 - Diagram Alir Evaluasi Hasil Ekstraksi NER (3.9)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> V{"Uji Coba<br/>(variasi komponen)"}
+
+        V --> U1["Uji Coba 1:<br/>Penanganan Ketidakseimbangan Kelas<br/>(baseline vs weighted-CE vs<br/>contrastive vs augmentation)"]
+        V --> U2["Uji Coba 2:<br/>Perbandingan Model (backbone)"]
+        V --> U3["Uji Coba 3:<br/>Pengaruh Modul POS-tag"]
+
+        U1 --> P["Latih model sesuai variasi<br/>(pipeline identik)"]
+        U2 --> P
+        U3 --> P
+
+        P --> A2["Prediksi pada Data Uji 30%<br/>(ground truth BIO)"]
+        A2 --> A3["Pencocokan entity-level (seqeval,<br/>span + kategori harus tepat)"]
+        A3 --> A4["Hitung Precision, Recall, F1<br/>per label + macro & micro average"]
+        A4 --> A5[/"Tabel Metrik NER<br/>per uji coba"/]
+        A5 --> FINISH([Selesai])
+
+        N1["Catatan: Bab 3 hanya rancangan uji coba;<br/>hasil & angka disajikan di Bab 4"]
+        V -.-> N1
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style V fill:#ffccbc
+        style U1 fill:#ffccbc
+        style U2 fill:#d1c4e9
+        style U3 fill:#f0f4c3
+        style A5 fill:#c8e6c9
+        style N1 fill:#fff3e0,stroke:#ff9800,stroke-dasharray: 5 5
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- GAMBAR 3.12 - SOCIAL NETWORK ANALYSIS -->
+    <h2>Gambar 3.12 - Diagram Alir Analisis Jaringan dengan SNA (3.10.1)</h2>
+    <div class="mermaid">
+    flowchart TD
+        START([Mulai]) --> A1[/"Knowledge Graph"/]
+
+        A1 --> A2["<b>Langkah 1:</b><br/>Proyeksi Jaringan Tokoh<br/>(co-participation pada Event, berbobot)"]
+
+        A2 --> B0["<b>Langkah 2:</b><br/>Sentralitas Tingkat Node"]
+        B0 --> B1["Degree Centrality"]
+        B0 --> B2["Betweenness Centrality"]
+        B0 --> B3["Closeness Centrality"]
+        B0 --> B4["PageRank (weighted)"]
+
+        A2 --> C0["<b>Langkah 3:</b><br/>Metrik Tingkat Graf<br/>density, transitivity,<br/>ukuran jaringan, jumlah komponen"]
+
+        A2 --> D0["<b>Langkah 4:</b><br/>Deteksi Komunitas Louvain<br/>(modularitas Q)"]
+
+        B1 --> E1[/"Tabel metrik sentralitas,<br/>metrik graf, daftar komunitas"/]
+        B2 --> E1
+        B3 --> E1
+        B4 --> E1
+        C0 --> E1
+        D0 --> E1
+
+        E1 --> FINISH([Selesai])
+
+        style START fill:#e1f5fe
+        style FINISH fill:#e1f5fe
+        style A1 fill:#fff9c4
+        style B0 fill:#bbdefb
+        style C0 fill:#b2dfdb
+        style D0 fill:#e1bee7
+        style E1 fill:#c8e6c9
+    </div>
+
+    <hr style="margin-top: 50px;">
+    <p style="text-align: center; color: #666; font-size: 12px;">
+        Flowchart Bab 3 - Konstruksi Basis Data Graf Sirah Nabawiyah Berbasis NER<br/>
+        Untuk menyimpan flowchart: Klik kanan pada diagram &rarr; Save image as... &rarr; Pilih format PNG
+    </p>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

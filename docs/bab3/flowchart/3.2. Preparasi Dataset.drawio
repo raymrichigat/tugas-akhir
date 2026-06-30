@@ -1,0 +1,81 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="838" dy="973" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="QzICUe9PI9HPxqju3laK-2" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-3" target="QzICUe9PI9HPxqju3laK-4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-3" value="Mulai" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="36" y="135" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-4" target="QzICUe9PI9HPxqju3laK-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-4" value="Dokumen PDF&lt;div&gt;Sirah&amp;nbsp;&lt;div&gt;Nabawiyah&lt;/div&gt;&lt;/div&gt;" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.20192307692307693;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="161" y="130" width="130" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-5" target="QzICUe9PI9HPxqju3laK-7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-5" value="Konversi PDF&lt;div&gt;ke Citra&lt;/div&gt;" style="whiteSpace=wrap;html=1;strokeWidth=2;rounded=1;arcSize=12;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="336" y="135" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-7" target="QzICUe9PI9HPxqju3laK-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-7" value="Praproses Citra" style="whiteSpace=wrap;html=1;strokeWidth=2;rounded=1;arcSize=12;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="506" y="135" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-9" target="QzICUe9PI9HPxqju3laK-11" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-9" value="Ekstraksi Teks dengan OCR" style="whiteSpace=wrap;html=1;strokeWidth=2;rounded=1;arcSize=12;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="676" y="135" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-11" target="QzICUe9PI9HPxqju3laK-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-11" value="Teks&amp;nbsp;&lt;div&gt;tiap halaman&lt;div&gt;(page_001.txt, dst)&lt;/div&gt;&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;strokeWidth=2;rounded=1;arcSize=12;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="661" y="240" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-14" target="QzICUe9PI9HPxqju3laK-16" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-14" value="Ekstraksi Dokumen" style="whiteSpace=wrap;html=1;strokeWidth=2;rounded=1;arcSize=12;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="506" y="245" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-16" target="QzICUe9PI9HPxqju3laK-18" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-16" value="Dokumen&amp;nbsp;&lt;div&gt;terstruktur (JSON)&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;strokeWidth=2;rounded=1;arcSize=12;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="326" y="242.5" width="130" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-18" target="QzICUe9PI9HPxqju3laK-20" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-18" value="Ekspor format&amp;nbsp;&lt;div&gt;ke CSV&lt;/div&gt;" style="whiteSpace=wrap;html=1;strokeWidth=2;rounded=1;arcSize=12;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="166" y="245" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="QzICUe9PI9HPxqju3laK-20" target="QzICUe9PI9HPxqju3laK-24" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="386" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-20" value="Dataset" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;strokeWidth=2;rounded=1;arcSize=12;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="16" y="245" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QzICUe9PI9HPxqju3laK-24" value="Selesai" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="26" y="340" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jlebDdjpLorxg8rq9J-E-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="jlebDdjpLorxg8rq9J-E-2" target="QzICUe9PI9HPxqju3laK-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jlebDdjpLorxg8rq9J-E-2" value="Daftar Isi Acuan&lt;div&gt;(toc_groundtruth.json)&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;strokeWidth=2;rounded=1;arcSize=12;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="491" y="360" width="150" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

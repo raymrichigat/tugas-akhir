@@ -53,3 +53,16 @@ data/result/pseudo-labelling/SRL-NER/done_running/
 # Backup & bundle data lokal (redundant dgn file gold yang sudah tracked, regeneratable)
 data/result/_verify_backup_*/
 data/result/pseudo-labelling/SRL-NER/corrected_gold_data_*/
+
+# Folder sampah/arsip hasil cleanup lokal (122MB, regeneratable/arsip — jangan commit)
+lama/sampah/
+
+# Bundle training (zip + folder unzip, regeneratable, duplikat CSV yang sudah tracked)
+training_bundle_corrected_gold_*
+
+# Presentasi (binary besar, share via Drive — sama spt *.docx/*.pdf)
+*.pptx
+
+# Draw.io file backup/lock sementara (autosave editor, bukan sumber)
+.$*
+*.bkp

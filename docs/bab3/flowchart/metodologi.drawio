@@ -1,0 +1,172 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+  <diagram name="Page-1" id="aScw1lcbw0qm6JhZMgNg">
+    <mxGraphModel dx="1290" dy="669" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="SFG11pWXMuIXePLhgofs-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-1" target="SFG11pWXMuIXePLhgofs-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-1" value="Mulai" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="20" y="90" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-2" target="SFG11pWXMuIXePLhgofs-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-2" value="Sirah Nabawiyah" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
+          <mxGeometry x="180" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-6" target="SFG11pWXMuIXePLhgofs-8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-6" value="Preparasi Dataset" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="340" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NqYwZ1-w-KmLZ9Y9caUv-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="SFG11pWXMuIXePLhgofs-8" target="SFG11pWXMuIXePLhgofs-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-8" value="Dataset" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-10" target="SFG11pWXMuIXePLhgofs-12" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="130" />
+              <mxPoint x="810" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-10" value="Preprocesing" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="660" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-12" target="SFG11pWXMuIXePLhgofs-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-12" value="Chunking" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="640" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-14" target="SFG11pWXMuIXePLhgofs-16" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-14" value="Anotasi Data" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="460" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-16" target="SFG11pWXMuIXePLhgofs-18" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-16" value="Pemodelan dan Evaluasi" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="280" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-18" target="SFG11pWXMuIXePLhgofs-20" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="70" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-18" value="Entitas Clustering" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="100" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" target="SFG11pWXMuIXePLhgofs-22" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250" y="310" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-20" value="Ekstraksi Relasi" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="130" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-22" target="SFG11pWXMuIXePLhgofs-24" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-22" value="Konstruksi Knowledge Graph" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="310" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-24" target="SFG11pWXMuIXePLhgofs-26" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-24" value="Evaluasi" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="480" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-26" value="Selesai" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="660" y="270" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-30" target="SFG11pWXMuIXePLhgofs-32" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-30" value="Mulai" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1030" y="480" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-32" target="SFG11pWXMuIXePLhgofs-34" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-32" value="Sirah Nabawiyah" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" parent="1" vertex="1">
+          <mxGeometry x="1220" y="490" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-34" target="SFG11pWXMuIXePLhgofs-36" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-34" value="Preparasi Dataset" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1410" y="490" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-56" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-36" target="SFG11pWXMuIXePLhgofs-40" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-36" value="Dataset" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="1410" y="600" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-42" target="SFG11pWXMuIXePLhgofs-44" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-44" target="SFG11pWXMuIXePLhgofs-46" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1470" y="800" />
+              <mxPoint x="1470" y="800" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-44" value="Pemodelan dan Evaluasi" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="1410" y="700" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-46" target="SFG11pWXMuIXePLhgofs-48" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-46" value="Entitas Clustering" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="1410" y="830" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-59" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-52" target="SFG11pWXMuIXePLhgofs-53" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-52" value="Evaluasi Graph" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="1030" y="830" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-53" value="Selesai" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="880" y="820" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-55" value="Preprocessing" style="swimlane;whiteSpace=wrap;html=1;direction=east;" parent="1" vertex="1">
+          <mxGeometry x="1170" y="560" width="220" height="210" as="geometry">
+            <mxRectangle x="370" y="660" width="120" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-40" value="Chunking" style="whiteSpace=wrap;html=1;rounded=1;" parent="SFG11pWXMuIXePLhgofs-55" vertex="1">
+          <mxGeometry x="50" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-42" value="Anotasi Data" style="whiteSpace=wrap;html=1;rounded=1;" parent="SFG11pWXMuIXePLhgofs-55" vertex="1">
+          <mxGeometry x="50" y="140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="SFG11pWXMuIXePLhgofs-55" source="SFG11pWXMuIXePLhgofs-40" target="SFG11pWXMuIXePLhgofs-42" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-57" value="Knowledge Graph" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1185" y="780" width="190" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-48" value="Ekstraksi Relasi" style="whiteSpace=wrap;html=1;rounded=1;" parent="SFG11pWXMuIXePLhgofs-57" vertex="1">
+          <mxGeometry x="35" y="50" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SFG11pWXMuIXePLhgofs-58" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SFG11pWXMuIXePLhgofs-48" target="SFG11pWXMuIXePLhgofs-52" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
