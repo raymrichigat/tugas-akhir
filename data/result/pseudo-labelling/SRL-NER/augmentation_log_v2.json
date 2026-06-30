@@ -1,6 +1,6 @@
 {
-  "input": "E:\\2_Kehidupan-Kuliah\\10_tugas-akhir\\repo-TA\\TA_preprocess\\TA_sirah\\data\\result\\pseudo-labelling\\SRL-NER\\train.csv",
-  "output": "E:\\2_Kehidupan-Kuliah\\10_tugas-akhir\\repo-TA\\TA_preprocess\\TA_sirah\\data\\result\\pseudo-labelling\\SRL-NER\\train_augmented_v2.csv",
+  "input": "data\\result\\pseudo-labelling\\SRL-NER\\train.csv",
+  "output": "data\\result\\pseudo-labelling\\SRL-NER\\train_augmented_v2.csv",
   "config": {
     "n_augment": 2,
     "replace_prob": 0.7,
@@ -14,195 +14,194 @@
     "fallback_for_event_radius": 2
   },
   "stats": {
-    "original_sentences": 599,
-    "minor_sentences": 147,
-    "augmentable_sentences": 136,
-    "augmented_sentences": 272,
-    "original_tokens": 102884,
-    "augmented_tokens": 49136,
-    "mean_replacements_per_variant": 4.863970588235294
+    "original_sentences": 590,
+    "minor_sentences": 151,
+    "augmentable_sentences": 144,
+    "augmented_sentences": 288,
+    "original_tokens": 116353,
+    "augmented_tokens": 58521,
+    "mean_replacements_per_variant": 4.826388888888889
   },
   "skip_reasons": {
-    "quran_reference": 7,
-    "no_period": 4
+    "no_period": 7
   },
   "pool_diagnostics": {
-    "pool_blacklisted_person": 1043,
-    "sentences_no_period": 47,
-    "pool_dropped_broken_event": 1
+    "pool_blacklisted_person": 1024,
+    "pool_dropped_broken_event": 1,
+    "sentences_no_period": 44
   },
   "augmentation_diagnostics": {
-    "replaced_TIME": 90,
-    "protected_source_PERSON": 550,
-    "replaced_PERSON": 518,
-    "replaced_LOCATION": 497,
-    "replaced_EVENT": 218,
+    "replaced_LOCATION": 509,
+    "replaced_PERSON": 542,
+    "replaced_EVENT": 242,
+    "protected_source_PERSON": 576,
+    "replaced_TIME": 97,
     "broken_event_skipped": 2
   },
   "pool_sizes_per_period": {
     "P0": {
-      "PERSON": 58,
-      "LOCATION": 29,
-      "TIME": 17,
-      "EVENT": 3
+      "PERSON": 57,
+      "LOCATION": 34,
+      "TIME": 18,
+      "EVENT": 2
     },
     "P1": {
-      "PERSON": 39,
+      "PERSON": 95,
       "LOCATION": 9,
-      "TIME": 4,
+      "TIME": 1,
       "EVENT": 1
     },
     "P2": {
       "PERSON": 10,
       "LOCATION": 4,
-      "TIME": 8,
+      "TIME": 5,
       "EVENT": 2
     },
     "P3": {
-      "PERSON": 28,
-      "LOCATION": 1,
+      "PERSON": 31,
+      "LOCATION": 2,
       "TIME": 0,
       "EVENT": 1
     },
     "P4": {
-      "PERSON": 61,
-      "LOCATION": 7,
-      "TIME": 4,
-      "EVENT": 2
+      "PERSON": 66,
+      "LOCATION": 9,
+      "TIME": 5,
+      "EVENT": 3
     },
     "P5": {
-      "PERSON": 83,
-      "LOCATION": 16,
-      "TIME": 6,
-      "EVENT": 11
+      "PERSON": 75,
+      "LOCATION": 15,
+      "TIME": 3,
+      "EVENT": 6
     },
     "P6": {
-      "PERSON": 39,
-      "LOCATION": 10,
-      "TIME": 8,
-      "EVENT": 1
+      "PERSON": 45,
+      "LOCATION": 9,
+      "TIME": 9,
+      "EVENT": 2
     },
     "P7": {
-      "PERSON": 40,
-      "LOCATION": 14,
+      "PERSON": 35,
+      "LOCATION": 11,
       "TIME": 12,
-      "EVENT": 11
+      "EVENT": 10
     },
     "P8": {
       "PERSON": 60,
-      "LOCATION": 9,
-      "TIME": 7,
-      "EVENT": 4
+      "LOCATION": 12,
+      "TIME": 9,
+      "EVENT": 6
     },
     "P9": {
-      "PERSON": 77,
-      "LOCATION": 11,
-      "TIME": 11,
+      "PERSON": 64,
+      "LOCATION": 9,
+      "TIME": 10,
       "EVENT": 9
     },
     "P10": {
-      "PERSON": 77,
-      "LOCATION": 9,
-      "TIME": 19,
-      "EVENT": 6
+      "PERSON": 91,
+      "LOCATION": 11,
+      "TIME": 18,
+      "EVENT": 9
     },
     "P11": {
-      "PERSON": 95,
-      "LOCATION": 16,
-      "TIME": 16,
-      "EVENT": 5
+      "PERSON": 93,
+      "LOCATION": 15,
+      "TIME": 18,
+      "EVENT": 6
     },
     "P12": {
-      "PERSON": 52,
-      "LOCATION": 10,
+      "PERSON": 45,
+      "LOCATION": 11,
       "TIME": 3,
-      "EVENT": 4
+      "EVENT": 3
     },
     "P13": {
-      "PERSON": 53,
-      "LOCATION": 9,
-      "TIME": 8,
-      "EVENT": 5
+      "PERSON": 64,
+      "LOCATION": 12,
+      "TIME": 6,
+      "EVENT": 8
     },
     "P14": {
-      "PERSON": 43,
-      "LOCATION": 19,
-      "TIME": 28,
+      "PERSON": 36,
+      "LOCATION": 17,
+      "TIME": 24,
       "EVENT": 3
     }
   },
   "pre_augment_label_distribution": {
-    "O": 95277,
-    "B-TIME": 233,
-    "I-TIME": 433,
-    "B-PERSON": 2884,
-    "I-PERSON": 2675,
-    "B-LOCATION": 985,
-    "I-LOCATION": 72,
-    "B-EVENT": 163,
-    "I-EVENT": 162
+    "O": 108882,
+    "B-PERSON": 2920,
+    "B-LOCATION": 972,
+    "I-LOCATION": 66,
+    "I-PERSON": 2597,
+    "B-EVENT": 167,
+    "B-TIME": 206,
+    "I-TIME": 394,
+    "I-EVENT": 149
   },
   "post_augment_label_distribution": {
-    "O": 139983,
-    "B-TIME": 371,
-    "I-TIME": 713,
-    "B-PERSON": 4148,
-    "I-PERSON": 3953,
-    "B-LOCATION": 1683,
-    "I-LOCATION": 202,
-    "B-EVENT": 471,
-    "I-EVENT": 496
+    "O": 162784,
+    "B-PERSON": 4278,
+    "B-LOCATION": 1690,
+    "I-LOCATION": 179,
+    "I-PERSON": 4019,
+    "B-EVENT": 487,
+    "B-TIME": 334,
+    "I-TIME": 645,
+    "I-EVENT": 458
   },
   "augmented_text_ids": [
-    "000354-001-aug1",
-    "000354-001-aug2",
-    "000010-001-aug1",
-    "000010-001-aug2",
-    "000146-002-aug1",
-    "000146-002-aug2",
-    "000147-001-aug1",
-    "000147-001-aug2",
-    "000088-005-aug1",
-    "000088-005-aug2",
+    "000001-001-aug1",
+    "000001-001-aug2",
+    "000002-002-aug1",
+    "000002-002-aug2",
+    "000002-011-aug1",
+    "000002-011-aug2",
+    "000002-012-aug1",
+    "000002-012-aug2",
+    "000006-001-aug1",
+    "000006-001-aug2",
+    "000008-001-aug1",
+    "000008-001-aug2",
+    "000009-001-aug1",
+    "000009-001-aug2",
+    "000009-002-aug1",
+    "000009-002-aug2",
+    "000010-002-aug1",
+    "000010-002-aug2",
+    "000010-012-aug1",
+    "000010-012-aug2",
+    "000012-001-aug1",
+    "000012-001-aug2",
+    "000025-001-aug1",
+    "000025-001-aug2",
     "000031-001-aug1",
     "000031-001-aug2",
-    "000032-007-aug1",
-    "000032-007-aug2",
-    "000035-002-aug1",
-    "000035-002-aug2",
     "000032-003-aug1",
     "000032-003-aug2",
+    "000032-007-aug1",
+    "000032-007-aug2",
+    "000034-001-aug1",
+    "000034-001-aug2",
+    "000035-002-aug1",
+    "000035-002-aug2",
+    "000040-001-aug1",
+    "000040-001-aug2",
+    "000051-006-aug1",
+    "000051-006-aug2",
+    "000052-006-aug1",
+    "000052-006-aug2",
     "000071-003-aug1",
     "000071-003-aug2",
     "000071-006-aug1",
     "000071-006-aug2",
-    "000359-001-aug1",
-    "000359-001-aug2",
-    "000359-003-aug1",
-    "000359-003-aug2",
-    "000359-002-aug1",
-    "000359-002-aug2",
-    "000080-001-aug1",
-    "000080-001-aug2",
-    "000080-010-aug1",
-    "000080-010-aug2",
-    "000080-011-aug1",
-    "000080-011-aug2",
-    "000080-003-aug1",
-    "000080-003-aug2",
-    "000080-002-aug1",
-    "000080-002-aug2",
-    "000080-009-aug1",
-    "000080-009-aug2",
-    "000080-005-aug1",
-    "000080-005-aug2",
-    "000080-007-aug1",
-    "000080-007-aug2",
-    "000358-002-aug1",
-    "000358-002-aug2",
-    "000358-005-aug1",
-    "000358-005-aug2",
-    "000358-003-aug1",
-    "000358-003-aug2"
+    "000075-005-aug1",
+    "000075-005-aug2",
+    "000075-009-aug1",
+    "000075-009-aug2",
+    "000078-001-aug1",
+    "000078-001-aug2"
   ]
 }

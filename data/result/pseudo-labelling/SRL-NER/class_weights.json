@@ -11,37 +11,37 @@
     "I-TIME"
   ],
   "token_counts": {
-    "O": 95277,
-    "B-PERSON": 2884,
-    "I-PERSON": 2675,
-    "B-LOCATION": 985,
-    "I-LOCATION": 72,
-    "B-EVENT": 163,
-    "I-EVENT": 162,
-    "B-TIME": 233,
-    "I-TIME": 433
+    "O": 108882,
+    "B-PERSON": 2920,
+    "I-PERSON": 2597,
+    "B-LOCATION": 972,
+    "I-LOCATION": 66,
+    "B-EVENT": 167,
+    "I-EVENT": 149,
+    "B-TIME": 206,
+    "I-TIME": 394
   },
   "balanced_raw": {
-    "O": 0.12,
-    "B-PERSON": 3.964,
-    "I-PERSON": 4.273,
-    "B-LOCATION": 11.606,
-    "I-LOCATION": 158.772,
-    "B-EVENT": 70.132,
-    "I-EVENT": 70.565,
-    "B-TIME": 49.062,
-    "I-TIME": 26.401
+    "O": 0.119,
+    "B-PERSON": 4.427,
+    "I-PERSON": 4.978,
+    "B-LOCATION": 13.301,
+    "I-LOCATION": 195.88,
+    "B-EVENT": 77.414,
+    "I-EVENT": 86.766,
+    "B-TIME": 62.758,
+    "I-TIME": 32.812
   },
   "sqrt_tempered_norm_O1": {
     "O": 1.0,
-    "B-PERSON": 5.748,
-    "I-PERSON": 5.968,
-    "B-LOCATION": 9.835,
-    "I-LOCATION": 36.377,
-    "B-EVENT": 24.177,
-    "I-EVENT": 24.251,
-    "B-TIME": 20.222,
-    "I-TIME": 14.834
+    "B-PERSON": 6.106,
+    "I-PERSON": 6.475,
+    "B-LOCATION": 10.584,
+    "I-LOCATION": 40.617,
+    "B-EVENT": 25.534,
+    "I-EVENT": 27.032,
+    "B-TIME": 22.99,
+    "I-TIME": 16.624
   },
   "note": "Rekomendasi pakai sqrt_tempered_norm_O1 (balanced mentah terlalu ekstrem -> precision kolaps spt legacy 2026-05-07)."
 }

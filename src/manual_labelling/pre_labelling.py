@@ -139,6 +139,31 @@ _EXTEND_RE = re.compile(
     r"(-\s*[A-Z][a-z']+(?:'[a-z]*)?|\s+[A-Z][a-z']+(?:'[a-z]*)?)"
 )
 
+# ── Rantai nasab panjang (genealogi) ─────────────────────────────────────────
+# Pada silsilah "X bin Y bin Z bin ..." (mis. nasab Nabi di awal kitab), tiap nama
+# adalah ORANG BERBEDA, jadi dipecah jadi PERSON terpisah & kata "bin" jadi O.
+# Hanya aktif untuk RANTAI KONTINU >=_GENEAL_MIN_LINKS "bin" beruntun, di mana
+# antar-"bin" hanya boleh ada nama + koma + "(yang namanya X)" + "atau Y" — BUKAN
+# kata lain/angka. Ini memisahkan silsilah asli (A bin B bin C bin D...) dari
+# DAFTAR orang ("1. A bin B ke X 2. C bin D ...") supaya nama biasa
+# ("Ali bin Abu Thalib", "Uyainah bin Hishn") TIDAK ikut terpecah.
+_GENEAL_MIN_LINKS = 6     # ambang konservatif: hanya nasab asli yang sepanjang ini
+# Atom nama: compound ("Abdul Muththalib", "Abdu Manaf") atau atom tunggal.
+_NAME_ATOM_RE = re.compile(
+    r"(?:Abdul|Abdu|Abul|Abu|Abi|Ummu|Ibnu)\s+" + _ATOM
+    + r"|" + _ATOM
+)
+# Nama tunggal untuk dipakai di pola rantai (compound prefix opsional).
+_GNAME = r"(?:(?:Abdul|Abdu|Abul|Abu|Abi|Ummu|Ibnu)\s+)?" + _ATOM
+# Satu mata rantai: pemisah sempit (paren/koma) + "bin X" + opsional "atau Y".
+_CHAIN_LINK = (
+    r"(?:\s*\([^)]*\))?\s*,?\s*(?:bin|binti)\s+" + _GNAME
+    + r"(?:\s+atau\s+" + _GNAME + r")?"
+)
+_GENEALOGY_RE = re.compile(
+    r"\b" + _GNAME + r"(?:" + _CHAIN_LINK + r"){" + str(_GENEAL_MIN_LINKS) + r",}"
+)
+
 # ── EVENT patterns ───────────────────────────────────────────────────────────
 EVENT_EXACT = [
     # Perang
@@ -172,12 +197,31 @@ EVENT_EXACT = [
     "Fathul Makkah",
 ]
 
-# Pattern generik perang/ghazwah/sariyah
+# Pattern generik perang/ghazwah/sariyah.
+#
+# Kata ke-2 setelah nama medan HANYA diambil bila benar-benar bagian nama event:
+#   - kepala multi-kata : "Bani X", "Dzul X", "Dzatur X", "Hamra'ul X"
+#   - kualifier ukuran  : "Badr Kubra", "Badr Ula", "Badr Shughra"
+# Selain itu berhenti di 1 kata, supaya tidak menyedot PERSON/kata umum di
+# belakangnya ("Perang Badr Aisyah", "Perang Khaibar Bekas" → cukup "Perang Badr"/
+# "Perang Khaibar"). Trigger "perang"/"ghazwah" case-insensitive ([Pp]/[Gg]) agar
+# bentuk huruf kecil ("perang Mu'tah") tetap tertangkap (kapitalisasi bukan penentu).
+_EVENT_HEAD = r"(?:Bani|Banu|Dzul|Dzu|Dzatur|Dzatu|Dzi|Hamra'ul)"
+_EVENT_QUAL = r"(?:Kubra|Ula|Shughra|Sughra|Akhir|Pertama|Kedua|Ketiga)"
+_CAPWORD = r"[A-Z][a-z']+(?:-[A-Z][a-z']+)*"   # incl. nama berhyphen: "Al-Yamamah"
 _EVENT_PERANG_RE = re.compile(
-    r"\b(Perang\s+[A-Z][a-z']+(?:\s+[A-Z][a-z']+)?)"
+    r"\b([Pp]erang\s+(?:"
+    + _EVENT_HEAD + r"\s+" + _CAPWORD              # Perang Bani Nadhir
+    + r"|" + _CAPWORD + r"\s+" + _EVENT_QUAL       # Perang Badr Kubra
+    + r"|" + _CAPWORD                              # Perang Badr (1 kata)
+    + r"))"
 )
 _EVENT_GHAZWAH_RE = re.compile(
-    r"\b(Ghazwah\s+[A-Z][a-z']+(?:\s+[A-Z][a-z']+)?)"
+    r"\b([Gg]hazwah\s+(?:"
+    + _EVENT_HEAD + r"\s+" + _CAPWORD
+    + r"|" + _CAPWORD + r"\s+" + _EVENT_QUAL
+    + r"|" + _CAPWORD
+    + r"))"
 )
 
 # ── LOCATION patterns ────────────────────────────────────────────────────────
@@ -253,9 +297,12 @@ def find_exact_matches(text, patterns, label):
     """Cari semua kemunculan pattern eksak di teks."""
     results = []
     for pat in patterns:
-        # Escape regex special chars in pattern
+        # Escape regex special chars in pattern.
+        # Pakai lookaround (?<!\w)...(?!\w) — bukan \b — agar term yang berakhir
+        # apostrof tetap match. "\bIsra'\b" GAGAL (tak ada word-boundary setelah
+        # "'"); inilah akar 15 tambalan auto_isra_coverage. Lookaround memperbaikinya.
         escaped = re.escape(pat)
-        for m in re.finditer(r"\b" + escaped + r"\b", text):
+        for m in re.finditer(r"(?<!\w)" + escaped + r"(?!\w)", text):
             results.append({
                 "entity_text": m.group(0),
                 "label": label,
@@ -292,6 +339,10 @@ _INDO_STOPWORDS = {
     "Sebab", "Padahal", "Bahwa", "Yakni", "Yaitu", "Rupanya",
     "Tanya", "Sesungguhnya", "Sungguh", "Sebenarnya", "Malah", "Justru", "Apalagi",
 }
+
+# Kata pertama tiap nama PERSON (untuk guard FP "perang <PERSON>").
+# Battle tidak dinamai dari individu; "pasukan perang Kisra" bukan nama event.
+_PERSON_FIRST = {p.split()[0] for p in PERSON_EXACT}
 
 
 def find_person_bin(text):
@@ -331,6 +382,28 @@ def find_person_bin(text):
             "end_char": end_pos,
         })
     return results
+
+
+def find_genealogy_persons(text):
+    """Deteksi rantai nasab panjang & pecah jadi PERSON per-nama (bin = O).
+
+    Mengembalikan (regions, entities):
+      - regions: daftar (start, end) span genealogi (untuk filter overlap di pemanggil)
+      - entities: tiap nama diri di dalam region sebagai PERSON terpisah
+    """
+    regions, ents = [], []
+    for m in _GENEALOGY_RE.finditer(text):
+        s, e = m.start(), m.end()
+        regions.append((s, e))
+        # Tiap nama diri di dalam rantai (termasuk alias "(yang namanya X)") = PERSON.
+        for nm in _NAME_ATOM_RE.finditer(text, s, e):
+            ents.append({
+                "entity_text": nm.group(0),
+                "label": "PERSON",
+                "start_char": nm.start(),
+                "end_char": nm.end(),
+            })
+    return regions, ents
 
 
 def find_time_bulan(text):
@@ -388,13 +461,55 @@ def _normalize_quotes(text):
     return text
 
 
+# ── Kamus koreksi OCR: apostrof INTERNAL yang hilang jadi spasi ───────────────
+# Ditemukan dari data (entitas dikenal yang ter-split; versi benar dominan).
+# WAJIB length-preserving (len kunci == len nilai) supaya offset karakter tetap
+# valid — hanya apostrof internal (bukan ujung kata seperti "Isra'").
+# Urut: kunci lebih panjang dulu agar tidak saling memotong.
+_OCR_APOS_MAP = {
+    "Mush ab": "Mush'ab",
+    "Rabi ah": "Rabi'ah",
+    "Isma il": "Isma'il",
+    "Asy ari": "Asy'ari",
+    "Ka bah": "Ka'bah",
+    "Mu adz": "Mu'adz",
+    "Ma qal": "Ma'qal",
+    "Tha if": "Tha'if",
+    "Mas ud": "Mas'ud",
+    "As ad": "As'ad",
+    "Sa d": "Sa'd",
+    "Ka b": "Ka'b",
+}
+assert all(len(k) == len(v) for k, v in _OCR_APOS_MAP.items()), \
+    "Koreksi OCR apostrof harus length-preserving (jaga offset)."
+_OCR_APOS_RE = [
+    (re.compile(r"(?<!\w)" + re.escape(k) + r"(?!\w)"), v)
+    for k, v in _OCR_APOS_MAP.items()
+]
+
+
+def _normalize_ocr_apostrophe(text):
+    """Sambung balik nama ber-apostrof yang ter-split OCR ("Tha if" -> "Tha'if")."""
+    for rx, v in _OCR_APOS_RE:
+        text = rx.sub(v, text)
+    return text
+
+
+def normalize_text(text):
+    """Normalisasi gabungan (kutip unicode + apostrof OCR). Length-preserving."""
+    return _normalize_ocr_apostrophe(_normalize_quotes(text))
+
+
 def extract_entities(text):
     """Ekstrak semua entitas dari teks."""
     if not isinstance(text, str) or not text.strip():
         return []
-    text = _normalize_quotes(text)
+    text = normalize_text(text)
 
     all_ents = []
+
+    # 0. Deteksi rantai nasab panjang (genealogi) — tiap nama jadi PERSON terpisah.
+    geneal_regions, geneal_ents = find_genealogy_persons(text)
 
     # 1. PERSON - exact match (paling panjang dulu)
     persons_sorted = sorted(PERSON_EXACT, key=len, reverse=True)
@@ -420,6 +535,17 @@ def extract_entities(text):
     # 7. TIME - bulan Hijriah
     all_ents.extend(find_time_bulan(text))
 
+    # 8a. Di region genealogi: buang PERSON span normal (exact/bin) yang overlap,
+    #     ganti dengan atom per-nama hasil find_genealogy_persons (bin = O).
+    if geneal_regions:
+        def _in_geneal(s, e):
+            return any(s < gr_e and e > gr_s for gr_s, gr_e in geneal_regions)
+        all_ents = [
+            x for x in all_ents
+            if not (x["label"] == "PERSON" and _in_geneal(x["start_char"], x["end_char"]))
+        ]
+        all_ents.extend(geneal_ents)
+
     # 8. Post-processing: bersihkan noise prefix yang lolos
     cleaned = []
     for ent in all_ents:
@@ -430,6 +556,13 @@ def extract_entities(text):
             stripped = name[len(first_word):].strip()
             ent["start_char"] += len(name) - len(stripped)
             ent["entity_text"] = stripped
+
+        # Guard: buang FP "perang <PERSON>" 1-kata (mis. "pasukan perang Kisra").
+        if ent["label"] == "EVENT":
+            m = re.match(r"[Pp]erang\s+(\S+)$", ent["entity_text"])
+            if m and m.group(1) in _PERSON_FIRST:
+                continue
+
         cleaned.append(ent)
 
     # Deduplicate
@@ -452,10 +585,13 @@ def main():
     chunks_with_ents = 0
 
     for _, row in df.iterrows():
-        text = str(row.get("teks_chunk", ""))
+        # Normalisasi (kutip + apostrof OCR) length-preserving. Teks ter-normalisasi
+        # disimpan ke output supaya offset entitas & tokenisasi downstream konsisten.
+        text = normalize_text(str(row.get("teks_chunk", "")))
         entities = extract_entities(text)
 
         base = {col: row.get(col, "") for col in base_cols}
+        base["teks_chunk"] = text
 
         if entities:
             chunks_with_ents += 1

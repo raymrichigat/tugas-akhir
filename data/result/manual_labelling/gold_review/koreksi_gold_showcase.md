@@ -1,0 +1,150 @@
+# Showcase Koreksi Gold (kesalahan → perbaikan → hasil)
+
+Dokumen ini menampilkan kesalahan anotasi yang ditemukan, letaknya, dan hasil perbaikannya. Disusun otomatis dari worksheet review yang sudah dikonfirmasi.
+
+## Ringkasan jumlah koreksi
+
+- **Entitas kelewat**: 29
+- **Batas entitas diperbaiki**: 28
+- **Ambiguitas LOCATION vs EVENT**: 27
+- **Salah anotasi (dibuang)**: 9
+- **OCR apostrof (nama ter-split)**: 4
+- **Salah tipe**: 1
+- **Rantai nasab dipecah**: 1
+
+**Total: 99 koreksi**
+
+
+## Entitas kelewat (29)
+
+| chunk | konteks | sebelum | masalah | sesudah |
+|---|---|---|---|---|
+| 000010-010 | ram. Mereka tidak boleh masuk [[Baitul-Haram]] dengan mengenakan kain wol 20 | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000074-005 | sa berlalu dari Shan'a hingga [[Hadhramaut]] tanpa rasa takut kecuali kepa | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000009-002 | pi kekuasaan di Hijaz di mata [[IRAQ]] RAN bangsa Arab memiliki keho | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000009-002 | n agama. Mereka Peta Kerajaan [[Arab]] Saudi berkuasa di tanah suci | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000005-003 | enggantinya, Kisra mengangkat [[lyas]] bin Qubaishah Ath-Thayy'i, da | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000030-004 | adaan beliau juga digambarkan [[Ummul]] Mukminin Khadijah , Beliau me | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000249-001 | paikan surat tersebut ataukah [[Abdullah]] sendiri yang menyampaikannya. | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000357-001 | numan. Pemimpin mereka adalah [[Al-Asyaj]] Al-Ashri, yang kemudian belia | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000223-005 | afilah dagang Quraisy setelah [[perjanjian]] Hudaibiyah. | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-EVENT` |
+| 000017-009 | uh anak laki-laki: Al-Harits, [[Az-Zubair]], Abu Thalib, Abdullah, Hamzah | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000017-009 | dapat seperti ini menambahkan [[Abdul]] Ka'bah dan Hajla. Ada yang be | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000017-009 | Hajla. Ada yang berpendapat, [[Abdul]] Ka'bah adalah Al-Muqawwim, da | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000017-009 | ikah, Shafiyyah, Arwa, dan 3. [[Abdullah]] Dia adalah bapak Rasulullah . | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000338-001 | han'a 10. Ziyad bin Lubaid ke [[Hadramaut]] 11. Adi bin Hatim ke Tha'i da | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000140-001 | bbas masuk Islam, begitu pula [[Ummul]] Fadhl dan aku. Namun Al-Abbas | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000140-003 | aku adalah orang yang lemah. [[Ummul]] Fadhl bangkit memungut tiang | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000140-003 | aku adalah orang yang lemah. [[Ummul]] Fadhl bangkit memungut tiang | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000301-001 | Diambilkan dari riwayat [[Ath-Thabarani]], bahwa tiga hari sebelum ada | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000301-001 | rletak antara Dzu Khasyab dan [[Dzul]] Marwah pada awal bulan Ramadh | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000314-003 | Arnab, budak perempuan milik [[ibnu]] Khathal yang juga dibunuh, Um | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000314-003 | perempuan. Tetapi boleh jadi [[Arnab]] dan Ummu Sa'd ini adalah bidu | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000273-001 | Sekalipun anak [[Abil]] Huqaiq sudah menyetujui perja | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+| 000296-003 | di sebuah mata air di wilayah [[Judzam]] yang disebut As-Salasil, hing | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000002-003 | d. Kindah. Mereka tinggal di [[Bahrain]], lalu terpaksa meninggalkanya | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000002-003 | kanya dan akhirnya singgah di [[Hadhramaut]]. Namun nasib mereka tidak jau | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000002-003 | d. Kindah. Mereka tinggal di [[Bahrain]], lalu terpaksa meninggalkanya | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000001-002 | ur dekat, terus membentang ke [[India]] dan Cina. Setiap benua memper | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000001-002 | terus membentang ke India dan [[Cina]]. Setiap benua mempertemukan l | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-LOCATION` |
+| 000002-005 | ksa Ibrahim untuk melenyapkan [[Hajar]] dan putranya yang masih kecil | `O` | tidak ter-anotasi di gold (regex tak menangkap) | `B-PERSON` |
+
+## Batas entitas diperbaiki (28)
+
+| chunk | konteks | sebelum | masalah | sesudah |
+|---|---|---|---|---|
+| 000032-001 | tan dengan tanggal 10 Agustus [[610]] M. Usia beliau saat itu genap | `O` | token seharusnya bagian dari entitas sebelumnya | `I-TIME` |
+| 000071-005 | ab,"Aku tidak tahu di manaAbu [[Bakar]] dan Muhammad bin Abdullah ber | `O` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000009-002 | ma. Mereka Peta Kerajaan Arab [[Saudi]] berkuasa di tanah suci dengan | `O` | token seharusnya bagian dari entitas sebelumnya | `I-LOCATION` |
+| 000005-003 | i dia justru dibuang ke Darul [[Kalb]] dan meninggal di sana. Sistem | `O` | token seharusnya bagian dari entitas sebelumnya | `I-LOCATION` |
+| 000005-003 | ntinya, Kisra mengangkat lyas [[bin]] Qubaishah Ath-Thayy'i, dan me | `O` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000005-003 | ya, Kisra mengangkat lyas bin [[Qubaishah]] Ath-Thayy'i, dan memerintahka | `O` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000155-005 | erhenti di dekat benteng Ka'b [[Al-Asyraf]]. Abu Na ilah berbisik-bisik m | `O` | token seharusnya bagian dari entitas sebelumnya | `I-LOCATION` |
+| 000157-001 | di pada bulan Jumadal Akhirah [[3]] H Gambarannya, orang-orang Qu | `O` | token seharusnya bagian dari entitas sebelumnya | `I-TIME` |
+| 000157-001 | pada bulan Jumadal Akhirah 3 [[H]] Gambarannya, orang-orang Qura | `O` | token seharusnya bagian dari entitas sebelumnya | `I-TIME` |
+| 000249-003 | Hal ini terjadi pada malam [[Selasa]] tanggal 10 Jumadal Rasulullah | `O` | token seharusnya bagian dari entitas sebelumnya | `I-TIME` |
+| 000017-008 | ari atau awal bulan Maret 571 [[M]]. Peristiwa ini merupakan prol | `O` | token seharusnya bagian dari entitas sebelumnya | `I-TIME` |
+| 000017-001 | ada kakeknya, Hasyim bin Abdu [[Manaf]]. Oleh karena itu ada baiknya | `O` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000227-001 | shba', atau berjuluk Ummu Abi [[Salamah]], putri pemimpin mereka. 2. Sa | `O` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000140-001 | asuk Islam, begitu pula Ummul [[Fadhl]] dan aku. Namun Al-Abbas menye | `O` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000140-003 | dalah orang yang lemah. Ummul [[Fadhl]] bangkit memungut tiang pembat | `O` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000140-003 | kan luka yang menganga. Ummul [[Fadhl]] berkata, "Engkau berani menyi | `O` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000314-003 | b, budak perempuan milik ibnu [[Khathal]] yang juga dibunuh, Ummu Sa'd | `O` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000296-001 | ka pada bulan Jumadal Akhirah [[8]] H seusai perang Mu'tah, denga | `O` | token seharusnya bagian dari entitas sebelumnya | `I-TIME` |
+| 000296-001 | pada bulan Jumadal Akhirah 8 [[H]] seusai perang Mu'tah, dengan | `O` | token seharusnya bagian dari entitas sebelumnya | `I-TIME` |
+| 000032-001 | i itu, yaitu pada hari Senin, [[malam]] tanggal 21 dari bulan Ramadha | `B-TIME` | token seharusnya bagian dari entitas sebelumnya | `I-TIME` |
+| 000074-004 | hadapan orang-orang di pasar [[Ukazh]]. Majannah, dan Dzil-Majaz unt | `B-LOCATION` | token seharusnya bagian dari entitas sebelumnya | `I-LOCATION` |
+| 000223-005 | ng Quraisy setelah perjanjian [[Hudaibiyah]]. | `B-EVENT` | token seharusnya bagian dari entitas sebelumnya | `I-EVENT` |
+| 000017-009 | seperti ini menambahkan Abdul [[Ka'bah]] dan Hajla. Ada yang berpendap | `B-LOCATION` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000017-009 | . Ada yang berpendapat, Abdul [[Ka'bah]] adalah Al-Muqawwim, dan Hajla | `B-LOCATION` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000338-001 | 7. Basyir bin Sufyan ke Bani [[Ka'b]] 8. Ibnul Latibah Al-Uzdi ke B | `B-PERSON` | token seharusnya bagian dari entitas sebelumnya | `I-PERSON` |
+| 000122-001 | ukit pasir, di pinggiran wadi [[Badr]]. | `B-LOCATION` | token seharusnya bagian dari entitas sebelumnya | `I-LOCATION` |
+| 000145-001 | dari Allah tentang peperangan [[Badr]], yang berbeda jauh dengan pen | `B-EVENT` | token seharusnya bagian dari entitas sebelumnya | `I-EVENT` |
+| 000301-001 | k antara Dzu Khasyab dan Dzul [[Marwah]] pada awal bulan Ramadhan 8 H | `B-LOCATION` | token seharusnya bagian dari entitas sebelumnya | `I-LOCATION` |
+
+## Ambiguitas LOCATION vs EVENT (27)
+
+| chunk | konteks | sebelum | masalah | sesudah |
+|---|---|---|---|---|
+| 000145-001 | Surat ini merupakan penjelasan dari Allah tentang peperangan Badr, yang berbeda jauh denga | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000147-001 | Peperangan ini terjadi pada bulan Syawwal 2 Hijriyah, selang tujuh hari sepulang dari Badr | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000158-001 | Bahkan karenanya Quraisy melarang semua penduduk Makkah meratapi para korban Badr dan tida | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000217-001 | Dumatul Jandal Setelah Badr Shughra beliau menetap di Madinah selama enam bulan Kemudian d | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000223-004 | Tetapi ada pula yang menyebutkannya sebelum Hudaibiyah. | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000223-005 | Apakah masih ada sisa daging yang bisa kalian berikan kepada kami?" Maka kami menyerahkann | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000223-005 | Sebab orang-orang Muslim tidak lagi mengintai kafilah dagang Quraisy setelah perjanjian Hu | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000227-005 | Tetapi perkembangan ini baru tampak jelas dengan dikukuhkannya perjanjian Hudaibiyah. | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000243-002 | " 220 Lihat rincian tentang peristiwa Hudaibiyah dan gencatan senjata ini dalam Fathul Bar | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000247-001 | Sebab ada kemungkinan itu bukan teks surat yang ditulis Nabi setelah perjanjian Hudaibiyah | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000247-003 | Kalau pun dikatakan bahwa surat itu ditulis setelah Hudaibiyah, maka tidak ada dalil yang  | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000247-003 | Yang disebutkan Al-Baihaqi dari Ibnu Ishaq mirip dengan surat yang ditulis Nabi kepada beb | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000260-001 | Karena orang munafik dan mereka y ang hatinya lemah tidak mau bergabung dalam peristiwa Hu | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000274-002 | Karena bagaimanapun juga, harta rampasan dari Perang Khaibar ini juga tidak lepas dari per | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000285-001 | Al-Hakim menuturkan, "Dengan tibanya bulan Dzul Qa'dah, tersiar kabar bahwa Rasulullah dan | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000285-005 | Umrah ini dinamakan umrah qadha', entah karena dimaksudkan sebagai qadha' dari umrah yang  | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000329-001 | "Sesungguhnya Allah telah menolong kamu (hai para mukminin) di medan peperangan yang banya | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000334-001 | Orang-orang Anshar termasuk mereka yang tidak bisa menerima kebijakan beliau ini, karena m | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000355-001 | Adapun peristiwa yang terjadi dalam Perang Uhud dan Hunain lebih disebabkan karena kelemah | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000010-012 | Saat Islam datang, kabilah-kabilah Yahudi yang terkenal adalah Khaibar, Nadhir, Mushthaliq | `LOCATION` | bukan entitas pada konteks ini | `O` |
+| 000275-001 | Pada saat-saat peperangan Khaibar ini, anak paman beliau, Ja'far bin Abu Thalib, tiba bers | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000275-001 | " Maka kami menetap di sana, lalu meninggalkan Habasyah hingga akhirnya kami tiba pada saa | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000275-001 | Beliau bersabda, "Demi Allah, aku tidak tahu karena apa aku gembira, entah karena penakluk | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000384-001 | membebaskannya dan menikahinya setelah penaklukkan Khaibar pada tahun 7 H. | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000210-001 | Yang pertama kali melakukan perlawanan terhadap orang-orang Muslim setelah tragedi Uhud ad | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000375-001 | Sedangkan Fathimah dinikahi Ali bin Abu Thalib pada waktu antara Perang Badr dan Uhud. | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+| 000378-001 | Dia ditinggal mati suaminya, Khunais bin Hudzafah As-Sahmi, pada waktu antara Perang Badr  | `LOCATION` | nama medan dibaca sbg tempat, padahal konteks = peristiwa | `EVENT` |
+
+## Salah anotasi (dibuang) (9)
+
+| chunk | konteks | sebelum | masalah | sesudah |
+|---|---|---|---|---|
+| 000032-001 | Qur'an, 26/166. 55 Ibnu Hajar [[berkata,"Al-Baihaqi]] mengisahkan bahwa jangka wakt | `I-PERSON` | ditandai entitas padahal bukan | `O` |
+| 000359-005 | aktu kalian, laksanakan puasa [[Ramadhan]] kalian, bayarkanlah zakat kal | `B-TIME` | ditandai entitas padahal bukan | `O` |
+| 000007-010 | m, yang menjadi wewenang Bani [[Umayyah]]. 6. Al-Qubah, atau penanganan | `B-PERSON` | ditandai entitas padahal bukan | `O` |
+| 000030-004 | hatkan. Shahihul-Bukhari, bab [[Bunyanil-Ka'bah]], 1/540. 53 Shahihul-Bukhari, | `I-LOCATION` | ditandai entitas padahal bukan | `O` |
+| 000255-002 | Lihat Shahih Al-Bukhari, bab [[Ghazwah]] Dzatu Qarad, 2/603; Shahih Mu | `B-EVENT` | ditandai entitas padahal bukan | `O` |
+| 000255-002 | hahih Al-Bukhari, bab Ghazwah [[Dzatu]] Qarad, 2/603; Shahih Muslim, | `I-EVENT` | ditandai entitas padahal bukan | `O` |
+| 000255-002 | Al-Bukhari, bab Ghazwah Dzatu [[Qarad]], 2/603; Shahih Muslim, 2/113- | `I-EVENT` | ditandai entitas padahal bukan | `O` |
+| 000294-002 | an 242 Shahih Al-Bukhari, bab [[Ghazwah]] Mu 'tah Min Ardhisi Syam, 2/6 | `B-EVENT` | ditandai entitas padahal bukan | `O` |
+| 000294-002 | hahih Al-Bukhari, bab Ghazwah [[Mu]] 'tah Min Ardhisi Syam, 2/611. | `I-EVENT` | ditandai entitas padahal bukan | `O` |
+
+## OCR apostrof (nama ter-split) (4)
+
+| chunk | konteks | sebelum | masalah | sesudah |
+|---|---|---|---|---|
+| (banyak) | 'Tha if' -> 'Tha'if' | `'Tha if' (terpisah)` | apostrof hilang jadi spasi -> nama terpecah | `'Tha'if' (tersambung)` |
+| (banyak) | 'Mas ud' -> 'Mas'ud' | `'Mas ud' (terpisah)` | apostrof hilang jadi spasi -> nama terpecah | `'Mas'ud' (tersambung)` |
+| (banyak) | 'Asy ari' -> 'Asy'ari' | `'Asy ari' (terpisah)` | apostrof hilang jadi spasi -> nama terpecah | `'Asy'ari' (tersambung)` |
+| (banyak) | 'Mush ab' -> 'Mush'ab' | `'Mush ab' (terpisah)` | apostrof hilang jadi spasi -> nama terpecah | `'Mush'ab' (tersambung)` |
+
+## Salah tipe (1)
+
+| chunk | konteks | sebelum | masalah | sesudah |
+|---|---|---|---|---|
+| 000017-008 | ang Muslim, seperti peristiwa [[Bukhtanashar]] pada tahun 587 SM dan orang-o | `B-PERSON` | tipe entitas keliru | `B-LOCATION` |
+
+## Rantai nasab dipecah (1)
+
+| chunk | konteks | sebelum | masalah | sesudah |
+|---|---|---|---|---|
+| 000016-001 | ...bin Lamk, bin Matausyalakh bin Akhnukh atau Idris, bin Yard... | `rantai disambung tak konsisten / 'bin' ikut PERSON` | tiap leluhur orang berbeda, tapi tergabung jadi 1 span | `tiap nama = PERSON terpisah, 'bin' = O` |

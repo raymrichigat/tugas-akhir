@@ -18,9 +18,15 @@ Format output (mengikuti format notebook referensi):
 """
 
 import re
+import sys
 import pandas as pd
 from pathlib import Path
 from sklearn.model_selection import train_test_split
+
+# Normalisasi OCR (kutip + apostrof ter-split) — sumber tunggal di pre_labelling,
+# diimpor agar tidak duplikasi kamus. Length-preserving → offset aman.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "manual_labelling"))
+from pre_labelling import normalize_text  # noqa: E402
 
 # ── Konfigurasi ──────────────────────────────────────────────────────────────
 IN_LABELLED  = Path(r"E:\2_Kehidupan-Kuliah\10_tugas-akhir\repo-TA\TA_preprocess\TA_sirah\data\result\manual_labelling\sirah_prelabelled.csv")
@@ -36,24 +42,91 @@ RANDOM_STATE = 42
 # BAGIAN 1: TOKENISASI DENGAN POSISI KARAKTER
 # ─────────────────────────────────────────────────────────────────────────────
 
-def tokenize_with_offsets(text: str) -> list[tuple[str, int, int]]:
+# Tanda baca yang DIPISAH dari token (Tingkat 1 — perbaikan boundary OCR).
+# Apostrof (') dan hyphen (-) SENGAJA TIDAK dipisah: keduanya bagian internal
+# nama Arab (Ka'b, Isra', Al-Khaththab) — memisahnya justru merusak entitas.
+_STRIP_PUNCT = ".,;:!?\"“”«»…()[]{}"
+
+# Pola pembuka artikel/nama berhyphen untuk penggabungan Tingkat 2.
+_ARTICLE_HYPHEN = re.compile(r"^[A-Z][A-Za-z']*-$")
+
+
+def _split_punct(word: str, start: int) -> list[tuple[str, int, int]]:
     """
-    Pecah teks menjadi kata-kata dan catat posisi karakter tiap kata.
+    Pisahkan tanda baca pembuka & penutup dari satu token, jaga offset karakter.
 
     Contoh:
-      Input : "Abu Bakar pergi ke Madinah."
-      Output: [("Abu", 0, 3), ("Bakar", 4, 9), ("pergi", 10, 15),
-               ("ke", 16, 18), ("Madinah.", 19, 27)]
+      "Madinah."     -> [("Madinah", s, s+7), (".", s+7, s+8)]
+      "(Al-An'am:"   -> [("(", s, s+1), ("Al-An'am", ...), (":", ...)]
+      "Isra'"        -> [("Isra'", s, s+5)]   (apostrof TIDAK dipisah)
+    Offset tetap presisi sehingga pencocokan span entitas (start/end_char)
+    di assign_bio_label tetap benar; tanda baca yang terpisah otomatis jadi O.
+    """
+    n = len(word)
+    j = 0
+    while j < n and word[j] in _STRIP_PUNCT:
+        j += 1
+    k = n
+    while k > j and word[k - 1] in _STRIP_PUNCT:
+        k -= 1
+
+    out: list[tuple[str, int, int]] = []
+    if j > 0:                                   # gugus tanda baca pembuka
+        out.append((word[:j], start, start + j))
+    if k > j:                                   # inti kata
+        out.append((word[j:k], start + j, start + k))
+    if k < n:                                   # gugus tanda baca penutup
+        out.append((word[k:], start + k, start + n))
+    if not out:                                 # token seluruhnya tanda baca
+        out.append((word, start, start + n))
+    return out
+
+
+def _merge_arabic_splits(
+    toks: list[tuple[str, int, int]],
+) -> list[tuple[str, int, int]]:
+    """
+    Tingkat 2 — gabung nama yang terbelah spasi pasca-hyphen akibat OCR:
+      "Baitul-" + "Haram" -> "Baitul-Haram"
+      "An-"     + "Nu'man" -> "An-Nu'man"
+    Syarat gabung: token berakhir "-" & berawal huruf besar (mirip nama),
+    DAN token berikutnya berawal huruf besar. Kata-ulang Indonesia
+    ("orang-" + "orang", huruf kecil) TIDAK ikut tergabung.
+    """
+    merged: list[tuple[str, int, int]] = []
+    i = 0
+    while i < len(toks):
+        tok, s, e = toks[i]
+        if (i + 1 < len(toks)
+                and _ARTICLE_HYPHEN.match(tok)
+                and toks[i + 1][0][:1].isupper()):
+            nxt, _ns, ne = toks[i + 1]
+            merged.append((tok + nxt, s, ne))   # offset menjangkau spasi di tengah
+            i += 2
+            continue
+        merged.append((tok, s, e))
+        i += 1
+    return merged
+
+
+def tokenize_with_offsets(text: str) -> list[tuple[str, int, int]]:
+    """
+    Pecah teks menjadi token + posisi karakter, dengan dua perbaikan OCR:
+      Tingkat 1: tanda baca menempel dipisah ("Madinah." -> "Madinah" "." )
+      Tingkat 2: nama terbelah pasca-hyphen digabung ("Baitul-" "Haram" -> "Baitul-Haram")
 
     Kenapa perlu posisi karakter?
-      Karena anotasi di sirah_prelabelled.csv menyimpan posisi entitas
-      dalam bentuk start_char/end_char. Kita perlu tahu kata mana yang
-      masuk ke dalam rentang posisi itu.
+      Anotasi di sirah_prelabelled.csv menyimpan posisi entitas (start_char/
+      end_char). Offset dipakai assign_bio_label untuk tahu token mana yang
+      masuk rentang entitas.
     """
-    return [
-        (m.group(), m.start(), m.end())
-        for m in re.finditer(r"\S+", text)
-    ]
+    # Normalisasi length-preserving dulu (idempoten pada teks gold yg sudah
+    # ternormalisasi; membersihkan teks unlabelled yang belum). Offset tetap valid.
+    text = normalize_text(text)
+    base: list[tuple[str, int, int]] = []
+    for m in re.finditer(r"\S+", text):
+        base.extend(_split_punct(m.group(), m.start()))
+    return _merge_arabic_splits(base)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

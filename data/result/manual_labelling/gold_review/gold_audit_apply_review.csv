@@ -1,0 +1,77 @@
+﻿no;chunk;token;target;current;status;acc;konteks_ditemukan
+4;000010-010;Baitul-Haram;B-LOCATION;O;OK_UNIK;;ram. Mereka tidak boleh masuk 〚Baitul-Haram〛 dengan mengenakan kain wol 20
+5;000032-001;610;I-TIME;O;OK_UNIK;;tan dengan tanggal 10 Agustus 〚610〛 M. Usia beliau saat itu genap
+6;000074-005;Hadhramaut;B-LOCATION;O;OK_UNIK;;sa berlalu dari Shan'a hingga 〚Hadhramaut〛 tanpa rasa takut kecuali kepa
+7;000071-005;Bakar;I-PERSON;O;OK_KONTEKS;;"ab,""Aku tidak tahu di manaAbu 〚Bakar〛 dan Muhammad bin Abdullah ber"
+11;000009-002;IRAQ;B-LOCATION;O;OK_UNIK;;pi kekuasaan di Hijaz di mata 〚IRAQ〛 RAN bangsa Arab memiliki keho
+13;000009-002;Arab;B-LOCATION;O;OK_KONTEKS;;n agama. Mereka Peta Kerajaan 〚Arab〛 Saudi berkuasa di tanah suci 
+14;000009-002;Saudi;I-LOCATION;O;OK_UNIK;;ma. Mereka Peta Kerajaan Arab 〚Saudi〛 berkuasa di tanah suci dengan
+15;000005-003;Kalb;I-LOCATION;O;OK_UNIK;;i dia justru dibuang ke Darul 〚Kalb〛 dan meninggal di sana. Sistem
+16;000005-003;lyas;B-PERSON;O;CURIGA_KATA_UMUM;;enggantinya, Kisra mengangkat 〚lyas〛 bin Qubaishah Ath-Thayy'i, da
+17;000005-003;bin;I-PERSON;O;CURIGA_KATA_UMUM;;ntinya, Kisra mengangkat lyas 〚bin〛 Qubaishah Ath-Thayy'i, dan me
+18;000005-003;Qubaishah;I-PERSON;O;OK_UNIK;;ya, Kisra mengangkat lyas bin 〚Qubaishah〛 Ath-Thayy'i, dan memerintahka
+19;000030-004;Ummul;B-PERSON;O;OK_UNIK;;adaan beliau juga digambarkan 〚Ummul〛 Mukminin Khadijah , Beliau me
+20;000155-005;Al-Asyraf;I-LOCATION;O;OK_UNIK;;erhenti di dekat benteng Ka'b 〚Al-Asyraf〛. Abu Na ilah berbisik-bisik m
+21;000157-001;3;I-TIME;O;OK_UNIK;;di pada bulan Jumadal Akhirah 〚3〛 H Gambarannya, orang-orang Qu
+22;000157-001;H;I-TIME;O;OK_UNIK;; pada bulan Jumadal Akhirah 3 〚H〛 Gambarannya, orang-orang Qura
+23;000249-001;Abdullah;B-PERSON;O;OK_KONTEKS;;paikan surat tersebut ataukah 〚Abdullah〛 sendiri yang menyampaikannya.
+24;000249-003;Selasa;I-TIME;O;OK_UNIK;;Hal ini terjadi pada malam 〚Selasa〛 tanggal 10 Jumadal Rasulullah
+25;000357-001;Al-Asyaj;B-PERSON;O;OK_UNIK;;numan. Pemimpin mereka adalah 〚Al-Asyaj〛 Al-Ashri, yang kemudian belia
+26;000223-005;perjanjian;B-EVENT;O;CURIGA_KATA_UMUM;;afilah dagang Quraisy setelah 〚perjanjian〛 Hudaibiyah.
+27;000017-008;M;I-TIME;O;OK_KONTEKS;;ari atau awal bulan Maret 571 〚M〛. Peristiwa ini merupakan prol
+28;000017-001;Manaf;I-PERSON;O;OK_KONTEKS;;ada kakeknya, Hasyim bin Abdu 〚Manaf〛. Oleh karena itu ada baiknya 
+29;000017-009;Az-Zubair;B-PERSON;O;OK_UNIK;;uh anak laki-laki: Al-Harits, 〚Az-Zubair〛, Abu Thalib, Abdullah, Hamzah
+30;000017-009;Abdul;B-PERSON;O;OK_KONTEKS;;dapat seperti ini menambahkan 〚Abdul〛 Ka'bah dan Hajla. Ada yang be
+31;000017-009;Abdul;B-PERSON;O;OK_KONTEKS;; Hajla. Ada yang berpendapat, 〚Abdul〛 Ka'bah adalah Al-Muqawwim, da
+32;000017-009;Abdullah;B-PERSON;O;OK_KONTEKS;;ikah, Shafiyyah, Arwa, dan 3. 〚Abdullah〛 Dia adalah bapak Rasulullah .
+33;000338-001;Hadramaut;B-LOCATION;O;OK_UNIK;;han'a 10. Ziyad bin Lubaid ke 〚Hadramaut〛 11. Adi bin Hatim ke Tha'i da
+34;000227-001;Salamah;I-PERSON;O;OK_UNIK;;shba', atau berjuluk Ummu Abi 〚Salamah〛, putri pemimpin mereka. 2. Sa
+35;000218-021;ud;I-PERSON;I-PERSON;SUDAH_BENAR;; y ang bernama Nu'aim bin Mas'〚ud〛 bin Amir Al Asyja'i y ang men
+36;000218-021;bin;I-PERSON;I-PERSON;SUDAH_BENAR;;ang bernama Nu'aim bin Mas'ud 〚bin〛 Amir Al Asyja'i y ang menemui
+37;000218-021;Amir;I-PERSON;I-PERSON;SUDAH_BENAR;;bernama Nu'aim bin Mas'ud bin 〚Amir〛 Al Asyja'i y ang menemui Rasu
+38;000140-001;Ummul;B-PERSON;O;OK_UNIK;;bbas masuk Islam, begitu pula 〚Ummul〛 Fadhl dan aku. Namun Al-Abbas
+39;000140-001;Fadhl;I-PERSON;O;OK_UNIK;;asuk Islam, begitu pula Ummul 〚Fadhl〛 dan aku. Namun Al-Abbas menye
+40;000122-001;wadi;B-LOCATION;O;CURIGA_KATA_UMUM;;lik bukit pasir, di pinggiran 〚wadi〛 Badr.
+41;000140-003;Ummul;B-PERSON;O;OK_KONTEKS;; aku adalah orang yang lemah. 〚Ummul〛 Fadhl bangkit memungut tiang 
+42;000140-003;Fadhl;I-PERSON;O;OK_KONTEKS;;dalah orang yang lemah. Ummul 〚Fadhl〛 bangkit memungut tiang pembat
+43;000140-003;Ummul;B-PERSON;O;OK_KONTEKS;; aku adalah orang yang lemah. 〚Ummul〛 Fadhl bangkit memungut tiang 
+44;000140-003;Fadhl;I-PERSON;O;OK_KONTEKS;;"kan luka yang menganga. Ummul 〚Fadhl〛 berkata, ""Engkau berani menyi"
+45;000145-001;peperangan;B-EVENT;O;CURIGA_KATA_UMUM;;penjelasan dari Allah tentang 〚peperangan〛 Badr, yang berbeda jauh denga
+46;000301-001;Ath-Thabarani;B-PERSON;O;OK_UNIK;;Diambilkan dari riwayat 〚Ath-Thabarani〛, bahwa tiga hari sebelum ada 
+47;000301-001;Dzul;B-LOCATION;O;OK_UNIK;;rletak antara Dzu Khasyab dan 〚Dzul〛 Marwah pada awal bulan Ramadh
+48;000314-003;ibnu;B-PERSON;O;CURIGA_KATA_UMUM;; Arnab, budak perempuan milik 〚ibnu〛 Khathal yang juga dibunuh, Um
+49;000314-003;Khathal;I-PERSON;O;OK_UNIK;;b, budak perempuan milik ibnu 〚Khathal〛 yang juga dibunuh, Ummu Sa'd 
+50;000314-003;Arnab;B-PERSON;O;OK_KONTEKS;; perempuan. Tetapi boleh jadi 〚Arnab〛 dan Ummu Sa'd ini adalah bidu
+51;000273-001;Abil;B-PERSON;O;OK_UNIK;;Sekalipun anak 〚Abil〛 Huqaiq sudah menyetujui perja
+52;000296-003;Judzam;B-LOCATION;O;OK_UNIK;;di sebuah mata air di wilayah 〚Judzam〛 yang disebut As-Salasil, hing
+53;000296-001;8;I-TIME;O;OK_UNIK;;ka pada bulan Jumadal Akhirah 〚8〛 H seusai perang Mu'tah, denga
+54;000296-001;H;I-TIME;O;OK_UNIK;; pada bulan Jumadal Akhirah 8 〚H〛 seusai perang Mu'tah, dengan 
+55;000114-013;Beberapa;O;O;SUDAH_BENAR;;Lokasi terjadinya Perang Badr 〚Beberapa〛 ayat yang memerintahkan peran
+56;000002-003;Bahrain;B-LOCATION;O;OK_KONTEKS;; d. Kindah. Mereka tinggal di 〚Bahrain〛, lalu terpaksa meninggalkanya
+57;000002-003;Hadhramaut;B-LOCATION;O;OK_UNIK;;kanya dan akhirnya singgah di 〚Hadhramaut〛. Namun nasib mereka tidak jau
+58;000002-003;Bahrain;B-LOCATION;O;OK_KONTEKS;; d. Kindah. Mereka tinggal di 〚Bahrain〛, lalu terpaksa meninggalkanya
+61;000001-002;India;B-LOCATION;O;OK_UNIK;;ur dekat, terus membentang ke 〚India〛 dan Cina. Setiap benua memper
+62;000001-002;Cina;B-LOCATION;O;OK_UNIK;;terus membentang ke India dan 〚Cina〛. Setiap benua mempertemukan l
+63;000002-005;Hajar;B-PERSON;O;OK_KONTEKS;;ksa Ibrahim untuk melenyapkan 〚Hajar〛 dan putranya yang masih kecil
+69;000032-001;malam;I-TIME;B-TIME;CURIGA_KATA_UMUM;;i itu, yaitu pada hari Senin, 〚malam〛 tanggal 21 dari bulan Ramadha
+71;000032-001;"berkata,""Al-Baihaqi";O;I-PERSON;CURIGA_KATA_UMUM;;"Qur'an, 26/166. 55 Ibnu Hajar 〚berkata,""Al-Baihaqi〛 mengisahkan bahwa jangka wakt"
+72;000074-004;Ukazh;I-LOCATION;B-LOCATION;OK_UNIK;; hadapan orang-orang di pasar 〚Ukazh〛. Majannah, dan Dzil-Majaz unt
+73;000074-004;Dzil-Majaz;B-LOCATION;B-LOCATION;SUDAH_BENAR;;di pasar Ukazh. Majannah, dan 〚Dzil-Majaz〛 untuk menyampaikan risalah, m
+79;000359-005;Ramadhan;O;B-TIME;OK_UNIK;;aktu kalian, laksanakan puasa 〚Ramadhan〛 kalian, bayarkanlah zakat kal
+82;000007-010;Umayyah;O;B-PERSON;OK_UNIK;;m, yang menjadi wewenang Bani 〚Umayyah〛. 6. Al-Qubah, atau penanganan
+83;000030-004;Bunyanil-Ka'bah;O;I-LOCATION;OK_UNIK;;hatkan. Shahihul-Bukhari, bab 〚Bunyanil-Ka'bah〛, 1/540. 53 Shahihul-Bukhari, 
+84;000255-002;Ghazwah;O;B-EVENT;OK_UNIK;;" Lihat Shahih Al-Bukhari, bab 〚Ghazwah〛 Dzatu Qarad, 2/603; Shahih Mu"
+85;000255-002;Dzatu;O;I-EVENT;OK_UNIK;;"hahih Al-Bukhari, bab Ghazwah 〚Dzatu〛 Qarad, 2/603; Shahih Muslim, "
+86;000255-002;Qarad;O;I-EVENT;OK_UNIK;;"Al-Bukhari, bab Ghazwah Dzatu 〚Qarad〛, 2/603; Shahih Muslim, 2/113-"
+88;000016-002;bin;O;O;SUDAH_BENAR;; E bin Lamk, bin Matausyalakh 〚bin〛 Akhnukh atau Idris , bin Yard
+89;000016-002;Akhnukh;B-PERSON;B-PERSON;SUDAH_BENAR;;in Lamk, bin Matausyalakh bin 〚Akhnukh〛 atau Idris , bin Yard, bin Ma
+96;000294-002;Ghazwah;O;B-EVENT;OK_UNIK;;an 242 Shahih Al-Bukhari, bab 〚Ghazwah〛 Mu 'tah Min Ardhisi Syam, 2/6
+97;000294-002;Mu;O;I-EVENT;OK_UNIK;;hahih Al-Bukhari, bab Ghazwah 〚Mu〛 'tah Min Ardhisi Syam, 2/611.
+107;000223-005;Hudaibiyah;I-EVENT;B-EVENT;OK_KONTEKS;;ng Quraisy setelah perjanjian 〚Hudaibiyah〛.
+108;000017-008;Bukhtanashar;B-LOCATION;B-PERSON;OK_UNIK;;ang Muslim, seperti peristiwa 〚Bukhtanashar〛 pada tahun 587 SM dan orang-o
+109;000017-009;Ka'bah;I-PERSON;B-LOCATION;OK_KONTEKS;;seperti ini menambahkan Abdul 〚Ka'bah〛 dan Hajla. Ada yang berpendap
+110;000017-009;Ka'bah;I-PERSON;B-LOCATION;OK_KONTEKS;;. Ada yang berpendapat, Abdul 〚Ka'bah〛 adalah Al-Muqawwim, dan Hajla
+111;000338-001;Ka'b;I-PERSON;B-PERSON;OK_UNIK;; 7. Basyir bin Sufyan ke Bani 〚Ka'b〛 8. Ibnul Latibah Al-Uzdi ke B
+112;000122-001;Badr;I-LOCATION;B-LOCATION;OK_KONTEKS;;ukit pasir, di pinggiran wadi 〚Badr〛.
+113;000145-001;Badr;I-EVENT;B-EVENT;OK_UNIK;;dari Allah tentang peperangan 〚Badr〛, yang berbeda jauh dengan pen
+114;000301-001;Marwah;I-LOCATION;B-LOCATION;OK_UNIK;;k antara Dzu Khasyab dan Dzul 〚Marwah〛 pada awal bulan Ramadhan 8 H 
