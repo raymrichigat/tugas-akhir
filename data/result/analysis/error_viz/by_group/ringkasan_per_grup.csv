@@ -1,0 +1,11 @@
+skenario,total_error,error_%,FN_PERSON,FN_LOCATION,FN_EVENT,FN_TIME,FNrate_EVENT_%,FNrate_TIME_%
+augmentation,166,0.39,34,13,8,14,7.4,6.0
+baseline,192,0.451,45,23,11,12,10.2,5.2
+scl,197,0.463,28,15,11,9,10.2,3.9
+jscl,212,0.498,34,19,10,12,9.3,5.2
+distilbert,216,0.508,17,18,10,14,9.3,6.0
+pos-tag,224,0.526,25,17,10,10,9.3,4.3
+weighted-class,232,0.545,24,21,11,11,10.2,4.7
+cahya-bert-base,243,0.571,35,24,11,12,10.2,5.2
+roberta,641,1.506,163,30,16,27,14.8,11.6
+indobert-base-p1,721,1.694,172,40,19,31,17.6,13.4
