@@ -261,29 +261,44 @@ LOCATION_EXACT = [
 ]
 
 # ── TIME patterns ─────────────────────────────────────────────────────────────
-# Bulan Hijriah
+# Bulan Hijriah — ejaan mengikuti teks OCR Mubarakfuri (multi-kata lengkap).
 BULAN_HIJRIAH = [
-    "Muharram", "Shafar", "Rabi'ul Awwal", "Rabi'ul Akhir",
+    "Muharram", "Shafar", "Safar",
+    "Rabi'ul Awwal", "Rabi'ul Akhir",
+    "Jumadal Awwal", "Jumadal Akhirah", "Jumadal Ula", "Jumadal Akhir",
     "Jumadil Ula", "Jumadil Akhir", "Jumada",
-    "Rajab", "Sya'ban", "Ramadhan",
-    "Syawwal", "Dzul Qa'dah", "Dzul Hijjah",
-    "Dzul Qi'dah",
+    "Rajab", "Sya'ban", "Ramadhan", "Syawwal",
+    "Dzul Qa'dah", "Dzul Qi'dah", "Dzul Hijjah",
 ]
+_BULAN_MASEHI = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
+                 "Agustus", "September", "Oktober", "November", "Desember"]
+# Alternation bulan (multi-kata dulu supaya greedy: "Dzul Hijjah" sebelum cuma "Dzul").
+_MON = "(?:" + "|".join(re.escape(m) for m in
+                        sorted(BULAN_HIJRIAH + _BULAN_MASEHI, key=len, reverse=True)) + ")"
+_DAY = r"(?:Senin|Selasa|Rabu|Kamis|Jum'at|Jumat|Sabtu|Ahad|Minggu)"
+_TW = r"(?:[Mm]alam|[Pp]agi|[Ss]ore|[Ss]iang|[Hh]ari)"
+_YEAR = (r"(?:tahun\s+)?\d+\s*(?:Hijriyah|Hijriah|Masehi|nubuwah|SM|H|M"
+         r"|dari\s+nubuwah|sebelum\s+hijrah|setelah\s+hijrah|sesudah\s+hijrah)\b")
+# Ekspresi tanggal LENGKAP: [hari/waktu] [tanggal N [atau N]] bulan[ atau bulan] [tahun].
+# Wajib mengandung bulan; rentang "atau" digabung; tahun di ekor ikut. Lihat juga
+# fix_time_boundaries.py (patch batas TIME 2026-07-01) yang punya logika identik.
+_DATE_PRE = r"(?:" + _TW + r"\s+){0,2}(?:" + _DAY + r"\s*,?\s*)?(?:" + _TW + r"\s+){0,2}"
+_DATE_TGL = r"(?:tanggal\s+\d+(?:\s+atau\s+\d+)?\s+(?:dari\s+)?)?"
+_DATE_MON = r"(?:bulan\s+)?" + _MON + r"(?:\s+atau\s+(?:bulan\s+)?" + _MON + r")?"
+_DATE_TAIL = r"(?:\s+" + _YEAR + r")?"
 
-# Regex patterns untuk waktu
+# Regex patterns untuk waktu (pola lengkap DULU; dedup memilih span terpanjang).
 _TIME_PATTERNS = [
+    # ekspresi tanggal lengkap (multi-kata bulan + tahun + rentang)
+    re.compile(r"((?:" + _DATE_PRE + _DATE_TGL + r")" + _DATE_MON + _DATE_TAIL + r")"),
     # tahun X Hijriah/Masehi/Nubuwah/SM
     re.compile(r"\b(tahun\s+(?:ke[\s-]?)?\d+(?:\s+(?:Hijriyah|Hijriah|Masehi|SM|H|M|dari\s+nubuwah|setelah\s+hijrah|sebelum\s+hijrah))?)"),
-    # tanggal X bulan
-    re.compile(r"\b(tanggal\s+\d+\s+(?:dari\s+)?(?:bulan\s+)?\w+)"),
-    # bulan + tahun
-    re.compile(r"\b(bulan\s+(?:" + "|".join(BULAN_HIJRIAH) + r")(?:\s+(?:tahun\s+)?\d+\s*(?:H|Hijriyah|Hijriah)?)?)"),
+    # tanggal X <kata> (fallback kalau bulan tak dikenal, mis. OCR "Shafai")
+    re.compile(r"\b(tanggal\s+\d+\s+(?:dari\s+)?(?:bulan\s+)?[\w'-]+(?:\s+" + _YEAR + r")?)"),
     # hari Senin/Selasa/dll
     re.compile(r"\b(hari\s+(?:Senin|Selasa|Rabu|Kamis|Jumat|Sabtu|Minggu|Tasyriq|kurban|tarwiyah))"),
     # X tahun sebelum/setelah
     re.compile(r"\b(\d+\s+tahun\s+(?:sebelum|setelah|sesudah)\s+\w+)"),
-    # malam tanggal X
-    re.compile(r"\b(malam\s+tanggal\s+\d+\s+(?:dari\s+)?(?:bulan\s+)?\w+)"),
     # Lailatul Qadr
     re.compile(r"\b(Lailatul[\s-]Qadr)"),
     re.compile(r"\b(Lailatul[\s-]Qadar)"),

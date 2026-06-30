@@ -17,7 +17,9 @@ Versi data setelah re-annotation gold (arahan Bu Dini Adni):
   : token & baris IDENTIK dengan versi default, hanya kolom pos_tag yang diisi UPOS riil.
 
 ## Distribusi gold final
-PERSON 4205 | LOCATION 1421 | TIME 310 | EVENT 240
+PERSON 4205 | LOCATION 1421 | TIME 286 | EVENT 240
+(TIME 310->286 setelah fix batas span 2026-07-01: ekspresi tanggal Hijriah
+multi-kata + tahun ekor + rentang "atau" digabung jadi 1 span.)
 
 ## Catatan
 - Semua skenario (S1/S2/S3, grup A/B/C) WAJIB re-train + re-eval di benchmark ini.

@@ -1,6 +1,6 @@
 {
-  "input": "data\\result\\pseudo-labelling\\SRL-NER\\train.csv",
-  "output": "data\\result\\pseudo-labelling\\SRL-NER\\train_augmented_v2.csv",
+  "input": "E:\\2_Kehidupan-Kuliah\\10_tugas-akhir\\repo-TA\\TA_preprocess\\TA_sirah\\data\\result\\pseudo-labelling\\SRL-NER\\train.csv",
+  "output": "E:\\2_Kehidupan-Kuliah\\10_tugas-akhir\\repo-TA\\TA_preprocess\\TA_sirah\\data\\result\\pseudo-labelling\\SRL-NER\\train_augmented_v2.csv",
   "config": {
     "n_augment": 2,
     "replace_prob": 0.7,
@@ -19,8 +19,8 @@
     "augmentable_sentences": 144,
     "augmented_sentences": 288,
     "original_tokens": 116353,
-    "augmented_tokens": 58521,
-    "mean_replacements_per_variant": 4.826388888888889
+    "augmented_tokens": 58495,
+    "mean_replacements_per_variant": 4.743055555555555
   },
   "skip_reasons": {
     "no_period": 7
@@ -31,11 +31,11 @@
     "sentences_no_period": 44
   },
   "augmentation_diagnostics": {
-    "replaced_LOCATION": 509,
-    "replaced_PERSON": 542,
-    "replaced_EVENT": 242,
+    "replaced_LOCATION": 512,
+    "replaced_PERSON": 571,
+    "replaced_EVENT": 209,
     "protected_source_PERSON": 576,
-    "replaced_TIME": 97,
+    "replaced_TIME": 74,
     "broken_event_skipped": 2
   },
   "pool_sizes_per_period": {
@@ -54,7 +54,7 @@
     "P2": {
       "PERSON": 10,
       "LOCATION": 4,
-      "TIME": 5,
+      "TIME": 6,
       "EVENT": 2
     },
     "P3": {
@@ -78,19 +78,19 @@
     "P6": {
       "PERSON": 45,
       "LOCATION": 9,
-      "TIME": 9,
+      "TIME": 6,
       "EVENT": 2
     },
     "P7": {
       "PERSON": 35,
       "LOCATION": 11,
-      "TIME": 12,
+      "TIME": 13,
       "EVENT": 10
     },
     "P8": {
       "PERSON": 60,
       "LOCATION": 12,
-      "TIME": 9,
+      "TIME": 8,
       "EVENT": 6
     },
     "P9": {
@@ -102,19 +102,19 @@
     "P10": {
       "PERSON": 91,
       "LOCATION": 11,
-      "TIME": 18,
+      "TIME": 17,
       "EVENT": 9
     },
     "P11": {
       "PERSON": 93,
       "LOCATION": 15,
-      "TIME": 18,
+      "TIME": 16,
       "EVENT": 6
     },
     "P12": {
       "PERSON": 45,
       "LOCATION": 11,
-      "TIME": 3,
+      "TIME": 2,
       "EVENT": 3
     },
     "P13": {
@@ -126,31 +126,31 @@
     "P14": {
       "PERSON": 36,
       "LOCATION": 17,
-      "TIME": 24,
+      "TIME": 23,
       "EVENT": 3
     }
   },
   "pre_augment_label_distribution": {
-    "O": 108882,
+    "O": 108818,
     "B-PERSON": 2920,
     "B-LOCATION": 972,
     "I-LOCATION": 66,
     "I-PERSON": 2597,
     "B-EVENT": 167,
-    "B-TIME": 206,
-    "I-TIME": 394,
+    "B-TIME": 188,
+    "I-TIME": 476,
     "I-EVENT": 149
   },
   "post_augment_label_distribution": {
-    "O": 162784,
+    "O": 162686,
     "B-PERSON": 4278,
     "B-LOCATION": 1690,
-    "I-LOCATION": 179,
-    "I-PERSON": 4019,
+    "I-LOCATION": 165,
+    "I-PERSON": 4004,
     "B-EVENT": 487,
-    "B-TIME": 334,
-    "I-TIME": 645,
-    "I-EVENT": 458
+    "B-TIME": 298,
+    "I-TIME": 792,
+    "I-EVENT": 448
   },
   "augmented_text_ids": [
     "000001-001-aug1",
