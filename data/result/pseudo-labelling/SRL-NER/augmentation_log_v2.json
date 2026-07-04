@@ -19,24 +19,22 @@
     "augmentable_sentences": 144,
     "augmented_sentences": 288,
     "original_tokens": 116353,
-    "augmented_tokens": 58495,
-    "mean_replacements_per_variant": 4.743055555555555
+    "augmented_tokens": 58517,
+    "mean_replacements_per_variant": 4.756944444444445
   },
   "skip_reasons": {
     "no_period": 7
   },
   "pool_diagnostics": {
     "pool_blacklisted_person": 1024,
-    "pool_dropped_broken_event": 1,
     "sentences_no_period": 44
   },
   "augmentation_diagnostics": {
-    "replaced_LOCATION": 512,
-    "replaced_PERSON": 571,
-    "replaced_EVENT": 209,
+    "replaced_LOCATION": 503,
+    "replaced_PERSON": 553,
+    "replaced_EVENT": 239,
     "protected_source_PERSON": 576,
-    "replaced_TIME": 74,
-    "broken_event_skipped": 2
+    "replaced_TIME": 75
   },
   "pool_sizes_per_period": {
     "P0": {
@@ -85,7 +83,7 @@
       "PERSON": 35,
       "LOCATION": 11,
       "TIME": 13,
-      "EVENT": 10
+      "EVENT": 11
     },
     "P8": {
       "PERSON": 60,
@@ -131,26 +129,26 @@
     }
   },
   "pre_augment_label_distribution": {
-    "O": 108818,
+    "O": 108815,
     "B-PERSON": 2920,
     "B-LOCATION": 972,
     "I-LOCATION": 66,
-    "I-PERSON": 2597,
+    "I-PERSON": 2599,
     "B-EVENT": 167,
     "B-TIME": 188,
     "I-TIME": 476,
-    "I-EVENT": 149
+    "I-EVENT": 150
   },
   "post_augment_label_distribution": {
-    "O": 162686,
+    "O": 162681,
     "B-PERSON": 4278,
     "B-LOCATION": 1690,
-    "I-LOCATION": 165,
-    "I-PERSON": 4004,
+    "I-LOCATION": 177,
+    "I-PERSON": 4013,
     "B-EVENT": 487,
     "B-TIME": 298,
-    "I-TIME": 792,
-    "I-EVENT": 448
+    "I-TIME": 807,
+    "I-EVENT": 439
   },
   "augmented_text_ids": [
     "000001-001-aug1",

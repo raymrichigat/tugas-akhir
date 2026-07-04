@@ -11,36 +11,36 @@
     "I-TIME"
   ],
   "token_counts": {
-    "O": 108818,
+    "O": 108815,
     "B-PERSON": 2920,
-    "I-PERSON": 2597,
+    "I-PERSON": 2599,
     "B-LOCATION": 972,
     "I-LOCATION": 66,
     "B-EVENT": 167,
-    "I-EVENT": 149,
+    "I-EVENT": 150,
     "B-TIME": 188,
     "I-TIME": 476
   },
   "balanced_raw": {
     "O": 0.119,
     "B-PERSON": 4.427,
-    "I-PERSON": 4.978,
+    "I-PERSON": 4.974,
     "B-LOCATION": 13.301,
     "I-LOCATION": 195.88,
     "B-EVENT": 77.414,
-    "I-EVENT": 86.766,
+    "I-EVENT": 86.187,
     "B-TIME": 68.767,
     "I-TIME": 27.16
   },
   "sqrt_tempered_norm_O1": {
     "O": 1.0,
     "B-PERSON": 6.105,
-    "I-PERSON": 6.473,
+    "I-PERSON": 6.471,
     "B-LOCATION": 10.581,
-    "I-LOCATION": 40.605,
-    "B-EVENT": 25.527,
-    "I-EVENT": 27.024,
-    "B-TIME": 24.059,
+    "I-LOCATION": 40.604,
+    "B-EVENT": 25.526,
+    "I-EVENT": 26.934,
+    "B-TIME": 24.058,
     "I-TIME": 15.12
   },
   "note": "Rekomendasi pakai sqrt_tempered_norm_O1 (balanced mentah terlalu ekstrem -> precision kolaps spt legacy 2026-05-07)."
