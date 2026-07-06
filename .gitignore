@@ -50,6 +50,11 @@ corrected_gold_data_*.zip
 # Training outputs lokal hasil run (model + config + tokenizer, total belasan GB — share via Drive/HF)
 data/result/pseudo-labelling/SRL-NER/done_running/
 
+# Zip download run done_newest (bundle model+artefak dari Colab/Drive, GB-an, regeneratable)
+# Catatan: report .md kecil di done_newest tetap boleh di-commit (di-add manual).
+data/result/pseudo-labelling/SRL-NER/done_newest/zip_file/
+data/result/pseudo-labelling/SRL-NER/done_newest/**/*.zip
+
 # Backup & bundle data lokal (redundant dgn file gold yang sudah tracked, regeneratable)
 data/result/_verify_backup_*/
 data/result/pseudo-labelling/SRL-NER/corrected_gold_data_*/
