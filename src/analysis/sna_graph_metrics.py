@@ -342,11 +342,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--use-v1", action="store_true",
                     help="paksa pakai nodes.csv (bukan nodes_v2.csv)")
-    ap.add_argument("--version", choices=["v1", "v2", "v3"], default=None,
+    ap.add_argument("--version", choices=["v1", "v2", "v3", "v4", "v4_hybrid"], default=None,
                     help="Pilih versi nodes/edges (override --use-v1)")
     args = ap.parse_args()
 
-    if args.version == "v3":
+    if args.version in ("v4", "v4_hybrid"):
+        suffix = "_hybrid" if args.version == "v4_hybrid" else ""
+        nodes_path = RR_DIR / f"nodes_v4{suffix}.csv"
+        edges_path = RR_DIR / f"edges_v4{suffix}.csv"
+        source_note = f"{args.version} (`nodes_v4{suffix}.csv` + `edges_v4{suffix}.csv`) — NER S4-augmentation"
+        out_dir = OUT_DIR / args.version
+    elif args.version == "v3":
         nodes_path = RR_DIR / "nodes_v3.csv"
         edges_path = RR_DIR / "edges_v3.csv"
         source_note = "v3 (`nodes_v3.csv` + `edges_v3.csv`) — hasil NER S3.2 winner"

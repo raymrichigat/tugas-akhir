@@ -78,6 +78,27 @@ def main():
     # Title-case supaya schema downstream (relation_extraction, alias clustering)
     # konsisten dengan format manual labelling.
     df_ent["entity_text"] = df_ent["entity_text"].astype(str).str.title()
+    # Koreksi kata-sambung nasab: gold pakai 'bin'/'binti' huruf KECIL (1268/45x),
+    # sedangkan .title() menghasilkan 'Bin'/'Binti' → nama panjang jadi tak match
+    # alias_map (mis. "Ali Bin Abu Thalib" vs kanonik "Ali bin Abu Thalib") ⟹
+    # node terpecah. Kecilkan kembali agar konsisten dgn konvensi gold.
+    df_ent["entity_text"] = df_ent["entity_text"].str.replace(r"\bBin\b", "bin", regex=True)
+    df_ent["entity_text"] = df_ent["entity_text"].str.replace(r"\bBinti\b", "binti", regex=True)
+    # Koreksi casing pasca-apostrof: .title() mengapitalkan huruf setelah "'"
+    # (Ma'ad->Ma'Ad, Bu'ats->Bu'Ats). Konvensi gold: huruf setelah apostrof KECIL.
+    df_ent["entity_text"] = df_ent["entity_text"].str.replace(
+        r"'([A-Za-z])", lambda m: "'" + m.group(1).lower(), regex=True)
+
+    # Drop EVENT generik non-spesifik (FP over-extraction): "Perang"/"Peperangan"/"Malam"
+    # bukan nama peristiwa (cf clean_v3_nodes OP3). Nama pendek event asli
+    # (Badr/Uhud/Isra/Khaibar/…) TETAP dipertahankan.
+    GENERIC_EVENT = {"perang", "peperangan", "malam"}
+    mask_generic = (df_ent["entity_label"] == "EVENT") & \
+        (df_ent["entity_text"].str.strip().str.lower().isin(GENERIC_EVENT))
+    if int(mask_generic.sum()):
+        dropped = sorted(df_ent.loc[mask_generic, "entity_text"].unique())
+        print(f"  drop {int(mask_generic.sum())} mention EVENT generik: {dropped}")
+        df_ent = df_ent[~mask_generic].copy()
 
     print(f"\n[4/5] Join dengan chunks metadata: {args.chunks}")
     df_chunks = pd.read_csv(args.chunks, sep=";", encoding="utf-8-sig")

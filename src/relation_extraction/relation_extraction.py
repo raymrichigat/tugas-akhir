@@ -830,6 +830,8 @@ def main():
                     help="Output nodes CSV path")
     ap.add_argument("--out-edges", type=Path, default=OUT_EDGES,
                     help="Output edges CSV path")
+    ap.add_argument("--alias-map", type=Path, default=IN_ALIAS_MAP,
+                    help="Path alias_map.json (default: alias_clustering/alias_map.json)")
     args = ap.parse_args()
 
     print("=" * 60)
@@ -842,7 +844,7 @@ def main():
 
     # 1. Load data & alias map
     print("\n[1/8] Loading data...")
-    alias_map = load_alias_map(IN_ALIAS_MAP)
+    alias_map = load_alias_map(args.alias_map)
     print(f"  Alias map: {len(alias_map)} entries loaded")
     df = load_and_prepare_data(args.input, alias_map)
 

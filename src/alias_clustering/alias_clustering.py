@@ -541,13 +541,24 @@ def generate_report(alias_map: dict, cluster_info: dict, df: pd.DataFrame) -> st
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser(description="Alias Clustering Sirah")
+    ap.add_argument("--input", type=Path, default=IN_CSV,
+                    help="Prelabelled CSV sumber nama entitas (default: gold manual)")
+    ap.add_argument("--out-json", type=Path, default=OUT_JSON, help="Output alias_map.json")
+    ap.add_argument("--out-md", type=Path, default=OUT_MD, help="Output alias_clusters.md")
+    args = ap.parse_args()
+
+    in_csv, out_json, out_md = args.input, args.out_json, args.out_md
+
     print("=" * 60)
     print("ALIAS CLUSTERING — Sirah Nabawiyah")
     print("=" * 60)
+    print(f"  input : {in_csv}")
 
     # 1. Load data
     print("\n[1/4] Loading data...")
-    df = pd.read_csv(IN_CSV, sep=";", encoding="utf-8-sig").fillna("")
+    df = pd.read_csv(in_csv, sep=";", encoding="utf-8-sig").fillna("")
     df["entity_text"] = df["entity_text"].astype(str).str.strip()
     df = df[df["entity_text"] != ""]
     print(f"  {len(df)} rows, {df['entity_text'].nunique()} unique entities")
@@ -563,7 +574,7 @@ def main():
 
     # 3. Simpan alias_map.json
     print("\n[3/4] Saving alias map...")
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    out_json.parent.mkdir(parents=True, exist_ok=True)
 
     # Simpan versi bersih (tanpa prefix label::)
     clean_map = {}
@@ -574,14 +585,14 @@ def main():
                 clean_map[label] = {}
             clean_map[label][name] = canonical
 
-    OUT_JSON.write_text(json.dumps(clean_map, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"  Saved to: {OUT_JSON}")
+    out_json.write_text(json.dumps(clean_map, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"  Saved to: {out_json}")
 
     # 4. Generate report
     print("\n[4/4] Generating report...")
     report = generate_report(alias_map, cluster_info, df)
-    OUT_MD.write_text(report, encoding="utf-8")
-    print(f"  Saved to: {OUT_MD}")
+    out_md.write_text(report, encoding="utf-8")
+    print(f"  Saved to: {out_md}")
 
     # Ringkasan per label
     print(f"\nRingkasan:")

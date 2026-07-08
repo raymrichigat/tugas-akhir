@@ -326,11 +326,16 @@ def main():
     global IN_NODES, IN_EDGES, OUT_DIR
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--version", choices=["v2", "v3"], default="v3",
+    ap.add_argument("--version", choices=["v2", "v3", "v4", "v4_hybrid"], default="v3",
                     help="Pilih versi nodes/edges (default: v3)")
     args = ap.parse_args()
 
-    if args.version == "v3":
+    if args.version in ("v4", "v4_hybrid"):
+        suffix = "_hybrid" if args.version == "v4_hybrid" else ""
+        IN_NODES = ROOT / "data" / "result" / "relation_result" / f"nodes_v4{suffix}.csv"
+        IN_EDGES = ROOT / "data" / "result" / "relation_result" / f"edges_v4{suffix}.csv"
+        OUT_DIR = ROOT / "data" / "result" / "analysis" / args.version
+    elif args.version == "v3":
         IN_NODES = ROOT / "data" / "result" / "relation_result" / "nodes_v3.csv"
         IN_EDGES = ROOT / "data" / "result" / "relation_result" / "edges_v3.csv"
         OUT_DIR = ROOT / "data" / "result" / "analysis" / "v3"

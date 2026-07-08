@@ -225,11 +225,19 @@ def main():
     global SNA_CSV, EDGES_CSV, NODES_CSV, OUT_DIR, SUMMARY_MD
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--version", choices=["v2", "v3"], default="v3",
+    ap.add_argument("--version", choices=["v2", "v3", "v4", "v4_hybrid"], default="v3",
                     help="Pilih versi nodes/edges (default: v3)")
     args = ap.parse_args()
 
-    if args.version == "v3":
+    if args.version in ("v4", "v4_hybrid"):
+        suffix = "_hybrid" if args.version == "v4_hybrid" else ""
+        vdir = ROOT / "data" / "result" / "analysis" / args.version
+        SNA_CSV = vdir / "sna_metrics.csv"
+        EDGES_CSV = ROOT / "data" / "result" / "relation_result" / f"edges_v4{suffix}.csv"
+        NODES_CSV = ROOT / "data" / "result" / "relation_result" / f"nodes_v4{suffix}.csv"
+        OUT_DIR = vdir / "community_wordclouds"
+        SUMMARY_MD = vdir / "community_wordclouds_summary.md"
+    elif args.version == "v3":
         SNA_CSV = ROOT / "data" / "result" / "analysis" / "v3" / "sna_metrics.csv"
         EDGES_CSV = ROOT / "data" / "result" / "relation_result" / "edges_v3.csv"
         NODES_CSV = ROOT / "data" / "result" / "relation_result" / "nodes_v3.csv"

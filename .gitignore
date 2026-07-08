@@ -46,6 +46,8 @@ instruksi.txt
 
 # Bundle data sementara untuk upload Colab (regeneratable)
 corrected_gold_data_*.zip
+inference_bundle_augmentation_v4.zip
+inference_bundle_augmentation_v4/
 
 # Training outputs lokal hasil run (model + config + tokenizer, total belasan GB — share via Drive/HF)
 data/result/pseudo-labelling/SRL-NER/done_running/

@@ -51,6 +51,14 @@ def resolve_paths(version: str):
         nodes = RR_DIR / "nodes_v3.csv"
         edges = RR_DIR / "edges_v3.csv"
         out = BASE_DIR / "data" / "result" / "analysis" / "v3"
+    elif version == "v4":
+        nodes = RR_DIR / "nodes_v4.csv"
+        edges = RR_DIR / "edges_v4.csv"
+        out = BASE_DIR / "data" / "result" / "analysis" / "v4"
+    elif version == "v4_hybrid":
+        nodes = RR_DIR / "nodes_v4_hybrid.csv"
+        edges = RR_DIR / "edges_v4_hybrid.csv"
+        out = BASE_DIR / "data" / "result" / "analysis" / "v4_hybrid"
     else:
         raise ValueError(f"Unknown version: {version}")
     return nodes, edges, out
@@ -338,7 +346,7 @@ def visualize_network(G, metrics, community_map, out_dir):
 
 def main():
     parser = argparse.ArgumentParser(description="SNA — Sirah Nabawiyah")
-    parser.add_argument("--version", choices=["v1", "v2", "v3"], default="v3",
+    parser.add_argument("--version", choices=["v1", "v2", "v3", "v4", "v4_hybrid"], default="v3",
                         help="Pilih versi nodes/edges (default: v3)")
     args = parser.parse_args()
 

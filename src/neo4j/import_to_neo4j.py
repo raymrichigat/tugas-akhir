@@ -237,6 +237,9 @@ def main():
     parser.add_argument("--user", default="neo4j", help="Neo4j username")
     parser.add_argument("--password", help="Neo4j password")
     parser.add_argument("--clear", action="store_true", help="Hapus data lama sebelum import")
+    parser.add_argument("--nodes", type=Path, help="Override path nodes CSV (mis. nodes_v4.csv)")
+    parser.add_argument("--edges", type=Path, help="Override path edges CSV")
+    parser.add_argument("--out", type=Path, help="Override path output .cypher")
     args = parser.parse_args()
 
     print("=" * 60)
@@ -265,6 +268,13 @@ def main():
         print("\n  Source: v1 (raw relation_extraction output, no Period nodes)")
 
     use_periods = source in ("v2", "v3")
+
+    # Override manual (mis. v4 seragam/hibrida)
+    if args.nodes and args.edges:
+        nodes_path, edges_path = args.nodes, args.edges
+        out_path = args.out or (OUT_DIR / "import_sirah_v4.cypher")
+        use_periods = True
+        print(f"\n  Source: override -> {nodes_path.name} / {edges_path.name}")
 
     # 1. Baca data
     print("\n[1/3] Membaca nodes & edges...")
