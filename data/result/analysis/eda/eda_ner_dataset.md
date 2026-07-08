@@ -28,7 +28,7 @@ Pipeline pembentukan dataset NER (dari buku cetak → data train siap model):
 > Catatan 1: `text_id` = **chunk** (≈ paragraf, bisa multi-kalimat), bukan kalimat tunggal. Total 1.094 chunk (599 train + 258 test + 237 unlabelled).
 
 
-> Catatan 2: kolom `pos_tag` ada di CSV tetapi **semua bernilai `NN` (placeholder)** — POS-tag belum benar-benar dipakai sebagai fitur. (Relevan untuk skenario POS-tag.)
+> Catatan 2: kolom `pos_tag` di CSV **inti** (baseline & sebagian besar skenario) memang **semua `NN` (placeholder)** — POS dimatikan. **Namun untuk skenario POS-tag tersedia varian data ber-UPOS asli** di `data/result/manual_labelling/gold_review/training_bundle_corrected_gold_20260704/data_with_pos_20260610/` (17 tag UD: NOUN/VERB/PROPN/PUNCT/…, 0 placeholder `NN`). Jadi skenario POS-tag = **ablation bersih**: satu-satunya beda vs baseline adalah kolom POS (`NN` dummy → UPOS nyata). Hasil run terkoreksi (`done_newest`): POS-tag ≈ baseline (F1 0,9430 vs 0,9420) → menambah fitur POS asli **tidak** memperbaiki di atas IndoBERT (sinyal sintaktik sudah tertangkap implisit oleh LM). Catatan lama "POS belum dipakai" hanya berlaku untuk CSV inti, **bukan** skenario POS-tag.
 
 
 ## C. Distribusi Label / Kelas (Bukti Imbalance)
