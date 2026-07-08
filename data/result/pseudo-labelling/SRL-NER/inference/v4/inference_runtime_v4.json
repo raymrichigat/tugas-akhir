@@ -1,0 +1,12 @@
+{
+  "model_dir": "/content/drive/MyDrive/TA-Sirah/inference/models/S4-augmentation-iteration-6",
+  "scenario": "S4-augmentation (iter-6, gold terkoreksi, F1 entity 0.9458)",
+  "started_at": "2026-07-08T17:44:33",
+  "ended_at": "2026-07-08T17:45:04",
+  "total_seconds": 31.28,
+  "total_minutes": 0.52,
+  "n_chunks": 1094,
+  "n_chunks_predicted": 1094,
+  "n_tokens": 184649,
+  "n_entities": 12316
+}

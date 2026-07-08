@@ -1,0 +1,108 @@
+{
+  "graph_metrics": {
+    "n_nodes": 283,
+    "n_edges": 1908,
+    "density": 0.047815953687692654,
+    "average_degree": 13.484098939929329,
+    "n_components": 10,
+    "giant_component_size": 263,
+    "giant_component_ratio": 0.9293286219081273,
+    "average_clustering_coefficient": 0.5501000684769973,
+    "transitivity_global": 0.7333016175071361,
+    "degree_assortativity": -0.08333149507340652,
+    "giant_diameter": 6,
+    "giant_avg_shortest_path": 2.943372130148318,
+    "giant_radius": 3
+  },
+  "community_detection": {
+    "louvain": {
+      "n_communities": 19,
+      "modularity": 0.42885770962612735,
+      "community_sizes": [
+        58,
+        39,
+        49,
+        2,
+        2,
+        2,
+        50,
+        27,
+        2,
+        7,
+        21,
+        2,
+        2,
+        2,
+        3,
+        7,
+        3,
+        3,
+        2
+      ]
+    },
+    "greedy": {
+      "n_communities": 25,
+      "modularity": 0.4040873930535699,
+      "community_sizes": [
+        79,
+        49,
+        38,
+        28,
+        21,
+        9,
+        7,
+        7,
+        7,
+        4,
+        3,
+        3,
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "girvan_newman": {
+      "n_communities": 16,
+      "modularity": 0.1861660109221593,
+      "community_sizes": [
+        9,
+        163,
+        2,
+        2,
+        26,
+        2,
+        51,
+        2,
+        4,
+        7,
+        2,
+        2,
+        3,
+        3,
+        3,
+        2
+      ]
+    }
+  },
+  "ari_pairwise": {
+    "louvain__louvain": 1.0,
+    "louvain__greedy": 0.7019000263014475,
+    "louvain__girvan_newman": 0.33810654779201227,
+    "greedy__louvain": 0.7019000263014475,
+    "greedy__greedy": 1.0,
+    "greedy__girvan_newman": 0.42000296874933074,
+    "girvan_newman__louvain": 0.33810654779201227,
+    "girvan_newman__greedy": 0.42000296874933074,
+    "girvan_newman__girvan_newman": 1.0
+  }
+}

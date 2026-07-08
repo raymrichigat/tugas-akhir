@@ -1,0 +1,102 @@
+{
+  "graph_metrics": {
+    "n_nodes": 288,
+    "n_edges": 1986,
+    "density": 0.04805458768873403,
+    "average_degree": 13.791666666666666,
+    "n_components": 9,
+    "giant_component_size": 270,
+    "giant_component_ratio": 0.9375,
+    "average_clustering_coefficient": 0.5638541894677677,
+    "transitivity_global": 0.7265935118857508,
+    "degree_assortativity": -0.08079628404062526,
+    "giant_diameter": 6,
+    "giant_avg_shortest_path": 2.8966818119234476,
+    "giant_radius": 3
+  },
+  "community_detection": {
+    "louvain": {
+      "n_communities": 17,
+      "modularity": 0.44294079669157727,
+      "community_sizes": [
+        56,
+        21,
+        39,
+        58,
+        2,
+        2,
+        27,
+        2,
+        57,
+        2,
+        2,
+        7,
+        3,
+        3,
+        3,
+        2,
+        2
+      ]
+    },
+    "greedy": {
+      "n_communities": 21,
+      "modularity": 0.4266026432937772,
+      "community_sizes": [
+        93,
+        56,
+        39,
+        27,
+        21,
+        9,
+        7,
+        6,
+        3,
+        3,
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "girvan_newman": {
+      "n_communities": 16,
+      "modularity": 0.2098417534555617,
+      "community_sizes": [
+        165,
+        9,
+        2,
+        2,
+        25,
+        2,
+        58,
+        2,
+        2,
+        6,
+        2,
+        3,
+        3,
+        3,
+        2,
+        2
+      ]
+    }
+  },
+  "ari_pairwise": {
+    "louvain__louvain": 1.0,
+    "louvain__greedy": 0.6946068285959617,
+    "louvain__girvan_newman": 0.3457072077306661,
+    "greedy__louvain": 0.6946068285959617,
+    "greedy__greedy": 1.0,
+    "greedy__girvan_newman": 0.5025308901910237,
+    "girvan_newman__louvain": 0.3457072077306661,
+    "girvan_newman__greedy": 0.5025308901910237,
+    "girvan_newman__girvan_newman": 1.0
+  }
+}
