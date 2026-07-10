@@ -53,8 +53,9 @@ TA_sirah/
 │   │   ├── graf_pengujian.md          ← skenario uji coba graf (G1/G2/G3/G4)
 │   │   └── temporal.md                ← skenario temporal detection
 │   ├── bab3/                          ← draft Bab 3 metodologi
-│   │   ├── bab3_lengkap_revisi.md
+│   │   ├── metodologi.md              ← Bab 3 BERLAKU (SRL-NER real: IndoBERT BIO + self-training)
 │   │   └── bab3_revisi_paragraf.md
+│   │   (bab3_lengkap_revisi.md → docs/archive/bab3_lengkap_revisi_USANG.md, USANG cleanup 2026-07-10)
 │   ├── referensi/                     ← rujukan paper
 │   │   └── sna_weighted_relations.md
 │   └── archive/                       ← (kosong, disiapkan untuk file lama)

@@ -1,3 +1,18 @@
+<!--
+================================================================================
+⚠️ DRAF USANG — JANGAN DIPAKAI. Diarsipkan 2026-07-10.
+Bab 3 yang berlaku ada di `docs/bab3/metodologi.md`.
+
+Alasan diarsipkan:
+- Mendeskripsikan "SRL-based NER" sebagai dependency parsing Stanza + mapping
+  ARG0/ARG1/ARGM-LOC/ARGM-TMP. Itu BUKAN metode yang dipakai. Metode final =
+  IndoBERT token-classification BIO + iterative self-training (seed regex/gazetteer).
+  "SRL" hanya nama skenario.
+- Masih memuat LLM-based NER (QLoRA), yang DIBATALKAN per revisi 2026-05-03.
+Disimpan hanya sebagai jejak eksplorasi awal.
+================================================================================
+-->
+
 # BAB 3 METODOLOGI
 
 ## 3.1 Metode dan Alur Kerja
