@@ -2,7 +2,7 @@
 
 > **[CATATAN PENYUSUN, hapus saat finalisasi]**
 > Bab 3 ini ditulis ulang mengikuti susunan buku teman: **3.1 Perancangan Sistem** (flowchart garis besar + spesifikasi perangkat keras dan lunak), lalu **3.2 dan seterusnya** memuat tiap tahap pada flowchart, masing-masing berisi penjelasan alur, *pseudocode* (format BEGIN...END dengan INPUT dan OUTPUT), contoh hasil, dan penjelasan atribut/komponen data.
-> Tiga koreksi penting dari draft lama (`bab3_lengkap_revisi.md`, `bab3_revisi_paragraf.md`): (1) **skenario LLM-NER dan dua graf (Graf A/Graf B) dihapus**, sistem hanya membangun satu *knowledge graph* (keputusan pembimbing 3 Mei 2026); (2) ***pseudocode* NER ditulis sesuai implementasi nyata**, yaitu IndoBERT *token classification* BIO dengan *iterative self-training*, bukan *parsing* SRL/Stanza dengan pemetaan ARG0/ARGM yang ada di draft lama (draft lama mengarang langkah yang tidak ada di kode); (3) tahap **alias clustering, periodisasi, dan Social Network Analysis** dimasukkan sebagai tahap penuh agar konsisten dengan ruang lingkup Bab 1 dan Bab 2.
+> Tiga koreksi penting dari draft lama (`../archive/bab3_lengkap_revisi_USANG.md` — diarsipkan 2026-07-10, `bab3_revisi_paragraf.md`): (1) **skenario LLM-NER dan dua graf (Graf A/Graf B) dihapus**, sistem hanya membangun satu *knowledge graph* (keputusan pembimbing 3 Mei 2026); (2) ***pseudocode* NER ditulis sesuai implementasi nyata**, yaitu IndoBERT *token classification* BIO dengan *iterative self-training*, bukan *parsing* SRL/Stanza dengan pemetaan ARG0/ARGM yang ada di draft lama (draft lama mengarang langkah yang tidak ada di kode); (3) tahap **alias clustering, periodisasi, dan Social Network Analysis** dimasukkan sebagai tahap penuh agar konsisten dengan ruang lingkup Bab 1 dan Bab 2.
 > Patuh pedoman: tanpa em dash, bahasa *layman*, istilah asing *italic*, sitasi APA. Tanda **[PERIKSA]** = perlu konfirmasi pembimbing; **[SITASI: ...]** = referensi yang perlu masuk Daftar Pustaka.
 > Pembimbing: Dini Adni Navastara, S.Kom., M.Sc.; ko-pembimbing: Ratih Nur Esti Anggraini, S.Kom., M.Sc., Ph.D.
 
@@ -474,7 +474,7 @@ Tahap ekstraksi entitas bertujuan memperluas cakupan anotasi dari *seed* yang te
 
 [SISIPKAN GAMBAR 3.6 - Diagram Alir Ekstraksi Entitas dengan Iterative Self-Training]
 
-Pada strategi *iterative self-training*, model mula-mula dilatih (*fine-tuning*) dengan data *seed* berlabel. Model kemudian memprediksi label pada data tak berlabel, dan hanya prediksi dengan keyakinan tinggi yang ditambahkan sebagai label semu (*pseudo-label*) ke data latih untuk melatih ulang model. Langkah ini diulang beberapa iterasi sampai jumlah label semu baru habis atau mencapai batas iterasi. Sebuah kalimat diterima sebagai label semu jika rata-rata keyakinan entitas pada kalimat tersebut mencapai ambang (*threshold*) 0,9. *Pseudocode* tahap ini ditunjukkan pada Kode Semu 3.7.
+Pada strategi *iterative self-training*, model mula-mula dilatih (*fine-tuning*) dengan data *seed* berlabel. Model kemudian memprediksi label pada data tak berlabel, dan hanya prediksi dengan keyakinan tinggi yang ditambahkan sebagai label semu (*pseudo-label*) ke data latih untuk melatih ulang model. Langkah ini diulang beberapa iterasi sampai jumlah label semu baru habis atau mencapai batas iterasi. Satuan prediksi adalah *chunk* (potongan teks setingkat paragraf). Sebuah *chunk* diterima sebagai label semu jika **rata-rata keyakinan pada token-token yang diprediksi sebagai entitas** (label selain `O`) di *chunk* tersebut mencapai ambang (*threshold*) 0,9; token `O` tidak ikut dihitung dan *chunk* tanpa prediksi entitas otomatis ditolak. *Pseudocode* tahap ini ditunjukkan pada Kode Semu 3.7.
 
 [SISIPKAN KODE SEMU 3.7 - Iterative Self-Training NER]
 
@@ -484,36 +484,35 @@ INPUT  : train            (data berlabel BIO — 70% dari anotasi manual, dipaka
          unlabelled_full  (seluruh chunk yang tidak memiliki anotasi manual)
          THRESHOLD = 0.9
          MAX_ITER  = 6
-OUTPUT : best_model
+OUTPUT : final_model
          entities_all (entitas gabungan: anotasi manual train+test + prediksi NER unlabelled_full)
 
 ALGORITMA:
 1.  BEGIN
-2.      model      <- FineTuneIndoBERT(train)     // AutoModelForTokenClassification, BIO
-3.      pool       <- unlabelled_full              // pool self-training, menyusut tiap iterasi
-4.      labeled    <- train
-5.      best_model <- model
-6.      FOR i <- 1 TO MAX_ITER DO
-7.          preds    <- model.Predict(pool, aggregation = "simple")
-8.          accepted <- {kalimat IN preds : AvgEntityConfidence(kalimat) >= THRESHOLD}
-9.          IF accepted IS EMPTY THEN
-10.             BREAK                              // tidak ada pseudo-label baru
-11.         END IF
-12.         labeled <- labeled + ToBIO(accepted)
-13.         pool    <- pool - accepted
-14.         model   <- FineTuneIndoBERT(labeled)
-15.         IF SeqEvalF1(model, test) > SeqEvalF1(best_model, test) THEN
-16.             best_model <- model
-17.         END IF
-18.     END FOR
-19.     entities_pred   <- best_model.Predict(unlabelled_full)        // NER untuk chunk tak berlabel
-20.     entities_manual <- LoadEntities(train) + LoadEntities(test)   // anotasi manual sebagai prioritas
-21.     entities_all    <- Merge(entities_manual, entities_pred)       // manual menggantikan prediksi bila overlap
-22.     RETURN best_model, entities_all
-23. END
+2.      model   <- FineTuneIndoBERT(train)     // AutoModelForTokenClassification, BIO
+3.      pool    <- unlabelled_full             // pool self-training, menyusut tiap iterasi
+4.      labeled <- train
+5.      FOR i <- 1 TO MAX_ITER DO
+6.          preds    <- model.Predict(pool, aggregation = "simple")
+7.          // Terima chunk bila RATA-RATA keyakinan token entitas (label != O) >= THRESHOLD.
+8.          // Token O tidak dihitung; chunk tanpa prediksi entitas otomatis ditolak.
+9.          accepted <- {chunk IN preds : AvgEntityConfidence(chunk) >= THRESHOLD}
+10.         IF accepted IS EMPTY THEN
+11.             BREAK                             // tidak ada pseudo-label baru (kolam mengering)
+12.         END IF
+13.         labeled <- labeled + ToBIO(accepted)
+14.         pool    <- pool - accepted
+15.         model   <- FineTuneIndoBERT(labeled) // load_best_model_at_end: epoch terbaik per F1 validasi
+16.     END FOR
+17.     final_model     <- model                                      // model iterasi terakhir yang dijalankan
+18.     entities_pred   <- final_model.Predict(unlabelled_full)       // NER untuk chunk tak berlabel
+19.     entities_manual <- LoadEntities(train) + LoadEntities(test)   // anotasi manual sebagai prioritas
+20.     entities_all    <- Merge(entities_manual, entities_pred)       // manual menggantikan prediksi bila overlap
+21.     RETURN final_model, entities_all
+22. END
 ```
 
-Kode Semu 3.7 menunjukkan tahapan umum perluasan cakupan anotasi dari *seed* terbatas ke seluruh korpus melalui *iterative self-training*. Proses dimulai dengan melatih (*fine-tuning*) model IndoBERT sebagai *token classification* berskema BIO menggunakan data *seed* berlabel, kemudian model memprediksi label pada kumpulan data tak berlabel. Hanya kalimat dengan rata-rata keyakinan entitas mencapai ambang 0,9 yang diterima sebagai label semu (*pseudo-label*) dan ditambahkan ke data latih, lalu model dilatih ulang dan disimpan sebagai model terbaik apabila skornya pada data uji (seqeval F1) meningkat. Langkah ini diulang sampai tidak ada label semu baru atau mencapai batas enam iterasi. Setelah konvergen, model terbaik dipakai untuk memprediksi entitas pada seluruh *chunk* tak berlabel, lalu hasilnya digabung dengan anotasi manual data latih dan data uji, dengan anotasi manual diprioritaskan ketika terjadi tumpang tindih. Hasil akhir dari proses ini berupa model NER terbaik dan daftar entitas gabungan yang mencakup seluruh *chunk* korpus beserta label dan posisi karakternya. Dengan demikian, keluaran tahap ini tidak hanya menghasilkan model pengenal entitas, tetapi juga memperluas anotasi entitas ke seluruh korpus secara semi-*supervised* tanpa harus melabeli manual seluruh teks Sirah.
+Kode Semu 3.7 menunjukkan tahapan umum perluasan cakupan anotasi dari *seed* terbatas ke seluruh korpus melalui *iterative self-training*. Proses dimulai dengan melatih (*fine-tuning*) model IndoBERT sebagai *token classification* berskema BIO menggunakan data *seed* berlabel, kemudian model memprediksi label pada kumpulan data tak berlabel. Hanya *chunk* dengan rata-rata keyakinan token entitas mencapai ambang 0,9 yang diterima sebagai label semu (*pseudo-label*) dan ditambahkan ke data latih, lalu model dilatih ulang. Pada tiap pelatihan ulang, epoch terbaik dipilih berdasarkan F1 pada data validasi (bagian dari *seed*); data uji tidak pernah dipakai untuk memilih model. Langkah ini diulang sampai tidak ada label semu baru atau mencapai batas enam iterasi. Setelah konvergen, model dari iterasi terakhir dipakai untuk memprediksi entitas pada seluruh *chunk* tak berlabel, lalu hasilnya digabung dengan anotasi manual data latih dan data uji, dengan anotasi manual diprioritaskan ketika terjadi tumpang tindih. Hasil akhir dari proses ini berupa model NER terbaik dan daftar entitas gabungan yang mencakup seluruh *chunk* korpus beserta label dan posisi karakternya. Dengan demikian, keluaran tahap ini tidak hanya menghasilkan model pengenal entitas, tetapi juga memperluas anotasi entitas ke seluruh korpus secara semi-*supervised* tanpa harus melabeli manual seluruh teks Sirah.
 
 Hyperparameter pelatihan dijelaskan pada Tabel 3.11. Nilai-nilai ini mengikuti notebook acuan pembimbing dan metode Ariyanto et al. (2025).
 
@@ -525,14 +524,14 @@ Hyperparameter pelatihan dijelaskan pada Tabel 3.11. Nilai-nilai ini mengikuti n
 | *Learning rate* | 2e-5 | Laju pembelajaran *fine-tuning* |
 | *Batch size* | 16 | Ukuran *batch* latih dan evaluasi |
 | Epoch per iterasi | 10 | Jumlah epoch tiap iterasi *self-training* |
-| THRESHOLD | 0,9 | Ambang rata-rata keyakinan entitas per kalimat |
-| *Sampling rate* | 1,0 | Memakai semua kalimat di atas ambang |
+| THRESHOLD | 0,9 | Ambang rata-rata keyakinan token entitas per *chunk* |
+| *Sampling rate* | 1,0 | Memakai semua *chunk* di atas ambang |
 | *Aggregation strategy* | `simple` | Strategi agregasi sub-token |
 | Iterasi maksimum | 6 | Batas iterasi *self-training* |
 
 > **[CATATAN PENYUSUN]** Model dasar yang dipakai adalah IndoBERT *uncased* (`indolem/indobert-base-uncased`). Karena *uncased*, model tidak membedakan huruf besar dan kecil. Hal ini perlu disebut konsisten dengan Bab 2 subbab 2.3.3.
 
-Sebagai contoh hasil dinamika *self-training* pada konfigurasi dasar, jumlah kalimat baru yang diterima per iterasi menurun secara monoton, yaitu sekitar 187, lalu 32, 14, 2, 1, dan 1 pada enam iterasi, dengan total sekitar 237 label semu. <!-- [PERIKSA] angka per iterasi dari iteration_log.csv run baseline; cocokkan dengan log terbaru. --> Pola penurunan ini menunjukkan proses *self-training* mengonvergen, yaitu jumlah prediksi berkeyakinan tinggi yang baru semakin sedikit pada iterasi lanjut.
+Sebagai contoh hasil dinamika *self-training* pada konfigurasi dasar (*baseline*, run gold terkoreksi), jumlah *chunk* baru yang diterima per iterasi menurun, yaitu 188, lalu 39, 8, 3, 2, dan 0 pada enam iterasi, dengan total sekitar 240 *chunk* label semu dari 250 *chunk* kolam tak berlabel (menyisakan sekitar 10 *chunk* yang tak pernah melewati ambang). <!-- angka dari analisis konvergensi done_newest baseline (`*-above/below-0.9.xlsx`), lihat docs/bimbingan/2026-07-07.md §2.1 --> Pola penurunan ini menunjukkan proses *self-training* mengonvergen, yaitu jumlah prediksi berkeyakinan tinggi yang baru semakin sedikit pada iterasi lanjut sampai berhenti menambah *chunk*.
 
 Keluaran tahap ini adalah daftar entitas gabungan untuk seluruh *chunk* korpus. Untuk *chunk* yang memiliki anotasi manual (data latih dan data uji dari tahap 3.5), anotasi manual dipertahankan sebagai masukan primer karena telah melalui verifikasi manusia dan memiliki kualitas lebih tinggi dibandingkan prediksi otomatis. Untuk *chunk* yang tidak memiliki anotasi manual, digunakan prediksi model NER terbaik yang diperoleh dari proses *iterative self-training*. Kedua sumber entitas digabungkan sehingga seluruh 1.094 *chunk* memiliki entitas berlabel, dengan kolom `chunk_id`, `entity_text`, `label`, serta posisi karakternya. Daftar entitas gabungan ini menjadi masukan tahap penyatuan nama entitas.
 
