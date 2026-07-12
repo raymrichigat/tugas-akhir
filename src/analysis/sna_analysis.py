@@ -59,6 +59,12 @@ def resolve_paths(version: str):
         nodes = RR_DIR / "nodes_v4_hybrid.csv"
         edges = RR_DIR / "edges_v4_hybrid.csv"
         out = BASE_DIR / "data" / "result" / "analysis" / "v4_hybrid"
+    elif version == "v4_scoped":
+        # v4_hybrid dengan node PERSON nasab-only di-scope keluar
+        # (lihat src/relation_extraction/clean_v4_hybrid_genealogy.py)
+        nodes = RR_DIR / "nodes_v4_scoped.csv"
+        edges = RR_DIR / "edges_v4_scoped.csv"
+        out = BASE_DIR / "data" / "result" / "analysis" / "v4_scoped"
     else:
         raise ValueError(f"Unknown version: {version}")
     return nodes, edges, out
@@ -346,7 +352,7 @@ def visualize_network(G, metrics, community_map, out_dir):
 
 def main():
     parser = argparse.ArgumentParser(description="SNA — Sirah Nabawiyah")
-    parser.add_argument("--version", choices=["v1", "v2", "v3", "v4", "v4_hybrid"], default="v3",
+    parser.add_argument("--version", choices=["v1", "v2", "v3", "v4", "v4_hybrid", "v4_scoped"], default="v3",
                         help="Pilih versi nodes/edges (default: v3)")
     args = parser.parse_args()
 

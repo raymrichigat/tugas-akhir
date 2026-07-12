@@ -1,0 +1,82 @@
+{
+  "graph_metrics": {
+    "n_nodes": 137,
+    "n_edges": 1853,
+    "density": 0.1989051094890511,
+    "average_degree": 27.05109489051095,
+    "n_components": 5,
+    "giant_component_size": 128,
+    "giant_component_ratio": 0.9343065693430657,
+    "average_clustering_coefficient": 0.7100280785589891,
+    "transitivity_global": 0.7956695093587329,
+    "degree_assortativity": -0.07012581360291954,
+    "giant_diameter": 5,
+    "giant_avg_shortest_path": 1.9570620078740157,
+    "giant_radius": 3
+  },
+  "community_detection": {
+    "louvain": {
+      "n_communities": 8,
+      "modularity": 0.2830732290357799,
+      "community_sizes": [
+        37,
+        40,
+        2,
+        49,
+        2,
+        2,
+        3,
+        2
+      ]
+    },
+    "greedy": {
+      "n_communities": 10,
+      "modularity": 0.26068937034568823,
+      "community_sizes": [
+        66,
+        47,
+        7,
+        3,
+        3,
+        3,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "girvan_newman": {
+      "n_communities": 16,
+      "modularity": 0.03014325831819962,
+      "community_sizes": [
+        1,
+        104,
+        7,
+        5,
+        2,
+        2,
+        1,
+        2,
+        1,
+        2,
+        1,
+        2,
+        1,
+        1,
+        3,
+        2
+      ]
+    }
+  },
+  "ari_pairwise": {
+    "louvain__louvain": 1.0,
+    "louvain__greedy": 0.47370223211336415,
+    "louvain__girvan_newman": 0.11737574547198229,
+    "greedy__louvain": 0.47370223211336415,
+    "greedy__greedy": 1.0,
+    "greedy__girvan_newman": 0.22369016636596006,
+    "girvan_newman__louvain": 0.11737574547198229,
+    "girvan_newman__greedy": 0.22369016636596006,
+    "girvan_newman__girvan_newman": 1.0
+  }
+}

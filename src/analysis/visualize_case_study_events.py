@@ -216,7 +216,7 @@ def main() -> None:
     global NODES_CSV, EDGES_CSV, OUT_DIR
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--version", choices=["v2", "v3"], default="v3",
+    ap.add_argument("--version", choices=["v2", "v3", "v4_hybrid"], default="v3",
                     help="Pilih versi nodes/edges (default: v3)")
     args = ap.parse_args()
 
@@ -224,6 +224,10 @@ def main() -> None:
         NODES_CSV = ROOT / "data" / "result" / "relation_result" / "nodes_v3.csv"
         EDGES_CSV = ROOT / "data" / "result" / "relation_result" / "edges_v3.csv"
         OUT_DIR = ROOT / "data" / "result" / "analysis" / "v3"
+    elif args.version == "v4_hybrid":
+        NODES_CSV = ROOT / "data" / "result" / "relation_result" / "nodes_v4_hybrid.csv"
+        EDGES_CSV = ROOT / "data" / "result" / "relation_result" / "edges_v4_hybrid.csv"
+        OUT_DIR = ROOT / "data" / "result" / "analysis" / "v4_hybrid"
 
     nodes, edges = load_data()
     importance = compute_total_event_participation(edges)

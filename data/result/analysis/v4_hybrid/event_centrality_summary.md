@@ -6,105 +6,93 @@
 
 ## Ringkasan Graf
 
-- Event nodes      : **45**
-- Event-Event edges: **390**
-- Density          : **0.3939**
-- Components       : 7
-- Largest component: 39 events
+- Event nodes      : **35**
+- Event-Event edges: **264**
+- Density          : **0.4437**
+- Components       : 4
+- Largest component: 32 events
 
 ## Top 15 Event — PageRank (paling sentral di narasi)
 
 | Rank | Event | Period | PageRank | Degree | Frekuensi |
 |---:|---|---|---:|---:|---:|
-| 1 | Perang Badr | Satuan-satuan Pasukan Sebelum Perang Badr | 0.0799 | 33 | 66 |
-| 2 | Perang Uhud | AKTIVITAS PASUKAN ANTARA PERANG BADR DAN PERANG UHUD | 0.0670 | 34 | 55 |
-| 3 | Perang Khandaq | Perang Burhan | 0.0554 | 33 | 24 |
-| 4 | Uhud | AKTIVITAS PASUKAN ANTARA PERANG BADR DAN PERANG UHUD | 0.0369 | 28 | 3 |
-| 5 | Hudaibiyah | PERJANJIAN HUDAIBIYAH | 0.0365 | 29 | 15 |
-| 6 | Baiat Aqabah Kubra | BAIAT AQABAH KEDUA | 0.0353 | 28 | 4 |
-| 7 | Perang Khaibar | PERANG KHAIBAR DAN WADIL QURA | 0.0339 | 27 | 13 |
-| 8 | Perang Dzul Usyairah | Perang Dumatul Jandal | 0.0338 | 28 | 1 |
-| 9 | Perang Dzatur Riqa' | Perang Dzatur Riqa’ | 0.0299 | 26 | 3 |
-| 10 | Perang Bani Al-Ashfar | Perang Bani Nadhir | 0.0294 | 27 | 1 |
-| 11 | Isra' |  | 0.0290 | 27 | 18 |
-| 12 | Al-Umawi | Al-Qur’an | 0.0288 | 27 | 1 |
-| 13 | Perang Tha'if | Perang Tha’if | 0.0287 | 27 | 4 |
-| 14 | Perang Tabuk | PERANG TABUK | 0.0276 | 26 | 8 |
-| 15 | Perjanjian Hudaibiyah | PERJANJIAN HUDAIBIYAH | 0.0276 | 26 | 13 |
+| 1 | Perang Badr | Perang Badr & Dampaknya | 0.0965 | 27 | 53 |
+| 2 | Perang Uhud | Perang Uhud & Satuan Pasukan Pasca Uhud | 0.0889 | 29 | 43 |
+| 3 | Perang Khandaq | Perang Khandaq hingga Bani Mushthaliq | 0.0674 | 28 | 20 |
+| 4 | Perjanjian Hudaibiyah | Hudaibiyah & Babak Baru Diplomasi | 0.0442 | 24 | 20 |
+| 5 | Baiat Aqabah Kubra | Dakwah di Luar Makkah & Isra Mi'raj | 0.0424 | 23 | 4 |
+| 6 | Perang Dzul Usyairah | Perang Badr & Dampaknya | 0.0404 | 23 | 1 |
+| 7 | Perang Khaibar | Hudaibiyah & Babak Baru Diplomasi | 0.0382 | 21 | 12 |
+| 8 | Perang Bani Al-Ashfar | Perang Mu'tah & Penaklukan Makkah | 0.0353 | 22 | 1 |
+| 9 | Perang Dzatur Riqa' | Hudaibiyah & Babak Baru Diplomasi | 0.0348 | 21 | 2 |
+| 10 | Perang Tha'if | Hunain, Tabuk & Puncak Kekuatan Islam | 0.0344 | 22 | 4 |
+| 11 | Perang Tabuk | Hunain, Tabuk & Puncak Kekuatan Islam | 0.0328 | 21 | 6 |
+| 12 | Perang Mu'tah | Perang Mu'tah & Penaklukan Makkah | 0.0327 | 21 | 5 |
+| 13 | Perang Bu'ats | Dakwah di Luar Makkah & Isra Mi'raj | 0.0317 | 21 | 6 |
+| 14 | Perang Buwath | Perang Badr & Dampaknya | 0.0315 | 21 | 1 |
+| 15 | Perang Abwa' | Perang Badr & Dampaknya | 0.0307 | 22 | 1 |
 
 ## Top 15 Event — Betweenness (jembatan antar fase)
 
 | Rank | Event | Period | Betweenness | Degree |
 |---:|---|---|---:|---:|
-| 1 | Perang Uhud | AKTIVITAS PASUKAN ANTARA PERANG BADR DAN PERANG UHUD | 0.1442 | 34 |
-| 2 | Perang Khandaq | Perang Burhan | 0.0989 | 33 |
-| 3 | Isra' |  | 0.0443 | 27 |
-| 4 | Perang Khaibar | PERANG KHAIBAR DAN WADIL QURA | 0.0430 | 27 |
-| 5 | Perang Badr | Satuan-satuan Pasukan Sebelum Perang Badr | 0.0156 | 33 |
-| 6 | Perang Abwa' | PERANG TABUK | 0.0152 | 27 |
-| 7 | Hudaibiyah | PERJANJIAN HUDAIBIYAH | 0.0142 | 29 |
-| 8 | Perang Tha'if | Perang Tha’if | 0.0119 | 27 |
-| 9 | Uhud | AKTIVITAS PASUKAN ANTARA PERANG BADR DAN PERANG UHUD | 0.0116 | 28 |
-| 10 | Perang Bani Quraizhah | PERANG BANI QURAIZHAH | 0.0111 | 11 |
-| 11 | Baiat Aqabah Kubra | BAIAT AQABAH KEDUA | 0.0107 | 28 |
-| 12 | Hunain | PERANG HUNAIN | 0.0105 | 26 |
-| 13 | Perang Bani Mushthaliq | Perang Bani Nadhir | 0.0105 | 26 |
-| 14 | Perang Fijar | Perang Fijar | 0.0104 | 26 |
-| 15 | Hijrah | Hijrah ke Habasyah yang Pertama | 0.0104 | 26 |
+| 1 | Perang Uhud | Perang Uhud & Satuan Pasukan Pasca Uhud | 0.1958 | 29 |
+| 2 | Perang Khandaq | Perang Khandaq hingga Bani Mushthaliq | 0.1346 | 28 |
+| 3 | Perjanjian Hudaibiyah | Hudaibiyah & Babak Baru Diplomasi | 0.0264 | 24 |
+| 4 | Perang Abwa' | Perang Badr & Dampaknya | 0.0225 | 22 |
+| 5 | Perang Badr | Perang Badr & Dampaknya | 0.0186 | 27 |
+| 6 | Perang Tha'if | Hunain, Tabuk & Puncak Kekuatan Islam | 0.0170 | 22 |
+| 7 | Perang Bani Quraizhah | Perang Khandaq hingga Bani Mushthaliq | 0.0165 | 10 |
+| 8 | Perang Bani Mushthaliq | Perang Khandaq hingga Bani Mushthaliq | 0.0150 | 21 |
+| 9 | Baiat Aqabah Kubra | Dakwah di Luar Makkah & Isra Mi'raj | 0.0149 | 23 |
+| 10 | Perang Fijar | Nasab & Kelahiran Nabi | 0.0148 | 21 |
+| 11 | Hijrah | Konteks Arab Jahiliyah | 0.0147 | 21 |
+| 12 | Perang Hunain | Hunain, Tabuk & Puncak Kekuatan Islam | 0.0133 | 21 |
+| 13 | Baiat Aqabah | Dakwah di Luar Makkah & Isra Mi'raj | 0.0130 | 21 |
+| 14 | Perang Al-Yamamah | Perang Badr & Dampaknya | 0.0102 | 21 |
+| 15 | Perang Buwath | Perang Badr & Dampaknya | 0.0098 | 21 |
 
 ## Top 15 Event — Degree (paling banyak co-participation)
 
 | Rank | Event | Period | Degree | Weighted Degree | Frekuensi |
 |---:|---|---|---:|---:|---:|
-| 1 | Perang Uhud | AKTIVITAS PASUKAN ANTARA PERANG BADR DAN PERANG UHUD | 34 | 68 | 55 |
-| 2 | Perang Badr | Satuan-satuan Pasukan Sebelum Perang Badr | 33 | 85 | 66 |
-| 3 | Perang Khandaq | Perang Burhan | 33 | 56 | 24 |
-| 4 | Hudaibiyah | PERJANJIAN HUDAIBIYAH | 29 | 40 | 15 |
-| 5 | Baiat Aqabah Kubra | BAIAT AQABAH KEDUA | 28 | 39 | 4 |
-| 6 | Uhud | AKTIVITAS PASUKAN ANTARA PERANG BADR DAN PERANG UHUD | 28 | 41 | 3 |
-| 7 | Perang Dzul Usyairah | Perang Dumatul Jandal | 28 | 37 | 1 |
-| 8 | Isra' |  | 27 | 28 | 18 |
-| 9 | Perang Khaibar | PERANG KHAIBAR DAN WADIL QURA | 27 | 37 | 13 |
-| 10 | Perang Tha'if | Perang Tha’if | 27 | 31 | 4 |
-| 11 | Perang Abwa' | PERANG TABUK | 27 | 28 | 1 |
-| 12 | Perang Bani Al-Ashfar | Perang Bani Nadhir | 27 | 32 | 1 |
-| 13 | Al-Umawi | Al-Qur’an | 27 | 31 | 1 |
-| 14 | Perjanjian Hudaibiyah | PERJANJIAN HUDAIBIYAH | 26 | 30 | 13 |
-| 15 | Perang Tabuk | PERANG TABUK | 26 | 30 | 8 |
+| 1 | Perang Uhud | Perang Uhud & Satuan Pasukan Pasca Uhud | 29 | 65 | 43 |
+| 2 | Perang Khandaq | Perang Khandaq hingga Bani Mushthaliq | 28 | 48 | 20 |
+| 3 | Perang Badr | Perang Badr & Dampaknya | 27 | 74 | 53 |
+| 4 | Perjanjian Hudaibiyah | Hudaibiyah & Babak Baru Diplomasi | 24 | 34 | 20 |
+| 5 | Baiat Aqabah Kubra | Dakwah di Luar Makkah & Isra Mi'raj | 23 | 33 | 4 |
+| 6 | Perang Dzul Usyairah | Perang Badr & Dampaknya | 23 | 31 | 1 |
+| 7 | Perang Abwa' | Perang Badr & Dampaknya | 22 | 23 | 1 |
+| 8 | Perang Bani Al-Ashfar | Perang Mu'tah & Penaklukan Makkah | 22 | 27 | 1 |
+| 9 | Perang Tha'if | Hunain, Tabuk & Puncak Kekuatan Islam | 22 | 26 | 4 |
+| 10 | Baiat Aqabah | Dakwah di Luar Makkah & Isra Mi'raj | 21 | 23 | 2 |
+| 11 | Hijrah | Konteks Arab Jahiliyah | 21 | 23 | 3 |
+| 12 | Isra' Mi'raj | Dakwah di Luar Makkah & Isra Mi'raj | 21 | 22 | 9 |
+| 13 | Perang Al-Yamamah | Perang Badr & Dampaknya | 21 | 22 | 1 |
+| 14 | Perang Bani Mushthaliq | Perang Khandaq hingga Bani Mushthaliq | 21 | 21 | 2 |
+| 15 | Perang Bu'ats | Dakwah di Luar Makkah & Isra Mi'raj | 21 | 24 | 6 |
 
 ## Komunitas Event (Louvain)
 
-### Komunitas 1 — 19 event
-Top events: Perang Badr, Perang Uhud, Perang Khandaq, Uhud, Hudaibiyah, Baiat Aqabah Kubra, Perang Dzul Usyairah, Perang Bani Al-Ashfar
-Period coverage: AKTIVITAS PASUKAN ANTARA PERANG BADR DAN PERANG UHUD, BAIAT AQABAH KEDUA, PERANG BADR KUBRA, PERANG BANI QURAIZHAH, PERANG TABUK, PERJANJIAN HUDAIBIYAH, Perang As-Sawiq, Perang Bani Nadhir, Perang Bani Qainuqa’, Perang Burhan, Perang Dumatul Jandal, Peringatan di Makkah, Satuan-satuan Pasukan Sebelum Perang Badr
+### Komunitas 1 — 16 event
+Top events: Perang Khaibar, Perang Bani Al-Ashfar, Perang Dzatur Riqa', Perang Tha'if, Perang Tabuk, Perang Mu'tah, Perang Bu'ats, Perang Buwath
+Period coverage: Dakwah di Luar Makkah & Isra Mi'raj, Hudaibiyah & Babak Baru Diplomasi, Hunain, Tabuk & Puncak Kekuatan Islam, Konteks Arab Jahiliyah, Nasab & Kelahiran Nabi, Perang Badr & Dampaknya, Perang Khandaq hingga Bani Mushthaliq, Perang Mu'tah & Penaklukan Makkah
 
-### Komunitas 2 — 20 event
-Top events: Perang Khaibar, Perang Dzatur Riqa', Isra', Al-Umawi, Perang Tha'if, Perang Tabuk, Perjanjian Hudaibiyah, Perang Mu'tah
-Period coverage: Al-Qur’an, BAIAT AQABAH PERTAMA, Hijrah ke Habasyah yang Pertama, PERANG HUNAIN, PERANG KHAIBAR DAN WADIL QURA, PERANG MU’TAH, PERANG TABUK, PERJANJIAN HUDAIBIYAH, Perang Bani Nadhir, Perang Burhan, Perang Dzatur Riqa’, Perang Fijar, Perang Tha’if
+### Komunitas 2 — 1 event
+Top events: Perang Badr Kubra
+Period coverage: Perang Badr & Dampaknya
 
 ### Komunitas 3 — 1 event
-Top events: Isra' Dan Mi'raj
-Period coverage: ISRA’ DAN MI’RAJ
+Top events: Perang Badr Shughra
+Period coverage: Perang Uhud & Satuan Pasukan Pasca Uhud
 
 ### Komunitas 4 — 1 event
-Top events: Isra' Mi'raj
-Period coverage: ISRA’ DAN MI’RAJ
-
-### Komunitas 5 — 1 event
-Top events: Perang Badr Kubra
-Period coverage: PERANG BADR KUBRA
-
-### Komunitas 6 — 1 event
-Top events: Perang Badr Shughra
-Period coverage: PERANG BADR KUBRA
-
-### Komunitas 7 — 1 event
 Top events: Perang Hamra'ul Asad
-Period coverage: Perang Hamra’ul-Asad
+Period coverage: Perang Uhud & Satuan Pasukan Pasca Uhud
 
-### Komunitas 8 — 1 event
-Top events: Hamra'ul Asad
-Period coverage: Perang Hamra’ul-Asad
+### Komunitas 5 — 16 event
+Top events: Perang Badr, Perang Uhud, Perang Khandaq, Perjanjian Hudaibiyah, Baiat Aqabah Kubra, Perang Dzul Usyairah, Perang Bani Quraizhah, Perang Badr Ula
+Period coverage: Dakwah di Luar Makkah & Isra Mi'raj, Hudaibiyah & Babak Baru Diplomasi, Konteks Arab Jahiliyah, Perang Badr & Dampaknya, Perang Khandaq hingga Bani Mushthaliq, Perang Mu'tah & Penaklukan Makkah, Perang Uhud & Satuan Pasukan Pasca Uhud
 
 
 ## Catatan Interpretasi

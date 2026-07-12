@@ -342,11 +342,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--use-v1", action="store_true",
                     help="paksa pakai nodes.csv (bukan nodes_v2.csv)")
-    ap.add_argument("--version", choices=["v1", "v2", "v3", "v4", "v4_hybrid"], default=None,
+    ap.add_argument("--version", choices=["v1", "v2", "v3", "v4", "v4_hybrid", "v4_scoped"], default=None,
                     help="Pilih versi nodes/edges (override --use-v1)")
     args = ap.parse_args()
 
-    if args.version in ("v4", "v4_hybrid"):
+    if args.version == "v4_scoped":
+        nodes_path = RR_DIR / "nodes_v4_scoped.csv"
+        edges_path = RR_DIR / "edges_v4_scoped.csv"
+        source_note = ("v4_scoped (`nodes_v4_scoped.csv` + `edges_v4_scoped.csv`) — v4_hybrid "
+                       "dgn PERSON nasab-only di-scope keluar (co-participation network)")
+        out_dir = OUT_DIR / "v4_scoped"
+    elif args.version in ("v4", "v4_hybrid"):
         suffix = "_hybrid" if args.version == "v4_hybrid" else ""
         nodes_path = RR_DIR / f"nodes_v4{suffix}.csv"
         edges_path = RR_DIR / f"edges_v4{suffix}.csv"

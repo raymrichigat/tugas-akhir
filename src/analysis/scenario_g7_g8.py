@@ -88,6 +88,11 @@ def compute_g8(nodes, edges, label_to_phase):
             "n_event": len(person_events.get(person, set())),
             "fase": " | ".join(sorted(phases)),
         })
+    if not rows:
+        # Tidak ada event yang ter-petakan ke fase (mis. periode_bab v4 masih
+        # judul bab mentah, belum di-map ke periode kanonik) -> G8 kosong.
+        df = pd.DataFrame(columns=["person", "n_fase", "n_event", "fase"])
+        return df, sorted(unmapped), len(event_to_phase)
     df = pd.DataFrame(rows).sort_values(
         ["n_fase", "n_event"], ascending=False).reset_index(drop=True)
     return df, sorted(unmapped), len(event_to_phase)
@@ -141,6 +146,18 @@ def compute_g7(edges):
 
 # ---------------------------------------------------------------- output
 def main():
+    import argparse
+    global NODES_CSV, EDGES_CSV, OUT, OUT_MD
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--version", choices=["v3", "v4_hybrid"], default="v3")
+    args = ap.parse_args()
+    if args.version == "v4_hybrid":
+        NODES_CSV = REL / "nodes_v4_hybrid.csv"
+        EDGES_CSV = REL / "edges_v4_hybrid.csv"
+        OUT = BASE / "data" / "result" / "analysis" / "v4_hybrid"
+        OUT_MD = OUT / "scenario_g7_g8.md"
+        OUT.mkdir(parents=True, exist_ok=True)
+
     nodes, edges, label_to_phase = load_data()
     g8, unmapped, n_mapped = compute_g8(nodes, edges, label_to_phase)
     g7, gloc = compute_g7(edges)
