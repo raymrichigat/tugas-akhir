@@ -450,23 +450,26 @@ Format token berlabel terdiri dari kolom `text_id` (identitas *chunk*), `id` (id
 | pertama | I-TIME |
 | Hijriah | I-TIME |
 
-Sebagai contoh hasil agregat, berkas pra-anotasi memuat sekitar 6.000 baris entitas. Setelah konversi dan pembagian, data latih berisi sekitar 101.021 token dan data uji sekitar 42.558 token dengan 1.772 entitas. <!-- [PERIKSA] cocokkan angka token dan jumlah entitas dengan output prepare_bert_data.py dan train.csv/test.csv terbaru. --> Distribusi label pada data latih, yang menunjukkan ketidakseimbangan kelas yang tajam, dirangkum pada Tabel 3.10. Distribusi ini menjadi dasar penanganan kelas minoritas pada tahap NER.
+<!-- ANGKA dataset dimutakhirkan ke benchmark BARU (done_newest, gold TERKOREKSI 10 Juli) agar
+     konsisten dengan Bab 4 hasil migrasi. Sumber: train.csv/test.csv done_newest + koreksi gold.
+     ⚠️ Buku Word/PDF Bab 3 MASIH pakai angka lama (101.021/42.558 token, 1.772 entitas) -> update di Word. -->
+Sebagai contoh hasil agregat, berkas pra-anotasi memuat sekitar 6.000 baris entitas. Setelah konversi dan pembagian, data latih berisi sekitar 116.353 token (590 *chunk*) dan data uji sekitar 49.739 token (254 *chunk*) dengan 1.969 entitas, yang terdiri atas 1.302 entitas *Person*, 474 *Location*, 118 *Time*, dan 75 *Event*. Distribusi label pada data latih, yang menunjukkan ketidakseimbangan kelas yang tajam, dirangkum pada Tabel 3.10. Distribusi ini menjadi dasar penanganan kelas minoritas pada tahap NER.
 
 [SISIPKAN TABEL 3.10 - Distribusi Label Data Latih]
 
 | Tag BIO | Jumlah | Persentase |
 |---------|-------:|-----------:|
-| O | 94.070 | 93,1% |
-| B-PERSON | 2.634 | 2,61% |
-| I-PERSON | 2.289 | 2,27% |
-| B-LOCATION | 1.013 | 1,00% |
-| I-TIME | 442 | 0,44% |
-| B-TIME | 236 | 0,23% |
-| I-EVENT | 137 | 0,14% |
-| B-EVENT | 128 | 0,13% |
-| I-LOCATION | 72 | 0,07% |
+| O | 108.815 | 93,52% |
+| B-PERSON | 2.920 | 2,51% |
+| I-PERSON | 2.599 | 2,23% |
+| B-LOCATION | 972 | 0,84% |
+| I-TIME | 476 | 0,41% |
+| B-TIME | 188 | 0,16% |
+| B-EVENT | 167 | 0,14% |
+| I-EVENT | 150 | 0,13% |
+| I-LOCATION | 66 | 0,06% |
 
-Tabel 3.10 memperlihatkan bahwa kelas O sangat dominan dan entitas *Event* serta sebagian *Time* dan *Location* tergolong minoritas ekstrem (rasio ketidakseimbangan mencapai sekitar 25 banding 1). Kondisi ini melatarbelakangi penggunaan teknik penanganan ketidakseimbangan pada tahap berikutnya.
+Tabel 3.10 memperlihatkan bahwa kelas O sangat dominan dan entitas *Event* serta sebagian *Time* dan *Location* tergolong minoritas ekstrem (rasio ketidakseimbangan mencapai sekitar 17,5 banding 1 pada data latih). Kondisi ini melatarbelakangi penggunaan teknik penanganan ketidakseimbangan pada tahap berikutnya.
 
 ## 3.6 Ekstraksi Entitas dengan NER berbasis SRL
 

@@ -55,8 +55,11 @@ def count_entities(csv_path):
     return {k: int((lab == f"B-{k}").sum()) for k in KELAS}
 
 train_c = count_entities(SRL / "train.csv")
-test_c  = count_entities(SRL / "test.csv")
-print("train:", train_c, "| test:", test_c)
+# Data uji: pakai jumlah entitas pada gold TERKOREKSI (Bu Dini 2026-07-10), bukan
+# test.csv mentah, agar konsisten dengan support Tabel 4.1/4.2 (EVENT 75, rasio 17,4:1).
+# Hitungan B- pada gold terkoreksi (recompute_gt_corrected.build_corrected_gold):
+test_c  = {"PERSON": 1302, "LOCATION": 474, "EVENT": 75, "TIME": 113}
+print("train:", train_c, "| test (gold terkoreksi):", test_c)
 
 fig, ax = plt.subplots(figsize=(7.6, 4.4))
 x = np.arange(len(KELAS)); w = 0.38
@@ -154,45 +157,51 @@ def plot_perkelas(fname, judul, labels, perkelas, rot=0, figw=8.4, annot=False):
 
 
 # ── Uji Coba 1 (5 skenario) ──────────────────────────────────────────────────
+# Angka = ground-truth uji TERKOREKSI (Bu Dini 2026-07-10),
+# sumber: data/result/analysis/gt_corrected_2026_07_10/recompute_gt_corrected_results.md
+# (identik Tabel 4.1/4.2 di docs/bab4/hasil_pembahasan.md).
 sk1 = ["Baseline", "Weighted-CE", "SCL", "JSCL", "Augmentation"]
 plot_agregat("f1_uc1_agregat.png",
              "F1-score Agregat Lima Skenario Penanganan Imbalance (Uji Coba 1)",
-             sk1, [0.9481, 0.9393, 0.9512, 0.9434, 0.9581],
-             [0.8892, 0.8648, 0.8902, 0.8932, 0.9235], highlight=4, rot=12)
+             sk1, [0.9536, 0.9480, 0.9546, 0.9451, 0.9756],
+             [0.9136, 0.9156, 0.9236, 0.9062, 0.9543], highlight=4, rot=12)
 plot_perkelas("f1_uc1_perkelas.png",
               "F1-score per Kelas Lima Skenario Penanganan Imbalance (Uji Coba 1)",
               sk1,
-              {"PERSON":  [0.9596, 0.9575, 0.9655, 0.9559, 0.9640],
-               "LOCATION":[0.9527, 0.9352, 0.9493, 0.9394, 0.9653],
-               "EVENT":   [0.8039, 0.7767, 0.8200, 0.8367, 0.9020],
-               "TIME":    [0.8408, 0.7898, 0.8258, 0.8408, 0.8627]}, rot=12)
+              {"PERSON":  [0.9690, 0.9616, 0.9687, 0.9611, 0.9835],
+               "LOCATION":[0.9530, 0.9432, 0.9488, 0.9467, 0.9755],
+               "EVENT":   [0.9342, 0.9231, 0.9600, 0.9600, 0.9542],
+               "TIME":    [0.7983, 0.8347, 0.8170, 0.7572, 0.9038]}, rot=12)
 
 # ── Uji Coba 2 (5 model) ──────────────────────────────────────────────────────
+# Angka = ground-truth uji TERKOREKSI (Tabel 4.9/4.10).
 md2 = ["IndoBERT\nuncased", "cahya\nuncased", "DistilBERT", "IndoBERT\ncased", "RoBERTa"]
 plot_agregat("f1_uc2_agregat.png",
              "F1-score Agregat Lima Model Pra-latih (Uji Coba 2)",
-             md2, [0.9481, 0.9324, 0.9442, 0.7770, 0.8068],
-             [0.8892, 0.8744, 0.8748, 0.6867, 0.7165], highlight=0, figw=7.8)
+             md2, [0.9536, 0.9286, 0.9353, 0.7774, 0.8069],
+             [0.9136, 0.8811, 0.8852, 0.6893, 0.7490], highlight=0, figw=7.8)
 plot_perkelas("f1_uc2_perkelas.png",
               "F1-score per Kelas Lima Model Pra-latih (Uji Coba 2)",
               md2,
-              {"PERSON":  [0.9596, 0.9414, 0.9592, 0.7646, 0.8002],
-               "LOCATION":[0.9527, 0.9444, 0.9478, 0.9062, 0.9060],
-               "EVENT":   [0.8039, 0.8119, 0.8200, 0.6226, 0.6306],
-               "TIME":    [0.8408, 0.8000, 0.7722, 0.4532, 0.5291]}, figw=9.0)
+              {"PERSON":  [0.9690, 0.9493, 0.9581, 0.7843, 0.8135],
+               "LOCATION":[0.9530, 0.9232, 0.9232, 0.8717, 0.8766],
+               "EVENT":   [0.9342, 0.9315, 0.9116, 0.5549, 0.7654],
+               "TIME":    [0.7983, 0.7203, 0.7479, 0.5461, 0.5404]}, figw=9.0)
 
 # ── Uji Coba 3 (baseline vs POS-tag) ─────────────────────────────────────────
+# Angka = ground-truth uji TERKOREKSI (Tabel 4.14/4.15). POS-tag kini sedikit di
+# atas baseline pada micro (0,9547 vs 0,9536), praktis setara.
 sk3 = ["Baseline", "POS-tag"]
 plot_agregat("f1_uc3_agregat.png",
              "F1-score Agregat Baseline vs Modul POS-tag (Uji Coba 3)",
-             sk3, [0.9481, 0.9439], [0.8892, 0.8908], highlight=None, figw=5.4)
+             sk3, [0.9536, 0.9547], [0.9136, 0.9217], highlight=None, figw=5.4)
 plot_perkelas("f1_uc3_perkelas.png",
               "F1-score per Kelas Baseline vs Modul POS-tag (Uji Coba 3)",
               sk3,
-              {"PERSON":  [0.9596, 0.9579],
-               "LOCATION":[0.9527, 0.9385],
-               "EVENT":   [0.8039, 0.8485],
-               "TIME":    [0.8408, 0.8182]}, figw=6.6, annot=True)
+              {"PERSON":  [0.9690, 0.9693],
+               "LOCATION":[0.9530, 0.9466],
+               "EVENT":   [0.9342, 0.9333],
+               "TIME":    [0.7983, 0.8376]}, figw=6.6, annot=True)
 
 print("Selesai. Gambar di:", OUT)
 for p in sorted(OUT.glob("*.png")):
