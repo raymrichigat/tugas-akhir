@@ -189,6 +189,16 @@ Fitur analisis graf yang digunakan pada penelitian ini mencakup ukuran sentralit
 
 *Degree centrality* menunjukkan jumlah hubungan langsung suatu simpul; *betweenness centrality* menunjukkan peran simpul sebagai penghubung jalur terpendek; *closeness centrality* menunjukkan kedekatan struktural terhadap simpul lain (Adniati et al., 2023). *Density* mengukur kepadatan jaringan, dan deteksi komunitas dengan *Louvain method* berbasis *modularity* digunakan untuk melihat pengelompokan tokoh (Anuar et al., 2024). Graf antartokoh dibentuk melalui hubungan *co-participation* (dua tokoh terlibat pada peristiwa sama), *PageRank* menilai kepentingan relatif simpul (Zhang et al., 2021), sedangkan *clustering coefficient* dan *transitivity* mengukur kecenderungan terbentuknya hubungan segitiga (Sosa et al., 2021). Analisis juga dapat dilakukan melalui pembentukan sub-graf untuk mengamati lima peristiwa besar, serta graf lokasi untuk melihat lokasi yang berperan sentral. Hasil analisis ini tidak dimaknai sebagai penilaian historis atau keagamaan terhadap suatu tokoh, tetapi sebagai gambaran struktural berdasarkan relasi yang berhasil diekstraksi dari teks.
 
+Selain analisis struktural dengan SNA di atas, kelayakan *knowledge graph* sebagai produk akhir juga perlu dinilai dari sisi fungsionalnya, yaitu apakah graf mampu menjalankan fungsi yang menjadi tujuan pembangunannya. Berbeda dengan metrik yang mengukur akurasi atau karakteristik struktur, evaluasi fungsional bersifat berbasis kebutuhan (*black-box*), yaitu graf diuji dengan mengajukan sejumlah pertanyaan penelusuran lalu menilai apakah graf dapat menjawabnya dengan benar dan dapat dipertanggungjawabkan ke sumbernya, tanpa memeriksa implementasi internalnya. [SITASI: sumber 2020+ tentang evaluasi fungsional atau berbasis tugas (*task-based*) pada *knowledge graph*]
+
+Pendekatan yang lazim digunakan untuk maksud ini adalah *competency questions* (pertanyaan kompetensi), yaitu sekumpulan pertanyaan yang ditetapkan terlebih dahulu dan harus mampu dijawab oleh *knowledge graph* atau ontologi. *Competency questions* berperan ganda, yaitu sebagai spesifikasi kebutuhan yang menentukan cakupan pengetahuan yang harus direpresentasikan, sekaligus sebagai alat validasi karena keberhasilan graf dinilai dari kemampuannya menjawab pertanyaan-pertanyaan tersebut. [SITASI: sumber 2020+ tentang *competency questions* untuk evaluasi ontologi atau *knowledge graph*] Pada penelitian ini, *competency questions* diwujudkan sebagai sejumlah kebutuhan fungsional yang didefinisikan lebih dahulu, lalu diterjemahkan menjadi kueri *Cypher* dan diuji pada graf, sebagaimana dirinci pada Bab 3.
+<!-- [CATATAN] Dua [SITASI] di atas perlu diisi sumber NYATA 2020-2026 (jangan mengarang).
+     Konsep competency questions berasal dari Gruninger & Fox (1995) = terlalu lama untuk sumber utama;
+     boleh disebut sebagai asal-usul HANYA bila pembimbing izinkan + ditemani sumber 2020+.
+     Kata kunci pencarian: "competency questions knowledge graph/ontology evaluation 2020..2026",
+     "task-based / functional evaluation knowledge graph". Anchor yang sudah dimiliki: Choi & Jung (2025)
+     di subbab ini menyebut tahap evaluation pada konstruksi KG = pijakan generik bila perlu. -->
+
 ## 2.8 Metrik Evaluasi
 
 Evaluasi pada *Named-Entity Recognition* (NER) dilakukan untuk mengukur kemampuan model dalam mengenali dan mengklasifikasikan entitas secara benar, dengan memperhatikan kesesuaian batas entitas dan jenis entitas terhadap anotasi sebenarnya. Evaluasi NER umumnya menggunakan tiga metrik utama, yaitu *precision*, *recall*, dan *F1-score*, serta dapat dilakukan dengan pendekatan *exact match* (batas dan tipe entitas harus sama persis) atau *relaxed match* (mempertimbangkan kecocokan parsial) (Seow et al., 2025). Karena distribusi label dalam NER sering tidak seimbang (Nemoto et al., 2025), ketiga metrik tersebut lebih sesuai daripada akurasi.
@@ -212,3 +222,4 @@ Evaluasi pada *Named-Entity Recognition* (NER) dilakukan untuk mengukur kemampua
 [Persamaan 2.26: F1_macro = (1/C) × jumlah F1 tiap kelas]
 
 Karena penelitian ini menangani ketidakseimbangan label, *macro-F1* penting untuk melihat performa terhadap label minoritas, sementara *micro-F1* digunakan untuk melihat performa model secara umum.
+

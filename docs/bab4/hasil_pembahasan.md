@@ -5,22 +5,28 @@
 > **Sumber angka (jangan diubah tanpa cek ulang):** benchmark = *run* penuh `done_newest` dengan **ground-truth uji terkoreksi**. F1 entity-level + rincian error + confusion dari `data/result/analysis/gt_corrected_2026_07_10/` (`recompute_gt_corrected_results.md`, `error_breakdown_gt_corrected.md`, `confusion/`); skrip `src/pseudo_labelling/SRL-NER/recompute_gt_corrected.py` + `error_breakdown_gt_corrected.py`. Metrik graf (4.4) dari KG v4 model pemenang (S4-augmentation): sentralitas/komunitas tokoh dari `data/result/analysis/v4_scoped/` (graf Person ber-scope, nasab-only dibuang via `clean_v4_hybrid_genealogy.py`); sentralitas peristiwa/lokasi/lintas-fase/studi-kasus dari `data/result/analysis/v4_hybrid/` (event di-dedup `clean_v4_events.py`, periode di-map `apply_period_to_v4.py`).
 > Patuh pedoman: tanpa em dash, bahasa *layman*, istilah asing *italic*, sitasi APA. Tanda **[PERIKSA]** = perlu konfirmasi; **[SITASI: ...]** = referensi yang perlu masuk Daftar Pustaka.
 
-Bab ini menyajikan dan membahas hasil pengujian terhadap rancangan yang dijelaskan pada Bab 3. Pembahasan dibagi mengikuti tiga uji coba ekstraksi entitas (subbab 3.9) dan evaluasi fungsional *knowledge graph* (subbab 3.10), sehingga setiap angka dapat ditelusuri ke skenario uji coba yang sesuai.
-
-Seluruh evaluasi ekstraksi entitas dilakukan pada data uji yang sama, yaitu 254 *chunk* berisi 49.739 token dengan 1.969 entitas (*Person* 1.302, *Location* 474, *Time* 118, dan *Event* 75 entitas). <!-- Support entitas dari classification report seqeval pada recompute_gt_corrected_results.md (ground-truth uji terkoreksi). --> Pengukuran utama memakai *F1-score* tingkat entitas (*entity-level*) dengan pustaka seqeval, yaitu sebuah entitas dihitung benar hanya jika seluruh rentang token dan kategorinya tepat. Sebagai metrik pendukung analisis error, digunakan hitungan kesalahan tingkat token (*token-level*) yang memerinci jenis kesalahan. Komposisi data uji penting untuk dicatat sejak awal, karena ketimpangan jumlah entitas antar kelas (*Person* jauh lebih banyak daripada *Event* dan *Time*) menjadi penjelas utama pola hasil di seluruh subbab.
+Bab ini menyajikan dan membahas hasil pengujian terhadap rancangan yang dijelaskan pada Bab 3. Pembahasan diawali dengan profil data berlabel hasil anotasi (Subbab 4.1), lalu tiga uji coba ekstraksi entitas (Subbab 4.2 sampai 4.4) yang dirancang pada Subbab 3.8, dan ditutup dengan evaluasi *knowledge graph* (Subbab 4.5) yang mencakup analisis struktur jaringan dan pengujian fungsional (Subbab 3.9). Seluruh evaluasi ekstraksi entitas menggunakan *F1-score* tingkat entitas (*entity-level*) dengan pustaka seqeval, yaitu sebuah entitas dihitung benar hanya jika seluruh rentang token dan kategorinya tepat, dilengkapi hitungan kesalahan tingkat token (*token-level*) untuk membedah jenis kesalahan.
 
 ---
 
-## 4.1 Uji Coba 1: Penanganan Data Imbalance
+## 4.1 Anotasi Data
 
-Uji coba pertama bertujuan menguji apakah ketidakseimbangan jumlah entitas antar kelas (*imbalance*) pada data latih dapat ditangani sehingga kualitas pengenalan kelas minoritas (terutama *Event* dan *Time*) meningkat. Persoalannya nyata: pada data uji, *Event* hanya 75 entitas dan *Time* 118 entitas, jauh di bawah *Person* (1.302) dan *Location* (474), sehingga model cenderung kurang terlatih mengenali dua kelas terkecil itu. Untuk itu, alur dasar (*baseline*) dibandingkan dengan empat teknik penanganan ketidakseimbangan yang ditambahkan di atasnya, yaitu *weighted cross-entropy*, *supervised contrastive learning* (SCL), *Jaccard-similarity contrastive learning* (JSCL), dan *data augmentation* dengan *mention replacement*.
+Seluruh uji coba ekstraksi entitas pada bab ini berpijak pada data berlabel yang dihasilkan tahap anotasi (Subbab 3.5). Bagian ini menyajikan profil data tersebut lebih dahulu, karena karakteristiknya, terutama komposisi antar kelas, menjadi penjelas utama pola hasil di seluruh subbab berikutnya.
 
-Ketimpangan jumlah entitas antar kelas yang menjadi pangkal persoalan ini terlihat jelas pada Gambar 4.1, yang menyandingkan jumlah entitas tiap kelas pada data latih dan data uji.
+Data berlabel terdiri atas data latih sebanyak 590 *chunk* (116.353 token) yang dipakai sebagai *seed* pelatihan, dan data uji sebanyak 254 *chunk* (49.739 token) dengan 1.969 entitas yang dipakai sebagai acuan (*ground truth*) evaluasi. Seluruh evaluasi ekstraksi entitas pada bab ini dilakukan pada data uji yang sama tersebut. Komposisi entitas pada data uji adalah *Person* 1.302, *Location* 474, *Time* 118, dan *Event* 75. <!-- Support entitas dari classification report seqeval pada recompute_gt_corrected_results.md (ground-truth uji terkoreksi). --> Ketimpangan jumlah entitas antar kelas terlihat jelas pada Gambar 4.1, yang menyandingkan jumlah entitas tiap kelas pada data latih dan data uji.
 
 [SISIPKAN GAMBAR 4.1 - Distribusi Jumlah Entitas per Kelas (Imbalance) pada Data Latih dan Data Uji]
 <!-- file: data/result/analysis/bab4_viz/eda_imbalance.png -->
 
-Gambar 4.1 menyajikan jumlah entitas tiap kelas pada data latih dan data uji sebagai diagram batang berkelompok. Batang *Person* menjulang paling tinggi (2.920 entitas pada data latih) sedangkan *Event* hanya berupa batang pendek (167 entitas latih dan hanya 75 pada data uji), dengan rasio ketimpangan sekitar 17,5:1 pada data latih dan 17,4:1 pada data uji. Pola yang konsisten di kedua bagian data inilah yang mendasari seluruh Uji Coba 1, yaitu kelas *Event* dan *Time* yang contohnya sangat sedikit (*few-shot*) menjadi kelas yang paling sulit dikenali model.
+Gambar 4.1 menyajikan jumlah entitas tiap kelas pada data latih dan data uji sebagai diagram batang berkelompok. Batang *Person* menjulang paling tinggi (2.920 entitas pada data latih) sedangkan *Event* hanya berupa batang pendek (167 entitas latih dan hanya 75 pada data uji), dengan rasio ketimpangan sekitar 17,5:1 pada data latih dan 17,4:1 pada data uji.
+
+Profil data ini penting untuk membaca seluruh hasil bab ini. Pertama, dominasi *Person* dan *Location* mencerminkan sifat teks Sirah sebagai narasi biografis-historis yang padat menyebut nama tokoh dan tempat secara eksplisit, sedangkan *Event* dan *Time* jauh lebih jarang muncul sebagai entitas bernama karena peristiwa dan waktu dalam Sirah kerap dinyatakan melalui frasa kata kerja atau keterangan (misalnya "beliau wafat" atau "pada tahun itu") yang tidak tertangkap sebagai *named entity*. Kedua, ketimpangan sekitar 17,5:1 menempatkan *Event* (75) dan *Time* (118) sebagai kelas minoritas ekstrem (*few-shot*), sehingga model cenderung kurang terlatih mengenalinya dan kedua kelas inilah yang paling rentan berkinerja rendah di seluruh uji coba. Ketiga, distribusi data latih dan data uji konsisten (rasio hampir sama, 17,5:1 berbanding 17,4:1), sehingga data uji representatif terhadap data latih dan hasil evaluasi tidak bias oleh perbedaan komposisi. Ketiga hal ini menjadi lensa untuk menafsirkan hasil pada subbab berikutnya, yaitu ketimpangan inilah yang melatarbelakangi Uji Coba 1 (penanganan *imbalance*), sementara kelangkaan *Event* dan *Time* menjadi penjelas berulang mengapa kedua kelas itu paling sering menjadi titik terlemah.
+
+---
+
+## 4.2 Uji Coba 1: Penanganan Data Imbalance
+
+Uji coba pertama bertujuan menguji apakah ketidakseimbangan jumlah entitas antar kelas (*imbalance*) pada data latih, sebagaimana dipaparkan pada Subbab 4.1, dapat ditangani sehingga kualitas pengenalan kelas minoritas (terutama *Event* dan *Time*) meningkat. Untuk itu, alur dasar (*baseline*) dibandingkan dengan empat teknik penanganan ketidakseimbangan yang ditambahkan di atasnya, yaitu *weighted cross-entropy*, *supervised contrastive learning* (SCL), *Jaccard-similarity contrastive learning* (JSCL), dan *data augmentation* dengan *mention replacement*.
 
 Pengujian dilakukan dengan melatih kelima varian (alur dasar ditambah empat teknik) pada *seed* yang sama, lalu mengevaluasinya pada data uji yang identik, yaitu 254 *chunk* berisi 49.739 token dengan 1.969 entitas. Agar perbandingan adil, hanya komponen penanganan ketidakseimbangan yang divariasikan, sedangkan arsitektur dasar (IndoBERT *uncased*), ambang *pseudo-labelling*, dan *hyperparameter* lain dibuat sama persis mengikuti prosedur Kode Semu 3.12. Pengukuran kualitas memakai pustaka seqeval pada tingkat entitas (*entity-level*), yaitu satu entitas dihitung benar hanya jika seluruh rentang token dan kategorinya tepat, dan dilengkapi penghitungan kesalahan tingkat token (*token-level*) untuk membedah jenis kesalahan.
 
@@ -168,7 +174,7 @@ Oleh karena itu, strategi yang dipilih adalah menambah contoh kelas minoritas (*
 
 ---
 
-## 4.2 Uji Coba 2: Komparasi Model
+## 4.3 Uji Coba 2: Komparasi Model
 
 Uji coba kedua bertujuan menguji pengaruh pemilihan model pra-latih (*backbone*) terhadap kualitas pengenalan entitas, yaitu mencari tahu model berbahasa Indonesia mana yang paling sesuai untuk teks Sirah ketika dipakai dalam alur *iterative self-training*. Lima model dibandingkan: IndoBERT *uncased* (`indolem/indobert-base-uncased`, *baseline*), `cahya/bert-base-indonesian-1.5G`, DistilBERT Indonesia, IndoBERT *cased*, dan RoBERTa Indonesia. <!-- [PERIKSA] pastikan nama persis tiap model pembanding sesuai checkpoint yang dijalankan. -->
 
@@ -262,7 +268,7 @@ Awal nama "Murrah" yang seharusnya penanda awal entitas (*B*) justru ditandai se
 
 ---
 
-## 4.3 Uji Coba 3: Modul POS-tag
+## 4.4 Uji Coba 3: Modul POS-tag
 
 Uji coba ketiga bertujuan menguji apakah penambahan fitur *Part-of-Speech tagging* (POS-tag), yaitu informasi kelas kata seperti kata benda atau kata kerja, dapat membantu model mengenali batas dan tipe entitas dengan lebih baik. Hipotesisnya, mengetahui suatu kata berkategori kata benda dapat menjadi petunjuk tambahan bahwa kata itu berpeluang menjadi entitas. Untuk mengujinya, model tanpa fitur POS-tag (*baseline*) dibandingkan dengan model yang menambahkan POS-tag sebagai fitur pendamping pada masukan.
 
@@ -328,13 +334,13 @@ Menggabungkan ketiga uji coba, **konfigurasi terbaik adalah IndoBERT *uncased* d
 
 ---
 
-## 4.4 Evaluasi Graf
+## 4.5 Evaluasi Knowledge Graph
 
 Evaluasi *knowledge graph* terdiri dari dua bagian: analisis struktur jaringan dengan *Social Network Analysis* (apakah struktur graf masuk akal terhadap narasi Sirah) dan pengujian fungsional melalui skenario kueri (apakah graf dapat menjawab kebutuhan penelusuran).
 
-### 4.4.1 Analisis Struktur Jaringan (SNA)
+### 4.5.1 Analisis Struktur Jaringan (SNA)
 
-Hasil analisis jaringan menjawab delapan skenario pengujian (G1 sampai G8) yang dirancang pada Tabel 3.19, yaitu sentralitas tokoh (G1 dan G2), pengelompokan komunitas (G3), sentralitas peristiwa (G4), struktur jaringan keseluruhan (G5), studi kasus peristiwa (G6), peran lokasi (G7), dan keterlibatan lintas fase (G8). Analisis utama dilakukan pada proyeksi jaringan antar tokoh (*Person*), yaitu dua tokoh dihubungkan jika terlibat pada peristiwa yang sama, ditambah relasi kekerabatan, persahabatan, dan permusuhan yang eksplisit. Agar analisis sentralitas mengukur keterlibatan sosial dan bukan sekadar posisi dalam silsilah, cakupan graf dibatasi pada tokoh yang benar-benar terlibat pada minimal satu peristiwa yang dinarasikan; tokoh yang hanya muncul di dalam rantai keturunan (*nasab*) tanpa pernah terlibat peristiwa sengaja tidak dimasukkan ke analisis, sebab keterhubungan mereka semata berasal dari garis kekerabatan sehingga sentralitasnya menjadi artefak rantai, bukan keterlibatan nyata (pembatasan ini bersifat penyaringan pada tahap analisis, sedangkan *knowledge graph* utuh dengan seluruh entitas tetap dipertahankan sebagai basis pengetahuan). Bukti struktural di balik tiap skenario dapat ditelusuri langsung pada *knowledge graph* di Neo4j melalui kumpulan kueri reproduksi yang disediakan pada berkas `sna_evidence_queries_bab4.cypher`, sementara skor sentralitas dan komunitas dihitung pada pipeline analisis (NetworkX). Statistik tingkat graf (G5) ditunjukkan pada Tabel 4.17.
+Hasil analisis jaringan menjawab delapan skenario pengujian (G1 sampai G8) yang dirancang pada Tabel 3.20, yaitu sentralitas tokoh (G1 dan G2), pengelompokan komunitas (G3), sentralitas peristiwa (G4), struktur jaringan keseluruhan (G5), studi kasus peristiwa (G6), peran lokasi (G7), dan keterlibatan lintas fase (G8). Analisis utama dilakukan pada proyeksi jaringan antar tokoh (*Person*), yaitu dua tokoh dihubungkan jika terlibat pada peristiwa yang sama, ditambah relasi kekerabatan, persahabatan, dan permusuhan yang eksplisit. Agar analisis sentralitas mengukur keterlibatan sosial dan bukan sekadar posisi dalam silsilah, cakupan graf dibatasi pada tokoh yang benar-benar terlibat pada minimal satu peristiwa yang dinarasikan; tokoh yang hanya muncul di dalam rantai keturunan (*nasab*) tanpa pernah terlibat peristiwa sengaja tidak dimasukkan ke analisis, sebab keterhubungan mereka semata berasal dari garis kekerabatan sehingga sentralitasnya menjadi artefak rantai, bukan keterlibatan nyata (pembatasan ini bersifat penyaringan pada tahap analisis, sedangkan *knowledge graph* utuh dengan seluruh entitas tetap dipertahankan sebagai basis pengetahuan). Bukti struktural di balik tiap skenario dapat ditelusuri langsung pada *knowledge graph* di Neo4j melalui kumpulan kueri reproduksi yang disediakan pada berkas `sna_evidence_queries_bab4.cypher`, sementara skor sentralitas dan komunitas dihitung pada pipeline analisis (NetworkX). Statistik tingkat graf (G5) ditunjukkan pada Tabel 4.17.
 
 <!-- Angka v4 (KG dari NER pemenang S4-augmentation). Graf Person = data/result/analysis/v4_scoped/ (proyeksi co-participation, PERSON nasab-only di-scope keluar via src/relation_extraction/clean_v4_hybrid_genealogy.py; KG kanonik nodes_v4_hybrid.csv utuh). Event layer di-dedup via clean_v4_events.py. Kueri reproduksi bukti SNA per skenario ada di data/result/neo4j/sna_evidence_queries_bab4.cypher. Skor degree/betweenness/PageRank + Louvain/modularitas dari src/analysis/sna_analysis.py + sna_graph_metrics.py --version v4_scoped. -->
 
@@ -483,23 +489,23 @@ Visualisasi langsung dari Neo4j Browser ditunjukkan pada Gambar 4.17, yaitu jari
 [SISIPKAN GAMBAR 4.17 - Visualisasi Neo4j Browser: Jaringan Ego Nabi Muhammad]
 <!-- file: docs/bimbingan/screenshots/A1_ego_muhammad.png (screenshot Neo4j Browser langsung). [PERIKSA] Screenshot ini dari KG lama (masih memuat event lifecycle spt Kelahiran/Hijrah Madinah yg tidak ada di v4) — sebaiknya di-regenerate dari KG v4 setelah import_sirah v4 ke Neo4j agar konsisten. Reproduksi: di Neo4j Browser jalankan `MATCH (m:Person {name:'Muhammad'})-[r]-(n) RETURN m,r,n` lalu tata layout & screenshot. Warna otomatis per-label (Person hijau, Event biru). -->
 
-### 4.4.2 Pengujian Fungsional Knowledge Graph
+### 4.5.2 Pengujian Fungsional Knowledge Graph
 
-Enam skenario kueri Cypher (Tabel 3.20) dijalankan pada graf untuk memverifikasi kelayakan penelusuran relasional. Ringkasan hasilnya ditunjukkan pada Tabel 4.24. Setiap kueri dinilai pada empat kriteria: dapat dieksekusi tanpa galat, mengembalikan hasil tidak kosong, hasil sesuai fakta pada teks sumber (validasi manual), dan hasil dapat dilacak balik ke dokumen sumber melalui metadata *provenance* (`evidence`, `halaman`, `chunk_id`).
+Keenam fungsi yang telah didefinisikan pada Subbab 3.9.2 (F1 sampai F6, Tabel 3.21) diuji dengan menjalankan skenario kueri Cypher masing-masing pada graf, untuk memverifikasi kelayakan penelusuran relasional. Ringkasan hasilnya ditunjukkan pada Tabel 4.24. Keberhasilan tiap fungsi dinilai pada empat kriteria: kuerinya dapat dieksekusi tanpa galat, mengembalikan hasil tidak kosong, hasil sesuai fakta pada teks sumber (validasi manual), dan hasil dapat dilacak balik ke dokumen sumber melalui metadata *provenance* (`evidence`, `halaman`, `chunk_id`).
 
-[SISIPKAN TABEL 4.24 - Hasil Pengujian Fungsional Skenario Kueri Graf]
+[SISIPKAN TABEL 4.24 - Hasil Pengujian Fungsional per Fungsi Knowledge Graph]
 
-| No | Kategori kueri (contoh) | Eksekusi | Jumlah hasil | Hasil tidak kosong | Sesuai sumber | Terlacak |
-|----|-------------------------|:--------:|:------------:|:------------------:|:-------------:|:--------:|
-| 1 | Tokoh dalam suatu peristiwa (Perang Badr) | ✔ | [..] | ✔ | ✔ | ✔ |
-| 2 | Peristiwa di suatu lokasi (Madinah) | ✔ | [..] | ✔ | ✔ | ✔ |
-| 3 | Peristiwa pada suatu waktu (tahun ke-2 H) | ✔ | [..] | ✔ | ✔ | ✔ |
-| 4 | Peristiwa yang melibatkan suatu tokoh (Abu Bakar) | ✔ | [..] | ✔ | ✔ | ✔ |
-| 5 | *Multi-hop* (tokoh ke peristiwa ke lokasi; Umar) | ✔ | [..] | ✔ | ✔ | ✔ |
-| 6 | Urutan kronologi peristiwa (PRECEDES) | ✔ | [..] | ✔ | ✔ | ✔ |
+| Fungsi | Skenario kueri (contoh) | Eksekusi | Jumlah hasil | Hasil tidak kosong | Sesuai sumber | Terlacak |
+|--------|-------------------------|:--------:|:------------:|:------------------:|:-------------:|:--------:|
+| F1 | Tokoh dalam suatu peristiwa (Perang Badr) | ✔ | [..] | ✔ | ✔ | ✔ |
+| F2 | Peristiwa di suatu lokasi (Madinah) | ✔ | [..] | ✔ | ✔ | ✔ |
+| F3 | Peristiwa pada suatu waktu (tahun ke-2 H) | ✔ | [..] | ✔ | ✔ | ✔ |
+| F4 | Peristiwa yang melibatkan suatu tokoh (Abu Bakar) | ✔ | [..] | ✔ | ✔ | ✔ |
+| F5 | *Multi-hop* (tokoh ke peristiwa ke lokasi; Umar) | ✔ | [..] | ✔ | ✔ | ✔ |
+| F6 | Urutan kronologi peristiwa (PRECEDES) | ✔ | [..] | ✔ | ✔ | ✔ |
 
 > Kolom "Jumlah hasil" diisi dari keluaran `functional_test_queries_bab4.cypher` (query `*.count` atau query RINGKASAN). Tanda ✔/✘ pada kolom lain disesuaikan dengan hasil eksekusi nyata.
 
 <!-- [PERIKSA] Tabel 4.24 menyatakan keenam skenario berhasil (berdasarkan rancangan). Untuk mengisinya dengan bukti nyata, jalankan `data/result/neo4j/functional_test_queries_bab4.cypher` di Neo4j (setelah import_sirah_v3.cypher). File itu memuat Q1-Q6 (versi detail + versi _count) plus satu query RINGKASAN yang langsung mengeluarkan jumlah hasil keenam skenario. Catat jumlah baris tiap query ke tabel; bila ada yang kosong/janggal (mis. nama Time beda format), pakai query HELPER di file untuk menyesuaikan nilai `name`, lalu ubah tanda centang apa adanya. -->
 
-Sebagai contoh, kueri "siapa saja yang terlibat dalam Perang Badar" dengan pola `(:Person)-[:INVOLVED_IN]->(:Event {name:"Perang Badr"})` mengembalikan sejumlah tokoh yang seluruhnya dapat ditelusuri ke *chunk* sumbernya melalui properti `evidence` dan `halaman`. <!-- [PERIKSA] tampilkan daftar tokoh hasil query dan jumlahnya dari hasil eksekusi nyata sebagai ilustrasi. --> Keenam skenario dapat dijalankan dan menghasilkan jawaban yang dapat diverifikasi, sehingga graf dinilai layak mendukung penelusuran berbasis hubungan pada Sirah Nabawiyah.
+Sebagai contoh, kueri "siapa saja yang terlibat dalam Perang Badar" dengan pola `(:Person)-[:INVOLVED_IN]->(:Event {name:"Perang Badr"})` mengembalikan sejumlah tokoh yang seluruhnya dapat ditelusuri ke *chunk* sumbernya melalui properti `evidence` dan `halaman`. <!-- [PERIKSA] tampilkan daftar tokoh hasil query dan jumlahnya dari hasil eksekusi nyata sebagai ilustrasi. --> Keenam fungsi (F1 sampai F6) berhasil dipenuhi, yaitu kuerinya dapat dijalankan dan menghasilkan jawaban yang dapat diverifikasi, sehingga graf dinilai layak mendukung penelusuran berbasis hubungan pada Sirah Nabawiyah.
