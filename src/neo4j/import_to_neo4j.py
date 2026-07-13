@@ -46,7 +46,8 @@ def escape_cypher(s: str) -> str:
 
 
 def generate_cypher(nodes_df: pd.DataFrame, edges_df: pd.DataFrame,
-                    periods: list[dict] | None = None) -> str:
+                    periods: list[dict] | None = None,
+                    version_label: str | None = None) -> str:
     """
     Generate Cypher queries untuk import ke Neo4j.
 
@@ -55,7 +56,10 @@ def generate_cypher(nodes_df: pd.DataFrame, edges_df: pd.DataFrame,
     """
     lines = []
 
-    version_tag = "v2 (with Period nodes)" if periods else "v1 (no Period nodes)"
+    if version_label:
+        version_tag = version_label
+    else:
+        version_tag = "v2 (with Period nodes)" if periods else "v1 (no Period nodes)"
     lines.append("// ============================================================")
     lines.append(f"// Knowledge Graph Sirah Nabawiyah — Import Script [{version_tag}]")
     lines.append("// Auto-generated oleh import_to_neo4j.py")
@@ -291,7 +295,12 @@ def main():
 
     # 2. Generate Cypher
     print("\n[2/3] Generating Cypher...")
-    cypher = generate_cypher(nodes_df, edges_df, periods=periods)
+    version_label = None
+    if args.nodes and args.edges:
+        version_label = out_path.stem.replace("import_sirah_", "")
+        if use_periods:
+            version_label += " (with Period nodes)"
+    cypher = generate_cypher(nodes_df, edges_df, periods=periods, version_label=version_label)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out_path.write_text(cypher, encoding="utf-8")

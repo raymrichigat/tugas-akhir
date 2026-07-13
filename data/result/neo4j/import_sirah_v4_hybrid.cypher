@@ -1,5 +1,5 @@
 // ============================================================
-// Knowledge Graph Sirah Nabawiyah — Import Script [v2 (with Period nodes)]
+// Knowledge Graph Sirah Nabawiyah — Import Script [v4_hybrid (with Period nodes)]
 // Auto-generated oleh import_to_neo4j.py
 // ============================================================
 

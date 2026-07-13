@@ -1,14 +1,14 @@
 // =============================================================================
-// PENGUJIAN FUNGSIONAL KNOWLEDGE GRAPH — untuk mengisi Tabel 4.6 (Bab 4)
+// PENGUJIAN FUNGSIONAL KNOWLEDGE GRAPH — untuk mengisi Tabel 4.24 (Bab 4)
 // =============================================================================
-// Tujuan: menjalankan 6 skenario kueri (sesuai Tabel 3.13) lalu mencatat, untuk
-//         tiap skenario, empat kriteria penilaian pada Tabel 4.6:
+// Tujuan: menjalankan 6 skenario kueri (sesuai Tabel 3.21) lalu mencatat, untuk
+//         tiap skenario, empat kriteria penilaian pada Tabel 4.24:
 //           (1) Eksekusi tanpa galat   -> query jalan tanpa error
 //           (2) Hasil tidak kosong     -> jumlah baris > 0 (pakai query _count)
 //           (3) Sesuai sumber          -> cek manual kolom `evidence` + `halaman`
 //           (4) Terlacak (provenance)  -> kolom `evidence`/`halaman`/`chunk_id` ada
 //
-// Skema graf (dikonfirmasi dari import_sirah_v3.cypher):
+// Skema graf (dikonfirmasi dari import_sirah_v4_hybrid.cypher):
 //   Node    : Person, Event, Location, Time, Period (semua punya properti `name`;
 //             Period pakai `period_id`)
 //   Relasi  : (Person)-[:INVOLVED_IN]->(Event)
@@ -19,7 +19,7 @@
 //             relasi antar tokoh: KELUARGA / SAHABAT / MUSUH
 //   Properti edge inti: weight, frequency, halaman, evidence, periode_bab
 //
-// Prasyarat: jalankan import_sirah_v3.cypher dulu (graf sudah ter-load).
+// Prasyarat: jalankan import_sirah_v4_hybrid.cypher dulu (graf sudah ter-load).
 // Catatan weight: untuk pengujian fungsional, filter weight TIDAK dipakai (kita
 //   menguji apakah graf bisa menjawab). Bila ingin tampilan "bersih" yang sama
 //   dengan tabel SNA, tambahkan `AND r.weight >= 0.3` pada query INVOLVED_IN.
@@ -48,7 +48,7 @@ MATCH (p:Person)-[r:INVOLVED_IN]->(e:Event {name: "Perang Badr"})
 RETURN p.name AS tokoh, r.weight AS weight, r.halaman AS halaman, r.evidence AS evidence
 ORDER BY r.weight DESC;
 
-// Q1.count (untuk kolom 'jumlah hasil' Tabel 4.6)
+// Q1.count (untuk kolom 'jumlah hasil' Tabel 4.24)
 MATCH (p:Person)-[:INVOLVED_IN]->(e:Event {name: "Perang Badr"})
 RETURN count(DISTINCT p) AS jumlah_tokoh;
 
@@ -129,7 +129,7 @@ RETURN count(r) AS jumlah_relasi_precedes;
 
 
 // =============================================================================
-// RINGKASAN OTOMATIS — satu hasil berisi jumlah hasil tiap skenario (Tabel 4.6)
+// RINGKASAN OTOMATIS — satu hasil berisi jumlah hasil tiap skenario (Tabel 4.24)
 // =============================================================================
 MATCH (p:Person)-[:INVOLVED_IN]->(:Event {name: "Perang Badr"})
 WITH count(DISTINCT p) AS q1
