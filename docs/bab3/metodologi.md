@@ -6,11 +6,11 @@
 > Patuh pedoman: tanpa em dash, bahasa *layman*, istilah asing *italic*, sitasi APA. Tanda **[PERIKSA]** = perlu konfirmasi pembimbing; **[SITASI: ...]** = referensi yang perlu masuk Daftar Pustaka.
 > Pembimbing: Dini Adni Navastara, S.Kom., M.Sc.; ko-pembimbing: Ratih Nur Esti Anggraini, S.Kom., M.Sc., Ph.D.
 
-Bab ini menguraikan metodologi penelitian secara rinci. Subbab 3.1 menyajikan perancangan sistem secara garis besar, yaitu diagram alir keseluruhan metodologi beserta spesifikasi perangkat keras dan perangkat lunak yang digunakan. Subbab 3.2 sampai 3.10 menjelaskan setiap tahap pada diagram alir tersebut secara detail, dilengkapi *pseudocode*, contoh hasil, dan penjelasan komponen data pada tiap tahap.
+Bab ini menguraikan metodologi penelitian secara rinci. Subbab 3.1 menyajikan perancangan sistem secara garis besar, yaitu diagram alir keseluruhan metodologi beserta spesifikasi perangkat keras dan perangkat lunak yang digunakan. Subbab 3.2 sampai 3.9 menjelaskan setiap tahap pada diagram alir tersebut secara detail, dilengkapi *pseudocode*, contoh hasil, dan penjelasan komponen data pada tiap tahap.
 
 ## 3.1 Perancangan Sistem
 
-Penelitian ini bertujuan membangun *knowledge graph* Sirah Nabawiyah berbahasa Indonesia dari teks naratif menggunakan *Named-Entity Recognition* (NER) berbasis SRL dengan strategi *iterative self-training*, lalu menyimpannya pada Neo4j dan menganalisisnya dengan *Social Network Analysis* (SNA). Secara garis besar, sistem terdiri dari rangkaian tahap berikut: preparasi *dataset* dari dokumen Sirah, *preprocessing* untuk membersihkan *noise* hasil OCR, *chunking* untuk memecah teks menjadi unit kecil yang tetap mempertahankan konteks, pelabelan data sebagai *seed* sekaligus data acuan (*ground truth*), ekstraksi entitas dengan NER berbasis SRL (yang hasilnya digabungkan dengan anotasi manual untuk membentuk cakupan entitas seluruh korpus), penyatuan variasi nama entitas (*alias clustering*), konstruksi *knowledge graph* (pembentukan relasi, periodisasi peristiwa, dan impor ke Neo4j), evaluasi hasil ekstraksi NER, serta analisis jaringan dengan SNA dan pengujian fungsional graf. Diagram alir keseluruhan metodologi ditunjukkan pada Gambar 3.1.
+Penelitian ini bertujuan membangun *knowledge graph* Sirah Nabawiyah berbahasa Indonesia dari teks naratif menggunakan *Named-Entity Recognition* (NER) berbasis SRL dengan strategi *iterative self-training*, lalu menyimpannya pada Neo4j dan menganalisisnya dengan *Social Network Analysis* (SNA). Secara garis besar, sistem terdiri dari rangkaian tahap berikut: preparasi *dataset* dari dokumen Sirah, *preprocessing* untuk membersihkan *noise* hasil OCR, *chunking* untuk memecah teks menjadi unit kecil yang tetap mempertahankan konteks, pelabelan data sebagai *seed* sekaligus data acuan (*ground truth*), ekstraksi entitas dengan NER berbasis SRL (yang hasilnya digabungkan dengan anotasi manual untuk membentuk cakupan entitas seluruh korpus), konstruksi *knowledge graph* (penyatuan variasi nama entitas atau *alias clustering*, pembentukan relasi, periodisasi peristiwa, dan impor ke Neo4j), evaluasi hasil ekstraksi NER, serta analisis jaringan dengan SNA dan pengujian fungsional graf. Diagram alir keseluruhan metodologi ditunjukkan pada Gambar 3.1.
 
 ```mermaid
 flowchart TD
@@ -20,17 +20,16 @@ flowchart TD
     S3["3.4 Chunking\nPemecahan teks ±1500 karakter"]
     S4["3.5 Pelabelan Data\nSeed berlabel BIO + data uji"]
     S5["3.6 Ekstraksi Entitas NER\nIndoBERT + Iterative Self-Training"]
-    S6["3.7 Alias Clustering\nNormalisasi variasi nama entitas"]
-    S7["3.8 Konstruksi Knowledge Graph\nRelasi, periodisasi & impor Neo4j"]
-    S8["3.9 Evaluasi Hasil Ekstraksi NER\nSeqeval + 3 uji coba"]
-    S9["3.10 Analisis Jaringan & Pengujian Graf\nSNA + uji fungsional Cypher"]
+    S6["3.7 Konstruksi Knowledge Graph\nAlias clustering, relasi, periodisasi & impor Neo4j"]
+    S7["3.8 Evaluasi Hasil Ekstraksi NER\nSeqeval + 3 uji coba"]
+    S8["3.9 Analisis Jaringan & Pengujian Graf\nSNA + uji fungsional Cypher"]
 
-    START --> S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
+    START --> S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8
 ```
 
 **Gambar 3.1** Diagram Alir Keseluruhan Metodologi
 
-Tiap tahap pada diagram alir di atas diuraikan secara rinci pada subbab 3.2 sampai 3.10, masing-masing dilengkapi *pseudocode*, contoh hasil, dan penjelasan komponen data. Penelitian ini menggunakan dua lingkungan komputasi: komputer lokal untuk sebagian besar tahap pengolahan data, dan Google Colab dengan GPU untuk pelatihan model NER. Spesifikasi perangkat keras komputer lokal ditunjukkan pada Tabel 3.1.
+Tiap tahap pada diagram alir di atas diuraikan secara rinci pada subbab 3.2 sampai 3.9, masing-masing dilengkapi *pseudocode*, contoh hasil, dan penjelasan komponen data. Penelitian ini menggunakan dua lingkungan komputasi: komputer lokal untuk sebagian besar tahap pengolahan data, dan Google Colab dengan GPU untuk pelatihan model NER. Spesifikasi perangkat keras komputer lokal ditunjukkan pada Tabel 3.1.
 
 [SISIPKAN TABEL 3.1 - Spesifikasi Perangkat Keras]
 
@@ -538,11 +537,45 @@ Sebagai contoh hasil dinamika *self-training* pada konfigurasi dasar (*baseline*
 
 Keluaran tahap ini adalah daftar entitas gabungan untuk seluruh *chunk* korpus. Untuk *chunk* yang memiliki anotasi manual (data latih dan data uji dari tahap 3.5), anotasi manual dipertahankan sebagai masukan primer karena telah melalui verifikasi manusia dan memiliki kualitas lebih tinggi dibandingkan prediksi otomatis. Untuk *chunk* yang tidak memiliki anotasi manual, digunakan prediksi model NER terbaik yang diperoleh dari proses *iterative self-training*. Kedua sumber entitas digabungkan sehingga seluruh 1.094 *chunk* memiliki entitas berlabel, dengan kolom `chunk_id`, `entity_text`, `label`, serta posisi karakternya. Daftar entitas gabungan ini menjadi masukan tahap penyatuan nama entitas.
 
-## 3.7 Penyatuan Nama Entitas (Alias Clustering)
+Sebagai contoh keluaran, sebagian entitas hasil ekstraksi NER pada *chunk* `000099-001` (halaman 233) ditunjukkan pada Tabel 3.12.
 
-Tahap penyatuan nama bertujuan menormalisasi variasi penulisan nama entitas ke satu bentuk kanonik. Dalam Sirah, satu tokoh sering disebut dengan beberapa variasi (misalnya "Umar", "Umar bin Al-Khaththab", dan "Ibnul Khaththab" yang merujuk orang yang sama). Tanpa normalisasi, variasi ini akan menjadi *node* terpisah pada *knowledge graph* yang seharusnya satu entitas. Tahap ini dijalankan setelah ekstraksi entitas agar peta alias mencakup seluruh variasi nama di korpus. Diagram alir tahap ini ditunjukkan pada Gambar 3.7.
+[SISIPKAN TABEL 3.12 - Contoh Keluaran Ekstraksi Entitas NER]
 
-[SISIPKAN GAMBAR 3.7 - Diagram Alir Alias Clustering]
+| Entitas | Label | `start_char` | `end_char` |
+|---------|-------|-------------:|-----------:|
+| Madinah | LOCATION | 8 | 15 |
+| Perjanjian Hudaibiyah | EVENT | 280 | 301 |
+| Fathu Makkah | EVENT | 423 | 435 |
+| bulan Ramadhan | TIME | 441 | 455 |
+| Rasulullah | PERSON | 740 | 750 |
+| bulan Rabi'ul Awwal | TIME | 756 | 775 |
+
+> Contoh diambil dari keluaran inferensi NER (`sirah_predicted_v4_entity.csv`). Tabel menampilkan sebagian entitas dari satu *chunk*; entitas yang berulang (misalnya "Madinah" yang muncul beberapa kali) ditampilkan satu kali. Setiap baris memuat teks entitas, label kelasnya, serta rentang posisi karakter (`start_char`, `end_char`) pada *chunk* asal. Contoh ini memperlihatkan model mengenali keempat kelas entitas sekaligus, termasuk *Event* (Perjanjian Hudaibiyah, Fathu Makkah) dan ungkapan *Time* yang terdiri atas beberapa kata (bulan Ramadhan, bulan Rabi'ul Awwal).
+
+## 3.7 Konstruksi Knowledge Graph
+
+Tahap konstruksi *knowledge graph* menyusun struktur graf dari daftar entitas hasil ekstraksi melalui empat bagian yang berurutan: penyatuan variasi nama entitas (*alias clustering*) agar satu entitas tidak terpecah menjadi banyak *node*, pembentukan relasi antar entitas menjadi pasangan *node-edge*, periodisasi peristiwa yang menambahkan dimensi waktu berupa atribut periode dan relasi urutan kronologis antar peristiwa, lalu pemuatan *node* dan *edge* tersebut ke basis data graf Neo4j. Diagram alir keseluruhan tahap konstruksi *knowledge graph* ditunjukkan pada Gambar 3.7.
+
+```mermaid
+flowchart LR
+    A(["Mulai"]) --> B[/Entitas hasil NER/]
+    B --> C["1 · Alias Clustering<br/>manual + Jaro-Winkler 0,93"]
+    C --> D[/Data alias entitas/]
+    D --> E["2 · Pembentukan Relasi<br/>co-occurrence, tipe relasi, pembobotan"]
+    E --> F[/Data nodes & edges/]
+    F --> G["3 · Periodisasi Peristiwa<br/>Event ke periode P0-P14, relasi PRECEDES"]
+    G --> H[/Data nodes, edges & periode/]
+    H --> I["4 · Pemuatan ke Neo4j<br/>skema graf, import node & edge, Event ke periode"]
+    I --> J(["Knowledge Graph"])
+```
+
+**Gambar 3.7** Diagram Alir Konstruksi Knowledge Graph
+
+### 3.7.1 Penyatuan Nama Entitas (Alias Clustering)
+
+Tahap penyatuan nama bertujuan menormalisasi variasi penulisan nama entitas ke satu bentuk kanonik. Dalam Sirah, satu tokoh sering disebut dengan beberapa variasi (misalnya "Umar", "Umar bin Al-Khaththab", dan "Ibnul Khaththab" yang merujuk orang yang sama). Tanpa normalisasi, variasi ini akan menjadi *node* terpisah pada *knowledge graph* yang seharusnya satu entitas. Tahap ini dijalankan setelah ekstraksi entitas agar peta alias mencakup seluruh variasi nama di korpus. Diagram alir tahap ini ditunjukkan pada Gambar 3.8.
+
+[SISIPKAN GAMBAR 3.8 - Diagram Alir Alias Clustering]
 
 Penyatuan dilakukan dalam dua tahap. Pertama, pengelompokan manual (*manual clusters*) terhadap entitas yang dipastikan merujuk entitas sama berdasarkan pengetahuan domain, mencakup label *Person*, *Location*, dan *Event*. Kedua, pencocokan kemiripan string menggunakan algoritma Jaro-Winkler. Algoritma ini dipilih karena memberi bobot lebih pada kesamaan prefiks, yang sesuai dengan karakteristik nama Arab yang variasinya umumnya terjadi pada bagian akhir nama. Ambang kemiripan ditetapkan 0,93 (lebih tinggi dari ambang umum 0,85) karena banyak nama Arab berpola struktural mirip namun berbeda orang (misalnya "Abu Bakar" dan "Abu Bashir"). Untuk mencegah *false positive*, diterapkan sejumlah pengaman: bagian pembeda setelah prefiks majemuk harus mirip di atas 0,90; bagian patronimik (bin/binti) harus cocok; rasio panjang kedua nama tidak boleh di bawah 0,80; serta daftar pasangan terlarang (*exclude pairs*) untuk nama yang mirip secara leksikal namun berbeda entitas (misalnya "Sa'd bin Mu'adz" dan "Sa'd bin Ubadah"). *Pseudocode* tahap ini ditunjukkan pada Kode Semu 3.8.
 
@@ -588,9 +621,9 @@ ALGORITMA:
 
 Kode Semu 3.8 menunjukkan tahapan umum penyatuan variasi penulisan nama entitas ke satu bentuk kanonik. Proses dimulai dengan pengelompokan manual, yaitu memetakan kumpulan variasi nama yang dipastikan merujuk entitas sama berdasarkan pengetahuan domain ke nama kanoniknya untuk label *Person*, *Location*, dan *Event*. Selanjutnya, untuk tiap label dilakukan pencocokan kemiripan *string* dengan algoritma Jaro-Winkler, dengan nama diurutkan dari yang terpanjang agar bentuk yang lebih lengkap menjadi acuan kanonik. Sepasang nama disatukan hanya bila skor kemiripannya mencapai ambang 0,93, lolos seluruh pengaman (rasio panjang, kemiripan bagian pembeda setelah prefiks, dan kecocokan patronimik), serta tidak termasuk daftar pasangan terlarang. Hasil akhir dari proses ini berupa peta alias yang memetakan setiap variasi nama ke bentuk kanoniknya, disertai laporan klaster untuk ditinjau manual. Dengan demikian, keluaran tahap ini memastikan satu entitas yang ditulis dalam berbagai variasi direpresentasikan sebagai satu *node* pada *knowledge graph*, sehingga relasi dan analisis jaringan tidak terpecah akibat duplikasi nama.
 
-Keluaran tahap ini adalah peta alias (`alias_map.json`) yang memetakan setiap variasi nama ke bentuk kanoniknya, disertai laporan klaster (`alias_clusters.md`) untuk review manual. Sebagai contoh hasil, proses ini menghasilkan sekitar 143 variasi nama yang dipetakan ke sekitar 109 klaster kanonik. <!-- [PERIKSA] cocokkan jumlah alias dan klaster dengan alias_clusters.md terbaru. --> Peta alias digunakan pada tahap pembentukan relasi dan konstruksi graf agar setiap entitas direpresentasikan sebagai satu *node*. Contoh pemetaan variasi nama ke bentuk kanoniknya ditunjukkan pada Tabel 3.12.
+Keluaran tahap ini adalah peta alias (`alias_map.json`) yang memetakan setiap variasi nama ke bentuk kanoniknya, disertai laporan klaster (`alias_clusters.md`) untuk review manual. Sebagai contoh hasil, proses ini menghasilkan sekitar 143 variasi nama yang dipetakan ke sekitar 109 klaster kanonik. <!-- [PERIKSA] cocokkan jumlah alias dan klaster dengan alias_clusters.md terbaru. --> Peta alias digunakan pada tahap pembentukan relasi dan konstruksi graf agar setiap entitas direpresentasikan sebagai satu *node*. Contoh pemetaan variasi nama ke bentuk kanoniknya ditunjukkan pada Tabel 3.13.
 
-[SISIPKAN TABEL 3.12 - Contoh Pemetaan Variasi Nama ke Bentuk Kanonik]
+[SISIPKAN TABEL 3.13 - Contoh Pemetaan Variasi Nama ke Bentuk Kanonik]
 
 | Variasi nama | Bentuk kanonik | Jenis variasi |
 |--------------|----------------|---------------|
@@ -604,21 +637,17 @@ Keluaran tahap ini adalah peta alias (`alias_map.json`) yang memetakan setiap va
 
 > Contoh diambil dari `alias_clusters.md`. Variasi semantik (misalnya "Rasulullah") disatukan pada tahap pengelompokan manual; variasi ejaan atau *typo* disatukan oleh kemiripan Jaro-Winkler.
 
-## 3.8 Konstruksi Knowledge Graph
+### 3.7.2 Pembentukan Relasi
 
-Tahap konstruksi *knowledge graph* menyusun struktur graf dari daftar entitas hasil ekstraksi melalui tiga bagian yang berurutan: pembentukan relasi antar entitas menjadi pasangan *node-edge*, periodisasi peristiwa yang menambahkan dimensi waktu berupa atribut periode dan relasi urutan kronologis antar peristiwa, lalu pemuatan *node* dan *edge* tersebut ke basis data graf Neo4j.
+Tahap pembentukan relasi bertujuan menghubungkan entitas menjadi pasangan *node-edge* sehingga terbentuk struktur pengetahuan yang dapat dimasukkan ke basis data graf. Diagram alir tahap ini ditunjukkan pada Gambar 3.9.
 
-### 3.8.1 Pembentukan Relasi
-
-Tahap pembentukan relasi bertujuan menghubungkan entitas menjadi pasangan *node-edge* sehingga terbentuk struktur pengetahuan yang dapat dimasukkan ke basis data graf. Diagram alir tahap ini ditunjukkan pada Gambar 3.8.
-
-[SISIPKAN GAMBAR 3.8 - Diagram Alir Pembentukan Relasi]
+[SISIPKAN GAMBAR 3.9 - Diagram Alir Pembentukan Relasi]
 
 Proses diawali dengan normalisasi nama entitas menggunakan peta alias dari tahap sebelumnya, sehingga entitas yang sama tetapi ditulis berbeda dikenali sebagai satu *node*. Selanjutnya, relasi dibentuk berdasarkan kemunculan bersama (*co-occurrence*) entitas dalam *chunk* yang sama dengan memperhatikan kedekatan posisi (*proximity*). Dua entitas dianggap berada pada konteks yang sama jika berada dalam satu kalimat atau dalam jarak kurang dari 200 karakter. Entitas *Event* diperlakukan sebagai pusat keterhubungan karena dalam Sirah, peristiwa menjadi penghubung antara tokoh, lokasi, dan waktu.
 
-Relasi inti yang dibentuk mengikuti kombinasi label entitas dan dijelaskan pada Tabel 3.13.
+Relasi inti yang dibentuk mengikuti kombinasi label entitas dan dijelaskan pada Tabel 3.14.
 
-[SISIPKAN TABEL 3.13 - Rancangan Tipe Relasi Inti]
+[SISIPKAN TABEL 3.14 - Rancangan Tipe Relasi Inti]
 
 | Pasangan Entitas | Tipe Relasi | Makna |
 |------------------|-------------|-------|
@@ -675,9 +704,9 @@ ALGORITMA:
 
 Kode Semu 3.9 menunjukkan tahapan umum pembentukan relasi antar entitas menjadi pasangan *node-edge*. Proses dimulai dengan menormalkan nama tiap entitas memakai peta alias agar variasi penulisan dikenali sebagai satu *node*, kemudian entitas dikelompokkan per *chunk* dan dipisahkan menurut tipenya. Untuk tiap peristiwa pada sebuah *chunk*, dibentuk relasi ke tokoh (`INVOLVED_IN`), ke lokasi (`OCCURRED_AT`), dan ke waktu (`OCCURRED_ON`) selama keduanya berada pada konteks yang sama dan lolos pemeriksaan *guard* yang menolak relasi semu, sementara relasi antar tokoh (`KELUARGA`, `SAHABAT`, `MUSUH`) dibentuk dari pola kata pemicu pada kalimat bukti. Relasi yang sama dari konteks berbeda lalu digabung sambil menghimpun *evidence* dan menghitung bobot, dan daftar *node* unik dibangun dari seluruh entitas. Hasil akhir dari proses ini berupa berkas daftar *node* (`nodes.csv`) dan daftar *edge* (`edges.csv`) yang masing-masing dilengkapi atribut dan *provenance*. Dengan demikian, keluaran tahap ini tidak hanya merepresentasikan entitas sebagai titik, tetapi juga keterhubungan bermakna antara tokoh, peristiwa, lokasi, dan waktu yang siap dimuat ke dalam basis data graf.
 
-Atribut *node* dan *edge* dijelaskan pada Tabel 3.14 dan Tabel 3.15.
+Atribut *node* dan *edge* dijelaskan pada Tabel 3.15 dan Tabel 3.16.
 
-[SISIPKAN TABEL 3.14 - Atribut Node]
+[SISIPKAN TABEL 3.15 - Atribut Node]
 
 | Kolom | Deskripsi | Contoh nilai |
 |-------|-----------|--------------|
@@ -690,7 +719,7 @@ Atribut *node* dan *edge* dijelaskan pada Tabel 3.14 dan Tabel 3.15.
 
 > Contoh nilai diambil dari *node* "Muhammad" pada `nodes_v3.csv`.
 
-[SISIPKAN TABEL 3.15 - Atribut Edge]
+[SISIPKAN TABEL 3.16 - Atribut Edge]
 
 | Kolom | Deskripsi | Contoh nilai |
 |-------|-----------|--------------|
@@ -703,9 +732,9 @@ Atribut *node* dan *edge* dijelaskan pada Tabel 3.14 dan Tabel 3.15.
 
 > Contoh nilai diambil dari satu *edge* `(Amr bin Al-Ash) -[INVOLVED_IN]-> (Perang Badr)` pada `edges_v3.csv`.
 
-Bobot relasi dihitung dari kombinasi skor kedekatan (*proximity*) entitas dalam teks dan skor periode (kesesuaian relasi dengan periode peristiwa, lihat subbab 3.8.2). Contoh hasil satu relasi adalah `(Person: Abu Bakar) -[INVOLVED_IN]-> (Event: Hijrah ke Madinah)` dengan `evidence` berupa cuplikan kalimat sumber dan `weight` tertentu. Beberapa contoh *edge* nyata untuk tiap tipe relasi ditunjukkan pada Tabel 3.16. Keluaran tahap ini berupa `nodes.csv` dan `edges.csv`.
+Bobot relasi dihitung dari kombinasi skor kedekatan (*proximity*) entitas dalam teks dan skor periode (kesesuaian relasi dengan periode peristiwa, lihat subbab 3.7.3). Contoh hasil satu relasi adalah `(Person: Abu Bakar) -[INVOLVED_IN]-> (Event: Hijrah ke Madinah)` dengan `evidence` berupa cuplikan kalimat sumber dan `weight` tertentu. Beberapa contoh *edge* nyata untuk tiap tipe relasi ditunjukkan pada Tabel 3.17. Keluaran tahap ini berupa `nodes.csv` dan `edges.csv`.
 
-[SISIPKAN TABEL 3.16 - Contoh Edge Hasil Pembentukan Relasi]
+[SISIPKAN TABEL 3.17 - Contoh Edge Hasil Pembentukan Relasi]
 
 | Sumber (label) | Relasi | Tujuan (label) | weight | halaman |
 |----------------|--------|----------------|-------:|---------|
@@ -716,11 +745,11 @@ Bobot relasi dihitung dari kombinasi skor kedekatan (*proximity*) entitas dalam 
 
 > Contoh diambil dari `edges_v3.csv`. Tiap *edge* juga menyimpan `evidence` (cuplikan kalimat sumber) dan `chunk_id` yang tidak ditampilkan di sini agar ringkas.
 
-### 3.8.2 Periodisasi Peristiwa
+### 3.7.3 Periodisasi Peristiwa
 
-Tahap periodisasi bertujuan menempatkan setiap peristiwa (*Event*) pada periode kronologis Sirah dan membentuk relasi urutan antar peristiwa. Periodisasi memanfaatkan struktur daftar isi buku sebagai acuan urutan kronologis, karena Sirah disusun secara runtut. Diagram alir tahap ini ditunjukkan pada Gambar 3.9.
+Tahap periodisasi bertujuan menempatkan setiap peristiwa (*Event*) pada periode kronologis Sirah dan membentuk relasi urutan antar peristiwa. Periodisasi memanfaatkan struktur daftar isi buku sebagai acuan urutan kronologis, karena Sirah disusun secara runtut. Diagram alir tahap ini ditunjukkan pada Gambar 3.10.
 
-[SISIPKAN GAMBAR 3.9 - Diagram Alir Periodisasi Peristiwa]
+[SISIPKAN GAMBAR 3.10 - Diagram Alir Periodisasi Peristiwa]
 
 Periodisasi dilakukan secara *top-down*: bab-bab pada daftar isi dikelompokkan secara semantik menjadi sejumlah periode yang lebih besar (misalnya periode sebelum kenabian, periode dakwah di Makkah, periode Madinah, dan seterusnya). Setiap *node* EVENT dipetakan ke bab tempat ia paling banyak muncul, lalu bab tersebut menentukan periodenya beserta rentang halaman. Berdasarkan urutan halaman bab, peristiwa-peristiwa diurutkan secara kronologis dan dihubungkan dengan relasi `PRECEDES` (mendahului). *Pseudocode* tahap ini ditunjukkan pada Kode Semu 3.10.
 
@@ -755,9 +784,9 @@ ALGORITMA:
 
 Kode Semu 3.10 menunjukkan tahapan umum penempatan tiap peristiwa pada periode kronologis Sirah sekaligus pembentukan urutan antar peristiwa. Proses dimulai dengan memetakan setiap *node* EVENT ke bab tempat ia paling banyak muncul, lalu bab tersebut menentukan periode dan rentang halamannya berdasarkan pengelompokan periode yang disusun secara *top-down* dari daftar isi. Selanjutnya, peristiwa yang cukup sering muncul diurutkan secara kronologis menurut halaman bab dan dirapikan agar tidak ada urutan ganda dari bab yang sama. Berdasarkan urutan tersebut, dibentuk relasi `PRECEDES` antara tiap peristiwa dengan peristiwa berikutnya sehingga terbentuk rantai kronologi, dan hasil pemetaan periode disimpan sebagai berkas. Hasil akhir dari proses ini berupa peta periode tiap peristiwa beserta rentang halamannya dan kumpulan relasi `PRECEDES` antar peristiwa. Dengan demikian, keluaran tahap ini memberi dimensi waktu pada *knowledge graph*, sehingga peristiwa tidak hanya terhubung ke tokoh dan tempat, tetapi juga tertata menurut urutan kronologis narasi Sirah.
 
-Sebagai contoh hasil, daftar isi dikelompokkan menjadi sekitar 15 periode (diberi kode P0 sampai P14) yang tergabung dalam beberapa fase besar. <!-- [PERIKSA] cocokkan jumlah periode dan fase dengan period_mapping.json terbaru. --> Setiap peristiwa frekuen memperoleh atribut periode (`periode_bab`) dan rentang halaman (`page_range`), serta terhubung ke peristiwa berikutnya melalui relasi `PRECEDES`, sehingga terbentuk rantai kronologi peristiwa dari awal sampai akhir narasi Sirah. Contoh pemetaan beberapa peristiwa ke periode dan rentang halamannya, terurut kronologis, ditunjukkan pada Tabel 3.17.
+Sebagai contoh hasil, daftar isi dikelompokkan menjadi sekitar 15 periode (diberi kode P0 sampai P14) yang tergabung dalam beberapa fase besar. <!-- [PERIKSA] cocokkan jumlah periode dan fase dengan period_mapping.json terbaru. --> Setiap peristiwa frekuen memperoleh atribut periode (`periode_bab`) dan rentang halaman (`page_range`), serta terhubung ke peristiwa berikutnya melalui relasi `PRECEDES`, sehingga terbentuk rantai kronologi peristiwa dari awal sampai akhir narasi Sirah. Contoh pemetaan beberapa peristiwa ke periode dan rentang halamannya, terurut kronologis, ditunjukkan pada Tabel 3.18.
 
-[SISIPKAN TABEL 3.17 - Contoh Pemetaan Peristiwa ke Periode (Periodisasi)]
+[SISIPKAN TABEL 3.18 - Contoh Pemetaan Peristiwa ke Periode (Periodisasi)]
 
 | Peristiwa (*Event*) | `periode_bab` | `page_range` | `frequency` |
 |---------------------|---------------|--------------|------------:|
@@ -771,11 +800,11 @@ Sebagai contoh hasil, daftar isi dikelompokkan menjadi sekitar 15 periode (diber
 
 > **[CATATAN PENYUSUN]** Sebagian peristiwa penting dalam Sirah disebut dalam bentuk frasa kata kerja (misalnya "beliau wafat") atau frasa deskriptif (misalnya "turunnya wahyu pertama") yang tidak tertangkap NER sebagai entitas *Event*. Untuk kelengkapan narasi, sejumlah peristiwa daur hidup (*lifecycle events*) ditambahkan secara manual, sementara relasinya tetap ditemukan otomatis dari prediksi NER pada *chunk* terkait. Penambahan ini perlu diungkap apa adanya pada Bab 4 sebagai keterbatasan dan disclosure metode.
 
-### 3.8.3 Konstruksi Graf di Neo4j
+### 3.7.4 Konstruksi Graf di Neo4j
 
-Bagian ini membangun basis data graf di Neo4j dari daftar *node* dan *edge* yang dihasilkan pada dua bagian sebelumnya. Diagram alir bagian ini ditunjukkan pada Gambar 3.10.
+Bagian ini membangun basis data graf di Neo4j dari daftar *node* dan *edge* yang dihasilkan pada tahap pembentukan relasi dan periodisasi sebelumnya. Diagram alir bagian ini ditunjukkan pada Gambar 3.11.
 
-[SISIPKAN GAMBAR 3.10 - Diagram Alir Konstruksi Knowledge Graph]
+[SISIPKAN GAMBAR 3.11 - Diagram Alir Konstruksi Knowledge Graph]
 
 Skema graf terdiri dari empat label *node* (`Person`, `Event`, `Location`, `Time`) dan satu label tambahan `Period` untuk periode, serta tipe relasi inti `INVOLVED_IN`, `OCCURRED_AT`, dan `OCCURRED_ON`, ditambah `IN_PERIOD` (Event ke Period), serta relasi `KELUARGA`, `SAHABAT`, `MUSUH`, dan `PRECEDES`. Untuk menjaga integritas, dibuat *constraint* keunikan pada properti `name` setiap label *node* sehingga tidak ada dua *node* berduplikat. Impor *node* dan relasi menggunakan perintah `MERGE` agar *node* atau relasi yang sudah ada tidak terduplikasi, melainkan propertinya diperbarui. Skrip Cypher dihasilkan secara otomatis dari `nodes.csv` dan `edges.csv`, lalu dapat dijalankan langsung melalui *driver* Bolt atau disalin ke Neo4j Browser. *Pseudocode* tahap ini ditunjukkan pada Kode Semu 3.11.
 
@@ -818,11 +847,11 @@ Kode Semu 3.11 menunjukkan tahapan umum pemuatan daftar *node* dan *edge* menjad
 
 Properti *node* mencakup `name`, `node_id`, `frequency`, `aliases`, serta `periode_bab` dan `page_range` untuk EVENT; properti relasi mencakup `weight`, `frequency`, `evidence`, dan `halaman`. Sebagai contoh hasil, kueri Cypher `MATCH (p:Person)-[:INVOLVED_IN]->(e:Event {name: "Perang Badr"}) RETURN p.name` mengembalikan daftar tokoh yang terlibat pada Perang Badar berdasarkan graf. Statistik akhir jumlah *node* dan *edge* graf dilaporkan pada Bab 4. <!-- [PERIKSA] jumlah total node/edge final (versi bersih) disajikan di Bab 4 agar tidak terjadi perbedaan angka antar bab. -->
 
-## 3.9 Evaluasi Hasil Ekstraksi NER
+## 3.8 Evaluasi Hasil Ekstraksi NER
 
-Evaluasi hasil ekstraksi NER bertujuan mengukur kemampuan model mengenali dan mengklasifikasikan entitas secara objektif. Evaluasi dilakukan pada data uji (30% *ground truth* dari tahap pelabelan) yang tidak pernah digunakan saat *pseudo-labelling*, sehingga mencerminkan kemampuan generalisasi model. Prediksi dibandingkan dengan *ground truth* pada tingkat entitas (*entity-level*) menggunakan pustaka seqeval, yaitu sebuah entitas dianggap benar hanya jika seluruh rentang token dan kategorinya tepat. Dihitung *Precision*, *Recall*, dan *F1-score* untuk setiap label, serta agregat *macro-average* (rata-rata antar kelas dengan bobot sama, agar kelas minoritas *Event* dan *Time* terwakili) dan *micro-average*. Rumus metrik mengacu pada Bab 2 subbab 2.6.1. Diagram alir evaluasi ditunjukkan pada Gambar 3.11.
+Evaluasi hasil ekstraksi NER bertujuan mengukur kemampuan model mengenali dan mengklasifikasikan entitas secara objektif. Evaluasi dilakukan pada data uji (30% *ground truth* dari tahap pelabelan) yang tidak pernah digunakan saat *pseudo-labelling*, sehingga mencerminkan kemampuan generalisasi model. Prediksi dibandingkan dengan *ground truth* pada tingkat entitas (*entity-level*) menggunakan pustaka seqeval, yaitu sebuah entitas dianggap benar hanya jika seluruh rentang token dan kategorinya tepat. Dihitung *Precision*, *Recall*, dan *F1-score* untuk setiap label, serta agregat *macro-average* (rata-rata antar kelas dengan bobot sama, agar kelas minoritas *Event* dan *Time* terwakili) dan *micro-average*. Rumus metrik mengacu pada Bab 2 subbab 2.6.1. Diagram alir evaluasi ditunjukkan pada Gambar 3.12.
 
-[SISIPKAN GAMBAR 3.11 - Diagram Alir Evaluasi Hasil Ekstraksi NER]
+[SISIPKAN GAMBAR 3.12 - Diagram Alir Evaluasi Hasil Ekstraksi NER]
 
 Prosedur evaluasi yang sama dipakai untuk seluruh uji coba. *Pseudocode* evaluasi NER ditunjukkan pada Kode Semu 3.12.
 
@@ -844,9 +873,9 @@ ALGORITMA:
 
 Kode Semu 3.12 menunjukkan tahapan umum evaluasi kualitas hasil NER pada data uji. Proses dimulai dengan mengambil urutan label sebenarnya (*ground truth*) berformat BIO dari data uji, kemudian model NER terbaik memprediksi label untuk token yang sama. Kedua urutan dibandingkan pada tingkat entitas menggunakan pustaka seqeval, yaitu sebuah entitas dihitung benar hanya jika seluruh rentang token dan kategorinya tepat. Dari perbandingan itu dihitung *Precision*, *Recall*, dan *F1-score* untuk tiap label beserta agregat *macro-average* dan *micro-average*. Hasil akhir dari proses ini berupa kumpulan metrik per label dan agregatnya. Dengan demikian, keluaran tahap ini memberi ukuran objektif kemampuan model mengenali entitas pada data yang tidak pernah dilihat saat pelatihan, sehingga menjadi dasar pembahasan kualitas NER pada Bab 4.
 
-Untuk menguji metode secara lebih mendalam, dirancang tiga uji coba (skenario) yang masing-masing memvariasikan satu komponen pada alur ekstraksi NER, kemudian dievaluasi dengan prosedur dan data uji yang sama (Kode Semu 3.12). Rancangan ketiga uji coba dirangkum pada Tabel 3.18. Bab 3 hanya menjelaskan rancangan tiap uji coba; hasil, angka, dan analisis perbandingannya disajikan pada Bab 4.
+Untuk menguji metode secara lebih mendalam, dirancang tiga uji coba (skenario) yang masing-masing memvariasikan satu komponen pada alur ekstraksi NER, kemudian dievaluasi dengan prosedur dan data uji yang sama (Kode Semu 3.12). Rancangan ketiga uji coba dirangkum pada Tabel 3.19. Bab 3 hanya menjelaskan rancangan tiap uji coba; hasil, angka, dan analisis perbandingannya disajikan pada Bab 4.
 
-[SISIPKAN TABEL 3.18 - Rancangan Uji Coba Evaluasi NER]
+[SISIPKAN TABEL 3.19 - Rancangan Uji Coba Evaluasi NER]
 
 | Skenario | Penjelasan | Metrik Evaluasi |
 |----------|------------|-----------------|
@@ -854,31 +883,31 @@ Untuk menguji metode secara lebih mendalam, dirancang tiga uji coba (skenario) y
 | 2. Perbandingan model | Memvariasikan model dasar (*backbone*) pada *iterative self-training* untuk menguji model pra-latih mana yang paling sesuai | Precision, Recall, dan F1-Score (per label dan agregat antar model) |
 | 3. Pengaruh modul POS-tag | Memvariasikan ada atau tidaknya modul POS-tag untuk menguji pengaruh informasi POS-tag terhadap prediksi entitas | Precision, Recall, dan F1-Score (per label, dengan dan tanpa POS-tag) |
 
-### 3.9.1 Uji Coba 1: Penanganan Ketidakseimbangan Kelas
+### 3.8.1 Uji Coba 1: Penanganan Ketidakseimbangan Kelas
 
 Uji coba ini menguji pendekatan penanganan data yang tidak seimbang (*imbalance*). Sebagaimana ditunjukkan pada distribusi label (Tabel 3.10), kelas *Event* serta sebagian *Time* dan *Location* tergolong minoritas ekstrem. Untuk itu, alur dasar (*baseline*) dibandingkan dengan tiga teknik penanganan ketidakseimbangan yang ditambahkan di atasnya: *weighted cross-entropy*, yaitu pemberian bobot lebih besar pada kelas minoritas dalam fungsi *loss* sehingga kesalahan pada kelas minoritas lebih diperhitungkan; *supervised contrastive learning* (Khosla et al., 2020), yaitu komponen *loss* yang menarik representasi token sekelas agar saling mendekat dan token antar-kelas saling menjauh; serta *data augmentation* dengan penggantian sebutan entitas (*mention replacement*) (Dai & Adel, 2020), yaitu membentuk kalimat latih baru dengan mengganti entitas kelas minoritas dengan entitas sekelas sambil mempertahankan penandaan BIO. Seluruh varian dilatih pada *seed* yang sama dan dievaluasi dengan prosedur Kode Semu 3.12, lalu dibandingkan F1 per label dan *macro-average*-nya untuk melihat dampak terhadap kelas minoritas.
 
-### 3.9.2 Uji Coba 2: Perbandingan Model
+### 3.8.2 Uji Coba 2: Perbandingan Model
 
 Uji coba ini menguji perbandingan beberapa model pra-latih (*backbone*) ketika dipakai dalam alur *iterative self-training* yang sama. Model dasar IndoBERT (`indolem/indobert-base-uncased`) dibandingkan dengan model alternatif berbahasa Indonesia, baik yang *cased* maupun *uncased*, untuk mengetahui pengaruh pilihan *backbone* terhadap kualitas pengenalan entitas. Setiap model menjalankan pipeline yang identik (data, ambang *pseudo-labelling*, dan *hyperparameter* yang sama), kemudian dievaluasi dengan prosedur Kode Semu 3.12 agar perbandingannya adil. <!-- [PERIKSA] sebutkan daftar persis model pembanding (mis. IndoBERT cased, cahya/indonesian, DistilBERT, RoBERTa Indonesian) sesuai eksperimen yang dijalankan. -->
 
-### 3.9.3 Uji Coba 3: Pengaruh Modul POS-tag
+### 3.8.3 Uji Coba 3: Pengaruh Modul POS-tag
 
 Uji coba ini menguji pengaruh modul *Part-of-Speech tagging* (POS-tag) terhadap prediksi entitas. Model tanpa modul POS-tag dibandingkan dengan model yang menambahkan informasi POS-tag sebagai fitur pendamping pada masukan, dengan tujuan melihat apakah pengelompokan kelas kata membantu model mengenali batas dan tipe entitas. Kedua varian dilatih dan dievaluasi dengan prosedur dan data uji yang sama (Kode Semu 3.12), lalu dibandingkan F1 per label-nya. <!-- [PERIKSA] pastikan deskripsi modul POS-tag sesuai implementasi (sumber tag dan cara penggabungan fitur). Catatan: pada dataset saat ini kolom pos_tag masih berisi placeholder "NN". -->
 
-## 3.10 Analisis Jaringan dan Pengujian Fungsional Knowledge Graph
+## 3.9 Analisis Jaringan dan Pengujian Fungsional Knowledge Graph
 
 Setelah *knowledge graph* terbentuk, dilakukan analisis jaringan untuk memahami strukturnya sekaligus pengujian fungsional untuk memverifikasi kelayakannya dalam penelusuran relasional.
 
-### 3.10.1 Analisis Jaringan dengan Social Network Analysis
+### 3.9.1 Analisis Jaringan dengan Social Network Analysis
 
-Bagian ini menganalisis struktur *knowledge graph* yang terbentuk menggunakan *Social Network Analysis* (SNA), terutama pada jaringan antar tokoh (*Person*) yang terhubung melalui keterlibatan bersama pada peristiwa yang sama. Analisis bertujuan mengetahui tokoh dan peristiwa yang paling berperan serta kelompok tokoh yang sering muncul bersama. Diagram alir bagian ini ditunjukkan pada Gambar 3.12.
+Bagian ini menganalisis struktur *knowledge graph* yang terbentuk menggunakan *Social Network Analysis* (SNA), terutama pada jaringan antar tokoh (*Person*) yang terhubung melalui keterlibatan bersama pada peristiwa yang sama. Analisis bertujuan mengetahui tokoh dan peristiwa yang paling berperan serta kelompok tokoh yang sering muncul bersama. Diagram alir bagian ini ditunjukkan pada Gambar 3.13.
 
-[SISIPKAN GAMBAR 3.12 - Diagram Alir Analisis Jaringan]
+[SISIPKAN GAMBAR 3.13 - Diagram Alir Analisis Jaringan]
 
-Pertama, dibentuk proyeksi jaringan tokoh, yaitu dua tokoh dihubungkan jika sama-sama terlibat pada peristiwa yang sama (*co-participation*), dengan bobot sisi mencerminkan kekuatan keterhubungan. Kedua, dihitung ukuran sentralitas tingkat *node*, yaitu *degree centrality*, *betweenness centrality*, *closeness centrality*, dan *PageRank* (Elmezain et al., 2021; Zhang et al., 2021). Ketiga, dihitung ukuran tingkat graf, yaitu kepadatan (*density*), koefisien pengelompokan (*transitivity*), ukuran jaringan, dan jumlah komponen. Keempat, dilakukan deteksi komunitas dengan algoritma Louvain, dengan kualitas pembagian diukur oleh nilai modularitas Q (Anuar et al., 2024). Analisis jaringan dirancang sebagai delapan skenario pengujian (G1 sampai G8) yang mencakup analisis tingkat tokoh, tingkat graf, peristiwa, lokasi, dan keterlibatan lintas fase, sebagaimana ditunjukkan pada Tabel 3.19. *Pseudocode* untuk metrik inti jaringan tokoh ditunjukkan pada Kode Semu 3.13.
+Pertama, dibentuk proyeksi jaringan tokoh, yaitu dua tokoh dihubungkan jika sama-sama terlibat pada peristiwa yang sama (*co-participation*), dengan bobot sisi mencerminkan kekuatan keterhubungan. Kedua, dihitung ukuran sentralitas tingkat *node*, yaitu *degree centrality*, *betweenness centrality*, *closeness centrality*, dan *PageRank* (Elmezain et al., 2021; Zhang et al., 2021). Ketiga, dihitung ukuran tingkat graf, yaitu kepadatan (*density*), koefisien pengelompokan (*transitivity*), ukuran jaringan, dan jumlah komponen. Keempat, dilakukan deteksi komunitas dengan algoritma Louvain, dengan kualitas pembagian diukur oleh nilai modularitas Q (Anuar et al., 2024). Analisis jaringan dirancang sebagai delapan skenario pengujian (G1 sampai G8) yang mencakup analisis tingkat tokoh, tingkat graf, peristiwa, lokasi, dan keterlibatan lintas fase, sebagaimana ditunjukkan pada Tabel 3.20. *Pseudocode* untuk metrik inti jaringan tokoh ditunjukkan pada Kode Semu 3.13.
 
-[SISIPKAN TABEL 3.19 - Rancangan Skenario Pengujian Analisis Jaringan (G1-G8)]
+[SISIPKAN TABEL 3.20 - Rancangan Skenario Pengujian Analisis Jaringan (G1-G8)]
 
 | Kode | Skenario (pertanyaan yang dijawab) | Entitas | Metode |
 |------|------------------------------------|---------|--------|
@@ -916,13 +945,13 @@ Kode Semu 3.13 menunjukkan tahapan umum analisis struktur *knowledge graph* deng
 
 Keluaran bagian ini berupa tabel metrik sentralitas per tokoh, metrik tingkat graf, dan daftar komunitas. Nilai-nilai metrik dan interpretasinya (misalnya tokoh paling sentral dan kelompok komunitas) disajikan dan dibahas pada Bab 4.
 
-### 3.10.2 Evaluasi Fungsional Knowledge Graph
+### 3.9.2 Evaluasi Fungsional Knowledge Graph
 
-Evaluasi fungsional graf bertujuan membuktikan bahwa *knowledge graph* yang telah dibangun benar-benar mampu menjalankan fungsi utamanya, yaitu menjawab pertanyaan penelusuran yang berbasis hubungan antar entitas. Evaluasi ini berbeda fokus dari dua evaluasi sebelumnya. Evaluasi kualitas NER (Subbab 3.9) menilai *seberapa akurat* model mengenali entitas melalui metrik seperti F1, sedangkan analisis SNA (Subbab 3.10.1) menilai *bagaimana karakteristik struktur* jaringan melalui metrik sentralitas dan komunitas. Evaluasi fungsional menjawab pertanyaan yang berbeda dan lebih mendasar, yaitu *apakah graf layak digunakan* untuk menelusuri informasi relasional pada Sirah. Dengan kata lain, jika analisis sebelumnya menilai akurasi dan bentuk graf, evaluasi fungsional menilai kegunaannya.
+Evaluasi fungsional graf bertujuan membuktikan bahwa *knowledge graph* yang telah dibangun benar-benar mampu menjalankan fungsi utamanya, yaitu menjawab pertanyaan penelusuran yang berbasis hubungan antar entitas. Evaluasi ini berbeda fokus dari dua evaluasi sebelumnya. Evaluasi kualitas NER (Subbab 3.8) menilai *seberapa akurat* model mengenali entitas melalui metrik seperti F1, sedangkan analisis SNA (Subbab 3.9.1) menilai *bagaimana karakteristik struktur* jaringan melalui metrik sentralitas dan komunitas. Evaluasi fungsional menjawab pertanyaan yang berbeda dan lebih mendasar, yaitu *apakah graf layak digunakan* untuk menelusuri informasi relasional pada Sirah. Dengan kata lain, jika analisis sebelumnya menilai akurasi dan bentuk graf, evaluasi fungsional menilai kegunaannya.
 
-Pertanyaan-pertanyaan penelusuran seperti "siapa saja yang terlibat dalam suatu peristiwa" atau "di mana lokasi peristiwa yang melibatkan tokoh tertentu" tidak dapat dijawab langsung dari data tabular hasil ekstraksi, melainkan menuntut penelusuran rantai relasi antar simpul. Kemampuan inilah yang justru menjadi alasan utama informasi disusun ke dalam bentuk graf. Oleh karena itu, pendekatan yang digunakan adalah pengujian berbasis skenario kueri (*query-based functional testing*): satu-satunya cara mengajukan pertanyaan kepada *knowledge graph* adalah melalui kueri, sehingga setiap kebutuhan penelusuran diterjemahkan menjadi kueri Cypher dan keberhasilan graf dinilai dari kemampuannya menjawab kueri tersebut. Disusun sejumlah skenario kueri yang mewakili kebutuhan penelusuran nyata pada Sirah, mencakup kueri berbasis tokoh, lokasi, waktu, serta kueri *multi-hop* yang menelusuri lebih dari satu relasi sekaligus. Rancangan skenario kueri ditunjukkan pada Tabel 3.20.
+Pertanyaan-pertanyaan penelusuran seperti "siapa saja yang terlibat dalam suatu peristiwa" atau "di mana lokasi peristiwa yang melibatkan tokoh tertentu" tidak dapat dijawab langsung dari data tabular hasil ekstraksi, melainkan menuntut penelusuran rantai relasi antar simpul. Kemampuan inilah yang justru menjadi alasan utama informasi disusun ke dalam bentuk graf. Oleh karena itu, pendekatan yang digunakan adalah pengujian berbasis skenario kueri (*query-based functional testing*): satu-satunya cara mengajukan pertanyaan kepada *knowledge graph* adalah melalui kueri, sehingga setiap kebutuhan penelusuran diterjemahkan menjadi kueri Cypher dan keberhasilan graf dinilai dari kemampuannya menjawab kueri tersebut. Disusun sejumlah skenario kueri yang mewakili kebutuhan penelusuran nyata pada Sirah, mencakup kueri berbasis tokoh, lokasi, waktu, serta kueri *multi-hop* yang menelusuri lebih dari satu relasi sekaligus. Rancangan skenario kueri ditunjukkan pada Tabel 3.21.
 
-[SISIPKAN TABEL 3.20 - Skenario Kueri Evaluasi Graf]
+[SISIPKAN TABEL 3.21 - Skenario Kueri Evaluasi Graf]
 
 | No | Kategori | Contoh Pertanyaan | Pola Relasi |
 |----|----------|-------------------|-------------|
