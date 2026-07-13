@@ -141,3 +141,28 @@ ORDER BY nfase DESC;
 
 // daftar fase yang ada di graf (verifikasi Period.phase)
 MATCH (per:Period) RETURN DISTINCT per.phase AS fase ORDER BY fase;
+
+
+// ---------------------------------------------------------------------
+// KESALAHAN / ARTEFAK GRAF — untuk DITAMPILKAN & dianalisis (§4.5.5, Gambar 4.20)
+// Tiga tipe kesalahan graf yang dibahas jujur di teks, ditampilkan langsung dari
+// graf agar dapat ditelaah (bukan sekadar diklaim). Tampilkan di Neo4j Browser.
+// ---------------------------------------------------------------------
+
+// (1) Over-ekstraksi INVOLVED_IN berbasis kedekatan: 4 relasi "Amr bin Umayyah"
+//     ke Perang Badr/Uhud/Tabuk/Khandaq; 3 di antaranya false-positive (Gambar 4.20).
+MATCH (p:Person {name: 'Amr bin Umayyah'})-[r:INVOLVED_IN]->(e:Event)
+RETURN p, r, e;
+
+// (2) Percampuran dua kubu (co-participation != aliansi): peserta Perang Badr
+//     memuat tokoh Muslim DAN Quraisy sekaligus pada peristiwa yang sama.
+MATCH (p:Person)-[r:INVOLVED_IN]->(e:Event {name: 'Perang Badr'})
+WHERE p.name IN ['Ali bin Abu Thalib','Hamzah bin Abdul Muththalib','Utsman bin Affan',
+                 'Abu Jahal','Abu Lahab','Abu Sufyan bin Harb']
+RETURN p, r, e;
+
+// (3) Pemisahan alias: "Madinah" dan "Yatsrib" (nama lama Madinah) jadi dua simpul
+//     lokasi terpisah karena tidak tergabung oleh alias clustering pada graf lokasi.
+MATCH (l:Location) WHERE l.name IN ['Madinah','Yatsrib']
+OPTIONAL MATCH (l)<-[r:OCCURRED_AT]-(e:Event)
+RETURN l, r, e;
