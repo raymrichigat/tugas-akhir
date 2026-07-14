@@ -219,6 +219,8 @@
 🖼️ `data/result/analysis/error_viz/by_group/s3_compare.png`
 
 ## Slide 19 — Evaluasi KG: Konstruksi & Tokoh Berpengaruh (G1/G2)
+Konstruksi KG menyatukan empat jenis entitas (tokoh, peristiwa, lokasi, waktu) beserta periodisasi ke dalam satu kerangka; posisi tiap tokoh lalu diukur dengan beberapa metrik sentralitas yang masing-masing menangkap **dimensi berbeda** — Degree (keterhubungan langsung), Closeness (kedekatan ke seluruh jaringan), PageRank (pengaruh berbobot), dan Betweenness (peran jembatan antar-kelompok).
+
 > **KG utuh:** 1.177 node (901 Person · 167 Time · 74 Location · 35 Event) + 15 Period; **705 relasi**. Proyeksi jaringan tokoh (ber-scope peserta peristiwa): **137 node · 1.853 edge · density 0,199**.
 
 **G1 — Tokoh paling sentral (urut PageRank)**
@@ -232,9 +234,13 @@
 
 **G2 — Jembatan (Betweenness):** Muhammad (0,2808) ≫ Jabir bin Abdullah (0,0635) · Ali (0,0441) · Abu Bakar (0,0294).
 
+**Temuan:** berbeda dari jejaring yang pengaruhnya tersebar (mis. jaringan kolaborasi peneliti, di mana tokoh paling produktif belum tentu paling sentral), di sini keempat metrik **konvergen pada Muhammad** — beliau sekaligus paling terhubung, paling dekat, paling berpengaruh, dan jembatan utama antar-kelompok. Ini menegaskan struktur naratif Sirah yang berpusat pada satu tokoh.
+
 🖼️ Perbandingan ego **Muhammad vs Abu Bakar** (Neo4j; sentralitas kasat mata) · ego Muhammad (Neo4j)
 
 ## Slide 20 — Evaluasi KG: Komunitas & Validasi Artefak
+Kelayakan graf ditinjau dari dua sisi: apakah **kelompok** yang terbentuk masuk akal secara naratif, dan apakah ada tokoh yang **sentralitasnya semu** akibat cara relasi dibentuk.
+
 - **Struktur masuk akal:** Muhammad dominan **di semua** ukuran (terhubung langsung ke ±108 dari 137 tokoh) → pusat seluruh peristiwa.
 - **Komunitas:** Louvain → **8 komunitas**, modularitas **Q = 0,2831** (kelompok masih terlihat namun melembut karena jaringan padat; ARI Louvain–greedy 0,47). Dua terbesar: lingkar Muslim inti (66) & komunitas campuran Quraisy–pejuang (47).
 - **Validasi jujur (artefak):** relasi `INVOLVED_IN` dibentuk dari **kedekatan teks**, sehingga sebagian nama melonjak semu. Contoh **Amr bin Umayyah** — tanpa pembobotan sempat **#2 PageRank**, padahal 3 dari 4 relasinya *false positive*; peran nyatanya kurir Nabi. Setelah pembobotan+scoping turun ke **#12**.
@@ -244,6 +250,8 @@
 🖼️ Sub-graf **satu komunitas** (Neo4j, lingkar Muslim inti) · screenshot **kesalahan graf** (INVOLVED_IN palsu Amr bin Umayyah, Neo4j)
 
 ## Slide 21 — Evaluasi KG: Peristiwa, Lokasi & Studi Kasus (G4/G7/G6)
+Selain tokoh, sentralitas **peristiwa** dan **lokasi** mengungkap apa yang paling banyak diliput teks — sekaligus memperlihatkan **bias cakupan ekstraksi**, bukan skala historis sebenarnya.
+
 **G4 — Peristiwa paling sentral (PageRank):** Perang Badr (0,0965) · Uhud (0,0889) · Khandaq (0,0674) · Hudaibiyah (0,0442) · Baiat Aqabah Kubra (0,0424). → didominasi peperangan. *Keterbatasan jujur:* peristiwa daur hidup (kelahiran, wahyu, wafat) tak muncul karena disebut lewat frasa kata kerja, tak tertangkap NER.
 
 **G7 — Lokasi paling sentral (weighted degree):** Madinah (661) · Habasyah (561) · Makkah (561) · Syam (530) · Yatsrib (528). → dua pusat fase Sirah (Makkah–Madinah). *Catatan:* "Yatsrib" = nama lama Madinah, belum tergabung alias.
