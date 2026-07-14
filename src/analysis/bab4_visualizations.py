@@ -82,10 +82,12 @@ fig.savefig(OUT / "eda_imbalance.png"); plt.close(fig)
 # ─────────────────────────────────────────────────────────────────────────────
 # 2. DISTRIBUSI AUGMENTASI — 2 panel batang linear: (a) O, (b) entitas
 # ─────────────────────────────────────────────────────────────────────────────
+# Angka done_newest (gold terkoreksi): train.csv vs train_augmented_final.csv
+# (mention replacement + parafrase). Token-level (B+I) per kelas; O = bukan entitas.
 ent = ["Person", "Location", "Time", "Event"]
-before_O, after_O = 95277, 139983
-before_e = [5559, 1057, 666, 325]
-after_e  = [8101, 1885, 1084, 967]
+before_O, after_O = 108815, 163352
+before_e = [5519, 1038, 664, 317]
+after_e  = [8311, 1875, 1107, 943]
 
 fig, (axO, axE) = plt.subplots(1, 2, figsize=(11, 4.4),
                                gridspec_kw={"width_ratios": [0.7, 1.7]})
