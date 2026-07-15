@@ -177,7 +177,7 @@ def plot_confusion(gold_lab: pd.Series, pred: pd.Series, title: str, path: Path)
     im = ax.imshow(cm_norm, cmap="Blues", vmin=0, vmax=1)
     ax.set_xticks(range(len(CONF_CLASSES))); ax.set_xticklabels(CONF_CLASSES, rotation=45, ha="right")
     ax.set_yticks(range(len(CONF_CLASSES))); ax.set_yticklabels(CONF_CLASSES)
-    ax.set_xlabel("Prediksi"); ax.set_ylabel("Gold (terkoreksi)")
+    ax.set_xlabel("Prediksi"); ax.set_ylabel("Acuan")
     ax.set_title(title, fontsize=10)
     for i in range(len(CONF_CLASSES)):
         for j in range(len(CONF_CLASSES)):
@@ -215,7 +215,7 @@ def main() -> None:
         f1_new = f1_score(ts_n, ps_n)
         rep_new = seq_report(ts_n, ps_n, digits=4)
         pl = per_label_f1(rep_new)
-        plot_confusion(gold_new, pred, f"{tag} — gold terkoreksi", CONF_DIR / f"{tag.split()[0]}.png")
+        plot_confusion(gold_new, pred, f"{tag}", CONF_DIR / f"{tag.split()[0]}.png")
         print(f"{tag:32s} F1 {f1_old:.4f} -> {f1_new:.4f}  ({f1_new-f1_old:+.4f})")
         rows.append({"tag": tag, "f1_old": f1_old, "f1_new": f1_new,
                      "P": precision_score(ts_n, ps_n), "R": recall_score(ts_n, ps_n),
