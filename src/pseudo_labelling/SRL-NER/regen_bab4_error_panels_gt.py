@@ -121,7 +121,7 @@ def plot_confusion(key: str, title: str, group: list, frames: dict) -> None:
         ax.imshow(np.log10(cm.values + 1), cmap="Blues")
         ax.set_xticks(range(len(ORDER))); ax.set_xticklabels(ORDER, rotation=45, ha="right", fontsize=8)
         ax.set_yticks(range(len(ORDER))); ax.set_yticklabels(ORDER, fontsize=8)
-        ax.set_xlabel("Prediksi", fontsize=8); ax.set_ylabel("Gold (terkoreksi)", fontsize=8)
+        ax.set_xlabel("Prediksi", fontsize=8); ax.set_ylabel("Acuan", fontsize=8)
         ax.set_title(nm, fontsize=10)
         mx = np.log10(cm.values.max() + 1)
         for i in range(len(ORDER)):

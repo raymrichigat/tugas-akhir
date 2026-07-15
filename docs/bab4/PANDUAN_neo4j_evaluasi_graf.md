@@ -23,7 +23,7 @@ Panduan praktis: gambar apa yang butuh screenshot Neo4j, query persisnya, dan ca
    ```
    data/result/neo4j/set_community_v4.cypher
    ```
-   Ini menambah properti `community` (hasil Louvain dari analisis Python) ke tiap simpul Person, karena Neo4j tak bisa mendeteksi komunitas sendiri tanpa plugin GDS. Cek: `MATCH (p:Person) WHERE p.community=0 RETURN count(p);` harus mengembalikan **66**.
+   Ini menambah properti `community` (hasil deteksi komunitas dari analisis Python) ke tiap simpul Person, karena Neo4j tak bisa mendeteksi komunitas sendiri tanpa plugin GDS. Cek: `MATCH (p:Person) WHERE p.community=0 RETURN count(p);` harus mengembalikan **66**.
 
 Setelah graf ter-load, kerjakan gambar di bawah. Tiap screenshot: jalankan query → tata layout (drag simpul biar rapi) → tombol kamera/expand → simpan PNG.
 
@@ -54,7 +54,7 @@ Kenapa lewat Event: *degree centrality* Tabel 4.19 dihitung pada proyeksi antar 
 ```cypher
 MATCH (p:Person {community:0})-[r]-(q:Person {community:0}) RETURN p,r,q
 ```
-Prasyarat: jalankan `data/result/neo4j/set_community_v4.cypher` lebih dulu (Langkah 0.4) — file itu menulis label komunitas Louvain ke tiap simpul (Neo4j tak bisa deteksi komunitas sendiri tanpa GDS). Hasil: 66 tokuh komunitas terbesar + seluruh relasi internalnya (padat = itu tujuannya). Rincian keanggotaan semua komunitas → `docs/lampiran/lampiran_komunitas_tokoh.md`.
+Prasyarat: jalankan `data/result/neo4j/set_community_v4.cypher` lebih dulu (Langkah 0.4) — file itu menulis label komunitas ke tiap simpul (Neo4j tak bisa deteksi komunitas sendiri tanpa GDS). Hasil: 66 tokoh komunitas terbesar + seluruh relasi internalnya (padat = itu tujuannya). Rincian keanggotaan semua komunitas → `docs/lampiran/lampiran_komunitas_tokoh.md`.
 
 **Query Gambar 4.19** (5 peristiwa besar, satu tampilan gabungan):
 ```cypher

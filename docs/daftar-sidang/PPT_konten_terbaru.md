@@ -221,7 +221,7 @@
 ## Slide 19 — Evaluasi KG: Konstruksi & Tokoh Berpengaruh (G1/G2)
 Konstruksi KG menyatukan empat jenis entitas (tokoh, peristiwa, lokasi, waktu) beserta periodisasi ke dalam satu kerangka; posisi tiap tokoh lalu diukur dengan beberapa metrik sentralitas yang masing-masing menangkap **dimensi berbeda** — Degree (keterhubungan langsung), Closeness (kedekatan ke seluruh jaringan), PageRank (pengaruh berbobot), dan Betweenness (peran jembatan antar-kelompok).
 
-> **KG utuh:** 1.177 node (901 Person · 167 Time · 74 Location · 35 Event) + 15 Period; **705 relasi**. Proyeksi jaringan tokoh (ber-scope peserta peristiwa): **137 node · 1.853 edge · density 0,199**.
+> **KG utuh:** **1.192 node** (901 Person · 167 Time · 74 Location · 35 Event · 15 Period); **728 relasi** (693 antar-entitas unik + 35 IN_PERIOD; 705 catatan awal, 12 duplikat digabung `MERGE`). Proyeksi jaringan tokoh (ber-scope peserta peristiwa): **137 node · 1.853 edge · density 0,199**.
 
 **G1 — Tokoh paling sentral (urut PageRank)**
 | # | Tokoh | Degree | Closeness | PageRank |

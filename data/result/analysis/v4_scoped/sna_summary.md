@@ -112,28 +112,28 @@
 Tokoh utama: Muhammad, Ali bin Abu Thalib, Umar bin Al-Khaththab, Abu Bakar, Aisyah, Utsman bin Affan, Amr bin Umayyah, Hasan bin Ali, Abdullah bin Ubay bin Salul, Mush'ab bin Umair
 
 ### Komunitas 2 (47 anggota)
-Tokoh utama: Abu Jahal, Abu Sufyan bin Harb, Khunais bin Hudzafah, Abu Azzah, Zainab, Zaid bin Haritsah, Ummu Kultsum, Husain bin Ali, Abdurrahman, Hamzah bin Abdul Muththalib
+Tokoh utama: Abu Jahal, Abu Sufyan bin Harb, Abu Azzah, Khunais bin Hudzafah, Zainab, Zaid bin Haritsah, Ummu Kultsum, Husain bin Ali, Abdurrahman, Hamzah bin Abdul Muththalib
 
 ### Komunitas 3 (7 anggota)
-Tokoh utama: Musailamah, Urwah bin Mas'ud, Ka'b bin Zuhair, Bujair bin Zuhair, Syaima' binti Al-Harits, Mu'adz bin Amr, Jabalah bin Al-Aiham
+Tokoh utama: Musailamah, Bujair bin Zuhair, Urwah bin Mas'ud, Ka'b bin Zuhair, Syaima' binti Al-Harits, Mu'adz bin Amr, Jabalah bin Al-Aiham
 
 ### Komunitas 4 (3 anggota)
-Tokoh utama: Tsabit bin Qais bin Syammas, Az-Zabir bin Batha, Iyas bin Mu'adz
+Tokoh utama: Tsabit bin Qais bin Syammas, Iyas bin Mu'adz, Az-Zabir bin Batha
 
 ### Komunitas 5 (3 anggota)
-Tokoh utama: Mu'adz bin Jabal, Al-Harits bin Abdi, Nu'man bin Qail
+Tokoh utama: Al-Harits bin Abdi, Mu'adz bin Jabal, Nu'man bin Qail
 
 ### Komunitas 6 (3 anggota)
 Tokoh utama: Abu Rafi', Abdullah bin Atik, Abdullah bin Unais
 
 ### Komunitas 7 (2 anggota)
-Tokoh utama: Sa'd bin Abu Waqqash, Kurz bin Jabir
+Tokoh utama: Kurz bin Jabir, Sa'd bin Abu Waqqash
 
 ### Komunitas 8 (2 anggota)
 Tokoh utama: Usamah bin Zaid, Mirdas bin Nuhaik
 
 ### Komunitas 9 (2 anggota)
-Tokoh utama: Nu'aim bin Ma'ud, Sulaith bin An- Nu'man
+Tokoh utama: Sulaith bin An- Nu'man, Nu'aim bin Ma'ud
 
 ### Komunitas 10 (2 anggota)
-Tokoh utama: Abu Jandal, Abu Bashir
+Tokoh utama: Abu Bashir, Abu Jandal

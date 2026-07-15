@@ -186,15 +186,19 @@ def compute_centrality_metrics(G):
 
 
 def detect_communities(G):
-    """Deteksi komunitas menggunakan Louvain (greedy modularity)."""
+    """Deteksi komunitas menggunakan greedy modularity (dilabeli "Louvain" pada
+    laporan, konsisten dengan penulisan buku TA). Komunitas diberi ID urut ukuran
+    menurun (0 = terbesar) agar stabil dan mudah dibaca."""
     try:
         from networkx.algorithms.community import greedy_modularity_communities
-        communities = greedy_modularity_communities(G, weight="weight")
+        communities = list(greedy_modularity_communities(G, weight="weight"))
+        # ID komunitas urut ukuran menurun (0 = terbesar)
+        communities = sorted(communities, key=len, reverse=True)
         community_map = {}
         for i, community in enumerate(communities):
             for node in community:
                 community_map[node] = i
-        print(f"  Communities detected: {len(set(community_map.values()))}")
+        print(f"  Communities detected (greedy modularity): {len(communities)}")
         return community_map
     except Exception as e:
         print(f"  Community detection failed: {e}")

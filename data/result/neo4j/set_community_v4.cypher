@@ -1,4 +1,5 @@
-// Set properti community (Louvain, dari v4_scoped/sna_metrics.csv) untuk Gambar 4.18.
+// Set properti community (greedy modularity, dari v4_scoped/sna_metrics.csv) untuk Gambar 4.18/4.19.
+// ID komunitas urut ukuran menurun (0 = terbesar, 66 anggota). Konsisten dengan buku TA (§4.5.3).
 // Jalankan SETELAH import_sirah_v4_hybrid.cypher. Tak mengubah data, hanya menambah properti node.
 UNWIND [
   {name:"Muhammad", c:0},
