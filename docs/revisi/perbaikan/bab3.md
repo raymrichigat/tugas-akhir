@@ -33,9 +33,18 @@ pemeriksa manual, keterbatasan 1-anotator (sekaligus Bu Ratih #5).
 
 Sumber: `docs/revisi/artefak/keterbatasan_negasi_relasi.md` (bukti Abu Lahab → Perang Badr).
 
-## P-3.7. BELUM ADA — perlu ditulis 📝
-- **Contoh chunking sebelum/sesudah** (Bu Ratih #4): teks Sirah nyata + alasan panjang chunk +
-  overlap + penanganan kalimat terpotong + metadata halaman.
-- **Definisi token/subtoken/chunk/batch** + penyelarasan BIO↔subtoken (strategi subtoken pertama,
-  `word_ids()`) (Bu Nanik #3/#4) — pindahkan dari analisis Bab 4 ke metodologi.
-- **Protokol koreksi manual** + alasan (Bu Ratih #5).
+## P-3.7. Contoh chunking sebelum/sesudah (Bu Ratih #4) 🧰
+Sumber: `docs/revisi/artefak/contoh_chunking.md`. Param: ≤1500 char, overlap 1 kalimat, batas
+kalimat dijaga, metadata bab/sub-bab/halaman. Contoh nyata sub-bab "Kekuasaan di Berbagai Penjuru
+Arab" (hal 53–54) → 2 chunk dengan kalimat overlap terlihat.
+
+## P-3.8. Definisi token/subtoken/chunk/batch + penyelarasan BIO↔subtoken (Bu Nanik #3/#4) 🧰
+Sumber: `docs/revisi/artefak/definisi_token_subtoken.md`. Definisi 4 istilah + contoh split nyata
+("Mush'ab"→`mush`+`'`+`ab`; "Umair"→`uma`+`##ir`) + kode `tokenize_and_align_labels` asli (subtoken
+pertama = label, lanjutan & special = `-100`; `word_ids()`; max 512). Pindahkan dari Bab 4 ke
+metodologi.
+
+## P-3.9. BELUM ADA — perlu ditulis 📝
+- **Protokol koreksi manual** + alasan (Bu Ratih #5) — sebagian sudah ke-cover di prosedur
+  validitas semantis (keterbatasan 1-anotator); lengkapi alasan koreksi (kesalahan batas/tipe/
+  entitas terlewat/palsu dari kamus/regex/OCR) + contoh sebelum/sesudah koreksi.
