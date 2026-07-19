@@ -123,6 +123,35 @@ Tiga hal dibedakan eksplisit: (1) **jumlah data bertambah**; (2) **rasio ketimpa
 > menuliskan ambang numerik low/moderate/high (≤2 / 2–9 / >9) sebagai standar berkutip — itu
 > konvensi deskriptif, bukan definisi baku, dan tidak perlu diklaim bersumber.
 
+### "Menangani" ketimpangan ≠ "menyeimbangkan" (dukungan literatur, ≤5 tahun)
+
+Penanganan ketimpangan kelas **tidak bertujuan menyamakan jumlah antarkelas menjadi 1:1**,
+melainkan mengurangi kecenderungan model memihak kelas mayoritas dan **meningkatkan kinerja kelas
+minoritas**. Henning dkk. (2023) menyatakan bahwa model NLP cenderung berkinerja buruk pada kelas
+yang jarang muncul, dan augmentasi data merupakan salah satu metode untuk menangani ketimpangan
+tersebut yang bahkan sering memberi peningkatan **lebih besar** dibanding penyeimbangan ulang
+(resampling) atau modifikasi fungsi kerugian. Khusus pada NER yang berdistribusi *long-tail*,
+Nemoto dkk. (2024) menegaskan bahwa keberhasilan penanganan ketimpangan diukur dari **peningkatan
+kinerja kelas minoritas tanpa mengorbankan kelas mayoritas**.
+
+Sejalan dengan itu, augmentasi pada penelitian ini meningkatkan F1 kelas minoritas (**TIME 0,80 →
+0,90; EVENT 0,93 → 0,95**) sekaligus tetap menjaga kelas mayoritas (PERSON 0,97 → 0,98). Maka
+augmentasi **dapat dinyatakan menangani ketimpangan kelas**, meskipun distribusi antarkelas belum
+seimbang. Klaim yang tepat: *"menangani/mengurangi ketimpangan"* (didukung peningkatan minoritas),
+**bukan** *"menyeimbangkan data"*.
+
+> Catatan: temuan Henning dkk. (2023) bahwa augmentasi cenderung unggul dibanding resampling/loss
+> **selaras dengan hasil penelitian ini** — augmentasi menjadi skenario pemenang di atas
+> weighted-CE dan contrastive (SCL/JSCL).
+
+**Rujukan (verifikasi sebelum Daftar Pustaka):**
+- Henning, S., Beluch, W., Fraser, A., & Friedrich, A. (2023). *A Survey of Methods for Addressing
+  Class Imbalance in Deep-Learning Based Natural Language Processing.* Proceedings of EACL 2023
+  (`aclanthology.org/2023.eacl-main.38`; arXiv 2210.04675).
+- Nemoto, S., Kitada, S., & Iyatomi, H. (2024). *Majority or Minority: Data Imbalance Learning
+  Method for Named Entity Recognition.* arXiv:2401.11431 (juga terbit di IEEE, `IEEE Xplore
+  10816423` — cek nama jurnal & tahun terbit final di IEEE).
+
 ### Mengapa PERSON (mayoritas) ikut naik +51 %?
 
 Target augmentasi adalah EVENT & LOCATION, tetapi **kalimat yang memuat entitas minoritas hampir
