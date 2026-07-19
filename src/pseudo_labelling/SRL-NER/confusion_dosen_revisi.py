@@ -78,27 +78,28 @@ def entity_confusion(ts: list[list[str]], ps: list[list[str]]) -> np.ndarray:
     return M
 
 
-def _annot_grid(ax, M, rows, cols, title):
+def _annot_grid(ax, M, rows, cols, title, num_fs=15, tick_fs=13, label_fs=13, title_fs=15):
     mx = M.max() if M.max() > 0 else 1
     ax.imshow(M, cmap="Blues", vmin=0, vmax=mx)
-    ax.set_xticks(range(len(cols))); ax.set_xticklabels(cols, rotation=45, ha="right", fontsize=8)
-    ax.set_yticks(range(len(rows))); ax.set_yticklabels(rows, fontsize=8)
-    ax.set_xlabel("Prediksi model"); ax.set_ylabel("Acuan (gold terkoreksi)")
-    ax.set_title(title, fontsize=10)
+    ax.set_xticks(range(len(cols))); ax.set_xticklabels(cols, rotation=40, ha="right", fontsize=tick_fs)
+    ax.set_yticks(range(len(rows))); ax.set_yticklabels(rows, fontsize=tick_fs)
+    ax.set_xlabel("Prediksi model", fontsize=label_fs); ax.set_ylabel("Acuan (gold terkoreksi)", fontsize=label_fs)
+    ax.set_title(title, fontsize=title_fs)
     for i in range(len(rows)):
         for j in range(len(cols)):
             v = M[i, j]
             c = "white" if v > 0.5 * mx else ("#999" if v == 0 else "black")
-            ax.text(j, i, f"{v}", ha="center", va="center", color=c, fontsize=8)
+            ax.text(j, i, f"{v}", ha="center", va="center", color=c, fontsize=num_fs)
 
 
-def plot_entity(M: np.ndarray, title: str, path: Path) -> None:
-    fig, ax = plt.subplots(figsize=(6.6, 5.6))
-    _annot_grid(ax, M, ENT_ROWS, ENT_COLS, title)
+def plot_entity(M: np.ndarray, title: str, path: Path,
+                figsize=(8.4, 7.0), num_fs=15, tick_fs=12.5) -> None:
+    fig, ax = plt.subplots(figsize=figsize)
+    _annot_grid(ax, M, ENT_ROWS, ENT_COLS, title, num_fs=num_fs, tick_fs=tick_fs)
     # garis pemisah blok inti 4x4 vs margin deteksi
-    ax.axhline(len(LABELS) - 0.5, color="crimson", lw=1.2, ls="--")
-    ax.axvline(len(LABELS) - 0.5, color="crimson", lw=1.2, ls="--")
-    fig.tight_layout(); fig.savefig(path, dpi=140); plt.close(fig)
+    ax.axhline(len(LABELS) - 0.5, color="crimson", lw=1.6, ls="--")
+    ax.axvline(len(LABELS) - 0.5, color="crimson", lw=1.6, ls="--")
+    fig.tight_layout(); fig.savefig(path, dpi=200, bbox_inches="tight"); plt.close(fig)
 
 
 def plot_bio(ts: list[list[str]], ps: list[list[str]], title: str, path: Path) -> None:
@@ -108,20 +109,21 @@ def plot_bio(ts: list[list[str]], ps: list[list[str]], title: str, path: Path) -
     cm_norm = cm.astype(float)
     rs = cm_norm.sum(axis=1, keepdims=True); rs[rs == 0] = 1
     cm_norm /= rs
-    fig, ax = plt.subplots(figsize=(7.4, 6.4))
+    # 9 kelas padat -> perbesar + orientasi lega (Bu Ratih #8)
+    fig, ax = plt.subplots(figsize=(11.0, 9.2))
     ax.imshow(cm_norm, cmap="Blues", vmin=0, vmax=1)
-    ax.set_xticks(range(len(BIO_CLASSES))); ax.set_xticklabels(BIO_CLASSES, rotation=45, ha="right", fontsize=8)
-    ax.set_yticks(range(len(BIO_CLASSES))); ax.set_yticklabels(BIO_CLASSES, fontsize=8)
-    ax.set_xlabel("Prediksi model"); ax.set_ylabel("Acuan (gold terkoreksi)")
-    ax.set_title(title, fontsize=10)
+    ax.set_xticks(range(len(BIO_CLASSES))); ax.set_xticklabels(BIO_CLASSES, rotation=40, ha="right", fontsize=12)
+    ax.set_yticks(range(len(BIO_CLASSES))); ax.set_yticklabels(BIO_CLASSES, fontsize=12)
+    ax.set_xlabel("Prediksi model", fontsize=13); ax.set_ylabel("Acuan (gold terkoreksi)", fontsize=13)
+    ax.set_title(title, fontsize=14)
     for i in range(len(BIO_CLASSES)):
         for j in range(len(BIO_CLASSES)):
             v = cm[i, j]
             if v == 0:
                 continue
             c = "white" if cm_norm[i, j] > 0.5 else "black"
-            ax.text(j, i, f"{v}", ha="center", va="center", color=c, fontsize=7)
-    fig.tight_layout(); fig.savefig(path, dpi=140); plt.close(fig)
+            ax.text(j, i, f"{v}", ha="center", va="center", color=c, fontsize=11)
+    fig.tight_layout(); fig.savefig(path, dpi=200, bbox_inches="tight"); plt.close(fig)
 
 
 def interpret(M: np.ndarray) -> dict:
@@ -146,6 +148,7 @@ def main() -> None:
     print(f"[OK] gold terkoreksi: {ci['n_changed']} token berubah")
 
     summ = []
+    winner_M = None
     for tag, ed in SCENARIOS.items():
         if not ed.is_dir():
             continue
@@ -157,8 +160,17 @@ def main() -> None:
         plot_bio(ts, ps, f"Token-level BIO (9 kelas) — {tag}", BIO_DIR / f"{short}.png")
         it = interpret(M)
         summ.append({"tag": tag, **it})
+        if tag == WINNER:
+            winner_M = M
         print(f"{tag:32s} benar {it['benar']:4d} | salah-tipe {it['salah_tipe']:3d} | "
               f"FN {it['fn']:3d} | FP {it['fp']:3d}")
+
+    # Gambar UTAMA Bab 4 = skenario pemenang, entity-level, ekstra besar & jelas
+    if winner_M is not None:
+        plot_entity(winner_M, f"Confusion Matrix Entity-level (4 tipe) — {WINNER}",
+                    ENT_DIR / "_BAB4_UTAMA.png",
+                    figsize=(9.6, 8.0), num_fs=18, tick_fs=14)
+        print(f"[OK] gambar utama Bab 4 -> {ENT_DIR / '_BAB4_UTAMA.png'}")
 
     summ.sort(key=lambda r: r["benar"], reverse=True)
     w = next((r for r in summ if r["tag"] == WINNER), summ[0])
@@ -177,7 +189,7 @@ def main() -> None:
         "|---|---:|---:|---:|---:|---:|",
     ]
     for r in summ:
-        star = " ⭐" if r["tag"] == WINNER else ""
+        star = " (pemenang)" if r["tag"] == WINNER else ""
         L.append(f"| {r['tag']}{star} | {r['benar']} | {r['salah_tipe']} | {r['fn']} | "
                  f"{r['fp']} | {r['det_err']} |")
     L.append(

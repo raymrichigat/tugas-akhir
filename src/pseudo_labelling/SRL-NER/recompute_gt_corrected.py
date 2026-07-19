@@ -173,19 +173,20 @@ def plot_confusion(gold_lab: pd.Series, pred: pd.Series, title: str, path: Path)
     rs = cm_row.sum(axis=1, keepdims=True)
     rs[rs == 0] = 1
     cm_norm = cm_row / rs
-    fig, ax = plt.subplots(figsize=(6.2, 5.2))
+    fig, ax = plt.subplots(figsize=(8.6, 7.0))
     im = ax.imshow(cm_norm, cmap="Blues", vmin=0, vmax=1)
-    ax.set_xticks(range(len(CONF_CLASSES))); ax.set_xticklabels(CONF_CLASSES, rotation=45, ha="right")
-    ax.set_yticks(range(len(CONF_CLASSES))); ax.set_yticklabels(CONF_CLASSES)
-    ax.set_xlabel("Prediksi"); ax.set_ylabel("Acuan")
-    ax.set_title(title, fontsize=10)
+    ax.set_xticks(range(len(CONF_CLASSES))); ax.set_xticklabels(CONF_CLASSES, rotation=40, ha="right", fontsize=13)
+    ax.set_yticks(range(len(CONF_CLASSES))); ax.set_yticklabels(CONF_CLASSES, fontsize=13)
+    ax.set_xlabel("Prediksi", fontsize=14); ax.set_ylabel("Acuan (gold terkoreksi)", fontsize=14)
+    ax.set_title(title, fontsize=15)
     for i in range(len(CONF_CLASSES)):
         for j in range(len(CONF_CLASSES)):
             c = "white" if cm_norm[i, j] > 0.5 else "black"
-            ax.text(j, i, f"{cm[i, j]}", ha="center", va="center", color=c, fontsize=8)
-    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+            ax.text(j, i, f"{cm[i, j]}", ha="center", va="center", color=c, fontsize=14)
+    cb = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    cb.set_label("Proporsi per baris (recall kelas)", fontsize=11)
     fig.tight_layout()
-    fig.savefig(path, dpi=130)
+    fig.savefig(path, dpi=200, bbox_inches="tight")
     plt.close(fig)
 
 

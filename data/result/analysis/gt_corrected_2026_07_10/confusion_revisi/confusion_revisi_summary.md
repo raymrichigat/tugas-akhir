@@ -11,7 +11,7 @@
 
 | Skenario | Span benar | Salah tipe | Tak terdeteksi (FN) | Spurious (FP) | Total error deteksi |
 |---|---:|---:|---:|---:|---:|
-| S4-augmentation ⭐ | 1921 | 3 | 45 | 45 | 90 |
+| S4-augmentation (pemenang) | 1921 | 3 | 45 | 45 | 90 |
 | S1-baseline (indolem uncased) | 1880 | 3 | 86 | 91 | 177 |
 | S3a-SCL | 1880 | 4 | 85 | 86 | 171 |
 | S2-weighted-CE | 1877 | 6 | 86 | 108 | 194 |
