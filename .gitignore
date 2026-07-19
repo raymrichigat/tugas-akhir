@@ -73,3 +73,9 @@ training_bundle_corrected_gold_*
 # Draw.io file backup/lock sementara (autosave editor, bukan sumber)
 .$*
 *.bkp
+
+# Audio rekaman sidang (terlalu besar untuk GitHub >100MB)
+*.mp3
+
+# Backup .md pra-sinkron dari PDF buku (redundan dgn history git)
+*.bak_pre_pdf_sync

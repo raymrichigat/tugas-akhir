@@ -1,0 +1,1995 @@
+﻿chunk_id,kategori,gt_teks,gt_tipe,pred_teks,pred_tipe
+000001-002,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000001-002,Benar,India,LOCATION,India,LOCATION
+000001-002,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000001-002,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000001-002,False negative,Cina,LOCATION,(tidak terdeteksi),-
+000001-002,False positive,(tidak ada),-,timur,LOCATION
+000001-002,False positive,(tidak ada),-,timur,LOCATION
+000002-003,Benar,Haritsah bin Amr,PERSON,Haritsah bin Amr,PERSON
+000002-003,Benar,Hijaz,LOCATION,Hijaz,LOCATION
+000002-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000002-003,Benar,Imran bin Amr,PERSON,Imran bin Amr,PERSON
+000002-003,Benar,Nash bin Al-Uzd,PERSON,Nash bin Al-Uzd,PERSON
+000002-003,Benar,Tihamah,LOCATION,Tihamah,LOCATION
+000002-003,Benar,Jafnah bin Amr,PERSON,Jafnah bin Amr,PERSON
+000002-003,Benar,Syam,LOCATION,Syam,LOCATION
+000002-003,Benar,Abul Muluk,PERSON,Abul Muluk,PERSON
+000002-003,Benar,Hijaz,LOCATION,Hijaz,LOCATION
+000002-003,Benar,Syam,LOCATION,Syam,LOCATION
+000002-003,Benar,Nashr bin Rabi'ah,PERSON,Nashr bin Rabi'ah,PERSON
+000002-003,Benar,Bahrain,LOCATION,Bahrain,LOCATION
+000002-003,Benar,Hadhramaut,LOCATION,Hadhramaut,LOCATION
+000002-003,Benar,Bahrain,LOCATION,Bahrain,LOCATION
+000002-003,Benar,Najd,LOCATION,Najd,LOCATION
+000002-004,Benar,Yaman,LOCATION,Yaman,LOCATION
+000002-004,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-004,Benar,Irak,LOCATION,Irak,LOCATION
+000002-004,Benar,Eufrat,LOCATION,Eufrat,LOCATION
+000002-004,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-004,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-004,Benar,Irak,LOCATION,Irak,LOCATION
+000002-004,Benar,Pakistan,LOCATION,Pakistan,LOCATION
+000002-004,Benar,Mesir,LOCATION,Mesir,LOCATION
+000002-004,Benar,Mesir,LOCATION,Mesir,LOCATION
+000002-004,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-004,Benar,Palestina,LOCATION,Palestina,LOCATION
+000002-004,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-004,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-004,False positive,(tidak ada),-,Isma',PERSON
+000002-005,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-005,Benar,Hajar,PERSON,Hajar,PERSON
+000002-005,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-005,Benar,Hijaz,LOCATION,Hijaz,LOCATION
+000002-005,Benar,Baitul-Haram,LOCATION,Baitul-Haram,LOCATION
+000002-005,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-005,Benar,Zamzam,LOCATION,Zamzam,LOCATION
+000002-005,Benar,Makkah,LOCATION,Makkah,LOCATION
+000002-005,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-005,Benar,Palestina,LOCATION,Palestina,LOCATION
+000002-005,Benar,Al-Khadhri,PERSON,Al-Khadhri,PERSON
+000002-005,Benar,Muhammad,PERSON,Muhammad,PERSON
+000002-008,Benar,Ismail,PERSON,Ismail,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Mudhadh bin Amru,PERSON,Mudhadh bin Amru,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-008,Benar,Palestina,LOCATION,Palestina,LOCATION
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Zamzam,LOCATION,Zamzam,LOCATION
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000002-008,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000002-008,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000002-008,Benar,Isma'il,PERSON,Isma'il,PERSON
+000005-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000005-004,Benar,Iyas bin Qubaishah,PERSON,Iyas bin Qubaishah,PERSON
+000005-004,Benar,Kisra,PERSON,Kisra,PERSON
+000005-004,Benar,tahun 632 M,TIME,tahun 632 M,TIME
+000005-004,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000007-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-004,Benar,Baitul-Haram,LOCATION,Baitul-Haram,LOCATION
+000007-004,Benar,Qushay bin Kilab,PERSON,Qushay bin Kilab,PERSON
+000007-004,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000007-004,Benar,Rabi'ah bin Haram,PERSON,Rabi'ah bin Haram,PERSON
+000007-004,Benar,Syam,LOCATION,Syam,LOCATION
+000007-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-004,Benar,Hulail bin Hubsyah,PERSON,Hulail bin Hubsyah,PERSON
+000007-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-004,Benar,Baitul-Haram,LOCATION,Baitul-Haram,LOCATION
+000007-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-004,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-004,Benar,Isma'il,PERSON,Isma'il,PERSON
+000007-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-005,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-005,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-005,Benar,Abu Ghibsyan,PERSON,Abu Ghibsyan,PERSON
+000007-005,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-005,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-005,Benar,Abu Ghibsyan,PERSON,Abu Ghibsyan,PERSON
+000007-005,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-005,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-005,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-006,Benar,Ya'mar bin Auf,PERSON,Ya'mar bin Auf,PERSON
+000007-006,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-006,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-006,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-006,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-006,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-006,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-006,Benar,abad kelima Masehi,TIME,abad kelima Masehi,TIME
+000007-006,Benar,tahun 440 M,TIME,tahun 440 M,TIME
+000007-006,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-006,Benar,Baitul-Haram,LOCATION,Baitul-Haram,LOCATION
+000007-006,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-006,Benar,Murrah bin Auf,PERSON,Murrah bin Auf,PERSON
+000007-007,Benar,Murrah bin Auf,PERSON,Murrah bin Auf,PERSON
+000007-007,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-007,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000007-007,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-007,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-007,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000007-007,Benar,Makkah,LOCATION,Makkah,LOCATION
+000007-007,False positive,(tidak ada),-,Hijabah,LOCATION
+000007-009,Benar,Hasyim bin Abdi,PERSON,Hasyim bin Abdi,PERSON
+000007-009,Benar,Hasyim bin Abdi,PERSON,Hasyim bin Abdi,PERSON
+000007-009,Benar,Al-Muththalib bin Hasyim bin Abdi,PERSON,Al-Muththalib bin Hasyim bin Abdi,PERSON
+000007-009,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000007-009,Benar,Al-Abbas bin Abdul,PERSON,Al-Abbas bin Abdul,PERSON
+000007-009,False positive,(tidak ada),-,hijabah,LOCATION
+000010-001,Benar,Isma'il,PERSON,Isma'il,PERSON
+000010-001,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000010-001,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000010-001,Benar,Amr bin Luhay,PERSON,Amr bin Luhay,PERSON
+000010-001,Benar,Syam,LOCATION,Syam,LOCATION
+000010-001,Benar,Syam,LOCATION,Syam,LOCATION
+000010-001,Benar,Syam,LOCATION,Syam,LOCATION
+000010-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000010-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000010-001,Benar,Hijaz,LOCATION,Hijaz,LOCATION
+000010-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000010-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000010-001,Benar,Laut Merah,LOCATION,Laut Merah,LOCATION
+000010-001,Benar,Qudaid,LOCATION,Qudaid,LOCATION
+000010-001,Benar,Tha'if,LOCATION,Tha'if,LOCATION
+000010-001,False negative,Wadi Nakhlah,LOCATION,(tidak terdeteksi),-
+000010-006,Benar,Sa'id bin Al-Musayyab,PERSON,Sa'id bin Al-Musayyab,PERSON
+000010-006,Benar,Amr bin Luhay,PERSON,Amr bin Luhay,PERSON
+000010-011,Benar,Adam,PERSON,Adam,PERSON
+000010-011,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000011-001,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000011-001,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000011-002,Benar,Hajar Aswad,LOCATION,Hajar Aswad,LOCATION
+000011-002,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000013-004,Benar,Abu Dawud,PERSON,Abu Dawud,PERSON
+000013-004,Benar,Abu Dawud,PERSON,Abu Dawud,PERSON
+000013-004,Benar,Amr bin Syu'aib,PERSON,Amr bin Syu'aib,PERSON
+000013-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000013-004,Benar,Sa'd bin Abu Waqqash,PERSON,Sa'd bin Abu Waqqash,PERSON
+000013-004,Benar,Abd bin Zum'ah,PERSON,Abd bin Zum'ah,PERSON
+000013-004,Benar,Abdurrahman bin Zum'ah,PERSON,Abdurrahman bin Zum'ah,PERSON
+000014-001,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000014-001,Benar,Yaman,LOCATION,Yaman,LOCATION
+000014-001,Benar,Syam,LOCATION,Syam,LOCATION
+000014-001,False negative,Ukazh,LOCATION,(tidak terdeteksi),-
+000014-001,False negative,Dzil-Majaz,LOCATION,(tidak terdeteksi),-
+000014-001,False negative,Majinnah,LOCATION,(tidak terdeteksi),-
+000015-002,Benar,Antarah bin Syaddad,PERSON,Antarah bin Syaddad,PERSON
+000015-003,Benar,Hani' bin Mas'ud,PERSON,Hani' bin Mas'ud,PERSON
+000015-003,Benar,As-Samau'al bin Adiya,PERSON,As-Samau'al bin Adiya,PERSON
+000015-003,Benar,Hajib bin Zararah,PERSON,Hajib bin Zararah,PERSON
+000015-004,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000015-004,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000016-002,Benar,Yatsribi,PERSON,Yatsribi,PERSON
+000016-002,Benar,Yahzan,PERSON,Yahzan,PERSON
+000016-002,Benar,Yalhan,PERSON,Yalhan,PERSON
+000016-002,Benar,Ar'awy,PERSON,Ar'awy,PERSON
+000016-002,Benar,Aid,PERSON,Aid,PERSON
+000016-002,Benar,Daisyan,PERSON,Daisyan,PERSON
+000016-002,Benar,Aishar,PERSON,Aishar,PERSON
+000016-002,Benar,Afnad,PERSON,Afnad,PERSON
+000016-002,Benar,Aiham,PERSON,Aiham,PERSON
+000016-002,Benar,Muqshir,PERSON,Muqshir,PERSON
+000016-002,Benar,Nahits,PERSON,Nahits,PERSON
+000016-002,Benar,Zarih,PERSON,Zarih,PERSON
+000016-002,Benar,Sumay,PERSON,Sumay,PERSON
+000016-002,Benar,Isma'il,PERSON,Isma'il,PERSON
+000016-002,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000016-002,Benar,Muhammad,PERSON,Muhammad,PERSON
+000016-002,Benar,Ibnu Sa'd,PERSON,Ibnu Sa'd,PERSON
+000016-002,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000016-002,Benar,Tarih,PERSON,Tarih,PERSON
+000016-002,Benar,Azar,PERSON,Azar,PERSON
+000016-002,Benar,Nahur,PERSON,Nahur,PERSON
+000016-002,Benar,Saru',PERSON,Saru',PERSON
+000016-002,Benar,Sarugh,PERSON,Sarugh,PERSON
+000016-002,Benar,Ra'u,PERSON,Ra'u,PERSON
+000016-002,Benar,Falakh,PERSON,Falakh,PERSON
+000016-002,Benar,Aibar,PERSON,Aibar,PERSON
+000016-002,Benar,Syalakh,PERSON,Syalakh,PERSON
+000016-002,Benar,Arfakhsyad,PERSON,Arfakhsyad,PERSON
+000016-002,Benar,Sam,PERSON,Sam,PERSON
+000016-002,Benar,Nuh,PERSON,Nuh,PERSON
+000016-002,Benar,Lamk,PERSON,Lamk,PERSON
+000016-002,Benar,Matausyalakh,PERSON,Matausyalakh,PERSON
+000016-002,Benar,Akhnukh,PERSON,Akhnukh,PERSON
+000016-002,Benar,Idris,PERSON,Idris,PERSON
+000016-002,Benar,Yard,PERSON,Yard,PERSON
+000016-002,Benar,Mahla'il,PERSON,Mahla'il,PERSON
+000016-002,Benar,Qainan,PERSON,Qainan,PERSON
+000016-002,Benar,Yanisya,PERSON,Yanisya,PERSON
+000016-002,Benar,Syaits,PERSON,Syaits,PERSON
+000016-002,Benar,Adam,PERSON,Adam,PERSON
+000016-002,False positive,(tidak ada),-,Muzay,PERSON
+000016-002,False positive,(tidak ada),-,Iwadhah,PERSON
+000016-002,False positive,(tidak ada),-,Aram,PERSON
+000016-002,False positive,(tidak ada),-,Qaidar,PERSON
+000016-002,False positive,(tidak ada),-,Sulaiman,PERSON
+000016-002,False positive,(tidak ada),-,Al-Kalbi,PERSON
+000017-001,Benar,Hasyim bin Abdu Manaf,PERSON,Hasyim bin Abdu Manaf,PERSON
+000017-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000017-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000017-001,Benar,Syam,LOCATION,Syam,LOCATION
+000017-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000017-001,Benar,Salma binti Amru,PERSON,Salma binti Amru,PERSON
+000017-001,Benar,Adi bin An-Najjar,PERSON,Adi bin An-Najjar,PERSON
+000017-001,Benar,Syam,LOCATION,Syam,LOCATION
+000017-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-003,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000017-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000017-003,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-003,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-003,Benar,Yaman,LOCATION,Yaman,LOCATION
+000017-003,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-003,Benar,Abdul Muthalib,PERSON,Abdul Muthalib,PERSON
+000017-003,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-003,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000017-003,Benar,Ath-Thabari,PERSON,Ath-Thabari,PERSON
+000017-004,Benar,Abu Sa'd bin Adi,PERSON,Abu Sa'd bin Adi,PERSON
+000017-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000017-004,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-004,Benar,Abu Sa'd,PERSON,Abu Sa'd,PERSON
+000017-004,Benar,Hijir,LOCATION,Hijir,LOCATION
+000017-004,Benar,Abu Sa'd,PERSON,Abu Sa'd,PERSON
+000017-004,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000017-004,Benar,Abu Sa'd,PERSON,Abu Sa'd,PERSON
+000017-004,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-004,Benar,Madinah,LOCATION,Madinah,LOCATION
+000017-004,Benar,Syams bin Abdi,PERSON,Syams bin Abdi,PERSON
+000017-004,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-007,Benar,Makkah,LOCATION,Makkah,LOCATION
+000017-007,Benar,Muzdalifah,LOCATION,Muzdalifah,LOCATION
+000017-007,Benar,Mina,LOCATION,Mina,LOCATION
+000017-007,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000017-007,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000017-007,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000017-007,Benar,Abrahah,PERSON,Abrahah,PERSON
+000017-008,Benar,Abrahah,PERSON,Abrahah,PERSON
+000017-008,Benar,Abrahah,PERSON,Abrahah,PERSON
+000017-008,Benar,bulan Muharram,TIME,bulan Muharram,TIME
+000017-008,Benar,bulan,TIME,bulan,TIME
+000017-008,Benar,Baitul Maqdis,LOCATION,Baitul Maqdis,LOCATION
+000017-008,Benar,Bukhtanashar,PERSON,Bukhtanashar,PERSON
+000017-008,Benar,tahun 587 SM,TIME,tahun 587 SM,TIME
+000017-008,Benar,tahun 70 M,TIME,tahun 70 M,TIME
+000017-008,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000017-008,Benar,Habasyah,LOCATION,Habasyah,LOCATION
+000017-008,Benar,Yaman,LOCATION,Yaman,LOCATION
+000017-008,Kesalahan batas,bulan Maret 571 M,TIME,Maret 571 M,TIME
+000017-009,Benar,Yaman,LOCATION,Yaman,LOCATION
+000017-009,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-009,Benar,Az-Zubair,PERSON,Az-Zubair,PERSON
+000017-009,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000017-009,Benar,Abdullah,PERSON,Abdullah,PERSON
+000017-009,Benar,Hamzah,PERSON,Hamzah,PERSON
+000017-009,Benar,Abu Lahb,PERSON,Abu Lahb,PERSON
+000017-009,Benar,Al-Abbas,PERSON,Al-Abbas,PERSON
+000017-009,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000017-009,Benar,Abdullah,PERSON,Abdullah,PERSON
+000017-009,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000017-009,Benar,Fathimah binti Amr bin A'idz bin Imran bin Makhzum bin Yaqzhah bin Murrah,PERSON,Fathimah binti Amr bin A'idz bin Imran bin Makhzum bin Yaqzhah bin Murrah,PERSON
+000017-009,Kesalahan batas,Abdul Ka'bah,PERSON,Ka'bah,PERSON
+000017-009,Kesalahan batas,Abdul Ka'bah,PERSON,Ka'bah,PERSON
+000017-009,False negative,Shafiyyah,PERSON,(tidak terdeteksi),-
+000017-010,Benar,Fathimah binti Amr bin A'idz bin Imran bin Makhzum bin Yaqzhah bin Murrah,PERSON,Fathimah binti Amr bin A'idz bin Imran bin Makhzum bin Yaqzhah bin Murrah,PERSON
+000017-010,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-010,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-010,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-010,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000017-010,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000017-010,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000017-012,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000017-012,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000017-012,Benar,Makkah,LOCATION,Makkah,LOCATION
+000017-012,Benar,Aminah,PERSON,Aminah,PERSON
+000017-012,Benar,Ummu Aiman,PERSON,Ummu Aiman,PERSON
+000017-012,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000017-012,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000018-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000018-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000018-001,Benar,Kisra,PERSON,Kisra,PERSON
+000018-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000018-001,Benar,Ibnu Sa'd,PERSON,Ibnu Sa'd,PERSON
+000018-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000018-001,Benar,Syam,LOCATION,Syam,LOCATION
+000018-001,Benar,Al-Arbadh bin Sariyah,PERSON,Al-Arbadh bin Sariyah,PERSON
+000018-001,Benar,Kisra,PERSON,Kisra,PERSON
+000018-001,Benar,Al-Baihaqi,PERSON,Al-Baihaqi,PERSON
+000018-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000018-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000018-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000018-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000018-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000018-001,Kesalahan batas,"Senin pagi ,",TIME,"Senin pagi , tanggal 9 Rabi'ul Awwal",TIME
+000018-001,Kesalahan batas,tanggal 20 atau 22 bulan April tahun 571 M,TIME,tanggal 20,TIME
+000018-001,False negative,tanggal 9 Rabi'ul Awwal,TIME,(tidak terdeteksi),-
+000018-001,False positive,(tidak ada),-,bulan April tahun 571 M,TIME
+000019-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000019-001,Benar,Sa'd bin Bakr,PERSON,Sa'd bin Bakr,PERSON
+000019-001,Benar,Halimah bin Abu Dzu'aib,PERSON,Halimah bin Abu Dzu'aib,PERSON
+000019-001,Benar,Al-Harits bin Abdul Uzza,PERSON,Al-Harits bin Abdul Uzza,PERSON
+000019-001,Benar,Abdullah bin Al-Harits,PERSON,Abdullah bin Al-Harits,PERSON
+000019-001,Benar,Anisa binti Al-Harits,PERSON,Anisa binti Al-Harits,PERSON
+000019-001,Benar,Judzamah binti Al-Harits,PERSON,Judzamah binti Al-Harits,PERSON
+000019-001,Benar,Abu Sufyan bin Al-Harits bin Abdul Muththalib,PERSON,Abu Sufyan bin Al-Harits bin Abdul Muththalib,PERSON
+000019-001,Benar,Hamzah bin Abdul Muththalib,PERSON,Hamzah bin Abdul Muththalib,PERSON
+000019-001,Benar,Sa'd bin Bakr,PERSON,Sa'd bin Bakr,PERSON
+000019-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000019-001,Benar,Hamzah,PERSON,Hamzah,PERSON
+000019-001,Benar,Hamzah,PERSON,Hamzah,PERSON
+000019-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000019-001,Benar,Halimah,PERSON,Halimah,PERSON
+000019-001,Benar,Halimah,PERSON,Halimah,PERSON
+000019-001,Kesalahan batas,Abu Kabsyah,PERSON,Abu,PERSON
+000019-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000019-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000019-003,Benar,Halimah,PERSON,Halimah,PERSON
+000021-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000021-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000021-001,Benar,Ibnu Hasyim,PERSON,Ibnu Hasyim,PERSON
+000021-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000021-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000021-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000021-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000021-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000021-001,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000021-001,False positive,(tidak ada),-,Al-Khadri,PERSON
+000026-002,Benar,Abu Qubais,PERSON,Abu Qubais,PERSON
+000026-002,Benar,Az-Zubair bin Abdul Muththalib,PERSON,Az-Zubair bin Abdul Muththalib,PERSON
+000026-002,Benar,Al-Ash bin Wa,PERSON,Al-Ash bin Wa,PERSON
+000026-002,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000026-002,Benar,Al-Khadhri,PERSON,Al-Khadhri,PERSON
+000026-002,Benar,Perang Fijar,EVENT,Perang Fijar,EVENT
+000027-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000027-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000027-001,Benar,Syam,LOCATION,Syam,LOCATION
+000027-001,Benar,Khadijah,PERSON,Khadijah,PERSON
+000027-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000027-001,Benar,Khadijah binti Khuwailid,PERSON,Khadijah binti Khuwailid,PERSON
+000027-001,Benar,Khadijah,PERSON,Khadijah,PERSON
+000027-001,Benar,Syam,LOCATION,Syam,LOCATION
+000027-001,Benar,Syam,LOCATION,Syam,LOCATION
+000029-003,Benar,Muhammad,PERSON,Muhammad,PERSON
+000029-003,Benar,Hajar,LOCATION,Hajar,LOCATION
+000029-003,Benar,Hajar,LOCATION,Hajar,LOCATION
+000029-003,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000029-003,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000029-003,False positive,(tidak ada),-,thawaf,LOCATION
+000032-001,Benar,bulan Ramadhan,TIME,bulan Ramadhan,TIME
+000032-001,Benar,Gua Hira',LOCATION,Gua Hira',LOCATION
+000032-001,Benar,Jibril,PERSON,Jibril,PERSON
+000032-001,Benar,"hari Senin , malam tanggal 21 dari bulan Ramadhan",TIME,"hari Senin , malam tanggal 21 dari bulan Ramadhan",TIME
+000032-001,Benar,tanggal 10 Agustus 610 M,TIME,tanggal 10 Agustus 610 M,TIME
+000032-001,Benar,Ibnu Hajar,PERSON,Ibnu Hajar,PERSON
+000032-001,Benar,Rabi'ul Awwal,TIME,Rabi'ul Awwal,TIME
+000032-001,Benar,bulan Ramadhan,TIME,bulan Ramadhan,TIME
+000032-002,Benar,bulan Ramadhan,TIME,bulan Ramadhan,TIME
+000032-002,Benar,bulan,TIME,bulan,TIME
+000032-002,Benar,Rab'ul Awwal,TIME,Rab'ul Awwal,TIME
+000032-002,Benar,bulan Ramadhan,TIME,bulan Ramadhan,TIME
+000032-002,Benar,bulan Rajab,TIME,bulan Rajab,TIME
+000032-002,Benar,Abdullah bin Muhammad bin Abdul Wahhab,PERSON,Abdullah bin Muhammad bin Abdul Wahhab,PERSON
+000032-002,Benar,bulan Ramadhan,TIME,bulan Ramadhan,TIME
+000032-002,Benar,Bulan Ramadhan,TIME,Bulan Ramadhan,TIME
+000032-002,Benar,Lailatul-Qadar,TIME,Lailatul-Qadar,TIME
+000032-002,Benar,Lailatul-Qadar,TIME,Lailatul-Qadar,TIME
+000032-002,Benar,bulan Ramadhan,TIME,bulan Ramadhan,TIME
+000032-002,Benar,gua Hira',LOCATION,gua Hira',LOCATION
+000032-002,Benar,Jibril,PERSON,Jibril,PERSON
+000032-002,Benar,bulan Ramadhan,TIME,bulan Ramadhan,TIME
+000032-002,Benar,Al-Khadhri,PERSON,Al-Khadhri,PERSON
+000033-001,Benar,Ibnu Sa'd,PERSON,Ibnu Sa'd,PERSON
+000033-001,Benar,Ibnu Abbas,PERSON,Ibnu Abbas,PERSON
+000033-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000033-001,Benar,Jibril,PERSON,Jibril,PERSON
+000033-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000033-001,Benar,Jibril,PERSON,Jibril,PERSON
+000035-001,Benar,Ibnul Qayyim,PERSON,Ibnul Qayyim,PERSON
+000039-003,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000039-003,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000039-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000039-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000039-003,Benar,Zaid bin Muhammad,PERSON,Zaid bin Muhammad,PERSON
+000039-003,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000041-001,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000041-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000041-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000041-001,Benar,Umayyah bin Ash-Shallat,PERSON,Umayyah bin Ash-Shallat,PERSON
+000041-001,Benar,Qus bin Sa'idah,PERSON,Qus bin Sa'idah,PERSON
+000041-001,Benar,Amr bin Nufail,PERSON,Amr bin Nufail,PERSON
+000041-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000041-001,Benar,SUDAN,LOCATION,SUDAN,LOCATION
+000041-001,Benar,ERITREA,LOCATION,ERITREA,LOCATION
+000041-001,Benar,Addis Ababa,LOCATION,Addis Ababa,LOCATION
+000041-001,Benar,Habasyah,LOCATION,Habasyah,LOCATION
+000044-002,Benar,Abu Lahab,PERSON,Abu Lahab,PERSON
+000044-002,Benar,Abu Hurairah,PERSON,Abu Hurairah,PERSON
+000044-002,Benar,Ka'b,PERSON,Ka'b,PERSON
+000044-002,Benar,Fathimah binti Muhammad,PERSON,Fathimah binti Muhammad,PERSON
+000044-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000045-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000045-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000045-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000048-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000048-001,Benar,Abu Lahab,PERSON,Abu Lahab,PERSON
+000048-001,Benar,Yazid bin Ruman,PERSON,Yazid bin Ruman,PERSON
+000048-001,Benar,Thariq bin Abdullah,PERSON,Thariq bin Abdullah,PERSON
+000048-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000048-005,Benar,Muhammad,PERSON,Muhammad,PERSON
+000048-005,Benar,Muhammad,PERSON,Muhammad,PERSON
+000048-005,Benar,Ibnu Abbas,PERSON,Ibnu Abbas,PERSON
+000052-001,Benar,Amr bin Al-Ash,PERSON,Amr bin Al-Ash,PERSON
+000052-001,Benar,Abdullah bin Abu Rabi'ah,PERSON,Abdullah bin Abu Rabi'ah,PERSON
+000052-001,Benar,Najasyi,PERSON,Najasyi,PERSON
+000052-001,Benar,Najasyi,PERSON,Najasyi,PERSON
+000052-001,Benar,Najasyi,PERSON,Najasyi,PERSON
+000057-006,Benar,Umar,PERSON,Umar,PERSON
+000057-006,Benar,Umar,PERSON,Umar,PERSON
+000057-006,Benar,Muhammad,PERSON,Muhammad,PERSON
+000057-006,Benar,Khabbab,PERSON,Khabbab,PERSON
+000057-006,Benar,Umar,PERSON,Umar,PERSON
+000057-006,Benar,Umar,PERSON,Umar,PERSON
+000057-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000057-006,Benar,malam Kamis,TIME,malam Kamis,TIME
+000057-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000057-006,Benar,Shafa,LOCATION,Shafa,LOCATION
+000057-006,Benar,Umar,PERSON,Umar,PERSON
+000057-006,Benar,Umar,PERSON,Umar,PERSON
+000057-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000057-006,Benar,Hamzah,PERSON,Hamzah,PERSON
+000057-006,Benar,Umar,PERSON,Umar,PERSON
+000057-006,Benar,Umar,PERSON,Umar,PERSON
+000058-001,Benar,Hamzah,PERSON,Hamzah,PERSON
+000058-001,Benar,Umar,PERSON,Umar,PERSON
+000058-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000058-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000058-001,Benar,Yazid bin Ziyad,PERSON,Yazid bin Ziyad,PERSON
+000058-001,Benar,Muhammad bin Ka'b,PERSON,Muhammad bin Ka'b,PERSON
+000058-001,Benar,Uthbah bin Rabi',PERSON,Uthbah bin Rabi',PERSON
+000058-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000058-001,Benar,Masjidil Haram,LOCATION,Masjidil Haram,LOCATION
+000058-001,Benar,Utbah,PERSON,Utbah,PERSON
+000058-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000058-001,Benar,Hamzah,PERSON,Hamzah,PERSON
+000058-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000058-001,Benar,Abul Walid,PERSON,Abul Walid,PERSON
+000058-001,Benar,Umar bin Al-Khaththab,PERSON,Umar bin Al-Khaththab,PERSON
+000058-001,Benar,Umar bin Al-Khaththab,PERSON,Umar bin Al-Khaththab,PERSON
+000063-002,Benar,Al-Muth'im bin Adi,PERSON,Al-Muth'im bin Adi,PERSON
+000063-002,Benar,Al-Muththalib bin Abdi,PERSON,Al-Muththalib bin Abdi,PERSON
+000063-002,Benar,Zuhair bin Abu Umayyah,PERSON,Zuhair bin Abu Umayyah,PERSON
+000063-002,Benar,Abul Bakhtari bin Hisyam,PERSON,Abul Bakhtari bin Hisyam,PERSON
+000063-002,Benar,Abul Bakhtari,PERSON,Abul Bakhtari,PERSON
+000063-002,Benar,Abul Bakhtari,PERSON,Abul Bakhtari,PERSON
+000063-002,Benar,Zuhair bin Abu Umayyah,PERSON,Zuhair bin Abu Umayyah,PERSON
+000063-002,Benar,Al-Muth'im bin Adi,PERSON,Al-Muth'im bin Adi,PERSON
+000063-002,Benar,Zam'ah bin Al-Aswad bin Al-Muththalib bin Asad,PERSON,Zam'ah bin Al-Aswad bin Al-Muththalib bin Asad,PERSON
+000063-003,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000063-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000063-003,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000063-003,Benar,Zam'ah bin Al-Aswad,PERSON,Zam'ah bin Al-Aswad,PERSON
+000063-003,Benar,Abul Bakhtari,PERSON,Abul Bakhtari,PERSON
+000063-003,Benar,Abul Bakhtari,PERSON,Abul Bakhtari,PERSON
+000063-003,Benar,Al-Muth'im bin Adi,PERSON,Al-Muth'im bin Adi,PERSON
+000063-003,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000063-003,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000064-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000064-001,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000064-001,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000064-001,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000064-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000064-001,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000064-001,Benar,Hamzah,PERSON,Hamzah,PERSON
+000064-001,Benar,Umar,PERSON,Umar,PERSON
+000064-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000064-001,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000065-001,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000065-001,Benar,bulan Rajab,TIME,bulan Rajab,TIME
+000065-001,Benar,bulan Ramadhan,TIME,bulan Ramadhan,TIME
+000065-001,Benar,Khadijah,PERSON,Khadijah,PERSON
+000065-001,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000065-001,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000065-001,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000065-001,Benar,Abdullah bin Abu Umayyah,PERSON,Abdullah bin Abu Umayyah,PERSON
+000065-001,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000065-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000065-001,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000065-001,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000074-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000074-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000074-002,Benar,Muhammad,PERSON,Muhammad,PERSON
+000074-005,Benar,Utbah bin Rabi'ah,PERSON,Utbah bin Rabi'ah,PERSON
+000074-005,Benar,Abu Thalib,PERSON,Abu Thalib,PERSON
+000074-005,Benar,Khabbab bin Al-Aratt,PERSON,Khabbab bin Al-Aratt,PERSON
+000074-005,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000074-005,Benar,Hadhramaut,LOCATION,Hadhramaut,LOCATION
+000075-001,Benar,bulan,TIME,bulan,TIME
+000075-001,Benar,Mei,TIME,Mei,TIME
+000075-001,Benar,bulan Juni 619 M,TIME,bulan Juni 619 M,TIME
+000075-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000075-001,Benar,Tha'if,LOCATION,Tha'if,LOCATION
+000075-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000075-001,Benar,Zaid bin Haritsah,PERSON,Zaid bin Haritsah,PERSON
+000075-001,Benar,Tha'if,LOCATION,Tha'if,LOCATION
+000075-001,Benar,Amr bin Umair,PERSON,Amr bin Umair,PERSON
+000075-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000075-001,Benar,Tha'if,LOCATION,Tha'if,LOCATION
+000075-001,Benar,Tha'if,LOCATION,Tha'if,LOCATION
+000075-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000075-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000075-006,False negative,Wadi Nakhlah,LOCATION,(tidak terdeteksi),-
+000075-006,False negative,Wadi Nakhlah,LOCATION,(tidak terdeteksi),-
+000075-006,False negative,Wadi Nakhlah,LOCATION,(tidak terdeteksi),-
+000075-010,Benar,Masjidil Haram,LOCATION,Masjidil Haram,LOCATION
+000075-010,Benar,Muhammad,PERSON,Muhammad,PERSON
+000075-010,Benar,Makkah,LOCATION,Makkah,LOCATION
+000075-010,Benar,Zaid bin Haritsah,PERSON,Zaid bin Haritsah,PERSON
+000075-010,Benar,Masjidil Haram,LOCATION,Masjidil Haram,LOCATION
+000075-010,Benar,Muhammad,PERSON,Muhammad,PERSON
+000075-010,Benar,Hajar Aswad,LOCATION,Hajar Aswad,LOCATION
+000075-010,Benar,Muth'im bin Adi,PERSON,Muth'im bin Adi,PERSON
+000075-010,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000075-010,Benar,Abu Rasulullah,PERSON,Abu Rasulullah,PERSON
+000075-010,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000075-011,Benar,Thaif,LOCATION,Thaif,LOCATION
+000075-011,Benar,Tha'if,LOCATION,Tha'if,LOCATION
+000075-011,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000076-001,Benar,bulan Dzul-Qa'dah,TIME,bulan Dzul-Qa'dah,TIME
+000076-001,Benar,bulan,TIME,bulan,TIME
+000076-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000076-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000076-001,Kesalahan batas,bulan Juli tahun 619 M,TIME,tahun 619 M,TIME
+000077-001,Benar,Az-Zuhri,PERSON,Az-Zuhri,PERSON
+000077-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000077-001,Benar,Amir bin Sha'sha'ah,PERSON,Amir bin Sha'sha'ah,PERSON
+000077-001,Benar,Muharib bin Khashafah,PERSON,Muharib bin Khashafah,PERSON
+000077-001,Benar,Al-Harits bin Ka'b,PERSON,Al-Harits bin Ka'b,PERSON
+000077-001,Benar,Az-Zuhri,PERSON,Az-Zuhri,PERSON
+000077-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000077-002,Benar,Amir bin Sha'sha',PERSON,Amir bin Sha'sha',PERSON
+000077-002,Benar,Baiharah bin Firas,PERSON,Baiharah bin Firas,PERSON
+000077-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000077-002,Benar,Abdul Muththalib,PERSON,Abdul Muththalib,PERSON
+000077-003,Benar,Isma'il,PERSON,Isma'il,PERSON
+000078-002,Benar,Iyas bin Mu'adz,PERSON,Iyas bin Mu'adz,PERSON
+000078-002,Benar,Yastrib,LOCATION,Yastrib,LOCATION
+000078-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000078-002,Benar,Perang Bu'ats,EVENT,Perang Bu'ats,EVENT
+000078-002,Benar,Iyas bin Mu'adz,PERSON,Iyas bin Mu'adz,PERSON
+000078-002,Benar,Abul Haisar,PERSON,Abul Haisar,PERSON
+000078-002,Benar,Anas bin Rafi',PERSON,Anas bin Rafi',PERSON
+000078-005,Benar,Abu Dzarr,PERSON,Abu Dzarr,PERSON
+000078-005,Benar,Muhammad,PERSON,Muhammad,PERSON
+000078-005,Benar,Al-Abbas,PERSON,Al-Abbas,PERSON
+000080-001,Benar,Isra',EVENT,Isra',EVENT
+000080-001,Benar,Mi'raj,EVENT,Mi'raj,EVENT
+000080-001,Benar,Isra',EVENT,Isra',EVENT
+000080-001,Benar,Ath-Thabari,PERSON,Ath-Thabari,PERSON
+000080-001,Benar,Isra',EVENT,Isra',EVENT
+000080-001,Benar,Isra',EVENT,Isra',EVENT
+000080-001,Benar,Isra',EVENT,Isra',EVENT
+000080-001,Benar,bulan Muharram,TIME,bulan Muharram,TIME
+000080-001,Benar,Isra',EVENT,Isra',EVENT
+000080-001,Benar,bulan Muharram,TIME,bulan Muharram,TIME
+000080-001,Benar,Isra',EVENT,Isra',EVENT
+000080-001,Benar,bulan Rabi'ul Awwal,TIME,bulan Rabi'ul Awwal,TIME
+000080-001,Benar,Khadijah,PERSON,Khadijah,PERSON
+000080-001,Benar,bulan Ramadhan,TIME,bulan Ramadhan,TIME
+000080-001,Benar,Isra',EVENT,Isra',EVENT
+000080-001,Benar,Al-Isra',EVENT,Al-Isra',EVENT
+000080-001,Benar,Isra',EVENT,Isra',EVENT
+000080-001,Kesalahan batas,malam tanggal 27 bulan Rajab,TIME,malam,TIME
+000080-001,False negative,Al-Qurthubi,PERSON,(tidak terdeteksi),-
+000080-001,False positive,(tidak ada),-,tanggal 27 bulan Rajab,TIME
+000080-005,Benar,Ibnu Abbas,PERSON,Ibnu Abbas,PERSON
+000080-005,Benar,Jibril,PERSON,Jibril,PERSON
+000080-005,Benar,Aisyah,PERSON,Aisyah,PERSON
+000080-005,Benar,Ibnu Mas'ud,PERSON,Ibnu Mas'ud,PERSON
+000080-005,Benar,Isra,EVENT,Isra,EVENT
+000080-005,Benar,Jibril,PERSON,Jibril,PERSON
+000080-005,Benar,Sidratul Muntaha,LOCATION,Sidratul Muntaha,LOCATION
+000080-005,Benar,Jibril,PERSON,Jibril,PERSON
+000080-005,Benar,Sidratul Muntaha,LOCATION,Sidratul Muntaha,LOCATION
+000080-005,Benar,Isra Mi'raj,EVENT,Isra Mi'raj,EVENT
+000080-005,Benar,Nil,LOCATION,Nil,LOCATION
+000080-005,Benar,Eufrat,LOCATION,Eufrat,LOCATION
+000080-009,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000080-009,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000080-009,Benar,Isra' Mi'raj,EVENT,Isra' Mi'raj,EVENT
+000080-009,Benar,Isra',EVENT,Isra',EVENT
+000081-002,Benar,Uwaim bin Sa'idah,PERSON,Uwaim bin Sa'idah,PERSON
+000081-002,Benar,Amr bin Auf,PERSON,Amr bin Auf,PERSON
+000081-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000081-002,Benar,Aqabah,LOCATION,Aqabah,LOCATION
+000081-002,Benar,Mina,LOCATION,Mina,LOCATION
+000081-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000081-002,Benar,Ubadah bin Ash-Shamit,PERSON,Ubadah bin Ash-Shamit,PERSON
+000081-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000083-004,Benar,As'ad bin Zurarah,PERSON,As'ad bin Zurarah,PERSON
+000083-004,Benar,As'ad bin Zurarah,PERSON,As'ad bin Zurarah,PERSON
+000083-004,Benar,Mush'ab,PERSON,Mush'ab,PERSON
+000083-004,Benar,Usaid,PERSON,Usaid,PERSON
+000083-004,Benar,As' ad bin Zurarah,PERSON,As' ad bin Zurarah,PERSON
+000083-004,Benar,Abu Umamah,PERSON,Abu Umamah,PERSON
+000083-004,Benar,As'ad,PERSON,As'ad,PERSON
+000083-004,Benar,Mush'ab,PERSON,Mush'ab,PERSON
+000083-004,Benar,Mush'ab,PERSON,Mush'ab,PERSON
+000083-004,Benar,Sa'd bin Mu'ad,PERSON,Sa'd bin Mu'ad,PERSON
+000083-007,Benar,Qais bin Al-Aslat,PERSON,Qais bin Al-Aslat,PERSON
+000083-007,Benar,Perang Khandaq,EVENT,Perang Khandaq,EVENT
+000083-007,Benar,Mush'ab bin Umair,PERSON,Mush'ab bin Umair,PERSON
+000083-007,Benar,Makkah,LOCATION,Makkah,LOCATION
+000083-007,Benar,Yastrib,LOCATION,Yastrib,LOCATION
+000085-001,Benar,Al-Abbas bin Abdul Muththalib,PERSON,Al-Abbas bin Abdul Muththalib,PERSON
+000085-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000085-001,Benar,Ka'b,PERSON,Ka'b,PERSON
+000085-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000085-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000088-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000088-001,Benar,As'ad bin Zurarah bin Ads,PERSON,As'ad bin Zurarah bin Ads,PERSON
+000088-001,Benar,Sa'd bin Ar-Rabi' bin Amr,PERSON,Sa'd bin Ar-Rabi' bin Amr,PERSON
+000088-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000088-001,Benar,Abul Haitsam,PERSON,Abul Haitsam,PERSON
+000088-001,Benar,Al-Barra' bin Ma'rur,PERSON,Al-Barra' bin Ma'rur,PERSON
+000088-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000088-001,Benar,As'ad bin Zararah,PERSON,As'ad bin Zararah,PERSON
+000088-001,Benar,Abdullah bin Rawahah bin Tsa'labah,PERSON,Abdullah bin Rawahah bin Tsa'labah,PERSON
+000088-001,Benar,Raff' bin Malik bin Al-Ajlan,PERSON,Raff' bin Malik bin Al-Ajlan,PERSON
+000088-001,Benar,Al-Barra' bin Ma'rur bin Shahr,PERSON,Al-Barra' bin Ma'rur bin Shahr,PERSON
+000088-001,Benar,Ubadah bin Ash-Shamit bin Qais,PERSON,Ubadah bin Ash-Shamit bin Qais,PERSON
+000088-001,Benar,Sa'd bin Ubadah bin Dulaim,PERSON,Sa'd bin Ubadah bin Dulaim,PERSON
+000088-001,Benar,Al-Mundzir bin Amr bin Khunais,PERSON,Al-Mundzir bin Amr bin Khunais,PERSON
+000088-001,Benar,Usaid bin Hudhair bin Sammak,PERSON,Usaid bin Hudhair bin Sammak,PERSON
+000088-001,Benar,Sa'd bin Khaitsamah bin Al-Harits,PERSON,Sa'd bin Khaitsamah bin Al-Harits,PERSON
+000088-001,Benar,Rifa'ah bin Abdul Mundzir bin Subair,PERSON,Rifa'ah bin Abdul Mundzir bin Subair,PERSON
+000088-001,Kesalahan batas,Ka'b bin Malik,PERSON,Ka'b bin,PERSON
+000088-001,Kesalahan batas,Abdullah bin Amr bin Haram,PERSON,Abdullah bin,PERSON
+000088-001,False positive,(tidak ada),-,Malik,PERSON
+000088-001,False positive,(tidak ada),-,Amr bin Haram,PERSON
+000088-006,Benar,Yastrib,LOCATION,Yastrib,LOCATION
+000088-006,Benar,Makkah,LOCATION,Makkah,LOCATION
+000088-006,Benar,Aqabah,LOCATION,Aqabah,LOCATION
+000088-006,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000089-001,Benar,Baiat Aqabah,EVENT,Baiat Aqabah,EVENT
+000089-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000089-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000089-001,Benar,Abu Salamah,PERSON,Abu Salamah,PERSON
+000089-001,Benar,Baiat Aqabah Kubra,EVENT,Baiat Aqabah Kubra,EVENT
+000089-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000089-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000089-001,False negative,Hijrah,EVENT,(tidak terdeteksi),-
+000089-001,False negative,Hijrah,EVENT,(tidak terdeteksi),-
+000089-006,Benar,Madinah,LOCATION,Madinah,LOCATION
+000089-006,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000089-006,Benar,Umar,PERSON,Umar,PERSON
+000089-006,Benar,Makkah,LOCATION,Makkah,LOCATION
+000089-006,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000089-006,Benar,Aisyah,PERSON,Aisyah,PERSON
+000089-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000089-006,Benar,Madinah,LOCATION,Madinah,LOCATION
+000089-006,Benar,Habasyah,LOCATION,Habasyah,LOCATION
+000089-006,Benar,Madinah,LOCATION,Madinah,LOCATION
+000089-006,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000089-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000089-006,Benar,Madinah,LOCATION,Madinah,LOCATION
+000089-006,Benar,Makkah,LOCATION,Makkah,LOCATION
+000089-006,Benar,Madinah,LOCATION,Madinah,LOCATION
+000089-006,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000089-006,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000089-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000090-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000090-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000090-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000090-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000090-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000090-001,Benar,Laut Merah,LOCATION,Laut Merah,LOCATION
+000090-001,Benar,Syam,LOCATION,Syam,LOCATION
+000090-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000090-001,Benar,Syam,LOCATION,Syam,LOCATION
+000090-001,Benar,Tha'if,LOCATION,Tha'if,LOCATION
+000093-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000093-001,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000093-001,Benar,Hadhramaut,LOCATION,Hadhramaut,LOCATION
+000093-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000093-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000093-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000093-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000093-001,Benar,Gua Tsaur,LOCATION,Gua Tsaur,LOCATION
+000093-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000095-004,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000095-004,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000096-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000096-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000096-006,Benar,Amir bin Fuhairah,PERSON,Amir bin Fuhairah,PERSON
+000096-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000096-006,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000096-006,Benar,Suraqah bin Malik bin Ju'syum,PERSON,Suraqah bin Malik bin Ju'syum,PERSON
+000096-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000096-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000096-006,Benar,Ummu Ma'bad,PERSON,Ummu Ma'bad,PERSON
+000096-010,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000096-010,Benar,Abu Buraidah,PERSON,Abu Buraidah,PERSON
+000096-010,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000096-010,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000096-010,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000096-010,Benar,Az-Zubair,PERSON,Az-Zubair,PERSON
+000096-010,Benar,Syam,LOCATION,Syam,LOCATION
+000096-010,False positive,(tidak ada),-,Abu,PERSON
+000097-001,Benar,hari Senin tanggal 8 Rabi'ul Awwal,TIME,hari Senin tanggal 8 Rabi'ul Awwal,TIME
+000097-001,Benar,tanggal 23 September 622 M,TIME,tanggal 23 September 622 M,TIME
+000097-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000097-001,Benar,Abdullah bin Az-Zubair,PERSON,Abdullah bin Az-Zubair,PERSON
+000097-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000097-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000097-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000097-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000097-001,Benar,Urwah bin Az-Zubair,PERSON,Urwah bin Az-Zubair,PERSON
+000097-001,Benar,tanggal 9 Rabi' ul Awwal tahun 41,TIME,tanggal 9 Rabi' ul Awwal tahun 41,TIME
+000097-001,Kesalahan batas,bulan Ramadhan tahun 41,TIME,bulan Ramadhan,TIME
+000097-001,False positive,(tidak ada),-,41,TIME
+000098-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000098-001,Benar,Yastrib,LOCATION,Yastrib,LOCATION
+000098-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000098-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000098-001,Benar,Masjid Nabawi,LOCATION,Masjid Nabawi,LOCATION
+000098-003,Benar,Zainab,PERSON,Zainab,PERSON
+000098-003,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000098-003,Benar,Aisyah,PERSON,Aisyah,PERSON
+000098-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000098-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000098-003,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000098-003,Benar,Bilal,PERSON,Bilal,PERSON
+000098-003,Benar,Bilal,PERSON,Bilal,PERSON
+000098-003,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000098-003,Benar,Aisyah,PERSON,Aisyah,PERSON
+000098-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000098-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000098-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000098-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000098-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000098-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000101-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000101-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000101-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000101-004,Benar,Madinah,LOCATION,Madinah,LOCATION
+000103-005,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000103-005,Benar,Shafiyyah binti Huyai bin Akhthab,PERSON,Shafiyyah binti Huyai bin Akhthab,PERSON
+000103-005,Benar,Abu Yasir,PERSON,Abu Yasir,PERSON
+000103-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000103-005,Benar,Madinah,LOCATION,Madinah,LOCATION
+000103-005,Benar,Amr bin Auf,PERSON,Amr bin Auf,PERSON
+000103-005,Benar,Huyai bin Akhthab,PERSON,Huyai bin Akhthab,PERSON
+000103-005,Benar,Abu Yasir bin Akhthab,PERSON,Abu Yasir bin Akhthab,PERSON
+000103-005,Benar,Abdullah bin Salam,PERSON,Abdullah bin Salam,PERSON
+000103-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000103-005,Benar,Madinah,LOCATION,Madinah,LOCATION
+000103-010,Benar,Madinah,LOCATION,Madinah,LOCATION
+000105-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000105-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000105-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000105-001,Benar,Baitul Maqdis,LOCATION,Baitul Maqdis,LOCATION
+000106-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000106-002,Benar,Madinah,LOCATION,Madinah,LOCATION
+000106-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000106-002,Benar,Abdurrahman bin Auf,PERSON,Abdurrahman bin Auf,PERSON
+000106-002,Benar,Sa'd bin Ar-Rabi',PERSON,Sa'd bin Ar-Rabi',PERSON
+000108-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000108-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000108-001,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000108-001,Benar,Abdullah bin Salam,PERSON,Abdullah bin Salam,PERSON
+000108-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000108-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000108-001,Benar,Ibnu Majah,PERSON,Ibnu Majah,PERSON
+000108-004,Benar,Abdullah bin Mas'ud,PERSON,Abdullah bin Mas'ud,PERSON
+000108-004,Benar,Muhammad,PERSON,Muhammad,PERSON
+000108-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000109-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000109-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000110-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000110-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000110-001,Benar,Abdullah bin Ubay bin Salul,PERSON,Abdullah bin Ubay bin Salul,PERSON
+000110-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000110-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000110-001,Benar,Abdullah bin Ubay,PERSON,Abdullah bin Ubay,PERSON
+000110-001,Benar,Abdullah bin Ubay,PERSON,Abdullah bin Ubay,PERSON
+000110-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000110-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000110-001,Benar,Abdurrahman bin Ka'b,PERSON,Abdurrahman bin Ka'b,PERSON
+000110-001,Benar,Abdullah bin Ubay,PERSON,Abdullah bin Ubay,PERSON
+000110-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000110-002,Benar,Abdurrahman bin Ka'b,PERSON,Abdurrahman bin Ka'b,PERSON
+000110-002,Benar,Abdullah bin Ubay,PERSON,Abdullah bin Ubay,PERSON
+000110-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000110-002,Benar,Abdullah bin Ubay bin Salul,PERSON,Abdullah bin Ubay bin Salul,PERSON
+000111-001,Benar,Sa'd bin Mu'adz,PERSON,Sa'd bin Mu'adz,PERSON
+000111-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000111-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000111-001,Benar,Umayyah bin Khalaf,PERSON,Umayyah bin Khalaf,PERSON
+000111-001,Benar,Umayyah,PERSON,Umayyah,PERSON
+000111-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000111-001,Benar,Umayyah,PERSON,Umayyah,PERSON
+000111-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000111-001,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000111-001,Benar,Abu Shafwan,PERSON,Abu Shafwan,PERSON
+000111-001,Benar,Umayyah,PERSON,Umayyah,PERSON
+000111-001,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000111-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000111-001,Benar,Abu Shafwan,PERSON,Abu Shafwan,PERSON
+000112-001,Benar,Yatsrib,LOCATION,Yatsrib,LOCATION
+000112-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000112-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000112-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000112-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000112-001,Benar,Sa'd bin Abi Waqqash,PERSON,Sa'd bin Abi Waqqash,PERSON
+000112-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000114-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000114-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000114-001,Benar,Yatsrib,LOCATION,Yatsrib,LOCATION
+000114-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000114-001,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000114-001,Benar,tanggal 1 Ramadhan tahun pertama H,TIME,tanggal 1 Ramadhan tahun pertama H,TIME
+000114-001,Benar,tahun 623 M,TIME,tahun 623 M,TIME
+000114-007,Benar,Amr bin Al-Hadhrami,PERSON,Amr bin Al-Hadhrami,PERSON
+000114-007,Benar,Utsman,PERSON,Utsman,PERSON
+000114-007,Benar,Abdullah bin Al-Mughirah,PERSON,Abdullah bin Al-Mughirah,PERSON
+000114-007,Benar,Al-Hakam bin Kaisan,PERSON,Al-Hakam bin Kaisan,PERSON
+000114-007,Benar,bulan Rajab,TIME,bulan Rajab,TIME
+000114-007,Benar,Amar bin Al-Hadhrami,PERSON,Amar bin Al-Hadhrami,PERSON
+000114-007,Benar,Utsman,PERSON,Utsman,PERSON
+000114-007,Benar,Madinah,LOCATION,Madinah,LOCATION
+000114-007,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000114-009,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000114-009,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000114-009,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000114-009,Benar,Kurz bin Jabir,PERSON,Kurz bin Jabir,PERSON
+000114-009,Benar,Abdullah bin Jahsy,PERSON,Abdullah bin Jahsy,PERSON
+000114-009,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000114-009,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000114-013,Benar,Muhammad,PERSON,Muhammad,PERSON
+000114-013,Benar,Abdullah bin Jahsy,PERSON,Abdullah bin Jahsy,PERSON
+000114-013,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000114-014,Benar,Baitul Maqdis,LOCATION,Baitul Maqdis,LOCATION
+000114-014,Benar,Masjidil Haram,LOCATION,Masjidil Haram,LOCATION
+000114-014,Kesalahan batas,bulan Sya'ban 2 H,TIME,bulan Sya'ban 2 H atau,TIME
+000115-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000115-001,Benar,Syam,LOCATION,Syam,LOCATION
+000115-001,Benar,Syam,LOCATION,Syam,LOCATION
+000115-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000115-001,Benar,Thalhah bin Ubaidillah,PERSON,Thalhah bin Ubaidillah,PERSON
+000115-001,Benar,Sa'id bin Zaid,PERSON,Sa'id bin Zaid,PERSON
+000115-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000115-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000115-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000115-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000115-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000115-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000122-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000122-001,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000122-001,Benar,Badr,LOCATION,Badr,LOCATION
+000122-001,Benar,Al-Akhnas bin Syariq,PERSON,Al-Akhnas bin Syariq,PERSON
+000122-001,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000122-001,Benar,Abu Jahal,PERSON,Abu Jahal,PERSON
+000122-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000122-001,Benar,Badr,LOCATION,Badr,LOCATION
+000122-001,Benar,Badr,LOCATION,Badr,LOCATION
+000122-001,Benar,Badr,LOCATION,Badr,LOCATION
+000124-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000124-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000124-002,Benar,Baiat Aqabah,EVENT,Baiat Aqabah,EVENT
+000124-002,Benar,Sa'd bin Mua'dz,PERSON,Sa'd bin Mua'dz,PERSON
+000124-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000131-001,Benar,Al-Aswad bin Abdul Asad,PERSON,Al-Aswad bin Abdul Asad,PERSON
+000131-001,Benar,Hamzah bin Abdul Muththalib,PERSON,Hamzah bin Abdul Muththalib,PERSON
+000131-001,Benar,Hamzah,PERSON,Hamzah,PERSON
+000131-001,Benar,Hamzah,PERSON,Hamzah,PERSON
+000131-001,Benar,Utbah bin Rabi'ah,PERSON,Utbah bin Rabi'ah,PERSON
+000131-001,Benar,Syaibah bin Rabi'ah,PERSON,Syaibah bin Rabi'ah,PERSON
+000131-001,Benar,Al-Walid bin Utbah,PERSON,Al-Walid bin Utbah,PERSON
+000131-001,Benar,Auf bin Al-Harits,PERSON,Auf bin Al-Harits,PERSON
+000131-001,Benar,Mu'awwidz bin Al-Harits,PERSON,Mu'awwidz bin Al-Harits,PERSON
+000131-001,Benar,Abdullah bin Rawahah,PERSON,Abdullah bin Rawahah,PERSON
+000132-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000132-001,Benar,Abu Dawud,PERSON,Abu Dawud,PERSON
+000132-001,Benar,Ubaidah,PERSON,Ubaidah,PERSON
+000132-001,Benar,Ali,PERSON,Ali,PERSON
+000132-001,Benar,Hamzah,PERSON,Hamzah,PERSON
+000132-001,Benar,Utbah,PERSON,Utbah,PERSON
+000132-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000132-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000132-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000138-001,Benar,Umar bin Al-Hammam,PERSON,Umar bin Al-Hammam,PERSON
+000138-001,Benar,Auf bin Al-Harits,PERSON,Auf bin Al-Harits,PERSON
+000138-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000138-001,Benar,Ibnu Abbas,PERSON,Ibnu Abbas,PERSON
+000138-001,Benar,Abul Bakhtari bin Hisyam,PERSON,Abul Bakhtari bin Hisyam,PERSON
+000138-001,Benar,Al-Abbas bin Al-Muththalib,PERSON,Al-Abbas bin Al-Muththalib,PERSON
+000138-001,Benar,Abu Hudzaifah bin Utbah,PERSON,Abu Hudzaifah bin Utbah,PERSON
+000138-001,Benar,Al-Abbas,PERSON,Al-Abbas,PERSON
+000138-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000138-001,Benar,Abu Hudzaifah,PERSON,Abu Hudzaifah,PERSON
+000138-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000138-002,Benar,Abu Hudzaifah,PERSON,Abu Hudzaifah,PERSON
+000138-002,Benar,Umar bin Al-Khaththab,PERSON,Umar bin Al-Khaththab,PERSON
+000138-002,Benar,Abu Hafsh,PERSON,Abu Hafsh,PERSON
+000138-002,Benar,Umar,PERSON,Umar,PERSON
+000138-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000138-002,Benar,Abu Hudzaifah,PERSON,Abu Hudzaifah,PERSON
+000138-002,Benar,Abu Hudzaifah,PERSON,Abu Hudzaifah,PERSON
+000138-002,Benar,perang Al-Yamamah,EVENT,perang Al-Yamamah,EVENT
+000138-002,Benar,Abul Bakhtari,PERSON,Abul Bakhtari,PERSON
+000138-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000138-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000138-002,Benar,Abul Bakhtari,PERSON,Abul Bakhtari,PERSON
+000138-002,Benar,Al,PERSON,Al,PERSON
+000138-002,Benar,Mujadzdzar bin Ziyad,PERSON,Mujadzdzar bin Ziyad,PERSON
+000138-002,Benar,Abul Bakhtari,PERSON,Abul Bakhtari,PERSON
+000138-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000138-002,Benar,Abul Bakhtari,PERSON,Abul Bakhtari,PERSON
+000142-003,Benar,Uqbah,PERSON,Uqbah,PERSON
+000142-003,Benar,Muhammad,PERSON,Muhammad,PERSON
+000142-003,Benar,Ashim bin Tsabit,PERSON,Ashim bin Tsabit,PERSON
+000142-003,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000148-001,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000148-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000148-001,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000148-001,Benar,Umair bin Wahb,PERSON,Umair bin Wahb,PERSON
+000148-001,Benar,Hijir,LOCATION,Hijir,LOCATION
+000148-001,Benar,Shafwan bin Umayyah,PERSON,Shafwan bin Umayyah,PERSON
+000148-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000148-001,Benar,Wahb bin Umair,PERSON,Wahb bin Umair,PERSON
+000148-001,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000148-001,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000148-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000148-002,Benar,Madinah,LOCATION,Madinah,LOCATION
+000148-002,Benar,Umar bin Al-Khaththab,PERSON,Umar bin Al-Khaththab,PERSON
+000148-002,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000148-002,Benar,Umar,PERSON,Umar,PERSON
+000148-002,Benar,Umar,PERSON,Umar,PERSON
+000148-002,Benar,Umar,PERSON,Umar,PERSON
+000148-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000148-002,Benar,Umar,PERSON,Umar,PERSON
+000148-002,Benar,Umar,PERSON,Umar,PERSON
+000148-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000148-004,Salah tipe,Badr,LOCATION,Badr,EVENT
+000148-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000154-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000154-001,Benar,Perang Uhud,EVENT,Perang Uhud,EVENT
+000154-001,Benar,bulan Muharram 3 H,TIME,bulan Muharram 3 H,TIME
+000154-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000154-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000154-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000154-001,Benar,Utsman bin Affan,PERSON,Utsman bin Affan,PERSON
+000154-001,Benar,Bilal,PERSON,Bilal,PERSON
+000154-001,Benar,bulan Shafar 3 H,TIME,bulan Shafar 3 H,TIME
+000154-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000154-001,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000154-001,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000155-001,Benar,Ka'b bin Al-Asyraf,PERSON,Ka'b bin Al-Asyraf,PERSON
+000155-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000155-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000155-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000155-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000155-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000155-001,Benar,Al-Muththalib bin Abu Wada'ah,PERSON,Al-Muththalib bin Abu Wada'ah,PERSON
+000155-001,Benar,Badr,LOCATION,Badr,LOCATION
+000155-004,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-004,Benar,Muhammad bin Maslamah,PERSON,Muhammad bin Maslamah,PERSON
+000155-004,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-004,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-004,Benar,Muhammad bin Maslamah,PERSON,Muhammad bin Maslamah,PERSON
+000155-004,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-004,Benar,Muhammad bin Maslamah,PERSON,Muhammad bin Maslamah,PERSON
+000155-004,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-004,Benar,Ibnul Asyraf,PERSON,Ibnul Asyraf,PERSON
+000155-004,Benar,Ka'b bin Al-Asyraf,PERSON,Ka'b bin Al-Asyraf,PERSON
+000155-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000155-004,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-004,Benar,Ka'b bin Al-Asyraf,PERSON,Ka'b bin Al-Asyraf,PERSON
+000155-004,Benar,Muhammad bin Maslamah,PERSON,Muhammad bin Maslamah,PERSON
+000155-004,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-006,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-006,Benar,Ka'b bin Al-Asyraf,PERSON,Ka'b bin Al-Asyraf,PERSON
+000155-006,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-006,Benar,Ibnul Asyraf,PERSON,Ibnul Asyraf,PERSON
+000155-006,Benar,Ka'b bin Al-Asyraf,PERSON,Ka'b bin Al-Asyraf,PERSON
+000155-006,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-006,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-006,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-006,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-006,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-006,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-006,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-006,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-006,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-006,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-006,Benar,Ka'b,PERSON,Ka'b,PERSON
+000155-006,Benar,Abu Na'ilah,PERSON,Abu Na'ilah,PERSON
+000155-006,Benar,Ka'b,PERSON,Ka'b,PERSON
+000157-003,Benar,Zaid,PERSON,Zaid,PERSON
+000157-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000157-003,Benar,Furat bin Hayyan,PERSON,Furat bin Hayyan,PERSON
+000157-003,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000157-003,Benar,Perang Uhud,EVENT,Perang Uhud,EVENT
+000157-003,Salah tipe,Jabal Uhud,LOCATION,Jabal Uhud,EVENT
+000158-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000158-001,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000158-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000158-001,Benar,Badr,EVENT,Badr,EVENT
+000158-001,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000158-001,Benar,Ikrimah bin Abu Jahl,PERSON,Ikrimah bin Abu Jahl,PERSON
+000158-001,Benar,Shafwan bin Umayyah,PERSON,Shafwan bin Umayyah,PERSON
+000158-001,Benar,Abu Sufyan bin Harb,PERSON,Abu Sufyan bin Harb,PERSON
+000158-001,Benar,Abdullah bin Abu Rabi'ah,PERSON,Abdullah bin Abu Rabi'ah,PERSON
+000158-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000158-001,Benar,Perang Badr,EVENT,Perang Badr,EVENT
+000158-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000172-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000172-002,Benar,Abu Amir,PERSON,Abu Amir,PERSON
+000175-002,Benar,Musafi' bin Thalhah bin Abu Thalhah,PERSON,Musafi' bin Thalhah bin Abu Thalhah,PERSON
+000175-002,Benar,Ashim bin Tsabit bin Abu Al-Aqlah,PERSON,Ashim bin Tsabit bin Abu Al-Aqlah,PERSON
+000175-002,Benar,Al-Julas bin Thalhah bin Abu Thalhah,PERSON,Al-Julas bin Thalhah bin Abu Thalhah,PERSON
+000175-002,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000175-002,Benar,Hamzah bin Abdul Muththalib,PERSON,Hamzah bin Abdul Muththalib,PERSON
+000175-002,Benar,Syuraih bin Qarizh,PERSON,Syuraih bin Qarizh,PERSON
+000175-002,Benar,Abu Zaid,PERSON,Abu Zaid,PERSON
+000175-002,Benar,Amr bin Abdi,PERSON,Amr bin Abdi,PERSON
+000175-002,Benar,Syurahbil bin Hasyim,PERSON,Syurahbil bin Hasyim,PERSON
+000175-002,Benar,Habasyah,LOCATION,Habasyah,LOCATION
+000175-002,Benar,Shu'ab,PERSON,Shu'ab,PERSON
+000185-002,Benar,Muhammad,PERSON,Muhammad,PERSON
+000185-002,Benar,Abdullah bin Ubay,PERSON,Abdullah bin Ubay,PERSON
+000185-002,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000185-002,Benar,Anas bin An-Nadhr,PERSON,Anas bin An-Nadhr,PERSON
+000185-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000185-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000185-002,Benar,Sa'd bin Mu',PERSON,Sa'd bin Mu',PERSON
+000185-002,Benar,Abu Umar,PERSON,Abu Umar,PERSON
+000185-002,Benar,Uhud,LOCATION,Uhud,LOCATION
+000198-001,Benar,Umar bin Al-Khaththab,PERSON,Umar bin Al-Khaththab,PERSON
+000198-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000198-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000198-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000198-001,Benar,Ibnu Qahafah,PERSON,Ibnu Qahafah,PERSON
+000198-001,Benar,Abu Bakar Ash-Shiddiq,PERSON,Abu Bakar Ash-Shiddiq,PERSON
+000198-001,Benar,Umar bin Al-Khaththab,PERSON,Umar bin Al-Khaththab,PERSON
+000198-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000198-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000198-001,Benar,Umar,PERSON,Umar,PERSON
+000198-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000198-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000198-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000198-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000198-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000203-001,Benar,Sabtu tanggal 7 Syawwal 3 H,TIME,Sabtu tanggal 7 Syawwal 3 H,TIME
+000203-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000203-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000203-001,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000203-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000203-001,Benar,Sahl bin Hunaif,PERSON,Sahl bin Hunaif,PERSON
+000203-001,Benar,Abu Dujanah,PERSON,Abu Dujanah,PERSON
+000203-001,False positive,(tidak ada),-,perang,EVENT
+000203-001,False positive,(tidak ada),-,perang,EVENT
+000206-008,Benar,Madinah,LOCATION,Madinah,LOCATION
+000206-008,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000206-008,Benar,Makkah,LOCATION,Makkah,LOCATION
+000206-008,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000206-008,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000206-008,Benar,Perang Uhud,EVENT,Perang Uhud,EVENT
+000210-001,Benar,Uhud,EVENT,Uhud,EVENT
+000210-001,Benar,As'ad bin Khuzaimah,PERSON,As'ad bin Khuzaimah,PERSON
+000210-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000210-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000210-001,Benar,Abu Salamah,PERSON,Abu Salamah,PERSON
+000210-001,Benar,Abu salamah,PERSON,Abu salamah,PERSON
+000210-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000210-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000210-001,Benar,bulan Muharram 4 H,TIME,bulan Muharram 4 H,TIME
+000210-001,Benar,Perang Uhud,EVENT,Perang Uhud,EVENT
+000210-001,Benar,Abu Salamah,PERSON,Abu Salamah,PERSON
+000210-001,False negative,As'ad,PERSON,(tidak terdeteksi),-
+000210-001,False negative,As'ad,PERSON,(tidak terdeteksi),-
+000212-001,Benar,bulan Shafar,TIME,bulan Shafar,TIME
+000212-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000212-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000212-001,Benar,Martsad bin Abu Martsad,PERSON,Martsad bin Abu Martsad,PERSON
+000212-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000212-001,Benar,Ashim bin Tsabit,PERSON,Ashim bin Tsabit,PERSON
+000212-001,Benar,Hijaz,LOCATION,Hijaz,LOCATION
+000213-003,Benar,Perang Khandaq,EVENT,Perang Khandaq,EVENT
+000213-003,Benar,Amr bin Umayyah,PERSON,Amr bin Umayyah,PERSON
+000213-003,Benar,Al-Mundzir bin Uqbah bin Amir,PERSON,Al-Mundzir bin Uqbah bin Amir,PERSON
+000213-003,Benar,Amr bin Umayyah,PERSON,Amr bin Umayyah,PERSON
+000213-003,Benar,Amir bin Ath-Thufail,PERSON,Amir bin Ath-Thufail,PERSON
+000213-003,Benar,Amr bin Umayyah,PERSON,Amr bin Umayyah,PERSON
+000213-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000213-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000213-003,Benar,Perang Uhud,EVENT,Perang Uhud,EVENT
+000213-003,Benar,Perang Uhud,EVENT,Perang Uhud,EVENT
+000213-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000213-004,Benar,Madinah,LOCATION,Madinah,LOCATION
+000213-004,Benar,perang Bani Nadhir,EVENT,perang Bani Nadhir,EVENT
+000214-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000214-005,Benar,Huyai bin Akhthab,PERSON,Huyai bin Akhthab,PERSON
+000214-005,Benar,Ibnu Ummi,PERSON,Ibnu Ummi,PERSON
+000214-005,Benar,Madinah,LOCATION,Madinah,LOCATION
+000214-005,Benar,Ali bin Abi Thalib,PERSON,Ali bin Abi Thalib,PERSON
+000214-007,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000214-007,Benar,Abu Dujanah,PERSON,Abu Dujanah,PERSON
+000214-007,Benar,Sahl bin Hunaif,PERSON,Sahl bin Hunaif,PERSON
+000214-007,Benar,Perang Bani Nadhir,EVENT,Perang Bani Nadhir,EVENT
+000214-007,Benar,bulan Rabi'ul Awwal 4 H,TIME,bulan Rabi'ul Awwal 4 H,TIME
+000214-007,Benar,Agustus 625 M,TIME,Agustus 625 M,TIME
+000214-007,Benar,Ibnu Abbas,PERSON,Ibnu Abbas,PERSON
+000215-001,Benar,Perang Bani Nadhir,EVENT,Perang Bani Nadhir,EVENT
+000215-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000215-001,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000215-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000215-001,Benar,Perang Uhud,EVENT,Perang Uhud,EVENT
+000215-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000215-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000215-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000215-001,Benar,Najd,LOCATION,Najd,LOCATION
+000215-001,Benar,bulan Rabi'ul Awwal,TIME,bulan Rabi'ul Awwal,TIME
+000216-001,Benar,Perang Uhud,EVENT,Perang Uhud,EVENT
+000216-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000216-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000216-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000216-001,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000216-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000216-001,Benar,Abdullah bin Rawahah,PERSON,Abdullah bin Rawahah,PERSON
+000216-001,Benar,Badr,LOCATION,Badr,LOCATION
+000216-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000216-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000216-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000216-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000216-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000216-001,Kesalahan batas,bulan Sya'ban 4 H,TIME,bulan Sya'ban 4 H atau,TIME
+000218-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000218-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000218-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000218-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000218-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000218-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-003,Kesalahan batas,Salman Al-Farisi,PERSON,Salman,PERSON
+000218-003,False negative,Salman,PERSON,(tidak terdeteksi),-
+000218-009,Benar,Madinah,LOCATION,Madinah,LOCATION
+000218-009,Benar,Amr bin Abdi,PERSON,Amr bin Abdi,PERSON
+000218-009,Benar,Ikrimah bin Abu Jahl,PERSON,Ikrimah bin Abu Jahl,PERSON
+000218-009,Benar,Dhirar bin Al-Khaththab,PERSON,Dhirar bin Al-Khaththab,PERSON
+000218-011,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-011,Benar,Jabir,PERSON,Jabir,PERSON
+000218-011,Benar,Umar bin Al-Khaththab,PERSON,Umar bin Al-Khaththab,PERSON
+000218-011,Benar,Perang Khandaq,EVENT,Perang Khandaq,EVENT
+000218-011,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-011,Benar,Ali,PERSON,Ali,PERSON
+000218-011,Benar,Perang Khandaq,EVENT,Perang Khandaq,EVENT
+000218-015,Benar,Muhammad,PERSON,Muhammad,PERSON
+000218-015,Benar,Ka'b,PERSON,Ka'b,PERSON
+000218-015,Benar,Muhammad,PERSON,Muhammad,PERSON
+000218-015,Benar,Ka'b bin As',PERSON,Ka'b bin As',PERSON
+000218-015,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000218-015,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000218-015,Benar,Shafiyah binti Abdul Muthalib,PERSON,Shafiyah binti Abdul Muthalib,PERSON
+000218-015,Benar,Hassan bin Tsabit,PERSON,Hassan bin Tsabit,PERSON
+000218-015,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-017,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-017,Benar,Sa'd bin Mu'adz,PERSON,Sa'd bin Mu'adz,PERSON
+000218-017,Benar,Sa'd bin Ubadah,PERSON,Sa'd bin Ubadah,PERSON
+000218-017,Benar,Abdullah bin Rawahah,PERSON,Abdullah bin Rawahah,PERSON
+000218-017,Benar,Khawwat bin Jubair,PERSON,Khawwat bin Jubair,PERSON
+000218-017,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-017,Benar,Muhammad,PERSON,Muhammad,PERSON
+000218-025,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-025,Benar,Khudzaifah bin Al-Yaman,PERSON,Khudzaifah bin Al-Yaman,PERSON
+000218-025,Benar,Makkah,LOCATION,Makkah,LOCATION
+000218-025,Benar,Hudzaifah bin Al-Yaman,PERSON,Hudzaifah bin Al-Yaman,PERSON
+000218-025,Benar,Makkah,LOCATION,Makkah,LOCATION
+000218-025,Benar,Madinah,LOCATION,Madinah,LOCATION
+000218-025,Benar,Perang Khandaq,EVENT,Perang Khandaq,EVENT
+000218-025,Benar,bulan Syawwal,TIME,bulan Syawwal,TIME
+000218-025,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-025,Benar,bulan Syawwal,TIME,bulan Syawwal,TIME
+000218-025,Benar,bulan Dzul Qa'dah,TIME,bulan Dzul Qa'dah,TIME
+000218-025,Benar,Ibnu Sa'd,PERSON,Ibnu Sa'd,PERSON
+000218-025,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-025,Benar,hari Rabu,TIME,hari Rabu,TIME
+000218-025,Benar,bulan Dzul Qa'dah,TIME,bulan Dzul Qa'dah,TIME
+000218-025,Kesalahan batas,tahun 5 H pada,TIME,tahun 5 H,TIME
+000218-025,False negative,Khandaq,LOCATION,(tidak terdeteksi),-
+000218-026,Benar,bulan Syawwal,TIME,bulan Syawwal,TIME
+000218-026,Benar,bulan Dzul Qa'dah,TIME,bulan Dzul Qa'dah,TIME
+000218-026,Benar,Ibnu Sa'd,PERSON,Ibnu Sa'd,PERSON
+000218-026,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-026,Benar,hari Rabu,TIME,hari Rabu,TIME
+000218-026,Benar,bulan Dzul Qa'dah,TIME,bulan Dzul Qa'dah,TIME
+000218-026,Benar,Perang Khandaq,EVENT,Perang Khandaq,EVENT
+000218-026,Benar,Ahzab,EVENT,Ahzab,EVENT
+000218-026,Benar,Perang Ahzab,EVENT,Perang Ahzab,EVENT
+000218-026,Benar,Madinah,LOCATION,Madinah,LOCATION
+000218-026,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000218-026,Benar,Perang Ahzab,EVENT,Perang Ahzab,EVENT
+000218-026,False negative,Khandaq,LOCATION,(tidak terdeteksi),-
+000219-004,Benar,Abu Lubabah,PERSON,Abu Lubabah,PERSON
+000219-004,Benar,Abu Lubabah,PERSON,Abu Lubabah,PERSON
+000219-004,Benar,Muhammad,PERSON,Muhammad,PERSON
+000219-004,Benar,Abu Lubabah,PERSON,Abu Lubabah,PERSON
+000219-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000219-004,Benar,masjid,LOCATION,masjid,LOCATION
+000219-004,Benar,Abu Lubabah,PERSON,Abu Lubabah,PERSON
+000219-004,Benar,Abu Lubabah,PERSON,Abu Lubabah,PERSON
+000219-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000219-004,False positive,(tidak ada),-,Nabawi,LOCATION
+000219-007,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000219-007,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000219-007,Benar,binti Al-Harits,PERSON,binti Al-Harits,PERSON
+000219-007,Benar,Madinah,LOCATION,Madinah,LOCATION
+000219-007,Benar,Ka'b bin Asad,PERSON,Ka'b bin Asad,PERSON
+000219-007,Benar,Ka'b,PERSON,Ka'b,PERSON
+000220-001,Benar,Sallam bin Abul Huqaiq,PERSON,Sallam bin Abul Huqaiq,PERSON
+000220-001,Benar,Abu Rafi',PERSON,Abu Rafi',PERSON
+000220-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000220-001,Benar,Sallam bin Abul Huqaiq,PERSON,Sallam bin Abul Huqaiq,PERSON
+000220-001,Benar,Ka'b bin Al-Asyraf,PERSON,Ka'b bin Al-Asyraf,PERSON
+000220-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000220-001,Benar,Abdullah bin Atik,PERSON,Abdullah bin Atik,PERSON
+000220-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000220-001,Benar,Abu Raf',PERSON,Abu Raf',PERSON
+000220-001,Benar,Abdullah bin Atik,PERSON,Abdullah bin Atik,PERSON
+000220-003,Benar,Abu Rafi'?',PERSON,Abu Rafi'?',PERSON
+000220-003,Benar,Abu Rafi',PERSON,Abu Rafi',PERSON
+000220-003,Benar,Hijaz,LOCATION,Hijaz,LOCATION
+000220-003,Benar,Abu Rafi,PERSON,Abu Rafi,PERSON
+000222-002,Benar,Madinah,LOCATION,Madinah,LOCATION
+000223-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000223-001,Benar,Ukkasyah bin Mihshan,PERSON,Ukkasyah bin Mihshan,PERSON
+000223-001,Benar,bulan Rabi'ul Awwal 6 H,TIME,bulan Rabi'ul Awwal 6 H,TIME
+000223-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000223-001,Benar,Muhammad bin Maslamah,PERSON,Muhammad bin Maslamah,PERSON
+000223-001,Benar,bulan Rabi'ul Awwal atau Rabi'ul Akhir,TIME,bulan Rabi'ul Awwal atau Rabi'ul Akhir,TIME
+000223-001,Benar,Muhammad bin Maslamah,PERSON,Muhammad bin Maslamah,PERSON
+000223-001,Benar,Abu Ubaidah bin Al-Jarrah,PERSON,Abu Ubaidah bin Al-Jarrah,PERSON
+000223-001,Benar,Rabi'ul Akhir 6 H,TIME,Rabi'ul Akhir 6 H,TIME
+000223-001,Benar,Muhammad bin Maslamah,PERSON,Muhammad bin Maslamah,PERSON
+000223-001,Benar,Abu Ubaidah,PERSON,Abu Ubaidah,PERSON
+000223-001,Benar,Zaid bin Haritsah,PERSON,Zaid bin Haritsah,PERSON
+000223-001,Benar,bulan Rabi'ul Akhir 6 H,TIME,bulan Rabi'ul Akhir 6 H,TIME
+000224-001,Benar,bulan Sya'ban 6 H,TIME,bulan Sya'ban 6 H,TIME
+000224-001,Benar,Al-Harits bin Abu Dhirar,PERSON,Al-Harits bin Abu Dhirar,PERSON
+000224-001,Benar,Buraidah bin Al-Hushaib,PERSON,Buraidah bin Al-Hushaib,PERSON
+000224-001,Benar,Al-Harits bin Al-Dhirar,PERSON,Al-Harits bin Al-Dhirar,PERSON
+000224-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000224-001,Benar,Zainab,PERSON,Zainab,PERSON
+000224-001,Benar,Abul Ash,PERSON,Abul Ash,PERSON
+000224-001,False positive,(tidak ada),-,bulan 213,TIME
+000225-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000225-004,Benar,Madinah,LOCATION,Madinah,LOCATION
+000225-004,Benar,Abdullah bin Ubay,PERSON,Abdullah bin Ubay,PERSON
+000225-004,Benar,Perang Ahzab,EVENT,Perang Ahzab,EVENT
+000225-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000225-004,Benar,Zainab binti Jahsy,PERSON,Zainab binti Jahsy,PERSON
+000225-004,Benar,Zaid bin Haritsah,PERSON,Zaid bin Haritsah,PERSON
+000225-004,Benar,Zainab,PERSON,Zainab,PERSON
+000225-004,Benar,Zainab,PERSON,Zainab,PERSON
+000225-004,Benar,Zainab,PERSON,Zainab,PERSON
+000225-005,Benar,Zainab,PERSON,Zainab,PERSON
+000225-005,Benar,Zainab,PERSON,Zainab,PERSON
+000225-005,Benar,Muhammad,PERSON,Muhammad,PERSON
+000225-005,Benar,Zainab,PERSON,Zainab,PERSON
+000225-005,Benar,Zaid,PERSON,Zaid,PERSON
+000225-005,Benar,Zaid,PERSON,Zaid,PERSON
+000225-005,Benar,Zainab,PERSON,Zainab,PERSON
+000225-005,Benar,Muhammad,PERSON,Muhammad,PERSON
+000225-005,Benar,Perang Bani Mushthaliq,EVENT,Perang Bani Mushthaliq,EVENT
+000225-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000226-001,Benar,Perang Bani Mushthaliq,EVENT,Perang Bani Mushthaliq,EVENT
+000226-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000226-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000226-001,Benar,Umar bin Al-Khaththab,PERSON,Umar bin Al-Khaththab,PERSON
+000226-001,Benar,Sinan bin Wabar,PERSON,Sinan bin Wabar,PERSON
+000226-001,Benar,Abdullah bin Ubay,PERSON,Abdullah bin Ubay,PERSON
+000226-001,Benar,Zaid bin Arqam,PERSON,Zaid bin Arqam,PERSON
+000226-001,Benar,Abdullah bin Ubay,PERSON,Abdullah bin Ubay,PERSON
+000226-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000226-004,Benar,Abdullah bin Ubay.',PERSON,Abdullah bin Ubay.',PERSON
+000226-004,Benar,Zaid,PERSON,Zaid,PERSON
+000226-004,Benar,Zaid bin Arqam,PERSON,Zaid bin Arqam,PERSON
+000226-004,Benar,Abdullah bin Abdullah bin Ubay,PERSON,Abdullah bin Abdullah bin Ubay,PERSON
+000226-004,Benar,Madinah,LOCATION,Madinah,LOCATION
+000226-004,Benar,Abdullah bin Ubay,PERSON,Abdullah bin Ubay,PERSON
+000226-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000226-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000226-004,Benar,Abdullah bin Abdullah bin Ubay,PERSON,Abdullah bin Abdullah bin Ubay,PERSON
+000226-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000226-004,Benar,Aisyah,PERSON,Aisyah,PERSON
+000226-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000227-003,Benar,Kurz bin Jabir,PERSON,Kurz bin Jabir,PERSON
+000227-003,Benar,bulan Syawwal 6 H,TIME,bulan Syawwal 6 H,TIME
+000227-003,Benar,Madinah,LOCATION,Madinah,LOCATION
+000227-003,Benar,tahun Zadul Ma'ad,TIME,tahun Zadul Ma'ad,TIME
+000227-003,Benar,Amr bin Umayyah,PERSON,Amr bin Umayyah,PERSON
+000227-003,Benar,Salamah bin Abu Salamah,PERSON,Salamah bin Abu Salamah,PERSON
+000227-003,Benar,bulan Syawwal 6 H,TIME,bulan Syawwal 6 H,TIME
+000227-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000227-003,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000227-003,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000227-005,Benar,perjanjian Hudaibiyah,EVENT,perjanjian Hudaibiyah,EVENT
+000227-005,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000230-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000230-001,Benar,Masjidil Haram,LOCATION,Masjidil Haram,LOCATION
+000230-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000230-001,Benar,Ka'b,PERSON,Ka'b,PERSON
+000230-001,Benar,Dzi Thuwa,LOCATION,Dzi Thuwa,LOCATION
+000230-001,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000230-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000230-001,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000230-001,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000230-001,Benar,Khalid,PERSON,Khalid,PERSON
+000231-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000231-001,Benar,Hudaibiyah,LOCATION,Hudaibiyah,LOCATION
+000231-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000231-001,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000231-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000231-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000231-001,Benar,Hudaibiyah,LOCATION,Hudaibiyah,LOCATION
+000231-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000233-001,Benar,Al-Hulais bin Alqamah,PERSON,Al-Hulais bin Alqamah,PERSON
+000233-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000233-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000233-001,Benar,Masjidil Haram,LOCATION,Masjidil Haram,LOCATION
+000233-001,Benar,Urwah bin Mas'ud,PERSON,Urwah bin Mas'ud,PERSON
+000233-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000235-002,Benar,Aban bin Sa'id bin Al-Ash,PERSON,Aban bin Sa'id bin Al-Ash,PERSON
+000235-002,Benar,Utsman,PERSON,Utsman,PERSON
+000235-002,Benar,Utsman,PERSON,Utsman,PERSON
+000235-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000235-002,Benar,Utsman,PERSON,Utsman,PERSON
+000235-002,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000235-002,Benar,Utsman,PERSON,Utsman,PERSON
+000235-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000236-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000236-002,Benar,Umar,PERSON,Umar,PERSON
+000236-002,Benar,Ma'qal bin Yassar,PERSON,Ma'qal bin Yassar,PERSON
+000237-002,Benar,Muhammad,PERSON,Muhammad,PERSON
+000237-002,Benar,Muhammad,PERSON,Muhammad,PERSON
+000237-002,Benar,Muhammad,PERSON,Muhammad,PERSON
+000237-002,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000237-002,Benar,Ali,PERSON,Ali,PERSON
+000237-002,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000237-002,Benar,Muhammad,PERSON,Muhammad,PERSON
+000237-002,Benar,Masjidil Haram,LOCATION,Masjidil Haram,LOCATION
+000239-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000239-001,Benar,Ummu Salamah,PERSON,Ummu Salamah,PERSON
+000239-001,Benar,Ummu Salamah,PERSON,Ummu Salamah,PERSON
+000239-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000239-001,Benar,Ummu Salamah,PERSON,Ummu Salamah,PERSON
+000239-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000239-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000239-001,Benar,Abu Jahl,PERSON,Abu Jahl,PERSON
+000241-001,Benar,Hubaibiyah,LOCATION,Hubaibiyah,LOCATION
+000241-001,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000242-002,Benar,Umar,PERSON,Umar,PERSON
+000242-002,Benar,Ibnul Khaththab,PERSON,Ibnul Khaththab,PERSON
+000242-002,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000242-002,Benar,Umar,PERSON,Umar,PERSON
+000242-002,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000242-002,Benar,Umar,PERSON,Umar,PERSON
+000242-002,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000242-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000242-002,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000242-002,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000242-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000242-002,Benar,Umar,PERSON,Umar,PERSON
+000242-002,Benar,Umar,PERSON,Umar,PERSON
+000242-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000242-002,Benar,Umar,PERSON,Umar,PERSON
+000242-003,Benar,Umar,PERSON,Umar,PERSON
+000245-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000245-002,Benar,Najasyi,PERSON,Najasyi,PERSON
+000245-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000245-002,Benar,Kisra,PERSON,Kisra,PERSON
+000245-002,Benar,Persia,LOCATION,Persia,LOCATION
+000246-001,Benar,tahun 6 H,TIME,tahun 6 H,TIME
+000246-001,Benar,Hudaibiyah,LOCATION,Hudaibiyah,LOCATION
+000246-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000246-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000246-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000246-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000246-001,Benar,bulan Muharram tahun 7 H,TIME,bulan Muharram tahun 7 H,TIME
+000246-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000252-001,Benar,Haudzah bin Ali,PERSON,Haudzah bin Ali,PERSON
+000252-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000252-001,Benar,Haudzah bin Ali,PERSON,Haudzah bin Ali,PERSON
+000252-001,Benar,Salith bin Al-Amiri,PERSON,Salith bin Al-Amiri,PERSON
+000252-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000252-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000252-001,Benar,Jibril,PERSON,Jibril,PERSON
+000252-002,Benar,Yamamah,LOCATION,Yamamah,LOCATION
+000252-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000254-004,Benar,Muhammad,PERSON,Muhammad,PERSON
+000254-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000254-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000254-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000254-006,Benar,Muhammad,PERSON,Muhammad,PERSON
+000254-006,Benar,Muhammad,PERSON,Muhammad,PERSON
+000254-006,Benar,Abd bin Al-Julunda,PERSON,Abd bin Al-Julunda,PERSON
+000254-006,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000255-002,Benar,Ibnu Al-Akwa',PERSON,Ibnu Al-Akwa',PERSON
+000255-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000255-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000255-002,Benar,Salamah bin Al-Akwa',PERSON,Salamah bin Al-Akwa',PERSON
+000259-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000259-001,Benar,Perjanjian Hudaibiyah,EVENT,Perjanjian Hudaibiyah,EVENT
+000259-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000260-001,Benar,Hudaibiyah,EVENT,Hudaibiyah,EVENT
+000260-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000260-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000260-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000260-001,Benar,Siba' bin Urfuthah,PERSON,Siba' bin Urfuthah,PERSON
+000260-001,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000260-001,Benar,Numailah bin Abdullah,PERSON,Numailah bin Abdullah,PERSON
+000260-001,Benar,Abu Hurairah,PERSON,Abu Hurairah,PERSON
+000260-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000260-001,Benar,Siba' bin Urfuthah,PERSON,Siba' bin Urfuthah,PERSON
+000260-001,Benar,Abu Hurairah,PERSON,Abu Hurairah,PERSON
+000260-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000264-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000264-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000264-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000264-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000264-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000264-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000264-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000264-001,Benar,Al-Hubab bin Al-Mundzir,PERSON,Al-Hubab bin Al-Mundzir,PERSON
+000264-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000264-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000264-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000264-002,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000267-002,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000267-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000272-001,Benar,Ibnu Abul Huqaiq,PERSON,Ibnu Abul Huqaiq,PERSON
+000272-001,Benar,Ibnu Abil Huqaiq,PERSON,Ibnu Abil Huqaiq,PERSON
+000272-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000272-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000272-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000272-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000273-002,Benar,Muhammad bin Maslamah,PERSON,Muhammad bin Maslamah,PERSON
+000273-002,Benar,Mahmud bin Maslamah,PERSON,Mahmud bin Maslamah,PERSON
+000273-002,Benar,Ibnul Qayyim,PERSON,Ibnul Qayyim,PERSON
+000273-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000273-002,Benar,Abul Huqaiq,PERSON,Abul Huqaiq,PERSON
+000273-002,Benar,Shafiyah binti Huyai bin Akhthab,PERSON,Shafiyah binti Huyai bin Akhthab,PERSON
+000273-002,Benar,Kinanah bin Abul Huqaiq,PERSON,Kinanah bin Abul Huqaiq,PERSON
+000273-002,Kesalahan batas,Az Zubair,PERSON,Az,PERSON
+000273-002,False positive,(tidak ada),-,Zubair,PERSON
+000284-001,Benar,Najd,LOCATION,Najd,LOCATION
+000284-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000284-001,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000284-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000284-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000284-001,Benar,Perang Dzatur Riqa',EVENT,Perang Dzatur Riqa',EVENT
+000284-001,Benar,4 H,TIME,4 H,TIME
+000284-001,Benar,Abu Musa,PERSON,Abu Musa,PERSON
+000284-001,Benar,Abu Hurairah,PERSON,Abu Hurairah,PERSON
+000284-001,Benar,Perang Khaibar,EVENT,Perang Khaibar,EVENT
+000284-001,Benar,bulan Rabi'ul Awwal 7 H,TIME,bulan Rabi'ul Awwal 7 H,TIME
+000284-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000284-005,Benar,Makkah,LOCATION,Makkah,LOCATION
+000284-005,Benar,Perang Hunain,EVENT,Perang Hunain,EVENT
+000285-001,Benar,bulan Dzul Qa'dah,TIME,bulan Dzul Qa'dah,TIME
+000285-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000285-001,Benar,Hudaibiyah,EVENT,Hudaibiyah,EVENT
+000285-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000285-001,Benar,Uwaih bin Abu Rahm,PERSON,Uwaih bin Abu Rahm,PERSON
+000285-001,Benar,Najiyah bin Jundab,PERSON,Najiyah bin Jundab,PERSON
+000285-001,Benar,Dzul Hulaifah,LOCATION,Dzul Hulaifah,LOCATION
+000285-001,Benar,Aus bin Khauli,PERSON,Aus bin Khauli,PERSON
+000285-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-002,Benar,Aus bin Khauli,PERSON,Aus bin Khauli,PERSON
+000285-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-002,Benar,Yatsrib,LOCATION,Yatsrib,LOCATION
+000285-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-004,Benar,Marwah,LOCATION,Marwah,LOCATION
+000285-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000285-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-004,Benar,Ali,PERSON,Ali,PERSON
+000285-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-004,Benar,Hamzah,PERSON,Hamzah,PERSON
+000285-004,Benar,Ali,PERSON,Ali,PERSON
+000285-004,Benar,Zaid,PERSON,Zaid,PERSON
+000285-004,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000285-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-004,Benar,Ja'far bin Abu Thalib,PERSON,Ja'far bin Abu Thalib,PERSON
+000285-004,Benar,Maimunah,PERSON,Maimunah,PERSON
+000285-004,Benar,Al-Abbas,PERSON,Al-Abbas,PERSON
+000285-004,Benar,Ummul Fadhl,PERSON,Ummul Fadhl,PERSON
+000285-004,Benar,Al-Abbas,PERSON,Al-Abbas,PERSON
+000285-004,Benar,Makkah,LOCATION,Makkah,LOCATION
+000285-004,Benar,Abu Rafi',PERSON,Abu Rafi',PERSON
+000285-004,Benar,Maimunah,PERSON,Maimunah,PERSON
+000285-004,Kesalahan batas,Maimunah binti Al-Harits Al-Amiriyah,PERSON,Maimunah binti Al-Harits,PERSON
+000285-004,False negative,Maimunah,PERSON,(tidak terdeteksi),-
+000287-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000287-001,Benar,Al-Harits bin Umair,PERSON,Al-Harits bin Umair,PERSON
+000287-001,Benar,Syurahbil bin Amr,PERSON,Syurahbil bin Amr,PERSON
+000287-001,Benar,Syam,LOCATION,Syam,LOCATION
+000287-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000287-001,Benar,Perang Ahzab,EVENT,Perang Ahzab,EVENT
+000292-002,Benar,Ja'far bin Abu Thalib,PERSON,Ja'far bin Abu Thalib,PERSON
+000292-002,Benar,Ibnu Umar,PERSON,Ibnu Umar,PERSON
+000292-002,Benar,Ibnu Umar,PERSON,Ibnu Umar,PERSON
+000292-002,Benar,Ja'far bin Abu Thalib,PERSON,Ja'far bin Abu Thalib,PERSON
+000292-002,Benar,Ja'far bin Abu Thalib,PERSON,Ja'far bin Abu Thalib,PERSON
+000292-002,Benar,Abdullah bin Rawahah,PERSON,Abdullah bin Rawahah,PERSON
+000292-003,Benar,Abdullah bin Rawahah,PERSON,Abdullah bin Rawahah,PERSON
+000293-001,Benar,Tsabit bin Arqam,PERSON,Tsabit bin Arqam,PERSON
+000293-001,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000293-001,Benar,perang Mu'tah,EVENT,perang Mu'tah,EVENT
+000293-001,Benar,Yaman,LOCATION,Yaman,LOCATION
+000293-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000293-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000293-001,Benar,Zaid,PERSON,Zaid,PERSON
+000293-001,Benar,Ibnu Rawahah,PERSON,Ibnu Rawahah,PERSON
+000293-001,Kesalahan batas,Khalid,PERSON,Khalid bin dia,PERSON
+000295-001,Benar,perang Mu'tah,EVENT,perang Mu'tah,EVENT
+000301-001,Benar,Ath-Thabarani,PERSON,Ath-Thabarani,PERSON
+000301-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000301-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000301-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000301-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000301-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000301-001,Benar,Perang Bani Al-Ashfar,EVENT,Perang Bani Al-Ashfar,EVENT
+000301-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000301-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000301-001,Benar,Amr bin Salim,PERSON,Amr bin Salim,PERSON
+000301-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000301-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000301-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000301-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000301-001,Benar,Abu Qatadah bin Rab'i,PERSON,Abu Qatadah bin Rab'i,PERSON
+000301-001,Benar,Dzu Khasyab,LOCATION,Dzu Khasyab,LOCATION
+000301-001,Benar,Dzul Marwah,LOCATION,Dzul Marwah,LOCATION
+000301-001,Benar,bulan Ramadhan 8 H,TIME,bulan Ramadhan 8 H,TIME
+000301-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000301-002,Benar,Hathib bin Abi Balta'ah,PERSON,Hathib bin Abi Balta'ah,PERSON
+000301-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000301-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000301-002,Benar,Hathib bin Abu Balta'ah,PERSON,Hathib bin Abu Balta'ah,PERSON
+000301-002,Benar,Ali,PERSON,Ali,PERSON
+000301-002,Benar,Al-Miqdad,PERSON,Al-Miqdad,PERSON
+000301-002,Benar,Ali,PERSON,Ali,PERSON
+000301-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000301-002,Benar,Amir bin Al-Adhbath,PERSON,Amir bin Al-Adhbath,PERSON
+000302-001,Benar,bulan Ramadhan 8 H,TIME,bulan Ramadhan 8 H,TIME
+000302-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000302-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000302-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000302-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000302-001,Benar,Abu Ruhm,PERSON,Abu Ruhm,PERSON
+000302-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000302-001,Benar,Al-Abbas bin Abdul Muthalib,PERSON,Al-Abbas bin Abdul Muthalib,PERSON
+000302-001,Benar,Abu Sufyan bin Al-Harits,PERSON,Abu Sufyan bin Al-Harits,PERSON
+000302-001,Benar,Abdullah bin Umayyah,PERSON,Abdullah bin Umayyah,PERSON
+000302-001,Benar,Ummu Salamah,PERSON,Ummu Salamah,PERSON
+000302-001,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000302-001,Benar,Abu Sufyan bin Al-Harits,PERSON,Abu Sufyan bin Al-Harits,PERSON
+000302-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000302-001,Benar,Yusuf,PERSON,Yusuf,PERSON
+000302-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000302-001,Benar,Ali,PERSON,Ali,PERSON
+000302-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000302-002,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000302-002,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000302-002,Benar,Muhammad,PERSON,Muhammad,PERSON
+000305-001,Benar,Selasa pagi hari tanggal 17 Ramadhan 8 H,TIME,Selasa pagi hari tanggal 17 Ramadhan 8 H,TIME
+000305-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000305-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000305-001,Benar,Al-Abbas,PERSON,Al-Abbas,PERSON
+000305-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000305-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000305-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000305-001,Benar,Abbas,PERSON,Abbas,PERSON
+000305-001,Benar,Abbas,PERSON,Abbas,PERSON
+000305-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000305-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000305-001,Benar,Abbas,PERSON,Abbas,PERSON
+000305-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000305-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000305-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000305-001,Benar,Abbas,PERSON,Abbas,PERSON
+000305-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000305-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000305-001,Benar,Abbas,PERSON,Abbas,PERSON
+000305-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000308-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000308-001,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000308-001,Benar,Khalid,PERSON,Khalid,PERSON
+000308-001,Benar,Kurz bin Jabir,PERSON,Kurz bin Jabir,PERSON
+000308-001,Benar,Khunais bin Khalid bin Rabi'ah,PERSON,Khunais bin Khalid bin Rabi'ah,PERSON
+000308-001,Benar,Khandamah,LOCATION,Khandamah,LOCATION
+000308-001,Benar,Khalid,PERSON,Khalid,PERSON
+000308-001,Benar,Khalid,PERSON,Khalid,PERSON
+000308-001,Benar,Hammas bin Qais,PERSON,Hammas bin Qais,PERSON
+000308-001,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000308-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000308-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000308-001,Benar,Shafa,LOCATION,Shafa,LOCATION
+000308-001,Benar,Az-Zubair,PERSON,Az-Zubair,PERSON
+000308-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000309-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000309-001,Benar,Hajar Aswad,LOCATION,Hajar Aswad,LOCATION
+000309-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000309-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000309-001,Benar,Utsman bin Thalhah,PERSON,Utsman bin Thalhah,PERSON
+000309-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000309-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000309-001,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000309-001,Benar,Ibrahim,PERSON,Ibrahim,PERSON
+000310-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000310-001,Benar,Usamah,PERSON,Usamah,PERSON
+000310-001,Benar,Bilal,PERSON,Bilal,PERSON
+000310-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000310-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000310-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000310-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000310-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000310-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000310-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000312-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000312-001,Benar,Bilal,PERSON,Bilal,PERSON
+000312-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000312-001,Benar,Abu Sufyan bin Harb,PERSON,Abu Sufyan bin Harb,PERSON
+000312-001,Benar,Attab bin Usaid,PERSON,Attab bin Usaid,PERSON
+000312-001,Benar,Al-Harits bin Hisyam,PERSON,Al-Harits bin Hisyam,PERSON
+000312-001,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000312-001,Benar,Usaid,PERSON,Usaid,PERSON
+000312-001,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000314-003,Benar,Ka'b bin Zuhair,PERSON,Ka'b bin Zuhair,PERSON
+000314-003,Benar,Wahsy bin Harb,PERSON,Wahsy bin Harb,PERSON
+000314-003,Benar,Hindun binti Uthbah,PERSON,Hindun binti Uthbah,PERSON
+000314-003,Benar,Abu Sufyan,PERSON,Abu Sufyan,PERSON
+000314-003,Benar,ibnu Khathal,PERSON,ibnu Khathal,PERSON
+000314-003,Benar,Ummu Sa'd,PERSON,Ummu Sa'd,PERSON
+000314-003,Benar,Ibnu Ishaq,PERSON,Ibnu Ishaq,PERSON
+000314-003,Benar,Arnab,PERSON,Arnab,PERSON
+000314-003,Benar,Ummu Sa'd,PERSON,Ummu Sa'd,PERSON
+000320-002,Benar,Makkah,LOCATION,Makkah,LOCATION
+000320-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000320-002,Benar,Sa'd bin Zaid,PERSON,Sa'd bin Zaid,PERSON
+000320-002,False positive,(tidak ada),-,Qadid,LOCATION
+000323-001,Benar,Malik bin Auf,PERSON,Malik bin Auf,PERSON
+000323-001,Benar,Hunain,LOCATION,Hunain,LOCATION
+000323-001,Benar,Dzul Majaz,LOCATION,Dzul Majaz,LOCATION
+000323-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000323-001,Benar,Arafah,LOCATION,Arafah,LOCATION
+000323-001,False negative,Hunain,LOCATION,(tidak terdeteksi),-
+000323-001,False negative,Hunain,LOCATION,(tidak terdeteksi),-
+000326-001,Benar,tanggal 6 Syawwal 8 H,TIME,tanggal 6 Syawwal 8 H,TIME
+000326-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000326-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000326-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000326-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000326-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000326-001,Benar,Shafwan bin Umayyah,PERSON,Shafwan bin Umayyah,PERSON
+000326-001,Benar,Attab bin Usaid,PERSON,Attab bin Usaid,PERSON
+000326-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000326-001,Benar,Anas bin Abu Martsad,PERSON,Anas bin Abu Martsad,PERSON
+000326-001,Benar,Hunain,LOCATION,Hunain,LOCATION
+000326-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000326-001,Benar,Musa,PERSON,Musa,PERSON
+000327-001,Benar,malam Rabu tanggal 10 Syawwal,TIME,malam Rabu tanggal 10 Syawwal,TIME
+000327-001,Benar,Hunain,LOCATION,Hunain,LOCATION
+000327-001,Benar,Malik bin Auf,PERSON,Malik bin Auf,PERSON
+000327-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000327-001,Benar,Hunain,LOCATION,Hunain,LOCATION
+000327-001,Benar,Abu Sufyan bin Harb,PERSON,Abu Sufyan bin Harb,PERSON
+000327-001,Benar,Laut Merah,LOCATION,Laut Merah,LOCATION
+000327-001,Benar,Kaladah bin Al-Junaid,PERSON,Kaladah bin Al-Junaid,PERSON
+000327-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000327-001,Benar,Muhammad bin Abdullah,PERSON,Muhammad bin Abdullah,PERSON
+000332-003,Benar,Abu Bakrah,PERSON,Abu Bakrah,PERSON
+000332-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000332-003,Benar,Naufal bin Mu'awiyyah,PERSON,Naufal bin Mu'awiyyah,PERSON
+000332-003,Benar,Umar bin Al-Khaththab,PERSON,Umar bin Al-Khaththab,PERSON
+000333-002,Benar,Al-Harits bin Al-Harits bin Kaladah,PERSON,Al-Harits bin Al-Harits bin Kaladah,PERSON
+000333-002,Benar,Muhammad,PERSON,Muhammad,PERSON
+000333-002,Benar,Tihamah,LOCATION,Tihamah,LOCATION
+000333-002,Benar,Zaid bin Tsabit,PERSON,Zaid bin Tsabit,PERSON
+000334-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000334-003,Benar,Muhammad,PERSON,Muhammad,PERSON
+000335-003,Benar,Uyainah bin Hishn,PERSON,Uyainah bin Hishn,PERSON
+000338-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000338-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000338-001,Benar,hari-hari,TIME,hari-hari,TIME
+000338-001,Benar,tahun 8 H,TIME,tahun 8 H,TIME
+000338-001,Benar,bulan Muharram tahun 9 H,TIME,bulan Muharram tahun 9 H,TIME
+000338-001,Benar,Uyainah bin Hishn,PERSON,Uyainah bin Hishn,PERSON
+000338-001,Benar,Yazid bin Al-Hushain,PERSON,Yazid bin Al-Hushain,PERSON
+000338-001,Benar,Abbad bin Bisyr,PERSON,Abbad bin Bisyr,PERSON
+000338-001,Benar,Rafi' bin Mukaits,PERSON,Rafi' bin Mukaits,PERSON
+000338-001,Benar,Amru bin Al-Ash,PERSON,Amru bin Al-Ash,PERSON
+000338-001,Benar,Adh-Dhahak bin Sufyan,PERSON,Adh-Dhahak bin Sufyan,PERSON
+000338-001,Benar,Basyir bin Sufyan,PERSON,Basyir bin Sufyan,PERSON
+000338-001,Benar,Ka'b,PERSON,Ka'b,PERSON
+000338-001,Benar,Ibnul Latibah,PERSON,Ibnul Latibah,PERSON
+000338-001,Benar,Al-Muhajir bin Abu Umayyah,PERSON,Al-Muhajir bin Abu Umayyah,PERSON
+000338-001,Benar,Ziyad bin Lubaid,PERSON,Ziyad bin Lubaid,PERSON
+000338-001,Benar,Hadramaut,LOCATION,Hadramaut,LOCATION
+000338-001,Benar,Adi bin Hatim,PERSON,Adi bin Hatim,PERSON
+000338-001,Benar,Malik bin Nuwairah,PERSON,Malik bin Nuwairah,PERSON
+000338-001,Benar,Az-Zibriqan bin Badr,PERSON,Az-Zibriqan bin Badr,PERSON
+000338-001,Benar,Qais bin Ashim,PERSON,Qais bin Ashim,PERSON
+000338-001,Benar,Al-A'la bin Al-Hadhrami,PERSON,Al-A'la bin Al-Hadhrami,PERSON
+000338-001,Benar,Al-Bahrain bin Abu Thalib,PERSON,Al-Bahrain bin Abu Thalib,PERSON
+000338-001,Benar,Najran,LOCATION,Najran,LOCATION
+000338-001,Benar,bulan Muharram 9 H,TIME,bulan Muharram 9 H,TIME
+000338-001,Benar,bulan Muharram 9 H,TIME,bulan Muharram 9 H,TIME
+000338-001,Salah tipe,Hudaibiyah,LOCATION,Hudaibiyah,EVENT
+000338-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000342-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000342-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000342-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000342-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000348-003,Benar,Tabuk,LOCATION,Tabuk,LOCATION
+000354-001,Benar,bulan Dzul Qi'dah atau Dzul Hijjah tahu 9 H,TIME,bulan Dzul Qi'dah atau Dzul Hijjah tahu 9 H,TIME
+000354-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000354-001,Benar,Abu Bakar Ash-Shiddiq,PERSON,Abu Bakar Ash-Shiddiq,PERSON
+000354-001,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000354-001,Benar,Ali,PERSON,Ali,PERSON
+000354-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000354-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000354-001,Benar,Ali,PERSON,Ali,PERSON
+000354-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000354-001,Benar,Ali,PERSON,Ali,PERSON
+000354-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000354-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000354-001,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000355-005,Benar,Sulaiman bin Buraidah,PERSON,Sulaiman bin Buraidah,PERSON
+000355-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000355-006,Benar,Makkah,LOCATION,Makkah,LOCATION
+000357-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000357-001,Benar,Makkah,LOCATION,Makkah,LOCATION
+000357-001,Benar,tahun 5 H,TIME,tahun 5 H,TIME
+000357-001,Benar,Munkid bin Hayyan,PERSON,Munkid bin Hayyan,PERSON
+000357-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-001,Benar,Al-Jarud bin Al-Ala,PERSON,Al-Jarud bin Al-Ala,PERSON
+000357-001,False negative,Al-Asyaj,PERSON,(tidak terdeteksi),-
+000357-005,Benar,Ka'b bin Zuhair,PERSON,Ka'b bin Zuhair,PERSON
+000357-005,Benar,Ka'b,PERSON,Ka'b,PERSON
+000357-005,Benar,Ka'b,PERSON,Ka'b,PERSON
+000357-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-005,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-005,Benar,Ka'b,PERSON,Ka'b,PERSON
+000357-005,Benar,Ka'b,PERSON,Ka'b,PERSON
+000357-011,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000357-011,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-011,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-011,Benar,Yaman,LOCATION,Yaman,LOCATION
+000357-011,Benar,Perang Tabuk,EVENT,Perang Tabuk,EVENT
+000357-011,Benar,Al-Harits bin Abdi,PERSON,Al-Harits bin Abdi,PERSON
+000357-011,Benar,An-Nu'man bin Qail,PERSON,An-Nu'man bin Qail,PERSON
+000357-011,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-011,Benar,Malik bin Murrah,PERSON,Malik bin Murrah,PERSON
+000357-012,Benar,Mu'adz bin Jabal,PERSON,Mu'adz bin Jabal,PERSON
+000357-012,Benar,tahun 9 H,TIME,tahun 9 H,TIME
+000357-012,Benar,Perang Tabuk,EVENT,Perang Tabuk,EVENT
+000357-012,Benar,Malik bin An-Namath,PERSON,Malik bin An-Namath,PERSON
+000357-012,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000357-012,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000357-012,Benar,Khalid bin Al-Walid,PERSON,Khalid bin Al-Walid,PERSON
+000357-012,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-012,Benar,Ali,PERSON,Ali,PERSON
+000357-012,Benar,tahun 9 H,TIME,tahun 9 H,TIME
+000357-012,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-012,Benar,Perang Tabuk,EVENT,Perang Tabuk,EVENT
+000357-013,Benar,Najran,LOCATION,Najran,LOCATION
+000357-013,Benar,Najran,LOCATION,Najran,LOCATION
+000357-013,Benar,Makkah,LOCATION,Makkah,LOCATION
+000357-013,Benar,Yaman,LOCATION,Yaman,LOCATION
+000357-013,Benar,Najran,LOCATION,Najran,LOCATION
+000357-013,Benar,tahun 9 H,TIME,tahun 9 H,TIME
+000357-013,Benar,Najran,LOCATION,Najran,LOCATION
+000357-013,Benar,Abu Haritsah bin Alqamah,PERSON,Abu Haritsah bin Alqamah,PERSON
+000357-014,Benar,Abu Haritsah bin Alqamah,PERSON,Abu Haritsah bin Alqamah,PERSON
+000357-014,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-014,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-014,Benar,Isa,PERSON,Isa,PERSON
+000357-014,Benar,Isa,PERSON,Isa,PERSON
+000357-014,Benar,Adam,PERSON,Adam,PERSON
+000357-014,Benar,Isa,PERSON,Isa,PERSON
+000357-014,Benar,Ali,PERSON,Ali,PERSON
+000357-014,Benar,Isa,PERSON,Isa,PERSON
+000357-014,Benar,Isa,PERSON,Isa,PERSON
+000357-014,False negative,Adam,PERSON,(tidak terdeteksi),-
+000357-015,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-015,Benar,bulan Rajab,TIME,bulan Rajab,TIME
+000357-015,Benar,bulan Shafar,TIME,bulan Shafar,TIME
+000357-015,Benar,Ubaidah,PERSON,Ubaidah,PERSON
+000357-015,Benar,Najran,LOCATION,Najran,LOCATION
+000357-015,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000357-019,Benar,Yaman,LOCATION,Yaman,LOCATION
+000357-019,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000357-019,Benar,Amir bin Sha'sha'ah,PERSON,Amir bin Sha'sha'ah,PERSON
+000357-019,Benar,Amir bin Ath-Thufail,PERSON,Amir bin Ath-Thufail,PERSON
+000357-019,Benar,Arbad bin Qais,PERSON,Arbad bin Qais,PERSON
+000357-019,Benar,Khalid bin Ja'far,PERSON,Khalid bin Ja'far,PERSON
+000357-019,Benar,Jabbar bin Aslam,PERSON,Jabbar bin Aslam,PERSON
+000357-019,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-020,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-020,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-020,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000357-020,Benar,Zaid,PERSON,Zaid,PERSON
+000357-020,Benar,Zaid,PERSON,Zaid,PERSON
+000357-020,Benar,Zaid,PERSON,Zaid,PERSON
+000357-021,Benar,Zaid,PERSON,Zaid,PERSON
+000357-021,Benar,H,TIME,H,TIME
+000357-021,Benar,Yaman,LOCATION,Yaman,LOCATION
+000357-021,Benar,Anir bin Qais,PERSON,Anir bin Qais,PERSON
+000357-021,Benar,Al-Harits bin Ka'b,PERSON,Al-Harits bin Ka'b,PERSON
+000357-021,Benar,bulan Muharram 11 H,TIME,bulan Muharram 11 H,TIME
+000357-021,Benar,tahun 9 H,TIME,tahun 9 H,TIME
+000357-021,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000357-021,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-021,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-021,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-021,Benar,Jazirah Arab,LOCATION,Jazirah Arab,LOCATION
+000357-023,Benar,Makkah,LOCATION,Makkah,LOCATION
+000357-023,Benar,Madinah,LOCATION,Madinah,LOCATION
+000357-023,Benar,Yaman,LOCATION,Yaman,LOCATION
+000359-003,Benar,Masjidil Haram,LOCATION,Masjidil Haram,LOCATION
+000359-003,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000359-003,Benar,Shafa,LOCATION,Shafa,LOCATION
+000359-003,Benar,Marwah,LOCATION,Marwah,LOCATION
+000359-003,Benar,Makkah,LOCATION,Makkah,LOCATION
+000359-003,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000359-003,Benar,Shafa,LOCATION,Shafa,LOCATION
+000359-003,Benar,Marwah,LOCATION,Marwah,LOCATION
+000359-003,Benar,tanggal 8 Dzul Hijjah,TIME,tanggal 8 Dzul Hijjah,TIME
+000359-003,Benar,hari tarwiyah,TIME,hari tarwiyah,TIME
+000359-003,Benar,Mina,LOCATION,Mina,LOCATION
+000359-003,Benar,Arafah,LOCATION,Arafah,LOCATION
+000359-003,Benar,Arafah,LOCATION,Arafah,LOCATION
+000359-010,Benar,hari,TIME,hari,TIME
+000359-010,Benar,pertengahan hari-hari Tasyriq,TIME,pertengahan hari-hari Tasyriq,TIME
+000359-010,Benar,hari kurban,TIME,hari kurban,TIME
+000359-010,Benar,nafar,TIME,nafar,TIME
+000359-010,Benar,tanggal 13 Dzul Hijjah,TIME,tanggal 13 Dzul Hijjah,TIME
+000359-010,Benar,Mina,LOCATION,Mina,LOCATION
+000359-010,Benar,Ka'bah,LOCATION,Ka'bah,LOCATION
+000359-010,Benar,Madinah,LOCATION,Madinah,LOCATION
+000360-001,Benar,Mina,LOCATION,Mina,LOCATION
+000360-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000360-001,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000360-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000360-001,Benar,bulan Shafar tahun 11 H,TIME,bulan Shafar tahun 11 H,TIME
+000360-001,Benar,Usamah bin Zaid,PERSON,Usamah bin Zaid,PERSON
+000360-001,Benar,Palestina,LOCATION,Palestina,LOCATION
+000360-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000360-001,Kesalahan batas,Farwah bin Amr Al-Judzami,PERSON,Farwah bin Amr,PERSON
+000360-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000360-002,Benar,Usamah bin Zaid,PERSON,Usamah bin Zaid,PERSON
+000360-002,Benar,Madinah,LOCATION,Madinah,LOCATION
+000360-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000360-002,Kesalahan batas,Abu,PERSON,Abu 265,PERSON
+000360-002,False negative,Al-Jurf,LOCATION,(tidak terdeteksi),-
+000360-002,False negative,Usamah,PERSON,(tidak terdeteksi),-
+000364-003,Benar,Abu Said,PERSON,Abu Said,PERSON
+000364-003,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000364-003,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000364-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000364-003,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000364-003,Benar,Abu Kemudian,PERSON,Abu Kemudian,PERSON
+000364-003,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000364-003,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000364-003,Benar,Abu,PERSON,Abu,PERSON
+000367-001,Benar,hari Ahad,TIME,hari Ahad,TIME
+000367-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000368-001,Benar,Anas bin Malik,PERSON,Anas bin Malik,PERSON
+000368-001,Benar,hari Senin,TIME,hari Senin,TIME
+000368-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000368-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000368-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000368-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000368-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000368-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000368-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000368-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000368-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000368-002,Benar,Hasan,PERSON,Hasan,PERSON
+000368-002,Benar,Husain,PERSON,Husain,PERSON
+000368-002,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000368-002,Benar,Aisyah,PERSON,Aisyah,PERSON
+000368-002,Benar,Khaibar,LOCATION,Khaibar,LOCATION
+000372-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000372-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000372-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000372-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000372-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000372-001,Benar,Umar,PERSON,Umar,PERSON
+000372-001,Benar,Umar,PERSON,Umar,PERSON
+000372-001,Benar,Umar,PERSON,Umar,PERSON
+000372-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000372-001,Benar,Umar,PERSON,Umar,PERSON
+000372-001,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000372-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000372-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000372-001,Benar,Ibnu Hisyam,PERSON,Ibnu Hisyam,PERSON
+000372-001,Benar,Muhammad,PERSON,Muhammad,PERSON
+000372-002,Benar,Ali,PERSON,Ali,PERSON
+000372-002,Benar,Ibnu Abbas,PERSON,Ibnu Abbas,PERSON
+000372-002,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000372-002,Benar,Ibnul Musayyab,PERSON,Ibnul Musayyab,PERSON
+000372-002,Benar,Umar,PERSON,Umar,PERSON
+000372-002,Benar,Abu Bakar,PERSON,Abu Bakar,PERSON
+000376-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000376-001,Benar,bulan Syawal tahun kesepuluh dar nubuwah,TIME,bulan Syawal tahun kesepuluh dar nubuwah,TIME
+000376-001,Benar,Khadijah,PERSON,Khadijah,PERSON
+000376-001,Benar,As-Sakran bin Amru,PERSON,As-Sakran bin Amru,PERSON
+000377-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000377-001,Benar,bulan Syawwal,TIME,bulan Syawwal,TIME
+000377-001,Benar,bulan Syawwal,TIME,bulan Syawwal,TIME
+000377-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000377-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000377-001,Benar,Aisyah,PERSON,Aisyah,PERSON
+000377-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000380-001,Benar,Abu Salamah,PERSON,Abu Salamah,PERSON
+000380-001,Benar,bulan Jumdats Tsaniyah tahun 4 H,TIME,bulan Jumdats Tsaniyah tahun 4 H,TIME
+000380-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000380-001,Benar,bulan Syawwal,TIME,bulan Syawwal,TIME
+000381-001,Benar,Asad bin Khuzaimah,PERSON,Asad bin Khuzaimah,PERSON
+000381-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000381-001,Benar,Zaid binti Haritsah,PERSON,Zaid binti Haritsah,PERSON
+000381-001,Benar,Zaid,PERSON,Zaid,PERSON
+000381-001,Benar,Zaid,PERSON,Zaid,PERSON
+000381-001,Benar,bulan Sya'ban 6 H,TIME,bulan Sya'ban 6 H,TIME
+000382-001,Benar,Juwairiyah,PERSON,Juwairiyah,PERSON
+000382-001,Benar,Tsabit bin Qais bin Syammas,PERSON,Tsabit bin Qais bin Syammas,PERSON
+000382-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000382-001,Benar,bulan Sya'ban 6 H,TIME,bulan Sya'ban 6 H,TIME
+000385-009,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000385-009,Benar,Anas,PERSON,Anas,PERSON
+000385-009,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000385-009,Benar,Aisyah,PERSON,Aisyah,PERSON
+000385-009,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000385-010,Benar,Anas,PERSON,Anas,PERSON
+000385-010,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000385-010,Benar,Aisyah,PERSON,Aisyah,PERSON
+000385-010,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000385-010,Benar,Aisyah,PERSON,Aisyah,PERSON
+000385-010,Benar,Aisyah,PERSON,Aisyah,PERSON
+000387-001,Benar,Ummu Ma'bad,PERSON,Ummu Ma'bad,PERSON
+000387-001,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000387-001,Benar,Madinah,LOCATION,Madinah,LOCATION
+000387-002,Benar,Ali bin Abu Thalib,PERSON,Ali bin Abu Thalib,PERSON
+000387-002,Benar,Rasulullah,PERSON,Rasulullah,PERSON
+000387-002,Benar,Jabir bin Samurah,PERSON,Jabir bin Samurah,PERSON
+000387-002,Benar,Abu Thufail,PERSON,Abu Thufail,PERSON
+000387-002,Benar,Anas bin Malik,PERSON,Anas bin Malik,PERSON
+000387-007,Benar,Abu Juhaifah,PERSON,Abu Juhaifah,PERSON
+000387-007,Benar,Jabir bin Samurah,PERSON,Jabir bin Samurah,PERSON
+000387-007,Benar,Ummu Salamah,PERSON,Ummu Salamah,PERSON
+000387-007,Benar,Jabir,PERSON,Jabir,PERSON
+000388-012,Benar,Kharijah binti Zaid,PERSON,Kharijah binti Zaid,PERSON
+000388-012,Benar,Rasulullah,PERSON,Rasulullah,PERSON

@@ -1,0 +1,1 @@
+runtime_detik=3620 menit=60.33

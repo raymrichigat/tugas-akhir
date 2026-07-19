@@ -1,35 +1,140 @@
-# BAB 5 KESIMPULAN DAN SARAN
+<!-- SUMBER: docs/Buku-TA-Genta-fixed.pdf (buku terbaru), diekstrak 2026-07-19. Cermin TEKS untuk rujukan revisi; tabel/gambar/persamaan dipipihkan. Backup .md lama: kesimpulan.md.bak_pre_pdf_sync -->
 
-<!-- SINKRON STRUKTURAL dengan buku `docs/Buku-TA-Genta.pdf` (hlm 89-90), per 2026-07-12.
-     Struktur mengikuti buku (4 kesimpulan + 4 saran). ANGKA sudah dimutakhirkan ke benchmark
-     BARU (GT-terkoreksi + KG v4) agar konsisten dengan Bab 4 .md hasil migrasi 10 Juli:
-       - data uji 254 chunk / 49.739 token / 1.969 entitas (Person 1.302 / Location 474 / Time 118 / Event 75)
-       - augmentation F1 mikro 0,9756; Event 0,9342->0,9542; Time 0,7983->0,9038
-       - SNA v4 (scoped): 137 simpul / 1.853 sisi / density 0,199 / Louvain 8 komunitas / Q 0,2831
-     ⚠️ Buku Word/PDF Bab 5 MASIH pakai angka lama (0,9581/208 node/Q 0,3851) -> perlu di-update di Word.
-     Catatan: draf .md sebelumnya memuat 8 saran + poin konstruksi KG terpisah; di sini diringkas
-     mengikuti struktur buku. Bila ingin versi lebih rinci, lihat riwayat git file ini. -->
+<!-- Halaman buku 120 · PDF 154 -->
+BAB 5
+KESIMPULAN DAN SARAN
+5.1 Kesimpulan
+Berdasarkan hasil dan pengujian dan pembahasan yang telah dilakukan, diperoleh Kesimpulan
+sebagai berikut:
+1. Data teks Sirah Nabawiyah disiapkan melalui tahapan OCR (Optical Character
+Recognition), pembersihan teks, pemrosesan awal, pemotongan teks menjadi beberapa
+chunk, pelabelan entitas menggunakan skema BIO, pembagian data, serta penyatuan
+variasi nama melalui alias clustering. Pelabelan awal dilakukan secara semiotomatis
+menggunakan kamus entitas dan pola ekspresi reguler, kemudian diperiksa kembali
+untuk menghasilkan data berlabel. Tahapan tersebut menghasilkan data latih sebanyak
+590 chunk yang terdiri atas 116.353 token dan 4.247 entitas. Sementara itu, data uji
+terdiri atas 254 chunk, 49.739 token, dan 1.969 entitas, dengan rincian 1.302 entitas
+Person, 474 entitas Location, 118 entitas Time, dan 75 entitas Event. Dengan struktur
+label yang konsisten, pemisahan data latih dan data uji, serta penyatuan sebagian variasi
+nama, teks Sirah Nabawiyah telah diubah menjadi dataset yang siap digunakan untuk
+pelatihan dan evaluasi model NER. Namun, distribusi entitas masih tidak seimbang
+karena kelas Event dan Time memiliki jumlah data yang jauh lebih sedikit dibandingkan
+Person dan Location.
+2. Ekstraksi entitas dilakukan menggunakan NER berbasis IndoBERT dengan orientasi
+peran semantik ala Semantic Role Labeling (SRL) dan strategi iterative self-training.
+Orientasi SRL digunakan sebagai landasan konseptual untuk menentukan empat
+kategori entitas, yaitu Person, Event, Location, dan Time, serta memahami
+kedudukannya dalam suatu peristiwa. Penelitian ini tidak menjalankan pengurai SRL
+secara penuh. Implementasinya diwujudkan melalui pelabelan awal menggunakan
+kamus entitas dan pola ekspresi reguler, kemudian dilanjutkan dengan pelatihan model
+NER. Dalam proses iterative self-training, model yang telah dilatih digunakan untuk
+menghasilkan pseudo-label pada data yang belum berlabel. Prediksi dengan tingkat
+keyakinan yang memenuhi ambang kemudian ditambahkan ke data latih dan digunakan
+untuk melatih model pada iterasi berikutnya. Proses tersebut memungkinkan model
+memanfaatkan data yang belum berlabel tanpa memerlukan anotasi manual terhadap
+seluruh korpus. Konfigurasi terbaik diperoleh menggunakan IndoBERT uncased yang
+dipadukan dengan augmentasi data berupa mention replacement dan parafrase kalimat.
+3. Knowledge graph dibangun dari hasil prediksi model NER terbaik terhadap seluruh
+korpus Sirah Nabawiyah. Entitas hasil ekstraksi dinormalisasi dan direpresentasikan
+sebagai simpul Person, Event, Location, dan Time. Graf juga dilengkapi simpul Period
+untuk menunjukkan pembagian fase dalam narasi Sirah. Hubungan antarentitas
+direpresentasikan melalui relasi INVOLVED_IN, OCCURRED_AT, OCCURRED_ON,
+PRECEDES, KELUARGA, SAHABAT, MUSUH, dan IN_PERIOD. Hasil konstruksi
+memuat 1.177 simpul entitas, yang terdiri atas 901 Person, 167 Time, 74 Location, dan
+35 Event, serta 15 simpul Period. Dengan demikian, graf secara keseluruhan memiliki
+1.192 simpul. Graf tersebut juga memuat 728 relasi, yang terdiri atas 312 relasi
+KELUARGA, 229 INVOLVED_IN, 44 OCCURRED_AT, 46 OCCURRED_ON, 33
+SAHABAT, 17 PRECEDES, 12 MUSUH, dan 35 IN_PERIOD. Seluruh simpul dan relasi
 
-## 5.1 Kesimpulan
+<!-- Halaman buku 121 · PDF 155 -->
+disimpan di Neo4j menggunakan model labeled property graph sehingga dapat
+ditelusuri melalui kueri Cypher. Relasi inti juga dilengkapi metadata evidence dan
+halaman agar hasil penelusuran dapat diperiksa kembali pada dokumen sumber.
+4. Evaluasi penelitian dilakukan terhadap hasil NER melalui tiga skenario uji coba serta
+terhadap knowledge graph melalui SNA dan pengujian fungsional. Pada uji coba
+pertama, augmentasi data menjadi metode paling efektif untuk menangani
+ketidakseimbangan kelas. Konfigurasi tersebut menghasilkan F1-score mikro tingkat
+entitas sebesar 0,9756, meningkat dibandingkan baseline sebesar 0,9536. Perbaikan
+terbesar terjadi pada kelas minoritas, yaitu Time yang meningkat dari 0,7983 menjadi
+0,9038 serta Event yang meningkat dari 0,9342 menjadi 0,9542. Hasil tersebut
+menunjukkan bahwa penambahan ragam contoh melalui mention replacement dan
+parafrase lebih efektif daripada sekadar mengubah bobot kelas pada fungsi loss.
+Pada uji coba kedua, IndoBERT uncased menghasilkan performa terbaik di antara lima
+model dasar yang dibandingkan, dengan F1-score mikro sebesar 0,9536. Penurunan
+performa pada IndoBERT cased dan RoBERTa terutama ditemukan pada entitas
+banyak kata dan disertai peningkatan kesalahan batas BIO. Temuan tersebut mengarah
+pada masalah teknis penyelarasan label kata ke subword, sehingga hasilnya tidak dapat
+langsung ditafsirkan bahwa kedua model tersebut secara umum lebih buruk untuk NER
+Sirah. Pada uji coba ketiga, penambahan fitur POS-tag menghasilkan F1-score mikro
+sebesar 0,9547, hanya meningkat 0,0011 dari baseline sebesar 0,9536. Perubahan
+tersebut sangat kecil dan tidak konsisten pada setiap kelas sehingga fitur POS-tag belum
+memberikan peningkatan yang berarti pada konfigurasi yang diuji. Secara keseluruhan,
+konfigurasi terbaik dari ketiga uji coba adalah IndoBERT uncased dengan augmentasi
+data, yang memperoleh F1-score mikro sebesar 0,9756.
+Analisis SNA pada proyeksi jaringan antartokoh menghasilkan 137 simpul dan 1.853
+sisi dengan density sebesar 0,1989. Jaringan memiliki koefisien pengelompokan sebesar
+0,7100, transitivity sebesar 0,7957, dan komponen terbesar yang mencakup 128 simpul
+atau 93,4% dari keseluruhan tokoh. Muhammad menempati posisi tertinggi pada ukuran
+sentralitas utama, yaitu degree centrality sebesar 0,7941, PageRank sebesar 0,0509, dan
+betweenness centrality sebesar 0,2808. Hasil tersebut sejalan dengan kedudukan
+Muhammad sebagai tokoh utama dalam narasi Sirah. Algoritma Louvain menghasilkan
+delapan komunitas dengan modularitas sebesar 0,2831. Nilai tersebut menunjukkan
+bahwa struktur kelompok masih dapat ditemukan, tetapi batas antar komunitas tidak
+terlalu kuat karena jaringan antar tokoh bersifat padat.
+Pengujian fungsional menunjukkan bahwa seluruh enam skenario kueri dapat
+dijalankan tanpa galat, menghasilkan jawaban yang tidak kosong, dan dapat ditelusuri
+melalui metadata evidence serta halaman. Namun, validasi manual menemukan
+setidaknya satu jawaban yang tidak didukung oleh konteks sumber pada setiap fungsi.
+Kesalahan tersebut antara lain disebabkan oleh pengabaian negasi, penggunaan
+kedekatan penyebutan sebagai hubungan, kekeliruan cakupan lokasi dan waktu, serta
+penggunaan urutan kemunculan dalam dokumen sebagai urutan kronologis. Dengan
+demikian, graf telah layak secara operasional untuk penelusuran awal dan eksplorasi
+hubungan, tetapi belum dapat digunakan sebagai sumber jawaban yang berdiri sendiri
+tanpa pemeriksaan terhadap teks Sirah. Hasil SNA juga perlu ditafsirkan sebagai
+karakteristik graf hasil ekstraksi, bukan sebagai ukuran pengaruh sejarah secara mutlak.
 
-Berdasarkan hasil pengujian dan pembahasan yang telah dilakukan, diperoleh kesimpulan sebagai berikut.
-
-1. Persiapan data teks Sirah Nabawiyah dilakukan melalui beberapa tahapan, yaitu pemindaian teks menggunakan OCR (*Optical Character Recognition*), pembersihan dan pemrosesan awal teks (*preprocessing*), pemotongan teks menjadi bagian-bagian pendek (*chunking*), serta pelabelan entitas. Pelabelan awal dilakukan secara semi-otomatis menggunakan skema BIO berbasis pola dan kamus entitas pada empat kelas, yaitu *Person*, *Event*, *Location*, dan *Time*. Selanjutnya, variasi penulisan nama yang merujuk pada entitas yang sama disatukan melalui penyatuan alias (*alias clustering*) agar acuan entitas menjadi lebih konsisten. Tahapan ini menghasilkan data uji sebanyak 254 *chunk* yang terdiri atas 49.739 token dan 1.969 entitas, dengan rincian 1.302 entitas *Person*, 474 entitas *Location*, 118 entitas *Time*, dan 75 entitas *Event*. Distribusi tersebut menunjukkan adanya ketidakseimbangan kelas yang cukup tajam, terutama pada kelas *Event* dan *Time* sebagai kelas minoritas.
-
-2. Model ekstraksi entitas dikembangkan menggunakan pendekatan NER berbasis IndoBERT yang dilatih secara semi-*supervised* melalui *iterative self-training*. Pada pendekatan ini, model mula-mula dilatih menggunakan data berlabel awal, kemudian secara bertahap diperkaya dengan prediksi berkeyakinan tinggi dari data yang belum berlabel. Berdasarkan tiga skenario uji coba, hasil terbaik diperoleh pada model IndoBERT *uncased* dengan teknik *data augmentation* yang menggabungkan *mention replacement* dan parafrase kalimat. Konfigurasi ini menghasilkan *F1-score* mikro tingkat entitas sebesar 0,9756, dengan *precision* sebesar 0,9756 dan *recall* sebesar 0,9756. Teknik *augmentation* terbukti efektif dalam meningkatkan pengenalan entitas yang jarang muncul, terutama pada kelas *Time* yang meningkat dari 0,7983 menjadi 0,9038 dan kelas *Event* yang meningkat dari 0,9342 menjadi 0,9542. Meskipun demikian, kesalahan model masih didominasi oleh keputusan deteksi, yaitu membedakan entitas dari kata biasa, serta lebih banyak terkonsentrasi pada kelas dengan jumlah data paling sedikit. Perbandingan model juga menunjukkan bahwa model *uncased* memberikan hasil terbaik, sedangkan penurunan performa pada model *cased* dan RoBERTa lebih berkaitan dengan masalah teknis penyelarasan label. Selain itu, penambahan modul POS-tag belum memberikan peningkatan performa yang berarti pada konfigurasi yang diuji.
-
-3. Evaluasi hasil ekstraksi dan analisis graf menunjukkan bahwa model NER mampu mengenali entitas dengan performa tinggi, sedangkan kelayakan graf dapat ditinjau melalui pengujian fungsional dan *Social Network Analysis* (SNA). Pada pengujian fungsional, enam skenario kueri *Cypher* yang mewakili kebutuhan pencarian berbasis hubungan dapat dijalankan dengan baik. Keenam skenario tersebut meliputi pencarian tokoh dalam peristiwa, peristiwa pada suatu lokasi, peristiwa pada suatu waktu, peristiwa yang melibatkan tokoh tertentu, penelusuran *multi-hop*, dan urutan kronologis peristiwa. Seluruh skenario menghasilkan jawaban yang dapat ditelusuri kembali ke teks sumbernya.
-
-4. Pada analisis SNA terhadap proyeksi jaringan antartokoh, graf yang terbentuk terdiri atas 137 simpul dan 1.853 sisi dengan nilai *density* sebesar 0,199. Struktur jaringan tersebut menunjukkan pola yang sesuai dengan narasi Sirah, dengan tokoh Muhammad memiliki dominasi yang kuat pada seluruh ukuran sentralitas. Selain itu, deteksi komunitas menggunakan algoritma Louvain menghasilkan 8 komunitas dengan nilai modularitas sebesar 0,2831, yang secara umum koheren secara naratif. Meskipun demikian, analisis ini juga menunjukkan adanya keterbatasan metode, yaitu munculnya beberapa tokoh dengan sentralitas berlebih akibat over-ekstraksi relasi `INVOLVED_IN` yang dibentuk berdasarkan kedekatan kemunculan dalam teks.
-
-## 5.2 Saran
-
-Berdasarkan keterbatasan yang ditemukan selama penelitian, beberapa saran untuk pengembangan lanjutan adalah sebagai berikut.
-
-1. Metode ekstraksi relasi perlu ditingkatkan, khususnya pada relasi `INVOLVED_IN`. Pada penelitian ini, relasi masih dibentuk berdasarkan kedekatan kemunculan tokoh dan peristiwa dalam *chunk* yang sama, sehingga berpotensi menimbulkan *over-extraction* maupun *under-extraction*. Penelitian selanjutnya disarankan menambahkan ekstraksi relasi berbasis kata kerja atau predikat tindakan agar hubungan antar-entitas lebih mencerminkan peran sebenarnya dalam narasi.
-
-2. Pendeteksian entitas *Event* perlu diperluas agar tidak hanya bergantung pada nama peristiwa eksplisit. Beberapa peristiwa penting, seperti kelahiran Nabi, wahyu pertama, dan wafat Nabi, dapat muncul dalam bentuk frasa deskriptif atau konstruksi kata kerja. Oleh karena itu, penelitian lanjutan dapat mengembangkan metode *event extraction* berbasis pola verbal agar penambahan peristiwa tidak terlalu bergantung pada proses manual.
-
-3. Kualitas pelabelan dan pemodelan NER perlu diperbaiki. Pemeriksaan manual terhadap *ground truth* perlu diperketat, terutama pada entitas yang tidak konsisten akibat kapitalisasi. Selain itu, fungsi penyelarasan label kata ke *subword* perlu diperbaiki agar perbandingan model *uncased*, *cased*, dan RoBERTa dapat dilakukan secara lebih adil. Modul POS-tag juga sebaiknya diuji kembali menggunakan keluaran *POS tagger* yang sesungguhnya, bukan nilai *placeholder*.
-
-4. Cakupan dan pemanfaatan *knowledge graph* perlu diperluas. Tahap penyatuan alias perlu diperkuat, terutama pada variasi nama lokasi seperti Yatsrib dan Madinah, agar graf lebih ringkas dan akurat. Penelitian selanjutnya juga disarankan menguji metode pada sumber Sirah lain serta mengembangkan pemanfaatan graf, misalnya untuk sistem tanya-jawab atau visualisasi sejarah Sirah.
+<!-- Halaman buku 122 · PDF 156 -->
+5.2 Saran
+Berdasarkan keterbatasan yang ditemukan selama penelitian, beberapa saran untuk
+pengembangan lanjutan adalah sebagai berikut
+1. Jumlah dan kualitas data berlabel perlu ditingkatkan, terutama untuk kelas Event dan
+Time yang jumlahnya masih jauh lebih sedikit dibandingkan kelas lainnya. Penambahan
+data sebaiknya disertai pemeriksaan manual terhadap hasil OCR, konsistensi batas
+entitas, penggunaan huruf kapital, dan variasi penulisan nama. Pendeteksian Event juga
+perlu dikembangkan agar tidak hanya mengenali nama peristiwa yang disebutkan secara
+eksplisit. Peristiwa yang dinyatakan melalui kata kerja atau frasa deskriptif, seperti
+kelahiran, turunnya wahyu, hijrah, dan wafat, dapat ditangani melalui metode event
+extraction berbasis predikat dan argumen.
+2. Proses penyelarasan label kata ke subword perlu diperbaiki dan diuji secara khusus
+untuk setiap jenis tokenizer. Perbaikan ini diperlukan agar perbandingan antara model
+uncased, cased, dan RoBERTa dapat dilakukan secara lebih adil. Pengujian dapat
+dilengkapi dengan pemeriksaan word_ids, batas BIO pada entitas banyak kata, serta
+analisis kesalahan pada setiap tahap iterative self-training. Sementara itu,
+pengembangan fitur POS-tag bukan prioritas utama karena peningkatan yang diperoleh
+pada penelitian ini sangat kecil. Pengujian lanjutan sebaiknya dilakukan hanya apabila
+terdapat strategi integrasi yang lebih kuat daripada sekadar menambahkan fitur POS
+pada representasi token.
+3. Metode ekstraksi relasi perlu dikembangkan dari pendekatan berbasis kedekatan
+menjadi pendekatan yang mempertimbangkan makna kalimat. Model perlu mengenali
+predikat tindakan, negasi, pelaku, sasaran, lokasi, waktu, serta hubungan antarkalimat.
+Relasi INVOLVED_IN juga dapat diuraikan menjadi hubungan yang lebih khusus,
+seperti
+memimpin,
+mengikuti,
+melawan, mengutus,
+menjadi
+korban, atau
+meriwayatkan. Perincian tersebut dapat mencegah tokoh dari peran dan pihak yang
+berbeda diperlakukan sebagai peserta dengan makna yang sama. Relasi kronologis
+sebaiknya dibangun dari informasi waktu yang telah dinormalisasi, bukan hanya dari
+urutan penyebutan peristiwa dalam dokumen.
+4. Penyempurnaan knowledge graph perlu mencakup penyatuan alias yang lebih
+menyeluruh, misalnya antara Madinah dan Yatsrib, serta penambahan identitas rujukan
+yang stabil untuk setiap potongan sumber. Evaluasi graf selanjutnya dapat
+menggunakan data acuan relasi yang dianotasi secara manual sehingga ketepatan relasi
+dapat diukur menggunakan precision, recall, dan F1-score, bukan hanya melalui
+pemeriksaan contoh kueri. Validasi juga dapat melibatkan ahli Sirah dan menggunakan
+lebih dari satu sumber untuk membandingkan variasi riwayat. Setelah kualitas relasi
+meningkat, graf dapat dikembangkan lebih lanjut menjadi sistem tanya-jawab,
+pencarian semantik, atau visualisasi kronologis interaktif dengan tetap menampilkan
+bukti dan halaman sumber pada setiap jawaban.

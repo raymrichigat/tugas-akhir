@@ -1,580 +1,2350 @@
-# BAB 4 HASIL DAN PEMBAHASAN
-
-> **[CATATAN PENYUSUN, hapus saat finalisasi]**
-> Bab ini menyatukan hasil dan pembahasan dalam satu alur (tidak dipisah), mengikuti permintaan susunan. Struktur: 4.1 Uji Coba 1 (penanganan data *imbalance*), 4.2 Uji Coba 2 (komparasi model), 4.3 Uji Coba 3 (modul POS-tag), 4.4 Evaluasi graf. Tiap subbab memuat penjelasan hasil, tabel hasil, interpretasi, alasan tinggi/rendah, analisis error, contoh data error, dan rujukan visualisasi.
-> **Sumber angka (jangan diubah tanpa cek ulang):** benchmark = *run* penuh `done_newest` dengan **ground-truth uji terkoreksi**. F1 entity-level + rincian error + confusion dari `data/result/analysis/gt_corrected_2026_07_10/` (`recompute_gt_corrected_results.md`, `error_breakdown_gt_corrected.md`, `confusion/`); skrip `src/pseudo_labelling/SRL-NER/recompute_gt_corrected.py` + `error_breakdown_gt_corrected.py`. Metrik graf (4.4) dari KG v4 model pemenang (S4-augmentation): sentralitas/komunitas tokoh dari `data/result/analysis/v4_scoped/` (graf Person ber-scope, nasab-only dibuang via `clean_v4_hybrid_genealogy.py`); sentralitas peristiwa/lokasi/lintas-fase/studi-kasus dari `data/result/analysis/v4_hybrid/` (event di-dedup `clean_v4_events.py`, periode di-map `apply_period_to_v4.py`).
-> Patuh pedoman: tanpa em dash, bahasa *layman*, istilah asing *italic*, sitasi APA. Tanda **[PERIKSA]** = perlu konfirmasi; **[SITASI: ...]** = referensi yang perlu masuk Daftar Pustaka.
-
-Bab ini menyajikan dan membahas hasil pengujian terhadap rancangan yang dijelaskan pada Bab 3. Pembahasan diawali dengan profil data berlabel hasil anotasi (Subbab 4.1), lalu tiga uji coba ekstraksi entitas (Subbab 4.2 sampai 4.4) yang dirancang pada Subbab 3.8, dan ditutup dengan evaluasi *knowledge graph* (Subbab 4.5) yang mencakup analisis struktur jaringan dan pengujian fungsional (Subbab 3.9). Seluruh evaluasi ekstraksi entitas menggunakan *F1-score* tingkat entitas (*entity-level*) dengan pustaka seqeval, yaitu sebuah entitas dihitung benar hanya jika seluruh rentang token dan kategorinya tepat, dilengkapi hitungan kesalahan tingkat token (*token-level*) untuk membedah jenis kesalahan.
-
----
-
-## 4.1 Anotasi Data
-
-Seluruh uji coba ekstraksi entitas pada bab ini berpijak pada data berlabel yang dihasilkan tahap anotasi (Subbab 3.5). Bagian ini menyajikan profil data tersebut lebih dahulu, karena karakteristiknya, terutama komposisi antar kelas, menjadi penjelas utama pola hasil di seluruh subbab berikutnya.
-
-Data berlabel terdiri atas data latih sebanyak 590 *chunk* (116.353 token) yang dipakai sebagai *seed* pelatihan, dan data uji sebanyak 254 *chunk* (49.739 token) dengan 1.969 entitas yang dipakai sebagai acuan (*ground truth*) evaluasi. Seluruh evaluasi ekstraksi entitas pada bab ini dilakukan pada data uji yang sama tersebut. Komposisi entitas pada data uji adalah *Person* 1.302, *Location* 474, *Time* 118, dan *Event* 75. <!-- Support entitas dari classification report seqeval pada recompute_gt_corrected_results.md (ground-truth uji terkoreksi). --> Rangkuman statistik kedua bagian data ditunjukkan pada Tabel 4.1.
-
-[SISIPKAN TABEL 4.1 - Statistik Data Latih dan Data Uji]
-
-| Statistik | Data Latih (*train*) | Data Uji (*test*) |
-|-----------|---------------------:|------------------:|
-| Jumlah *chunk* | 590 | 254 |
-| Jumlah token | 116.353 | 49.739 |
-| Jumlah entitas | 4.247 | 1.969 |
-| — *Person* | 2.920 | 1.302 |
-| — *Location* | 972 | 474 |
-| — *Event* | 167 | 75 |
-| — *Time* | 188 | 118 |
-
-<!-- train dari train.csv (B-count per kelas); test dari support seqeval (recompute_gt_corrected_results.md). -->
-
-Ketimpangan jumlah entitas antar kelas terlihat jelas pada Gambar 4.1, yang menyandingkan jumlah entitas tiap kelas pada data latih dan data uji.
-
-[SISIPKAN GAMBAR 4.1 - Distribusi Jumlah Entitas per Kelas (Imbalance) pada Data Latih dan Data Uji]
-<!-- file: data/result/analysis/bab4_viz/eda_imbalance.png -->
-
-Gambar 4.1 menyajikan jumlah entitas tiap kelas pada data latih dan data uji sebagai diagram batang berkelompok. Batang *Person* menjulang paling tinggi (2.920 entitas pada data latih) sedangkan *Event* hanya berupa batang pendek (167 entitas latih dan hanya 75 pada data uji), dengan rasio ketimpangan sekitar 17,5:1 pada data latih dan 17,4:1 pada data uji.
-
-Profil data ini penting untuk membaca seluruh hasil bab ini. Pertama, dominasi *Person* dan *Location* mencerminkan sifat teks Sirah sebagai narasi biografis-historis yang padat menyebut nama tokoh dan tempat secara eksplisit, sedangkan *Event* dan *Time* jauh lebih jarang muncul sebagai entitas bernama karena peristiwa dan waktu dalam Sirah kerap dinyatakan melalui frasa kata kerja atau keterangan (misalnya "beliau wafat" atau "pada tahun itu") yang tidak tertangkap sebagai *named entity*. Kedua, ketimpangan sekitar 17,5:1 menempatkan *Event* (75) dan *Time* (118) sebagai kelas minoritas ekstrem (*few-shot*), sehingga model cenderung kurang terlatih mengenalinya dan kedua kelas inilah yang paling rentan berkinerja rendah di seluruh uji coba. Ketiga, distribusi data latih dan data uji konsisten (rasio hampir sama, 17,5:1 berbanding 17,4:1), sehingga data uji representatif terhadap data latih dan hasil evaluasi tidak bias oleh perbedaan komposisi. Ketiga hal ini menjadi lensa untuk menafsirkan hasil pada subbab berikutnya, yaitu ketimpangan inilah yang melatarbelakangi Uji Coba 1 (penanganan *imbalance*), sementara kelangkaan *Event* dan *Time* menjadi penjelas berulang mengapa kedua kelas itu paling sering menjadi titik terlemah.
-
----
-
-## 4.2 Uji Coba 1: Penanganan Data Imbalance
-
-Uji coba pertama bertujuan menguji apakah ketidakseimbangan jumlah entitas antar kelas (*imbalance*) pada data latih, sebagaimana dipaparkan pada Subbab 4.1, dapat ditangani sehingga kualitas pengenalan kelas minoritas (terutama *Event* dan *Time*) meningkat. Untuk itu, alur dasar (*baseline*) dibandingkan dengan empat teknik penanganan ketidakseimbangan yang ditambahkan di atasnya, yaitu *weighted cross-entropy*, *supervised contrastive learning* (SCL), *Jaccard-similarity contrastive learning* (JSCL), dan *data augmentation* yang menggabungkan penggantian sebutan entitas (*mention replacement*) dengan parafrase kalimat berbantuan model bahasa (*paraphrase*) yang menjaga entitas tetap utuh.
-
-Pengujian dilakukan dengan melatih kelima varian (alur dasar ditambah empat teknik) pada *seed* yang sama, lalu mengevaluasinya pada data uji yang identik, yaitu 254 *chunk* berisi 49.739 token dengan 1.969 entitas. Agar perbandingan adil, hanya komponen penanganan ketidakseimbangan yang divariasikan, sedangkan arsitektur dasar (IndoBERT *uncased*), ambang *pseudo-labelling*, dan *hyperparameter* lain dibuat sama persis mengikuti prosedur Kode Semu 3.12. Pengukuran kualitas memakai pustaka seqeval pada tingkat entitas (*entity-level*), yaitu satu entitas dihitung benar hanya jika seluruh rentang token dan kategorinya tepat, dan dilengkapi penghitungan kesalahan tingkat token (*token-level*) untuk membedah jenis kesalahan.
-
-Metrik utama yang digunakan adalah *F1-score* (rata-rata harmonik) karena mampu memberikan evaluasi yang seimbang antara *precision* (ketepatan, proporsi prediksi yang benar) dan *recall* (kelengkapan, proporsi entitas acuan yang ditemukan), serta dilaporkan dalam bentuk *micro* (agregat seluruh entitas, didominasi kelas mayoritas) maupun *macro* (rata-rata antar kelas, lebih sensitif terhadap kelas minoritas). Karena itu hasil disajikan dalam dua tabel: Tabel 4.2 merangkum metrik agregat untuk menilai kualitas keseluruhan, sedangkan Tabel 4.3 memerinci F1-score tiap kelas entitas beserta *macro*-nya agar dampak terhadap kelas minoritas terlihat jelas.
-
-[SISIPKAN TABEL 4.2 - Precision, Recall, dan F1-score Agregat Uji Coba 1]
-
-| Skenario | Precision | Recall | F1-score (mikro) |
-|----------|----------:|-------:|-----------------:|
-| *Baseline* | 0,9524 | 0,9548 | 0,9536 |
-| *Weighted cross-entropy* | 0,9427 | 0,9533 | 0,9480 |
-| SCL | 0,9543 | 0,9548 | 0,9546 |
-| JSCL | 0,9415 | 0,9487 | 0,9451 |
-| **Augmentation** | **0,9756** | **0,9756** | **0,9756** |
-
-[SISIPKAN TABEL 4.3 - F1-score per Entitas Uji Coba 1]
-
-| Skenario | F1 PERSON | F1 LOCATION | F1 EVENT | F1 TIME | macro F1 |
-|----------|----------:|------------:|---------:|--------:|---------:|
-| *Baseline* | 0,9690 | 0,9530 | 0,9342 | 0,7983 | 0,9136 |
-| *Weighted cross-entropy* | 0,9616 | 0,9432 | 0,9231 | 0,8347 | 0,9156 |
-| SCL | 0,9687 | 0,9488 | 0,9600 | 0,8170 | 0,9236 |
-| JSCL | 0,9611 | 0,9467 | 0,9600 | 0,7572 | 0,9062 |
-| **Augmentation** | **0,9835** | **0,9755** | **0,9542** | **0,9038** | **0,9543** |
-
-[SISIPKAN GAMBAR 4.2 - F1-score Agregat Lima Skenario Uji Coba 1]
-<!-- file: data/result/analysis/bab4_viz/f1_uc1_agregat.png -->
-
-Gambar 4.2 meringkas Tabel 4.2 secara visual. Batang *augmentation* (disorot merah) berdiri paling tinggi baik pada F1 mikro maupun macro, sedangkan *weighted cross-entropy* paling rendah, sehingga peringkat antar skenario langsung terbaca.
-
-[SISIPKAN GAMBAR 4.3 - F1-score per Kelas Lima Skenario Uji Coba 1]
-<!-- file: data/result/analysis/bab4_viz/f1_uc1_perkelas.png -->
-
-Gambar 4.3 meringkas Tabel 4.3 dengan mengelompokkan batang per kelas entitas. Sumber keunggulan *augmentation* terlihat jelas, yaitu batang *Event* dan *Time*-nya naik paling tinggi dibanding skenario lain, sementara *Person* dan *Location* tetap tinggi dan stabil di semua skenario.
-
-Berdasarkan kedua tabel tersebut, teknik augmentation menjadi pemenang yang jelas dengan F1-score mikro 0,9756, mengungguli *baseline* (0,9536) dan seluruh teknik lain, dengan SCL menyusul tipis di urutan kedua (0,9546). Hal yang patut dicatat sejak awal adalah bahwa tidak semua penanganan ketidakseimbangan otomatis memperbaiki hasil, sebab dua teknik justru berada di bawah *baseline*, yaitu JSCL (0,9451) dan *weighted cross-entropy* (0,9480). Pola yang berlawanan arah ini menjadi inti pembahasan subbab ini, karena memperlihatkan bahwa menambah jumlah contoh kelas minoritas (augmentation) berbeda secara mendasar dari sekadar menggeser perhatian model ke kelas minoritas (*weighted cross-entropy*).
-
-Keunggulan augmentation paling kentara justru pada kelas minoritas, sebagaimana terbaca pada Tabel 4.3. F1-score *Time* melonjak dari 0,7983 ke 0,9038 (naik lebih dari sepuluh poin) dan F1-score *Event* naik dari 0,9342 ke 0,9542, sementara *Person* dan *Location* tetap kuat bahkan ikut naik. Penyebabnya bersifat langsung: augmentasi membentuk kalimat latih baru, baik dengan mengganti entitas minoritas dengan entitas sekelas (*mention replacement*) maupun dengan memparafrasekan kalimat sambil menjaga entitasnya, sehingga model memperoleh lebih banyak ragam contoh *Time* dan *Event* yang sebelumnya sangat sedikit. Di antara keduanya, *mention replacement* menjadi penyumbang utama tambahan data, sedangkan parafrase (yang menjaga entitas persis) menyumbang lebih sedikit karena sebagian besar hasil parafrase disaring agar entitasnya tetap benar. Bukti pada tingkat token memperkuat penjelasan ini, yaitu *false negative* (entitas terlewat) pada *Time* turun drastis dari 36 ke 7 dan pada *Location* dari 33 ke 17 sebagaimana terbaca pada rincian error tingkat token, dan secara keseluruhan augmentation menghasilkan total error terendah (78 token) sekaligus misklasifikasi tipe paling sedikit (hanya 4 token).
-
-Sebaliknya, dua teknik kontrastif berada di bawah *baseline*, dengan JSCL menempati posisi terendah (0,9451) dan *weighted cross-entropy* sedikit di atasnya (0,9480). Untuk *weighted cross-entropy*, penyebabnya terbaca dari pemecahan metrik agregat pada Tabel 4.2: pemberian bobot lebih besar pada kelas minoritas membuat model lebih agresif menebak entitas sehingga *false positive* naik menjadi 69 token (dari 55 pada *baseline*), tetapi tanpa diiringi kenaikan *recall* yang berarti (0,9533, praktis setara dengan *baseline* 0,9548), sehingga *precision* justru turun ke 0,9427 dan F1-score keseluruhan ikut turun. Temuan ini menegaskan bahwa menaikkan bobot kelas minoritas pada fungsi *loss* tidak menambah informasi baru tentang kelas tersebut, melainkan hanya menggeser model ke arah lebih banyak menebak, sehingga yang muncul adalah lebih banyak deteksi keliru, bukan pengenalan yang lebih baik.
-
-Pembahasan kemudian dilanjutkan pada anatomi kesalahan untuk memahami mengapa pola di atas terjadi. Rincian jenis kesalahan tingkat token ditunjukkan pada Tabel 4.4. Pada semua skenario, kesalahan didominasi oleh keputusan deteksi (entitas atau bukan entitas), yaitu *false negative* (48 sampai 59 persen) dan *false positive* (32 sampai 40 persen), sedangkan misklasifikasi tipe hanya 3 sampai 6 persen dan kesalahan batas (*boundary* B/I) hanya 4 sampai 10 persen. Temuan ini menunjukkan bahwa model sebenarnya sudah memahami perbedaan keempat tipe entitas, dan tantangan utamanya terletak pada memutuskan apakah suatu kata merupakan entitas atau bukan, bukan pada kebingungan membedakan jenis entitas.
-
-[SISIPKAN TABEL 4.4 - Rincian Jenis Error Token-level Uji Coba 1]
-
-| Skenario | Total error | FP (over-deteksi) | FN (terlewat) | Misklasifikasi tipe | Boundary B/I |
-|----------|------------:|------------------:|--------------:|--------------------:|-------------:|
-| *Baseline* | 165 | 55 (33%) | 98 (59%) | 5 (3%) | 7 (4%) |
-| *Weighted cross-entropy* | 174 | 69 (40%) | 84 (48%) | 11 (6%) | 10 (6%) |
-| SCL | 178 | 62 (35%) | 102 (57%) | 7 (4%) | 7 (4%) |
-| JSCL | 185 | 69 (37%) | 93 (50%) | 12 (6%) | 11 (6%) |
-| Augmentation | 78 | 25 (32%) | 41 (53%) | 4 (5%) | 8 (10%) |
-
-Akar penyebab error, berdasarkan inspeksi token salah, terbagi tiga. Pertama, **over-deteksi (FP)** banyak berasal dari kata umum atau abstrak yang kebetulan berhuruf kapital atau menyerupai nama (seperti *Hijabah* yang merujuk jabatan pengurus Ka'bah tetapi dikira tempat), serta penanda nasab dan gelar yang ditarik menjadi bagian nama. Kedua, **entitas terlewat (FN)**, yang justru menjadi kategori kesalahan terbanyak, banyak terjadi pada nama langka atau di luar distribusi (seperti *Cina*, *Ukazh*, *Dzil-Majaz*) dan pada token yang membawa tanda baca menempel akibat artefak OCR. Ketiga, **misklasifikasi tipe** yang jumlahnya sangat kecil hampir seluruhnya jatuh pada nama berfungsi ganda sebagai tempat sekaligus peristiwa (*Uhud*, *Badr*, *Hudaibiyah*), sebuah ambiguitas semantik nyata pada teks Sirah dan bukan kelemahan model.
-
-Untuk memperlihatkan tiap jenis kesalahan secara konkret, di bawah ini ditampilkan satu contoh nyata per jenis error dari skenario pemenang (*augmentation*), dirinci per token dengan kolom *ground-truth* (label acuan) dan prediksi model. Baris token yang salah ditandai dengan tanda ✗. Seluruh contoh diambil dari prediksi model *augmentation* pada data uji (rekonstruksi `test.csv` + berkas token salah skenario), sehingga dapat ditelusuri ke *chunk* sumbernya.
-
-<!-- Sumber: gold terkoreksi (test.csv + koreksi label baru.xlsx) + pred dari done_newest/augmentation/output_S4_augmentation/.../iterative-6-incorrect.xlsx, rekonstruksi via recompute_gt_corrected.py. Chunk id dicantumkan untuk provenance. -->
-
-[SISIPKAN TABEL 4.5 - Contoh Over-deteksi (False Positive), chunk 000007-007]
-
-| Token | Ground-truth | Prediksi | |
-|-------|--------------|----------|---|
-| . | O | O | |
-| Hijabah | O | *B-LOCATION* | ✗ |
-| atau | O | O | |
-| wewenang | O | O | |
-
-Kata *Hijabah* (jabatan pemelihara Ka'bah, bukan nama tempat) berlabel O pada acuan, tetapi ditarik model menjadi entitas *Location*. Inilah pola over-deteksi yang khas, yaitu kata umum atau abstrak berhuruf kapital yang dikira nama tempat atau orang.
-
-[SISIPKAN TABEL 4.6 - Contoh Entitas Terlewat (False Negative), chunk 000001-002]
-
-| Token | Ground-truth | Prediksi | |
-|-------|--------------|----------|---|
-| India | *B-LOCATION* | *B-LOCATION* | |
-| dan | O | O | |
-| Cina | *B-LOCATION* | O | ✗ |
-| . | O | O | |
-
-Nama tempat *Cina* dalam rangkaian "... India dan Cina ..." gagal dikenali model sehingga terlewat menjadi O, meskipun *India* tepat sebelumnya dikenali benar. Pola ini khas pada nama tempat yang jarang muncul pada data latih, dan *false negative* seperti ini adalah kategori kesalahan terbanyak.
-
-[SISIPKAN TABEL 4.7 - Contoh Misklasifikasi Tipe, chunk 000338-001]
-
-| Token | Ground-truth | Prediksi | |
-|-------|--------------|----------|---|
-| di | O | O | |
-| Hudaibiyah | *B-LOCATION* | *B-EVENT* | ✗ |
-| , | O | O | |
-
-Token *Hudaibiyah* dapat merujuk tempat sekaligus peristiwa; di sini model menebaknya sebagai *Event* padahal acuan menandainya *Location*. Inilah satu dari hanya empat token salah-tipe pada skenario ini, dan semuanya melibatkan pasangan *Location* dengan *Event* (*Hudaibiyah*, *Badr*, dan *Jabal Uhud*).
-
-[SISIPKAN TABEL 4.8 - Contoh Kesalahan Batas (Boundary B/I), chunk 000018-001]
-
-| Token | Ground-truth | Prediksi | |
-|-------|--------------|----------|---|
-| Senin | *B-TIME* | *B-TIME* | |
-| pagi | *I-TIME* | *I-TIME* | |
-| , | *I-TIME* | *I-TIME* | |
-| tanggal | *B-TIME* | *I-TIME* | ✗ |
-| 9 | *I-TIME* | *I-TIME* | |
-| Rabi'ul | *I-TIME* | *I-TIME* | |
-| Awwal | *I-TIME* | *I-TIME* | |
-
-Rentang waktu "Senin pagi, tanggal 9 Rabi'ul Awwal" seharusnya dipecah acuan menjadi dua segmen *Time* (kata *tanggal* menjadi awal segmen baru, *B-TIME*), tetapi model menandainya sebagai lanjutan (*I-TIME*) sehingga kedua segmen menyatu. Penanda batas *B* dan *I* bergeser meskipun tipe entitasnya (*Time*) tetap benar. Kesalahan jenis ini hanya 8 token pada skenario *augmentation* dan kebanyakan terjadi pada *Time* dan nama orang banyak-kata.
-
-Temuan tersebut juga terlihat secara visual pada *confusion matrix* kelima skenario Uji Coba 1 (Gambar 4.4) dan panel perbandingan error antar skenario Uji Coba 1 (Gambar 4.5).
-
-[SISIPKAN GAMBAR 4.4 - Confusion Matrix Token-level Lima Skenario Uji Coba 1]
-<!-- file: data/result/analysis/error_viz/by_group/s1_confusion.png -->
-
-Gambar 4.4 menyandingkan *confusion matrix* tingkat token kelima skenario Uji Coba 1 dengan pewarnaan skala logaritmik (log10), sehingga sel bernilai kecil tetap terlihat meskipun sel *O*-ke-*O* (sekitar 46.100 token bukan-entitas yang benar) jauh lebih besar daripada sel lain. Dibaca menyeluruh, kelima panel berbentuk hampir sama: blok antar-tipe entitas, yaitu bagian matriks selain baris dan kolom *O*, hampir seluruhnya bernilai nol (token salah-tipe hanya berkisar 4 sampai 12 dari puluhan ribu token, dan selalu melibatkan pasangan *Location* dengan *Event* atau *Person*), sementara seluruh kesalahan yang berarti menumpuk pada baris dan kolom *O*. Keseragaman ini sendiri sudah menjadi temuan, sebab menunjukkan bahwa tidak ada satu pun teknik yang membuat model bingung membedakan jenis entitas; yang berbeda antar-skenario hanyalah seberapa banyak kesalahan deteksi *O*-ke-entitas, dan dari sisi itu pembahasan difokuskan pada skenario pemenang.
-
-Pada panel *augmentation*, kebersihan blok antar-tipe terlihat paling ekstrem: hanya 4 token salah-tipe (seluruhnya *Location* diprediksi *Event*), tanpa satu pun kebocoran lain, sehingga model praktis tidak pernah tertukar membedakan satu tipe entitas dengan tipe lain. Seluruh kesalahan yang berarti terkumpul pada baris dan kolom *O*, yakni pada keputusan deteksi entitas-atau-bukan: sel terbesar adalah *Location* yang diprediksi *O* (17 token, nama tempat yang terlewat), disusul *Person* yang diprediksi *O* (15 token) dan *O* yang diprediksi *Person* (12 token, over-deteksi nama dari kata non-entitas), lalu *O*→*Location* (7) dan *Time*→*O* (7). Kelas minoritas justru tampil rapi: *Event* benar pada 136 token dengan hanya 2 terlewat dan tanpa satu pun salah-tipe, sedangkan *Time* benar pada 383 token dengan 7 terlewat. Angka-angka ini cocok persis dengan baris *augmentation* pada Tabel 4.4 (FP 25, FN 41, misklasifikasi tipe 4).
-
-Sebagai pembanding singkat, kontras paling tajam dengan pemenang ada pada *weighted-class*, yang baris-baris *O*-ke-entitasnya paling padat (45 token *O* salah ditandai sebagai *Person*, 12 sebagai *Location*, 8 sebagai *Time*); inilah wujud visual dari over-deteksi yang menjatuhkan *precision*-nya pada Tabel 4.2, sekaligus penegasan bahwa perbedaan antar-teknik bermain di kolom deteksi, bukan di blok tipe. Dengan demikian, pembacaan menyilang kelima panel menuju satu kesimpulan yang sama dengan Tabel 4.4, yaitu tantangan model terletak pada deteksi batas entitas (kolom dan baris *O*), bukan pada klasifikasi jenisnya, dan keunggulan *augmentation* berasal dari merapikan baris *O* pada kelas minoritas, bukan dari mengubah kemampuan membedakan tipe.
-
-[SISIPKAN GAMBAR 4.5 - Panel Perbandingan Error Lima Skenario Uji Coba 1 (total, FN, FP, dan FN-rate per kelas)]
-<!-- file: data/result/analysis/error_viz/by_group/s1_compare.png -->
-
-Gambar 4.5 memuat empat panel yang membedah error kelima skenario Uji Coba 1 dari sudut berbeda. Panel kiri-atas (total error) menegaskan peringkat yang sama dengan Tabel 4.4, yaitu *augmentation* paling sedikit (78 token) dan JSCL paling banyak (185 token). Panel kanan-atas (komposisi *false negative* per kelas) menunjukkan SCL paling banyak melewatkan entitas (sekitar 102 token) sedangkan *augmentation* memangkasnya ke sekitar 41 token, dengan *Person* (biru) dan *Time* (ungu) mendominasi jumlah absolut entitas terlewat. Panel kiri-bawah (komposisi *false positive* per kelas) memperlihatkan bahwa tumpukan FP tertinggi ada pada *weighted-class* dan JSCL (sekitar 69 token, didominasi over-deteksi *Person*), jauh di atas *augmentation* yang hanya sekitar 25 token, dan inilah penjelasan mengapa *precision* keduanya lebih rendah. Panel kanan-bawah adalah yang paling bermakna untuk persoalan ketidakseimbangan, yaitu *FN-rate* per kelas atau persentase entitas gold yang terlewat setelah dinormalkan terhadap jumlah masing-masing kelas. Pada panel ini *Time* (ungu) konsisten menjadi kelas tersulit dengan tingkat terlewat tertinggi, sekitar 31 persen pada *baseline*, dan *augmentation* adalah teknik yang menurunkannya paling tajam menjadi sekitar 6 persen, sementara *Person* (biru) paling mudah dengan tingkat terlewat hanya 1 sampai 2 persen. Panel terakhir ini menjadi bukti visual paling langsung bahwa kelangkaan contoh (*few-shot*) membuat kelas minoritas paling rentan terlewat, dan bahwa keunggulan *augmentation* benar-benar berasal dari perbaikan pada kelas minoritas itu, bukan dari kelas mayoritas.
-
-Karena augmentation menjadi pemenang Uji Coba 1, ditinjau secara eksplisit bagaimana teknik ini mengubah komposisi data latih, sekaligus menjawab satu hal yang sering ditanyakan, yaitu mengapa kelas *O* (token bukan-entitas) yang jumlahnya sangat besar tidak ikut dikurangi. Tabel 4.9 menyandingkan jumlah token tiap label pada data latih sebelum dan sesudah augmentasi (gabungan *mention replacement* dan parafrase).
-
-[SISIPKAN TABEL 4.9 - Distribusi Label Token Data Latih Sebelum dan Sesudah Augmentasi]
-
-| Label (token) | Sebelum augmentasi | Sesudah augmentasi | Perubahan |
-|---------------|-------------------:|-------------------:|----------:|
-| *O* (bukan entitas) | 108.815 | 163.352 | +54.537 (+50%) |
-| *Person* (B+I) | 5.519 | 8.311 | +2.792 (+51%) |
-| *Location* (B+I) | 1.038 | 1.875 | +837 (+81%) |
-| *Time* (B+I) | 664 | 1.107 | +443 (+67%) |
-| *Event* (B+I) | 317 | 943 | +626 (+198%) |
-| **Total token** | **116.353** | **175.588** | **+59.235 (+51%)** |
-
-[SISIPKAN GAMBAR 4.6 - Distribusi Label Token Data Latih Sebelum dan Sesudah Augmentasi]
-<!-- file: data/result/analysis/bab4_viz/augmentasi_distribusi.png -->
-
-Gambar 4.6 memvisualkan Tabel 4.9 dalam dua panel agar kelas *O* yang jauh lebih besar tidak menenggelamkan kelas entitas. Panel (a) khusus membandingkan jumlah token *O* sebelum dan sesudah augmentasi (108.815 menjadi 163.352), sedangkan panel (b) menampilkan keempat kelas entitas pada skala yang sama dan menonjolkan bahwa *Event* tumbuh paling tajam secara relatif (naik 198 persen) meskipun jumlah absolutnya tetap paling kecil. Pemisahan ini sekaligus memperlihatkan bahwa augmentasi menambah seluruh kelas, bukan mengurangi *O*.
-
-Pada tingkat entitas (dihitung dari penanda awal *B-*), jumlah *mention* naik dari 4.247 menjadi 6.780. Kenaikan terbesar justru terjadi pada kelas minoritas, yaitu *Event* melonjak dari 167 ke 495 (naik 196 persen) dan *Time* dari 188 ke 299 (naik 59 persen), sedangkan *Person* dan *Location* yang sudah banyak hanya naik 47 dan 75 persen. Pola inilah yang menjelaskan lonjakan F1 *Event* dan *Time* pada Tabel 4.3: model memperoleh jauh lebih banyak ragam contoh untuk dua kelas yang sebelumnya paling langka.
-
-Yang menonjol dari Tabel 4.9 adalah bahwa kelas *O* justru bertambah (dari 108.815 menjadi 163.352), bukan berkurang, dan proporsinya terhadap seluruh token nyaris tidak berubah (93,5 persen menjadi 93,0 persen). Hal ini disengaja. Ada beberapa alasan mengapa kelas *O* tidak dikurangi (*undersampling*) meskipun jumlahnya mendominasi. Pertama, persoalan NER adalah pelabelan berurutan (*sequence labeling*), bukan klasifikasi sampel yang berdiri sendiri. Token *O* bukan "data berlebih" yang dapat dibuang, melainkan kata-kata penghubung di antara entitas dalam satu kalimat. Membuang token *O* berarti merusak struktur kalimat dan urutan BIO, sehingga konteks yang justru dibutuhkan model untuk menentukan batas entitas ikut hilang. Kedua, mengurangi *O* berarti membuang kalimat yang sedikit atau tidak mengandung entitas, padahal kalimat semacam itu adalah contoh negatif yang berharga karena mengajari model kata-kata apa yang bukan entitas. Bukti dampak buruknya sudah terlihat dalam uji coba ini sendiri pada skenario *weighted cross-entropy*, yang menggeser model menjauh dari *O* sehingga over-deteksi (*false positive* naik ke 69 token) dan *precision* turun (Tabel 4.2 dan 4.3); *undersampling O* diperkirakan menimbulkan efek serupa, yaitu model menjadi terlalu mudah menebak entitas. Ketiga, distribusi data latih sebaiknya mencerminkan teks nyata, dan pada teks Sirah sekitar sembilan dari sepuluh token memang bukan entitas, sehingga bila *O* dikurangi secara artifisial model dilatih pada distribusi yang tidak realistis dan berisiko over-deteksi saat dipakai pada teks sebenarnya (pergeseran distribusi).
-
-Oleh karena itu, strategi yang dipilih adalah menambah contoh kelas minoritas (*oversampling* lewat augmentation), bukan mengurangi kelas mayoritas (*undersampling O*). Pendekatan ini menaikkan keterwakilan *Event* dan *Time* tanpa mengorbankan konteks *O*, dan hasilnya konsisten dengan Tabel 4.3, yaitu F1 kelas minoritas naik sementara *precision* keseluruhan tetap terjaga, berbeda dengan *weighted cross-entropy*. Mempertahankan *O* dalam jumlah besar juga bukan kerugian, sebab memprediksi *O* dengan benar adalah inti dari menghindari *false positive*; pada *confusion matrix* Gambar 4.4, sel *O*-ke-*O* yang besar (sekitar 46.100 token pada data uji) justru merupakan keberhasilan model mengenali kata bukan-entitas, dan kesalahan yang berarti terkumpul pada keputusan deteksi *O*-ke-entitas, bukan pada banyaknya jumlah *O*.
-
----
-
-## 4.3 Uji Coba 2: Komparasi Model
-
-Uji coba kedua bertujuan menguji pengaruh pemilihan model pra-latih (*backbone*) terhadap kualitas pengenalan entitas, yaitu mencari tahu model berbahasa Indonesia mana yang paling sesuai untuk teks Sirah ketika dipakai dalam alur *iterative self-training*. Lima model dibandingkan: IndoBERT *uncased* (`indolem/indobert-base-uncased`, *baseline*), `cahya/bert-base-indonesian-1.5G`, DistilBERT Indonesia, IndoBERT *cased*, dan RoBERTa Indonesia. <!-- [PERIKSA] pastikan nama persis tiap model pembanding sesuai checkpoint yang dijalankan. -->
-
-Pengujian dilakukan dengan menjalankan pipeline yang identik untuk kelima model, yaitu data latih, ambang *pseudo-labelling*, dan *hyperparameter* yang sama, sehingga satu-satunya yang berbeda adalah *backbone*-nya. Seluruh model dievaluasi pada data uji yang sama dengan Uji Coba 1 (254 *chunk*, 49.739 token, 1.969 entitas) dengan pustaka seqeval tingkat entitas, mengikuti prosedur Kode Semu 3.12. Metrik utama yang digunakan adalah *F1-score* karena mampu memberikan evaluasi yang seimbang antara *precision* (ketepatan) dan *recall* (kelengkapan), serta dilaporkan dalam bentuk *micro* (agregat seluruh entitas) maupun *macro* (rata-rata antar kelas, lebih sensitif terhadap kelas minoritas); selain itu, untuk model yang hasilnya menyimpang, ditambahkan dua alat bantu diagnosis, yaitu trajektori F1 dari *checkpoint* awal sampai iterasi terakhir (untuk memisahkan masalah pelatihan awal dari efek *self-training*) dan hitungan kesalahan batas (*boundary* B/I) tingkat token (untuk melihat di mana defisit terjadi). Sebagaimana Uji Coba 1, hasil disajikan dalam dua tabel, yaitu metrik agregat (*Precision*, *Recall*, dan F1-score mikro) pada Tabel 4.10 dan F1-score per entitas pada Tabel 4.11.
-
-[SISIPKAN TABEL 4.10 - Precision, Recall, dan F1-score Agregat Uji Coba 2]
-
-| Model | Precision | Recall | F1-score (mikro) |
-|-------|----------:|-------:|-----------------:|
-| IndoBERT *uncased* (*baseline*) | 0,9524 | 0,9548 | 0,9536 |
-| cahya *uncased* | 0,9388 | 0,9187 | 0,9286 |
-| DistilBERT *uncased* | 0,9502 | 0,9208 | 0,9353 |
-| IndoBERT *cased* | 0,7289 | 0,8329 | 0,7774 |
-| RoBERTa | 0,7654 | 0,8532 | 0,8069 |
-
-[SISIPKAN TABEL 4.11 - F1-score per Entitas Uji Coba 2]
-
-| Model | F1 PERSON | F1 LOCATION | F1 EVENT | F1 TIME | macro F1 |
-|-------|----------:|------------:|---------:|--------:|---------:|
-| IndoBERT *uncased* (*baseline*) | 0,9690 | 0,9530 | 0,9342 | 0,7983 | 0,9136 |
-| cahya *uncased* | 0,9493 | 0,9232 | 0,9315 | 0,7203 | 0,8811 |
-| DistilBERT *uncased* | 0,9581 | 0,9232 | 0,9116 | 0,7479 | 0,8852 |
-| IndoBERT *cased* | 0,7843 | 0,8717 | 0,5549 | 0,5461 | 0,6893 |
-| RoBERTa | 0,8135 | 0,8766 | 0,7654 | 0,5404 | 0,7490 |
-
-[SISIPKAN GAMBAR 4.7 - F1-score Agregat Lima Model Uji Coba 2]
-<!-- file: data/result/analysis/bab4_viz/f1_uc2_agregat.png -->
-
-Gambar 4.7 meringkas Tabel 4.10 secara visual dan memperlihatkan keterbelahan dua kelompok, yaitu tiga model *uncased* (dengan IndoBERT *uncased* disorot sebagai *baseline*) berdiri tinggi dan rapat di kisaran F1 0,93 sampai 0,95, sedangkan IndoBERT *cased* dan RoBERTa anjlok jauh.
-
-[SISIPKAN GAMBAR 4.8 - F1-score per Kelas Lima Model Uji Coba 2]
-<!-- file: data/result/analysis/bab4_viz/f1_uc2_perkelas.png -->
-
-Gambar 4.8 meringkas Tabel 4.11 per kelas dan menunjukkan bahwa keruntuhan kedua model bermasalah terjadi terutama pada *Person* dan *Time* yang anjlok dalam (*Person* ke 0,78 sampai 0,81 dari 0,94 sampai 0,96, dan *Time* ke sekitar 0,54 dari 0,84), sementara *Location* justru relatif bertahan tinggi (sekitar 0,87), bukan runtuh merata pada semua kelas. Pola yang justru menimpa entitas yang lazimnya banyak kata (*Person* dan *Time*) sambil menyisakan entitas satu kata (*Location*) ini menjadi petunjuk awal bahwa masalahnya bersifat teknis dan bukan kemampuan model.
-
-Tabel 4.10 memperlihatkan pola yang terbelah dua. Tiga model *uncased* (IndoBERT, cahya, dan DistilBERT) stabil pada F1-score mikro sekitar 0,93 sampai 0,95 dengan IndoBERT *uncased* tetap yang terbaik, sedangkan dua model lain anjlok jauh, yaitu IndoBERT *cased* (0,7774) dan RoBERTa (0,8069) yang terpaut sekitar lima belas sampai delapan belas poin. Selisih sebesar ini wajib dijelaskan dan bukan sekadar dilaporkan, sebab penyajian angka tanpa penjelasan mudah disalahartikan sebagai bukti bahwa model *cased* atau RoBERTa "lebih buruk" untuk NER. Investigasi yang dilakukan justru menunjukkan kebalikannya, bahwa anomali ini bukan berasal dari kemampuan model, melainkan dari masalah teknis penyelarasan label pada pipeline yang memang disetel untuk model *uncased*.
-
-Pembelahan dua kelompok ini paling gamblang terlihat ketika *confusion matrix* tingkat token kelima model disandingkan pada Gambar 4.9. Tiga model *uncased* (baris atas, yaitu IndoBERT, cahya, dan DistilBERT) berbentuk hampir identik dengan model sehat pada Uji Coba 1, yaitu blok antar-tipe entitas nyaris kosong dan kesalahan hanya menetes tipis pada baris dan kolom *O*, dengan sel *O* yang diprediksi *Person* berkisar 23 sampai 39 token. Sebaliknya, dua model bermasalah (baris bawah, yaitu IndoBERT *cased* dan RoBERTa) langsung tampak lebih gelap dan berantakan, sebab sel *O* yang diprediksi *Person* melonjak ke 200 dan 165 token sementara sel *Person* yang diprediksi *O* ke 149 dan 136 token, jauh melampaui ketiga model sehat. Kontras yang dapat diringkas sebagai tiga matriks rapi di atas dan dua matriks rusak di bawah ini memperlihatkan anomali sebagai gejala visual bahkan sebelum angkanya dibedah, sehingga pembahasan selanjutnya difokuskan pada satu model bermasalah, yaitu IndoBERT *cased*, sebagai contoh yang ditelaah paling dalam.
-
-[SISIPKAN GAMBAR 4.9 - Confusion Matrix Token-level Lima Model Uji Coba 2]
-<!-- file: data/result/analysis/error_viz/by_group/s2_confusion.png -->
-
-Besaran dan komposisi error kedua kelompok model itu terangkum dari empat sudut pada Gambar 4.10. Panel total error (kiri-atas) memperlihatkan anomali tanpa bisa salah baca, yaitu IndoBERT *cased* (774 token) dan RoBERTa (677 token) menjulang jauh di atas tiga model *uncased* yang berkisar 165 sampai 263 token. Panel *false negative* per kelas (kanan-atas) dan *false positive* per kelas (kiri-bawah) menunjukkan pembengkakan terjadi serentak pada entitas terlewat maupun over-deteksi, dengan *Person* (biru) mendominasi jumlah absolut karena memang kelas terbanyak (*false positive Person* melonjak ke 200 pada *cased* dan 165 pada RoBERTa, *false negative Person* ke 149 dan 136) dan *Time* (ungu) menyumbang porsi mencolok pada kedua sisi. Panel *FN-rate* per kelas (kanan-bawah) paling tajam memperlihatkan beban pada kelas minoritas, sebab pada *cased* dan RoBERTa entitas *Event* dan *Time* terlewat pada tingkat jauh lebih tinggi dibanding ketiga model *uncased* yang sehat. Pola ini, yaitu error yang meledak menyeluruh dan paling memberatkan kelas yang contohnya sedikit, kemudian ditelusuri akarnya melalui tiga bukti berikut.
-
-[SISIPKAN GAMBAR 4.10 - Panel Perbandingan Error Lima Model Uji Coba 2 (total, FN, FP, dan FN-rate per kelas)]
-<!-- file: data/result/analysis/error_viz/by_group/s2_compare.png -->
-
-Kesimpulan tersebut bersandar pada tiga bukti yang saling menguatkan. Pertama, anomali ini bukan kerusakan akibat *self-training*, karena trajektori F1-score dari *checkpoint* awal (*base*) sampai iterasi terakhir justru naik tipis sebagaimana ditunjukkan pada Tabel 4.12, yaitu IndoBERT *cased* bergerak dari 0,7608 ke 0,7770 dan RoBERTa dari 0,7836 ke 0,8068 (pada data uji terkoreksi kedua nilai akhir praktis sama, yaitu 0,7774 dan 0,8069). Seandainya *self-training* yang merusak, F1-score seharusnya menurun seiring iterasi, sehingga fakta kenaikan ini menandakan defisit sudah ada sejak pelatihan pertama dan bukan akibat *pseudo-labelling*. Kedua, defisit ini tidak merata melainkan menimpa entitas yang lazimnya terdiri atas banyak kata, yaitu *Person* dan *Time*, sedangkan entitas yang umumnya satu kata bertahan. Tabel 4.11 menunjukkan F1-score *Person* untuk *cased* dan RoBERTa anjlok ke 0,78 sampai 0,81 (dari 0,94 sampai 0,96 pada *uncased*), dan F1-score *Time* bahkan runtuh paling dalam ke sekitar 0,54 (dari 0,84), sementara F1-score *Location* tetap di sekitar 0,87, jauh lebih tinggi daripada *Person* dan *Time* dan mendekati *uncased*. Penurunan *Time* yang paling tajam itu memang perlu dibaca dengan hati-hati karena jumlah entitasnya kecil (118) sehingga F1-nya mudah berayun, tetapi arah penurunannya searah dengan *Person* dan keduanya sama-sama entitas banyak kata, sehingga polanya menunjuk pada satu akar yang sama, bukan kebetulan pada nama orang saja. Ketiga, defisit ini disertai ledakan kesalahan batas (*boundary* B/I), sebab pada model *uncased* kesalahan *boundary* hanya 7 sampai 12 token sedangkan pada *cased* melonjak ke 138 token dan pada RoBERTa ke 133 token. Yang menentukan, kesalahan batas itu hampir seluruhnya jatuh pada kedua kelas banyak-kata: pada *cased* 122 token pada *Person* dan 13 pada *Time* (hanya 3 sisanya pada *Event*), pada RoBERTa 114 pada *Person* dan 13 pada *Time*, sementara *Location* dan *Event* nyaris tak menyumbang kesalahan batas (paling banyak lima token). Distribusi yang hampir seluruhnya mengikuti garis satu-kata melawan banyak-kata ini menjadi penegas terkuat bahwa akar masalahnya adalah penyelarasan penanda batas B/I pada entitas banyak kata, bukan kelemahan model pada tipe entitas tertentu.
-
-[SISIPKAN TABEL 4.12 - Trajektori F1 Self-Training Model Anomali (base sampai iterasi-6)]
-
-| Model | F1 *base* | F1 iter-2 | F1 iter-4 | F1 iter-6 |
-|-------|----------:|----------:|----------:|----------:|
-| IndoBERT *cased* | 0,7608 | 0,7821 | 0,7772 | 0,7770 |
-| RoBERTa | 0,7836 | 0,8018 | 0,7945 | 0,8068 |
-
-<!-- Trajektori dihitung pada data uji ASLI (sebelum koreksi ground-truth), karena hanya iterasi terakhir yang memiliki berkas token salah untuk direkonstruksi ulang di GT terkoreksi. Nilai iter-6 pada GT terkoreksi (0,7774 dan 0,8069) praktis identik dengan kolom iter-6 di atas, dan yang relevan di sini semata arah trajektori yang NAIK (bukti defisit ada sejak base, bukan akibat self-training). -->
-
-
-Pola ini konsisten dengan **misalignment label kata-ke-subword**: entitas banyak kata paling rentan ketika penandaan B/I bergeser. *Person* paling sering berupa nama banyak kata (*Abdul Muththalib*, *Amr bin Luhay*) dan *Time* di teks Sirah juga lazim berupa rangkaian panjang (*hari Senin malam tanggal 21 dari bulan Ramadhan*), sehingga keduanya paling terdampak, sedangkan *Location* yang umumnya satu kata (*Makkah*, *Madinah*) nyaris tak tersentuh. Bahwa hitungan absolut kesalahan batas tetap didominasi *Person* (122 dari 138 token pada *cased*) bukan berarti *Time* aman, melainkan karena *Person* adalah kelas banyak-kata yang jauh paling sering muncul (1.302 berbanding 118 entitas); pada *Time* kerusakan serupa lebih banyak terbaca sebagai runtuhnya F1 relatif dan ledakan *false positive* daripada sebagai jumlah token batas yang besar. Pembeda kedua model ini dari tiga model *uncased* yang sehat adalah skema tokenisasinya (IndoBERT *cased* memakai WordPiece *cased*; RoBERTa memakai *byte-level BPE*), sementara pipeline disetel dan diuji untuk WordPiece *uncased*. Hipotesis terkuat: fungsi penyelarasan label kata-ke-subword tidak menangani tokenizer *cased*/BPE dengan benar, sehingga model dilatih pada label yang sedikit bergeser sejak awal. <!-- [PERIKSA] Status: ini hipotesis yang belum diverifikasi di level kode. Yang sudah terbukti: (1) bukan kerusakan self-training, (2) defisit ada sejak base, (3) terpusat di PERSON multi-kata + boundary. Verifikasi lanjutan: inspeksi fungsi tokenize_and_align_labels (word_ids/is_split_into_words) untuk tokenizer cased & RoBERTa. JANGAN menyimpulkan "cased/RoBERTa lebih buruk untuk NER Sirah" sebelum verifikasi ini. -->
-
-Dari sisi anatomi kesalahan, ketiga model *uncased* memperlihatkan pola error yang sama dengan Uji Coba 1, yaitu didominasi *false positive* dan *false negative* dengan misklasifikasi tipe dan *boundary* yang kecil. Pada model *cased* dan RoBERTa, selain *boundary* yang meledak, misklasifikasi tipe juga lebih banyak (39 token pada keduanya) dan sebagian besarnya menyebar ke pasangan yang melibatkan *Person* atau *Location*, sehingga sekali lagi menunjuk pada kerusakan yang terpusat pada penanganan entitas banyak kata, terutama nama orang. Kontras antara model sehat dan model anomali paling jelas terlihat pada kesalahan batas di nama orang banyak kata, dirinci per token pada Tabel 4.13 dan Tabel 4.14. Pada model *uncased* yang sehat, kesalahan batas sangat sedikit (hanya 8 token pada *augmentation*) dan kebanyakan jatuh pada *Time* (lihat Tabel 4.8), sedangkan pada IndoBERT *cased* dan RoBERTa kesalahan ini meledak (133 sampai 138 token, 122 dan 114 di antaranya pada *Person*) dan terpusat pada nama orang.
-
-[SISIPKAN TABEL 4.13 - Kesalahan Batas pada Person, IndoBERT cased (chunk 000013-004)]
-
-| Token | Ground-truth | Prediksi | |
-|-------|--------------|----------|---|
-| dari | O | O | |
-| Amr | *B-PERSON* | *I-PERSON* | ✗ |
-| bin | *I-PERSON* | *I-PERSON* | |
-| Syu'aib | *I-PERSON* | *B-PERSON* | ✗ |
-| , | O | O | |
-
-Nama "Amr bin Syu'aib" yang seharusnya satu entitas *Person* utuh (*B-I-I*) terpecah oleh model: awal nama "Amr" justru ditandai sebagai lanjutan (*I*) sehingga rangkaiannya menjadi tak berpangkal, sementara "Syu'aib" di ujung nama malah ditandai sebagai awal entitas baru (*B*). Penanda batas *B* dan *I* bergeser meskipun tipenya (*Person*) tetap benar.
-
-[SISIPKAN TABEL 4.14 - Kesalahan Batas pada Person, RoBERTa (chunk 000007-006)]
-
-| Token | Ground-truth | Prediksi | |
-|-------|--------------|----------|---|
-| dan | O | O | |
-| Murrah | *B-PERSON* | *I-PERSON* | ✗ |
-| bin | *I-PERSON* | *I-PERSON* | |
-| Auf | *I-PERSON* | *I-PERSON* | |
-
-Awal nama "Murrah" yang seharusnya penanda awal entitas (*B*) justru ditandai sebagai lanjutan (*I*), sehingga seluruh rangkaian "Murrah bin Auf" menjadi urutan *I* tanpa pangkal *B*, pola khas ketika penanda awal nama banyak-kata hilang.
-
-*Confusion matrix* IndoBERT *cased* ditunjukkan pada Gambar 4.11. Dibandingkan model sehat pada Gambar 4.4, kebocoran pada penanganan *Person* langsung terlihat: sel *O* yang diprediksi *Person* melonjak ke 200 token dan *Person* yang diprediksi *O* ke 149 token, jauh di atas *augmentation* yang hanya 12 dan 15. Kekeliruan antar-tipe pun naik menjadi 39 token yang menyebar pada sel-sel kecil di sekitar *Person* dan *Location*, berbanding hanya 4 token pada model sehat. Satu hal penting saat membaca gambar ini, matriksnya bersifat tingkat-tipe sehingga penanda *B* dan *I* digabung; akibatnya ledakan kesalahan batas *B/I* (sekitar 138 token yang menjadi gejala utama anomali) tidak muncul sebagai sel tersendiri melainkan tersembunyi di dalam hitungan *Person* yang dianggap benar. Dengan kata lain, Gambar 4.11 memperlihatkan sisi deteksi dan tipe dari defisit *Person*, sedangkan komponen batasnya terbaca terpisah pada hitungan token yang dibahas sebelumnya.
-
-[SISIPKAN GAMBAR 4.11 - Confusion Matrix IndoBERT cased (anomali)]
-<!-- file: data/result/analysis/gt_corrected_2026_07_10/confusion/B-indobert-cased.png (GT-terkoreksi done_newest; path lama error_viz/per_skenario/indobert-cased/... = grupB 17 Juni, JANGAN dipakai) -->
-
----
-
-## 4.4 Uji Coba 3: Modul POS-tag
-
-Uji coba ketiga bertujuan menguji apakah penambahan fitur *Part-of-Speech tagging* (POS-tag), yaitu informasi kelas kata seperti kata benda atau kata kerja, dapat membantu model mengenali batas dan tipe entitas dengan lebih baik. Hipotesisnya, mengetahui suatu kata berkategori kata benda dapat menjadi petunjuk tambahan bahwa kata itu berpeluang menjadi entitas. Untuk mengujinya, model tanpa fitur POS-tag (*baseline*) dibandingkan dengan model yang menambahkan POS-tag sebagai fitur pendamping pada masukan.
-
-Pengujian dilakukan dengan melatih kedua varian pada data dan prosedur yang sama, lalu mengevaluasinya pada data uji yang identik dengan dua uji coba sebelumnya (254 *chunk*, 49.739 token, 1.969 entitas). Metrik utama yang digunakan adalah *F1-score* karena mampu memberikan evaluasi yang seimbang antara *precision* (ketepatan) dan *recall* (kelengkapan), serta dilaporkan dalam bentuk *micro* maupun *macro*; metrik ini dilengkapi jumlah kesalahan tingkat token sebagai pembanding langsung banyaknya error. Kedua varian dievaluasi melalui prosedur seqeval yang identik pada data uji yang sama, sehingga angkanya langsung sebanding. Mengikuti format dua uji coba sebelumnya, hasil disajikan pada Tabel 4.15 untuk metrik agregat beserta jumlah error tingkat token dan Tabel 4.16 untuk F1-score per entitas.
-
-[SISIPKAN TABEL 4.15 - Precision, Recall, F1-score Agregat, dan Jumlah Error Uji Coba 3]
-
-| Skenario | Precision | Recall | F1-score (mikro) | Error token |
-|----------|----------:|-------:|-----------------:|------------:|
-| *Baseline* | 0,9524 | 0,9548 | 0,9536 | 165 |
-| POS-tag | 0,9628 | 0,9467 | 0,9547 | 164 |
-
-[SISIPKAN TABEL 4.16 - F1-score per Entitas Uji Coba 3]
-
-| Skenario | F1 PERSON | F1 LOCATION | F1 EVENT | F1 TIME | macro F1 |
-|----------|----------:|------------:|---------:|--------:|---------:|
-| *Baseline* | 0,9690 | 0,9530 | 0,9342 | 0,7983 | 0,9136 |
-| POS-tag | 0,9693 | 0,9466 | 0,9333 | 0,8376 | 0,9217 |
-
-<!-- Angka POS-tag & baseline UC3 = ground-truth uji TERKOREKSI (recompute_gt_corrected_results.md: POS-tag micro 0,9547 / baseline 0,9536; per-label di tabel; error breakdown error_breakdown_gt_corrected.md: POS-tag total 164 FP40/FN106/MIS10/BND8, baseline 165 FP55/FN98/MIS5/BND7). Skrip: recompute_gt_corrected.py + error_breakdown_gt_corrected.py. Catatan historis: pada test ASLI (sebelum koreksi), POS-tag di-inference LANGSUNG via eval_postag_direct.py (micro 0,9439, memvalidasi metode rekonstruksi lama vs 0,9432); angka lama itu kini superseded oleh GT terkoreksi. -->
-
-[SISIPKAN GAMBAR 4.12 - F1-score Agregat Baseline vs Modul POS-tag Uji Coba 3]
-<!-- file: data/result/analysis/bab4_viz/f1_uc3_agregat.png -->
-
-Gambar 4.12 meringkas Tabel 4.15 dan menunjukkan F1 mikro yang nyaris berimpit antara *baseline* dan POS-tag (dengan macro POS-tag hanya sedikit lebih tinggi), sehingga secara agregat tidak tampak perbaikan yang berarti dari penambahan POS-tag.
-
-[SISIPKAN GAMBAR 4.13 - F1-score per Kelas Baseline vs Modul POS-tag Uji Coba 3]
-<!-- file: data/result/analysis/bab4_viz/f1_uc3_perkelas.png -->
-
-Gambar 4.13 meringkas Tabel 4.16 per kelas dan memperlihatkan perubahan yang tidak konsisten arahnya, yaitu *Time* naik sementara *Location* justru turun dan *Person* maupun *Event* nyaris tak bergerak, sehingga secara visual pun penambahan POS-tag tidak memberi perbaikan yang sistematis.
-
-Secara ringkas, modul POS-tag tidak memberikan perbaikan yang berarti. F1-score mikro POS-tag (0,9547) praktis setara dengan *baseline* (0,9536), unggul hanya 0,0011 poin yang masih berada jauh di dalam rentang variansi antar-*run* sehingga tidak dapat ditafsirkan sebagai perbedaan yang bermakna. Perubahan per kelas pada Tabel 4.16 pun tidak konsisten arahnya, sebab F1-score *Time* naik (0,7983 ke 0,8376) dan *Event* praktis tetap, sementara *Location* justru turun (0,9530 ke 0,9466) dan *Person* nyaris tak berubah, sehingga tidak ada arah perbaikan yang sistematis. Berbeda dari perkiraan awal, penambahan POS di sini justru menggeser model ke arah *precision* lebih tinggi (0,9628 berbanding 0,9524) dengan *recall* sedikit menurun (0,9467 berbanding 0,9548); artinya model menjadi sedikit lebih berhati-hati menebak entitas, bukan menjadi lebih tepat mengenalinya. Kenaikan *macro* F1 yang tipis (0,9136 ke 0,9217) pun hampir seluruhnya berasal dari *Time*, kelas bersupport kecil (118 entitas) yang F1-nya mudah berayun, sehingga lebih mungkin mencerminkan variasi acak daripada manfaat sistematis fitur POS.
-
-Penting ditegaskan bahwa hasil ini diperoleh dari fitur POS yang asli, bukan *placeholder*. Pemeriksaan atas berkas data yang benar-benar dipakai pada *run* POS-tag (`data_with_pos_20260610` dan dataset *retraining* skenario ini) menunjukkan kolom POS terisi 17 kategori Universal Dependencies yang beragam dan selaras dengan token, yaitu NOUN, VERB, PROPN, PRON, ADP, dan seterusnya, dengan 1.131 dari 1.189 token bertanda *Person* berkategori PROPN. Temuan eksplorasi data (EDA) sebelumnya yang menyebut kolom `pos_tag` berisi nilai *placeholder* "NN" merujuk pada berkas *dataset* utama versi lama dan tidak berlaku untuk berkas POS yang dibuat khusus bagi uji coba ini. Dengan demikian, kegagalan modul POS-tag bukan artefak fitur palsu, melainkan hasil yang sah, sehingga penyebab yang paling masuk akal adalah bahwa informasi POS sebagian besar redundan dengan apa yang sudah dipelajari IndoBERT dari konteks: sebagai model bahasa berbasis konteks, IndoBERT pada praktiknya telah menyerap petunjuk kelas kata sehingga menambahkan POS secara eksplisit tidak memberi sinyal baru yang berarti untuk membedakan entitas.
-
-Dari sisi anatomi kesalahan, pola error skenario POS-tag tetap sama dengan *baseline*, yaitu didominasi keputusan deteksi (*false positive* dan *false negative*), dengan misklasifikasi tipe dan kesalahan batas yang kecil. Rinciannya justru membalik pergeseran yang semula diperkirakan: dari 164 token salah, *false negative* (entitas terlewat) menjadi kategori terbanyak dengan 106 token atau 65 persen, *false positive* (over-deteksi) hanya 40 token atau 24 persen, sedangkan misklasifikasi tipe 10 token (6 persen) dan kesalahan batas 8 token (5 persen), sehingga sama seperti skenario lain kesalahan terpusat pada keputusan deteksi, bukan pada pembedaan jenis entitas. Dibandingkan *baseline* yang *false positive*-nya 55 token dan *false negative* 98 token, penambahan POS justru menurunkan *false positive* menjadi 40 sekaligus menaikkan *false negative* menjadi 106; inilah wujud konkret dari *precision* yang naik tetapi *recall* yang turun, yaitu model menjadi lebih berhati-hati menebak entitas sehingga lebih sedikit salah tebak tetapi lebih banyak entitas terlewat. Tambahan entitas terlewat itu paling banyak jatuh pada *Location* (43 token, dari 33 pada *baseline*), tampak misalnya pada nama tempat langka seperti "Pakistan" yang seharusnya berlabel *B-LOCATION* tetapi diprediksi *O*, sejalan dengan penurunan tipis F1 *Location* pada Tabel 4.16.
-
-Untuk memperlihatkan kategori error terbesar itu secara konkret, yaitu entitas terlewat (*false negative*), Tabel 4.17 merinci per token sebuah penggalan dari *chunk* 000002-004. Nama tempat "*Pakistan*" yang menurut acuan sebuah entitas *Location* justru diprediksi *O* sehingga terlewat, meskipun konteks kalimatnya menyebut nama wilayah. Pola ini menjelaskan mengapa kelas *Location* dan *Time* paling banyak menyumbang *false negative* pada skenario POS-tag, sebab nama tempat langka dan rangkaian waktu yang jarang muncul pada data latih mudah gagal dikenali ketika model bergeser menjadi lebih berhati-hati.
-
-[SISIPKAN TABEL 4.17 - Contoh Entitas Terlewat (False Negative), chunk 000002-004]
-
-| Token | Ground-truth | Prediksi | |
-|-------|--------------|----------|---|
-| pula | *O* | *O* | |
-| ke | *O* | *O* | |
-| Pakistan | *B-LOCATION* | *O* | ✗ |
-| , | *O* | *O* | |
-| dan | *O* | *O* | |
-
-*Confusion matrix* skenario POS-tag ditunjukkan pada Gambar 4.14. Strukturnya menyerupai model sehat, yaitu kesalahan terkonsentrasi pada baris dan kolom *O* sementara kebingungan antar-tipe entitas tetap kecil (hanya sekitar 10 token). Dibandingkan *baseline*, sel over-deteksi justru mengecil, terutama *O* yang diprediksi *Person* (28 token berbanding 38 pada *baseline*), sedangkan sel entitas yang diprediksi *O* membesar, terutama *Location* yang terlewat (43 token berbanding 33). Pola ini sejalan dengan Tabel 4.15 yang menunjukkan *precision* POS-tag lebih tinggi tetapi *recall* lebih rendah, yaitu fitur POS membuat model lebih berhati-hati sehingga lebih sedikit salah tebak tetapi lebih banyak entitas terlewat.
-
-[SISIPKAN GAMBAR 4.14 - Confusion Matrix Skenario POS-tag]
-<!-- file: data/result/analysis/gt_corrected_2026_07_10/confusion/S5-POS-tag.png (GT-terkoreksi done_newest; path lama error_viz/per_skenario/POS-tag/... = grupB 17 Juni, JANGAN dipakai) -->
-
-Perbandingan *baseline* dan POS-tag dari empat sudut dirangkum pada Gambar 4.15. Panel total error (kiri-atas) menunjukkan keduanya nyaris sama banyak (POS-tag 164 berbanding *baseline* 165 token). Yang lebih informatif adalah dua panel komposisi: panel *false negative* per kelas (kanan-atas) memperlihatkan POS-tag justru melewatkan lebih banyak entitas (106 berbanding 98 token, tambahan terbesar pada *Location*), sedangkan panel *false positive* per kelas (kiri-bawah) memperlihatkan kebalikannya, yaitu over-deteksi POS-tag mengecil (40 berbanding 55 token). Kedua panel ini adalah wujud visual paling langsung dari pertukaran *precision* yang naik tetapi *recall* yang turun, yaitu model menjadi lebih berhati-hati sehingga lebih sedikit salah tebak, tetapi dengan ongkos lebih banyak entitas terlewat. Panel *FN-rate* per kelas (kanan-bawah) menunjukkan POS-tag tidak menurunkan tingkat terlewat kelas minoritas secara konsisten (*Time* sedikit membaik sementara *Location* justru memburuk), perubahan yang terlalu kecil dan tidak searah untuk disebut manfaat bersih. Dengan demikian, panel ini memperkuat kesimpulan bahwa modul POS-tag tidak memberikan perbaikan bersih.
-
-[SISIPKAN GAMBAR 4.15 - Panel Perbandingan Error Baseline vs POS-tag Uji Coba 3 (total, FN, FP, dan FN-rate per kelas)]
-<!-- file: data/result/analysis/error_viz/by_group/s3_compare.png -->
-
-### Rangkuman ketiga uji coba dan pembahasan error lintas-skenario
-
-Menggabungkan ketiga uji coba, **konfigurasi terbaik adalah IndoBERT *uncased* dengan *augmentation*** (micro F1 0,9756). Dua temuan error berlaku konsisten di semua skenario yang sehat. Pertama, **kedua kelas minoritas (*Event* 75 dan *Time* 118 entitas) tetap paling sulit** dibanding *Location* (474) dan *Person* (1.302), dengan *Time* sebagai kelas terlemah di hampir semua skenario karena entitasnya kerap berupa rangkaian banyak kata dan terpengaruh artefak OCR sehingga pencocokan rentang penuh paling sulit; kelangkaan contoh (*few-shot*) tetap menjadi faktor dominan kesalahan, dan augmentation berhasil justru karena menambah contoh kedua kelas ini, mengangkat F1 *Time* paling tajam (0,7983 ke 0,9038). Kedua, **misklasifikasi tipe yang sedikit itu didominasi pasangan *Location* dan *Event***, karena sejumlah nama identik berfungsi ganda sebagai tempat sekaligus peristiwa (*Uhud*, *Badr*, *Hudaibiyah*). Ini ambiguitas semantik nyata pada teks Sirah, bukan kelemahan model. Sebagai keterbatasan, efek *chunking* tidak diuji melalui *ablation* terpisah; pemeriksaan tak langsung menunjukkan hanya sebagian kecil error berada di tepi *chunk*, sehingga pemotongan konteks bukan penyebab utama error.
-
----
-
-## 4.5 Evaluasi Knowledge Graph
-
-Evaluasi *knowledge graph* mencakup tiga hal, yaitu konstruksi graf sebagai produk akhir, analisis struktur jaringan dengan *Social Network Analysis* (SNA) untuk menilai apakah struktur graf masuk akal terhadap narasi Sirah, serta pengujian fungsional melalui skenario kueri untuk menilai apakah graf dapat menjawab kebutuhan penelusuran. Analisis SNA dirancang menjawab delapan skenario pengujian (G1 sampai G8, Tabel 3.20), yaitu sentralitas tokoh (G1 dan G2), pengelompokan komunitas (G3), sentralitas peristiwa (G4), struktur jaringan keseluruhan (G5), studi kasus peristiwa (G6), peran lokasi (G7), dan keterlibatan lintas fase (G8). Skor sentralitas dan komunitas dihitung pada pipeline analisis (NetworkX), sedangkan bukti struktural di balik tiap skenario dapat ditelusuri langsung pada *knowledge graph* di Neo4j melalui berkas kueri reproduksi `sna_evidence_queries_bab4.cypher`.
-
-Analisis sentralitas tokoh dilakukan pada proyeksi jaringan antar tokoh (*Person*), yaitu dua tokoh dihubungkan jika terlibat pada peristiwa yang sama, ditambah relasi kekerabatan, persahabatan, dan permusuhan yang eksplisit. Agar analisis mengukur keterlibatan sosial dan bukan sekadar posisi dalam silsilah, cakupan graf dibatasi pada tokoh yang benar-benar terlibat pada minimal satu peristiwa yang dinarasikan; tokoh yang hanya muncul di dalam rantai keturunan (*nasab*) tanpa pernah terlibat peristiwa sengaja tidak dimasukkan ke analisis, sebab keterhubungan mereka semata berasal dari garis kekerabatan sehingga sentralitasnya menjadi artefak rantai, bukan keterlibatan nyata. Pembatasan ini bersifat penyaringan pada tahap analisis, sedangkan *knowledge graph* utuh dengan seluruh entitas tetap dipertahankan sebagai basis pengetahuan.
-
-### 4.5.1 Konstruksi Knowledge Graph
-
-*Knowledge graph* Sirah Nabawiyah dibangun dari hasil prediksi NER model pemenang (IndoBERT *uncased* dengan *augmentation*) terhadap seluruh korpus, lalu disimpan di Neo4j. Graf hasil konstruksi memuat 1.177 *node* entitas, yaitu 901 *Person*, 167 *Time*, 74 *Location*, dan 35 *Event*, ditambah 15 *node* *Period* sebagai penanda babak kronologis Sirah. Antar *node* terbentuk 693 relasi antar entitas, yaitu 312 `KELUARGA`, 229 `INVOLVED_IN` (keterlibatan tokoh pada peristiwa), 44 `OCCURRED_AT` (lokasi peristiwa), 46 `OCCURRED_ON` (waktu peristiwa), 33 `SAHABAT`, 17 `PRECEDES` (urutan kronologis antar peristiwa), dan 12 `MUSUH`, ditambah 35 relasi `IN_PERIOD` yang menautkan tiap peristiwa ke periodenya, sehingga *knowledge graph* memuat total 728 relasi. Tahap ekstraksi sebenarnya menghasilkan 705 catatan relasi, tetapi 12 di antaranya merupakan tiga serangkai (tokoh, jenis relasi, dan sasaran) yang identik namun ditemukan pada lokasi teks berbeda; keduabelas catatan itu digabung menjadi satu relasi dengan bukti ganda saat pemuatan ke Neo4j. Setiap relasi menyimpan metadata penelusuran (*provenance*) berupa potongan bukti, nomor halaman, dan penanda *chunk*, sehingga setiap fakta pada graf dapat dilacak balik ke teks sumber. Contoh potongan *knowledge graph* hasil konstruksi ditunjukkan pada Gambar 4.16, yaitu sub-graf salah satu peristiwa (Perang Badr) beserta tokoh, lokasi, dan waktu yang tertaut, sebagai gambaran bentuk graf secara umum.
-
-[SISIPKAN GAMBAR 4.16 - Contoh Knowledge Graph: Sub-graf Peristiwa Perang Badr]
-<!-- Screenshot Neo4j Browser. Reproduksi: `MATCH (e:Event {name:"Perang Badr"})-[r]-(n) RETURN e,r,n LIMIT 60` lalu tata layout & screenshot. Warna otomatis per-label (Person hijau-zaitun, Event biru, Location, Time). -->
-
-Dari graf utuh tersebut dibentuk proyeksi jaringan antar tokoh peserta peristiwa sebanyak 137 *node* (tokoh nasab-only dibuang sesuai pembatasan cakupan di atas) sebagai dasar analisis sentralitas dan komunitas. Statistik tingkat graf (G5) proyeksi ini ditunjukkan pada Tabel 4.18.
-
-<!-- Angka v4 (KG dari NER pemenang S4-augmentation). Graf Person = data/result/analysis/v4_scoped/ (proyeksi co-participation, PERSON nasab-only di-scope keluar via src/relation_extraction/clean_v4_hybrid_genealogy.py; KG kanonik nodes_v4_hybrid.csv utuh). Event layer di-dedup via clean_v4_events.py. Kueri reproduksi bukti SNA per skenario ada di data/result/neo4j/sna_evidence_queries_bab4.cypher. Skor degree/betweenness/PageRank + Louvain/modularitas dari src/analysis/sna_analysis.py + sna_graph_metrics.py --version v4_scoped. -->
-
-[SISIPKAN TABEL 4.18 - Statistik Jaringan Tokoh]
-
-| Metrik | Nilai |
-|--------|------:|
-| Jumlah *node* (*Person*) | 137 |
-| Jumlah *edge* | 1.853 |
-| *Density* | 0,1989 |
-| *Average clustering coefficient* (lokal) | 0,7100 |
-| *Transitivity* (global) | 0,7957 |
-| Jumlah komponen | 5 |
-| Ukuran komponen terbesar | 128 *node* (93,4%) |
-| Rata-rata panjang lintasan (komponen terbesar) | 1,96 |
-| Jumlah komunitas (Louvain) | 8 |
-| **Modularitas (Q, Louvain)** | **0,2831** |
-
-<!-- Angka dari data/result/analysis/v4_scoped/graph_metrics_v2.md & sna_summary.md (graf Person co-participation ber-scope, v4). Louvain proper Q=0,2831 (8 komunitas); pembanding greedy Q=0,2607 (10 komunitas) dan Girvan-Newman Q=0,0301; ARI(Louvain,greedy)=0,4737. Graf lebih padat & kecil dari v3 (208 node/density 0,085) karena di-scope ke tokoh peserta peristiwa; nasab-only dibuang. -->
-
-Proyeksi jaringan tokoh ini rapat dan saling terhubung erat, yaitu dari 137 tokoh terbentuk 1.853 sisi dengan *density* 0,199, koefisien pengelompokan lokal tinggi (0,71) dan *transitivity* global 0,796, serta komponen terbesar memuat 93% tokoh dengan rata-rata lintasan hanya 1,96 langkah. Angka-angka ini menandakan jaringan yang padat, tempat hampir semua tokoh saling terjangkau dalam dua langkah, sesuai sifat narasi Sirah yang berpusat pada segelintir peristiwa besar yang melibatkan banyak tokoh sekaligus. Kepadatan ini sekaligus menjadi konteks penting untuk membaca ukuran sentralitas dan komunitas pada subbab berikutnya, karena pada jaringan sepadat ini beberapa ukuran (terutama *betweenness*) kehilangan daya pembeda.
-
-### 4.5.2 Tokoh Berpengaruh
-
-Sentralitas tokoh dibaca dari dua sudut yang saling melengkapi, yaitu siapa yang paling sentral secara menyeluruh (G1) dan siapa yang menjadi jembatan penghubung antar-kelompok (G2). Untuk G1, sepuluh tokoh teratas beserta tiga ukuran sentralitas (*degree centrality*, *closeness centrality*, dan *PageRank*) ditunjukkan pada Tabel 4.19, diurutkan menurut *PageRank* sebagai ukuran kepentingan menyeluruh.
-
-[SISIPKAN TABEL 4.19 - Sepuluh Tokoh Teratas Sentralitas Tokoh (G1): Degree, Closeness, PageRank]
-<!-- Sumber: data/result/analysis/v4_scoped/sna_metrics.csv (graf Person co-participation ber-scope v4, 137 node). Diurut PageRank. -->
-
-| Rank | Tokoh | Degree | Closeness | PageRank |
-|---:|-------|------:|------:|------:|
-| 1 | Muhammad | 0,7941 | 0,7906 | 0,0509 |
-| 2 | Ali bin Abu Thalib | 0,5735 | 0,6516 | 0,0240 |
-| 3 | Abu Jahal | 0,5515 | 0,6516 | 0,0230 |
-| 4 | Umar bin Al-Khaththab | 0,5809 | 0,6552 | 0,0223 |
-| 5 | Abu Bakar | 0,5441 | 0,6376 | 0,0212 |
-| 6 | Abu Sufyan bin Harb | 0,5368 | 0,6376 | 0,0193 |
-| 7 | Aisyah | 0,5221 | 0,6275 | 0,0186 |
-| 8 | Abu Azzah | 0,5147 | 0,6242 | 0,0161 |
-| 9 | Khunais bin Hudzafah | 0,5147 | 0,6242 | 0,0161 |
-| 10 | Utsman bin Affan | 0,5221 | 0,6308 | 0,0158 |
-
-Ketiga ukuran G1 sepakat menempatkan Muhammad di puncak dengan jarak yang sangat lebar (*degree* 0,7941, yang berarti ia terhubung langsung ke sekitar 108 dari 137 tokoh, hampir 1,4 kali tokoh kedua), diikuti sahabat utama dan tokoh kunci. Sudut kedua (G2), yaitu *betweenness centrality* yang mengukur peran sebagai penghubung jalur terpendek antar tokoh, ditunjukkan pada Tabel 4.20; pada graf inti yang padat ini (rata-rata lintasan hanya 1,96) ukuran tersebut kurang tajam membedakan sehingga sebagian nama periferal ikut naik, namun tetap menegaskan dominasi Muhammad yang berjarak sangat lebar dari peringkat berikutnya.
-
-[SISIPKAN TABEL 4.20 - Sepuluh Tokoh Teratas berdasarkan Betweenness (Jembatan Antar-Kelompok, G2)]
-<!-- Sumber: data/result/analysis/v4_scoped/sna_metrics.csv (graf Person ber-scope v4). -->
-
-| Rank | Tokoh | Betweenness |
-|---:|-------|------:|
-| 1 | Muhammad | 0,2808 |
-| 2 | Jabir bin Abdullah | 0,0635 |
-| 3 | Ummu Kultsum | 0,0548 |
-| 4 | Husain bin Ali | 0,0548 |
-| 5 | Ali bin Abu Thalib | 0,0441 |
-| 6 | Abdullah bin Ubay bin Salul | 0,0393 |
-| 7 | Al-Barra' bin Azib | 0,0380 |
-| 8 | Ibnu Hajar | 0,0380 |
-| 9 | Salamah bin Al-Akwa' | 0,0373 |
-| 10 | Abu Bakar | 0,0294 |
-
-**Interpretasi.** Struktur jaringan masuk akal terhadap narasi Sirah. Muhammad sangat dominan pada semua ukuran sentralitas (*PageRank* 0,0509, lebih dari dua kali peringkat kedua; *degree centrality* 0,7941, yang berarti ia terhubung langsung ke sekitar 108 dari 137 tokoh; *betweenness* 0,2808, lebih dari empat kali peringkat kedua), mencerminkan posisinya sebagai pusat seluruh peristiwa. Peringkat berikutnya diisi konsisten oleh sahabat utama dan tokoh kunci, yaitu Ali bin Abu Thalib, Umar, Abu Bakar, Utsman, dan Aisyah, berdampingan dengan tokoh oposisi yang memang banyak terlibat peristiwa (Abu Jahal di peringkat tiga *PageRank* dan Abu Sufyan di peringkat enam). Susunan ini jauh lebih sesuai dengan bobot historis dibanding bila tokoh yang hanya muncul dalam silsilah ikut dihitung, dan menjadi bukti langsung manfaat pembatasan cakupan ke tokoh peserta peristiwa. Sebaliknya, ukuran *betweenness* (G2) pada Tabel 4.20 perlu dibaca dengan hati-hati: karena graf inti sangat padat dan rata-rata lintasan hanya 1,96 (hampir semua tokoh saling terhubung dalam dua langkah), ukuran ini kehilangan daya pembeda sehingga beberapa nama periferal ikut menonjol, termasuk perawi seperti Ibnu Hajar yang kehadirannya berasal dari peran periwayatan dan bukan keterlibatan sosial, pola artefak yang sama dengan yang dibahas pada validasi sentralitas. Yang tetap kokoh dari kedua ukuran adalah dominasi Muhammad yang berjarak sangat lebar dari seluruh tokoh lain.
-
-**Validasi tokoh yang terdengar asing.** Sebagian nama pada sepuluh besar mungkin terdengar asing dibanding tokoh yang lazim disebut sentral dalam literatur Sirah (para Khulafa Rasyidin). Kemunculan mereka berakar pada cara graf dibentuk, yaitu dua tokoh dihubungkan bila terlibat pada peristiwa yang sama (*co-participation*), sedangkan relasi keterlibatan (`INVOLVED_IN`) diekstraksi berdasarkan kedekatan posisi tokoh dengan nama peristiwa di dalam teks. Akibatnya, tokoh minor yang kebetulan disebut di dalam atau dekat *chunk* peristiwa berpenghuni padat (Perang Badr saja menautkan puluhan tokoh) otomatis terhubung ke seluruh peserta peristiwa itu dan membentuk *clique*, sehingga sentralitasnya ikut melonjak. Dengan kata lain, peringkat sentralitas sebagian mencerminkan seberapa banyak teks menyebut seseorang di sekitar peristiwa besar, bukan semata bobot historisnya. Contoh paling jelas adalah **Amr Bin Umayyah**: pada graf tanpa pembobotan ia sempat menempati peringkat kedua *PageRank* (degree 119), tepat di bawah Nabi Muhammad, posisi yang mencurigakan secara historis. Penelusuran balik ke teks menunjukkan tiga dari empat relasi `INVOLVED_IN`-nya adalah *false positive*, sebab keterkaitannya dengan Perang Badr, Uhud, dan Tabuk muncul dari kalimat yang sebenarnya membicarakan tokoh atau perbandingan lain, sementara hanya Perang Khandaq yang sahih; peran sebenarnya menurut teks adalah kurir Nabi ke Najasyi. Pembobotan sisi (membuang *co-mention* lemah) bersama pembatasan cakupan ke tokoh peserta peristiwa menurunkan Amr ke peringkat ke-12 sehingga ia tidak lagi muncul pada sepuluh besar Tabel 4.19. Kedua penyaringan itu menghapus kategori artefak terbesar, yaitu tokoh silsilah yang tanpa penyaringan sempat menggelembung ke puncak *PageRank* semata karena panjangnya rantai nasab (garis keturunan pra-Islam seperti para leluhur Nabi yang tidak pernah terlibat satu peristiwa pun), tetapi tidak menghapus seluruhnya. **Abu Azzah** (peringkat delapan) dan **Khunais bin Hudzafah** (peringkat sembilan) pada Tabel 4.19 adalah sisa artefak *clique*, yaitu keduanya disebut di dalam *chunk* peperangan besar (Perang Badr dan Uhud) sehingga otomatis tertaut ke seluruh pesertanya, dan karena namanya muncul pada kalimat yang sama dengan nama peristiwa, pembobotan tidak memangkasnya. Pola serupa menjelaskan kehadiran perawi pada peringkat jembatan Tabel 4.20, terutama **Ibnu Hajar**, seorang periwayat yang namanya berulang di seluruh teks sebagai penyebut sumber dan bukan pelaku peristiwa. Temuan ini menegaskan bahwa peringkat sentralitas wajib divalidasi balik ke teks, dan bahwa solusi tuntas atas over-ekstraksi `INVOLVED_IN` berbasis kedekatan posisi adalah ekstraksi relasi berbasis makna kata kerja, yang menjadi arah pengembangan lanjutan.
-
-**Mengapa Abu Azzah dan Khunais bin Hudzafah masuk sepuluh besar.** Kedua nama ini menempati peringkat delapan dan sembilan dengan skor yang identik persis (*PageRank* 0,0161, *degree centrality* 0,5147, *closeness* 0,6242, tampil sebagai dua baris kembar pada Tabel 4.19), dan keidentikan itu sendiri adalah petunjuk pertama bahwa keduanya artefak, bukan sentralitas nyata, sebab dua tokoh historis yang berbeda hampir tidak mungkin memiliki posisi jaringan yang sama persis. Penelusuran ke graf memastikan penyebabnya: keduanya sama-sama tertaut hanya pada dua peristiwa, yaitu Perang Badr dan Perang Uhud, dua *chunk* peperangan berpenghuni paling padat (masing-masing menautkan 58 tokoh). Karena proyeksi *co-participation* menghubungkan setiap pasangan tokoh yang berbagi peristiwa, sekadar tercatat di dalam kedua *chunk* ramai itu langsung mengaitkan keduanya ke seluruh peserta kedua peristiwa, sehingga masing-masing memperoleh *degree* 70 dari 137 tokoh, yaitu terhubung ke lebih dari separuh jaringan, hanya sedikit di bawah Ali bin Abu Thalib (*degree* 78) yang merupakan tokoh sentral sesungguhnya. Inilah inti mekanisme artefak *clique*: nama minor yang kebetulan disebut di dalam *chunk* peristiwa besar mewarisi seluruh keterhubungan peristiwa itu tanpa pernah menjadi poros, dan karena himpunan tetangga Abu Azzah dan Khunais sama persis, skor sentralitas keduanya menjadi tak terbedakan. Bukti tambahan bahwa keterkaitan ini lahir dari kedekatan penyebutan, bukan keterlibatan nyata, terlihat pada sumbernya: kedua relasi Khunais, baik ke Perang Badr maupun ke Perang Uhud, berasal dari halaman yang sama (612), sebuah pasal biografis yang membahas pernikahan dan bukan narasi kedua peperangan itu, sehingga nama peristiwa yang kebetulan tersebut di dekat namanya cukup untuk membangkitkan relasi keterlibatan yang keliru. Pola ini sejenis dengan artefak Amr bin Umayyah yang telah dibahas, dan sekali lagi menegaskan bahwa over-ekstraksi `INVOLVED_IN` berbasis kedekatan posisi hanya dapat dituntaskan melalui ekstraksi relasi berbasis makna kata kerja.
-
-**Mengapa nama periferal menonjol pada betweenness (Tabel 4.20).** Ukuran *betweenness* pada graf sepadat ini sangat tidak stabil, dan tingkat ketidakstabilannya dapat ditunjukkan dengan satu contoh telak: Abu Azzah dan Husain bin Ali sama-sama hanya terlibat pada Perang Badr dan Perang Uhud serta sama-sama ber-*degree* 70, namun *betweenness* keduanya berbeda ratusan kali lipat (0,0001 berbanding 0,0548) semata karena perbedaan bobot sisi pada jaringan yang jenuh, bukan karena perbedaan peran sosial. Gejala yang sama muncul sebagai skor kembar: Ummu Kultsum dan Husain bin Ali memiliki *betweenness* identik (0,0548), begitu pula Al-Barra' bin Azib dan Ibnu Hajar (0,0380), dan keidentikan ini kembali menjadi penanda artefak struktural, bukan kesamaan peran historis. Satu-satunya nama periferal yang mendekati jembatan sejati adalah Jabir bin Abdullah di peringkat dua, yang berbeda dari lainnya karena tertaut ke tiga peristiwa yang benar-benar berbeda (Perang Uhud, Perang Khandaq, dan Perjanjian Hudaibiyah) sehingga menghubungkan tiga kelompok peristiwa sekaligus; namun keterhubungan itu pun tetap lahir dari aturan *co-participation*, bukan dari peran perantara yang tercatat eksplisit dalam teks. Adapun Ibnu Hajar, kemunculannya paling jelas sebagai artefak karena ia seorang periwayat yang namanya berulang di seluruh teks sebagai penyebut sumber, bukan pelaku peristiwa. Dengan demikian, *betweenness* di sini sebaiknya dibaca hanya untuk menegaskan dominasi Muhammad (0,2808, lebih dari empat kali peringkat kedua) dan tidak dipakai untuk menilai peringkat tokoh-tokoh di bawahnya.
-
-Dominasi sentralitas Muhammad juga terlihat langsung ketika jaringan ego-nya disandingkan dengan tokoh lain. Gambar 4.17 membandingkan jaringan ego Nabi Muhammad dengan jaringan ego Abu Bakar pada proyeksi antar tokoh, yaitu tokoh-tokoh yang terhubung dengan masing-masing melalui keterlibatan pada peristiwa yang sama (*co-participation*), sesuai dengan cara *degree centrality* pada Tabel 4.19 dihitung. Karena hubungan antar tokoh ini terbentuk lewat peristiwa bersama dan bukan melalui relasi langsung, penelusurannya pada Neo4j menempuh jalur tokoh ke peristiwa ke tokoh, yaitu melewati simpul *Event*, agar visualisasinya benar-benar mencerminkan jaringan yang diukur. Simpul Muhammad menautkan jauh lebih banyak tokoh (lebih dari seratus, sejalan dengan *degree centrality* 0,7941 yang setara sekitar 108 dari 137 tokoh) daripada Abu Bakar yang jauh lebih sedikit (sekitar tujuh puluh, *degree centrality* 0,5441), sehingga selisih itu terbaca sebagai perbedaan kepadatan graf yang mencolok. Perbandingan visual ini menegaskan bahwa dominasi Muhammad bukan sekadar angka, melainkan pola keterhubungan yang kasat mata.
-
-[SISIPKAN GAMBAR 4.17 - Perbandingan Jaringan Ego: Nabi Muhammad (kiri) vs Abu Bakar (kanan)]
-<!-- Dua screenshot Neo4j Browser bersanding, skala sama. WAJIB ego CO-PARTICIPATION (lewat Event), BUKAN relasi langsung, agar cocok dgn degree centrality Tabel 4.19.
-Ego Muhammad:
-MATCH (m:Person {name:"Muhammad"})-[r1:INVOLVED_IN]->(e:Event)<-[r2:INVOLVED_IN]-(p:Person)
-WHERE r1.weight >= 0.3 AND r2.weight >= 0.3
-RETURN m, e, p
-Ego Abu Bakar: query sama, ganti name jadi "Abu Bakar".
-Hasil: Muhammad ~101 tokoh co-participation (degree proyeksi 108) vs Abu Bakar ~70 (degree 74). Simpul Event tampil sebagai perantara — itu benar, memperlihatkan co-participation terbentuk.
-CATATAN: ini BEDA dari Gambar 4.21 yang sengaja memakai ego relasi LANGSUNG (naratif KELUARGA/SAHABAT/MUSUH/INVOLVED_IN). Jadi 4.17 dan 4.21 = screenshot berbeda, tidak bisa dipakai ulang. -->
-
-### 4.5.3 Komunitas Tokoh
-
-Deteksi komunitas (G3) dengan algoritma Louvain menghasilkan 8 komunitas dengan modularitas Q = 0,2831, nilai yang menunjukkan struktur kelompok yang masih terlihat namun tidak setajam graf yang lebih longgar, wajar mengingat inti peserta peristiwa saling terhubung rapat sehingga batas antar-kelompok melembut. Dua komunitas terbesar mendominasi: komunitas lingkar Muslim inti (66 anggota; tokoh utama Muhammad, Ali, Umar, Abu Bakar, Aisyah, Utsman) dan sebuah komunitas campuran (47 anggota) yang menautkan tokoh oposisi Quraisy (Abu Jahal, Abu Sufyan) dengan sejumlah tokoh Muslim yang banyak terlibat peperangan (Hamzah bin Abdul Muththalib, Zaid bin Haritsah). Percampuran ini sendiri menjadi tanda bahwa pada modularitas serendah ini pemisahan antar-faksi belum tajam, sejalan dengan padatnya jaringan yang dibahas pada Tabel 4.18. Pengelompokan bersifat cukup stabil terhadap pilihan algoritma pada tingkat sedang, ditunjukkan oleh kesepakatan antara Louvain dan *greedy modularity* (*Adjusted Rand Index* 0,47). Karena Neo4j Browser mewarnai simpul menurut labelnya dan bukan menurut komunitas (pewarnaan per-komunitas menuntut plugin GDS yang tidak dipakai), hasil pengelompokan Louvain dari tahap analisis ditulis balik sebagai properti pada tiap simpul, lalu komunitas terbesar (66 anggota) ditampilkan utuh sebagai sub-graf tersendiri pada Gambar 4.18 untuk memperlihatkan kerapatan hubungan di dalam satu komunitas. Rincian keanggotaan seluruh komunitas (kedelapan komunitas bermakna beserta pasangan periferalnya) disajikan pada Lampiran [PERIKSA nomor: Data Komunitas Jaringan Tokoh], sedangkan di sini hanya ditampilkan sub-graf komunitas terbesarnya.
-
-[SISIPKAN GAMBAR 4.18 - Sub-graf Komunitas Terbesar (66 anggota) pada Neo4j Browser]
-<!-- Screenshot Neo4j Browser. Neo4j mewarnai per-label, bukan komunitas (butuh plugin GDS yang tak dipakai). Solusi: jalankan set_community_v4.cypher dulu (menulis properti `community` dari sna_metrics.csv v4_scoped), lalu tampilkan komunitas terbesar (id 0, 66 anggota) UTUH:
-MATCH (p:Person {community:0})-[r]-(q:Person {community:0}) RETURN p,r,q
--- Hasil: 66 simpul + relasi internal antar-mereka; tampak padat = itulah kerapatan komunitas yang mau ditunjukkan. Prasyarat: data/result/neo4j/set_community_v4.cypher (dijalankan setelah import_sirah_v4_hybrid.cypher). -->
-
-### 4.5.4 Peristiwa, Lokasi, dan Periodisasi
-
-**Sentralitas peristiwa (G4).** Analisis diperluas ke jaringan antar-peristiwa, yaitu dua *Event* dihubungkan bila berbagi minimal satu tokoh, dengan bobot sisi sama dengan jumlah tokoh bersama (35 *Event*, 264 sisi, *density* 0,444, 4 komponen, komponen terbesar memuat 32 peristiwa). Sepuluh peristiwa paling sentral menurut *PageRank* ditunjukkan pada Tabel 4.21.
-
-[SISIPKAN TABEL 4.21 - Sepuluh Peristiwa Teratas berdasarkan PageRank]
-
-| Rank | Peristiwa | PageRank | Frekuensi |
-|------|-----------|---------:|----------:|
-| 1 | Perang Badr | 0,0965 | 53 |
-| 2 | Perang Uhud | 0,0889 | 43 |
-| 3 | Perang Khandaq | 0,0674 | 20 |
-| 4 | Perjanjian Hudaibiyah | 0,0442 | 20 |
-| 5 | Baiat Aqabah Kubra | 0,0424 | 4 |
-| 6 | Perang Dzul Usyairah | 0,0404 | 1 |
-| 7 | Perang Khaibar | 0,0382 | 12 |
-| 8 | Perang Bani Al-Ashfar | 0,0353 | 1 |
-| 9 | Perang Dzatur Riqa' | 0,0348 | 2 |
-| 10 | Perang Tha'if | 0,0344 | 4 |
-
-Tiga peristiwa teratas adalah peperangan besar, yaitu Perang Badr (*PageRank* 0,0965), Perang Uhud (0,0889), dan Perang Khandaq (0,0674). Peringkat ini didukung bukti *co-participation* yang kuat: Perang Badr dan Perang Uhud terhubung ke hampir semua peristiwa lain (masing-masing ber-*degree* 27 dan 29 dari 34 peristiwa), sehingga berbagi tokoh dengan mayoritas peristiwa dan wajar menjadi pusat jaringan; pola ini masuk akal karena peperangan besar melibatkan paling banyak tokoh sehingga jaringan *co-participation*-nya paling padat. Yang menonjol dari daftar ini, dan berbeda dari sebagian kajian yang menyorot tonggak hidup Nabi, adalah bahwa peringkat teratas nyaris seluruhnya berisi peperangan; peristiwa daur hidup seperti kelahiran, turunnya wahyu pertama, dan wafat Nabi tidak muncul sebagai simpul sentral. Ini keterbatasan yang perlu diungkap secara jujur, sebab di dalam teks peristiwa daur hidup umumnya disebut melalui frasa kata kerja atau deskriptif ("beliau dilahirkan", "beliau wafat", "turunnya wahyu") yang tidak tertangkap NER sebagai entitas *Event* bernama, sehingga graf peristiwa mencerminkan sekaligus kekuatan model menangkap nama peperangan dan kelemahannya pada peristiwa berbasis kata kerja.
-
-Sebagai bukti bahwa *PageRank* dan fungsi naratif tidak selalu sejalan, ukuran *betweenness* (jembatan antar kelompok peristiwa) justru menempatkan Perang Uhud di puncak (0,1958), di atas Perang Khandaq (0,1346) dan Perjanjian Hudaibiyah (0,0264). Perang Uhud berperan sebagai penghubung antara kelompok peristiwa awal Madinah dan kelompok peristiwa pasca-Uhud, sehingga membaca kedua ukuran bersama lebih kaya daripada satu peringkat tunggal. Dua *caveat* perlu ditegaskan. Pertama, peringkat *PageRank* peristiwa wajib dibaca bersama frekuensi kemunculannya, sebab aturan *co-participation* dapat menggelembungkan peristiwa berfrekuensi rendah: Perang Dzul Usyairah menempati peringkat 6 (0,0404) padahal frekuensinya hanya 1, karena ia berada pada periode yang sama dengan Perang Badr sehingga "kecipratan" puluhan tokoh bersama (*degree* 23); pola serupa terjadi pada Perang Bani Al-Ashfar (peringkat 8, frekuensi 1) dan Baiat Aqabah Kubra (peringkat 5, frekuensi 4). Kedua, relasi kronologi `PRECEDES` hanya berjumlah 17 sisi, jauh lebih sedikit daripada ratusan sisi *co-participation*, sehingga sinyal yang dominan adalah kemunculan bersama, bukan urutan waktu eksplisit.
-
-<!-- G7 v4 dari scenario_g7_g8.py --version v4_hybrid (periode_bab sudah di-map via apply_period_to_v4.py). Graf lokasi v4 lebih kecil dari v3 (17 vs 35 node) karena KG v4 punya lebih sedikit relasi OCCURRED_AT (47 vs 83) dan tanpa enrichment lifecycle. -->
-**Peran lokasi (G7).** Dua lokasi dihubungkan bila ada tokoh yang terlibat pada peristiwa di kedua lokasi (17 *Location*, 136 sisi, *density* 1,000, artinya graf lengkap tempat setiap lokasi terhubung ke semua lokasi lain). Karena graf lokasi lengkap, *betweenness* seragam nol dan sama sekali tidak membedakan sehingga peringkat sepenuhnya memakai *weighted degree* (total tokoh bersama). Sepuluh lokasi paling sentral ditunjukkan pada Tabel 4.22.
-
-[SISIPKAN TABEL 4.22 - Sepuluh Lokasi Teratas berdasarkan Weighted Degree]
-
-| Rank | Lokasi | Weighted degree |
-|------|--------|----------------:|
-| 1 | Madinah | 661 |
-| 2 | Habasyah | 561 |
-| 3 | Makkah | 561 |
-| 4 | Syam | 530 |
-| 5 | Yatsrib | 528 |
-| 6 | Ash-Shafra | 525 |
-| 7 | Tihamah | 525 |
-| 8 | Badr | 525 |
-| 9 | Najd | 525 |
-| 10 | Aqabah | 297 |
-
-Hasil ini masuk akal terhadap geografi Sirah. Madinah (*weighted degree* 661) dan Makkah (561) menempati posisi teratas, mencerminkan dua pusat dari dua fase besar Sirah, yaitu dakwah di Makkah dan periode Madinah. Bukti bahwa *betweenness* tidak layak dipakai di sini bahkan lebih ekstrem daripada perkiraan: seluruh 17 lokasi memiliki *degree* identik 16 (terhubung ke semua lokasi lain) dengan *betweenness* seragam nol, sehingga ukuran ini sama sekali tidak mampu membedakan peran antar lokasi pada graf yang benar-benar lengkap ini; sebaliknya *weighted degree* yang menghitung total tokoh bersama tetap diskriminatif, dengan sebaran nilai yang lebar (dari 297 untuk Aqabah sampai 661 untuk Madinah). Habasyah menempati peringkat kedua bersama Makkah (561) meskipun berada di seberang Laut Merah, konsisten dengan perannya sebagai tujuan Hijrah ke Habasyah. Sebagai keterbatasan yang harus diungkap, "Yatsrib" muncul terpisah pada peringkat lima (528) padahal Yatsrib adalah nama lama Madinah; keduanya tidak tergabung oleh *alias clustering* pada graf lokasi, sehingga peran Madinah sebenarnya ter-*understate* (jika digabung, dominasinya makin besar). Pola lain yang menandakan keterbatasan aturan *co-participation* adalah empat lokasi Ash-Shafra, Tihamah, Badr, dan Najd yang memiliki *weighted degree* identik 525, indikasi bahwa keempatnya terhubung melalui himpunan tokoh bersama yang sama persis, bukan melalui keterkaitan geografis yang berdiri sendiri. Perlu dicatat pula bahwa graf lokasi v4 ini jauh lebih kecil daripada versi terdahulu (17 berbanding 35 lokasi), karena *knowledge graph* hasil model pemenang memuat lebih sedikit relasi tempat-peristiwa (`OCCURRED_AT`) sehingga hanya sebagian lokasi yang tertaut ke jaringan; hal ini menjadi salah satu keterbatasan cakupan graf yang perlu diperbaiki melalui ekstraksi relasi lokasi yang lebih lengkap.
-
-**Keterlibatan lintas fase (G8).** Skenario ini menghitung jumlah fase Sirah unik (dari enam fase) tempat seorang tokoh terlibat, melalui jalur tokoh ke peristiwa ke fase. Hasilnya ditunjukkan pada Tabel 4.23.
-
-[SISIPKAN TABEL 4.23 - Tokoh dengan Keterlibatan Lintas Fase Terbanyak]
-
-| Rank | Tokoh | Jumlah fase | Jumlah peristiwa |
-|------|-------|------------:|-----------------:|
-| 1 | Muhammad | 5 | 22 |
-| 2 | Umar bin Al-Khaththab | 3 | 5 |
-| 3 | Abu Bakar | 3 | 4 |
-| 4 | Ali bin Abu Thalib | 2 | 7 |
-| 5 | Zaid bin Haritsah | 2 | 5 |
-| 6 | Aisyah | 2 | 4 |
-
-Bukti paling kuat dari skenario ini adalah Muhammad sebagai tokoh dengan jangkauan fase terluas, merentang lima dari enam fase (fase I Pra-Islam, II Makkah, IV Perang Besar, V Diplomasi, dan VI Konsolidasi) melalui 22 peristiwa, menegaskan posisinya sebagai poros narasi yang hadir di hampir setiap babak. Satu-satunya fase yang tidak tersentuh, yaitu III Madinah Awal, lebih mencerminkan keterbatasan cakupan graf peristiwa (tidak ada peristiwa bernama yang terpetakan ke babak itu pada *knowledge graph* ini) daripada ketiadaan peran Nabi. Di bawahnya, hanya dua tokoh menyentuh tiga fase, yaitu Umar bin Al-Khaththab dan Abu Bakar (masing-masing 5 dan 4 peristiwa), sesuai posisi mereka sebagai sahabat terdekat yang aktif dari periode Makkah sampai Konsolidasi. Distribusi keseluruhan sangat timpang dan menjadi bukti bahwa mayoritas tokoh bersifat spesifik untuk satu babak: 124 tokoh hanya menyentuh satu fase, 17 tokoh dua fase, dua tokoh tiga fase, dan hanya satu tokoh (Muhammad) menyentuh lima fase. Sebagai catatan, banyaknya peristiwa yang diikuti tidak otomatis berarti jangkauan lintas fase yang luas: Ali bin Abu Thalib terlibat di tujuh peristiwa, terbanyak setelah Muhammad, tetapi seluruhnya terkonsentrasi pada dua fase saja (Makkah dan Perang Besar). Satu hal yang patut dicatat adalah bahwa peringkat lintas fase pada graf ini terisi seluruhnya oleh pelaku sejarah yang nyata (Muhammad, Umar, Abu Bakar, Ali, Zaid bin Haritsah, dan Aisyah), tanpa dihuni artefak periwayatan seperti perawi atau figur yang hanya disebut sebagai sumber. Meski begitu, kehati-hatian yang sama seperti pada ukuran sentralitas tetap diperlukan, sebab relasi `INVOLVED_IN` yang mendasari skenario ini dibentuk dari kedekatan posisi nama dengan nama peristiwa di dalam *chunk*, sehingga nama yang tersebar luas di teks (misalnya perawi seperti Ibnu Hajar yang muncul pada peringkat jembatan Tabel 4.20) berpotensi tertaut ke peristiwa yang secara historis tidak diikutinya. Peringkat lintas fase karena itu tetap wajib divalidasi balik ke makna teks dan tidak boleh dibaca semata sebagai ukuran keterlibatan historis.
-
-### 4.5.5 Studi Kasus Peristiwa Besar
-
-**Studi kasus lima peristiwa besar (G6).** Untuk memvalidasi pipeline secara kualitatif, dipilih lima peristiwa dari periode yang berjauhan (P8 sampai P13) lalu diperiksa sub-grafnya. Ringkasannya ditunjukkan pada Tabel 4.24 dan panel visualisasinya pada Gambar 4.19.
-
-[SISIPKAN TABEL 4.24 - Ringkasan Sub-graf Lima Peristiwa Besar]
-
-| Peristiwa | Periode | Tokoh | Lokasi | Waktu |
-|-----------|:-------:|------:|-------:|------:|
-| Perang Badr | P8 | 44 | 9 | 6 |
-| Perang Uhud | P9 | 41 | 3 | 10 |
-| Perjanjian Hudaibiyah | P11 | 7 | 5 | 4 |
-| Perang Khaibar | P11 | 7 | 2 | 1 |
-| Perang Tabuk | P13 | 4 | 0 | 1 |
-
-<!-- Angka di-recompute dari graf final SNA (edges_v4_hybrid.csv, INVOLVED_IN weight >= 0.3, sama dengan WEIGHT_THRESHOLD di sna_analysis.py) via visualize_case_study_events.py --version v4_hybrid. Konsisten dengan header tiap panel pada Gambar 4.19. -->
-
-
-[SISIPKAN GAMBAR 4.19 - Sub-graf Lima Peristiwa Besar (Neo4j Browser)]
-<!-- Screenshot Neo4j Browser (§4.5 seluruhnya Neo4j, bukan matplotlib). Query gabungan lima peristiwa dalam satu tampilan:
-MATCH (p:Person)-[r:INVOLVED_IN]->(e:Event)
-WHERE e.name IN ["Perang Badr","Perang Uhud","Perjanjian Hudaibiyah","Perang Khaibar","Perang Tabuk"]
-RETURN p,r,e
--- Hasil: 5 gugus event; Badr/Uhud padat (44/41 tokoh), Hudaibiyah/Khaibar 7, Tabuk 4; Muhammad menaut kelimanya. Warna otomatis per-label (Event vs Person). Alternatif: 5 screenshot terpisah, satu per baris Tabel 4.24. Angka acuan = Tabel 4.24 (v4). -->
-
-Secara visual, Gambar 4.19 menampilkan kelima peristiwa beserta tokoh pesertanya langsung dari Neo4j Browser dalam satu tampilan, dengan simpul diwarnai otomatis menurut labelnya (peristiwa dan tokoh berbeda warna) dan tiap peristiwa menjadi pusat gugus tokoh yang tertaut kepadanya melalui relasi `INVOLVED_IN`. Perbedaan kepadatan antar gugus langsung terbaca: gugus Perang Badr (44 tokoh) dan Perang Uhud (41 tokoh) tampak rapat oleh banyak tokoh, sedangkan Perjanjian Hudaibiyah (7 tokoh), Perang Khaibar (7 tokoh), dan Perang Tabuk (4 tokoh) hanya berisi segelintir tokoh, sehingga kontras cakupan antar peristiwa terlihat sekilas pandang. Dari kelima peristiwa, terkumpul 83 tokoh unik dan hanya Muhammad yang hadir di seluruh lima peristiwa, menegaskan perannya sebagai tulang punggung jaringan. Ukuran sub-graf menurun tajam dari Perang Badr ke Perjanjian Hudaibiyah. Penurunan ini lebih mencerminkan **bias cakupan NER** (seberapa banyak tokoh disebut pada *chunk* peristiwa itu) daripada keterlibatan historis sebenarnya, karena setiap sub-graf peristiwa secara konstruksi membentuk *clique* (semua peserta saling terhubung) sehingga *density* selalu bernilai 1,0 dan tidak informatif sebagai pembanding. Ukuran (jumlah tokoh) dan jumlah relasi langsung antar tokoh lebih tepat dipakai sebagai pembanding kohesi. Sebagai bukti keterbatasan aturan ini, daftar peserta Perang Badr justru mencampur dua kubu yang saling berperang: tokoh Muslim (Ali bin Abu Thalib, Hamzah bin Abdul Muththalib, Utsman bin Affan) dan tokoh Quraisy (Abu Jahal, Abu Lahab, Abu Sufyan bin Harb) sama-sama tertaut sebagai `INVOLVED_IN` peristiwa yang sama. Hal ini menegaskan bahwa relasi *co-participation* hanya menyatakan "terlibat pada peristiwa yang sama", bukan "berada di pihak yang sama", sehingga sub-graf peristiwa tidak boleh dibaca sebagai aliansi.
-
-
-**Analisis error/keterbatasan graf.** Sebagaimana error pada NER, struktur graf juga memuat sejumlah *artifact* yang perlu diungkap secara jujur:
-
-1. **Over-ekstraksi relasi `INVOLVED_IN` berbasis kedekatan.** Karena relasi dibentuk dari kemunculan bersama dalam *chunk* yang sama, sebagian tokoh memperoleh keterhubungan yang lebih tinggi daripada perannya yang sebenarnya. Contoh yang sudah ditelusuri adalah "Amr bin Umayyah" (setelah pembobotan dan pembatasan cakupan turun ke peringkat ke-12 *PageRank*, 0,0127): pemeriksaan menunjukkan sebagian relasi `INVOLVED_IN`-nya adalah *false positive* dari kedekatan teks, sedangkan peran historisnya yang nyata adalah kurir Nabi. Sisa artefak sejenis masih tampak pada Abu Azzah dan Khunais bin Hudzafah di sepuluh besar Tabel 4.19 (anggota *clique* peperangan) serta perawi Ibnu Hajar pada peringkat jembatan Tabel 4.20.
-2. **Peristiwa daur hidup tidak tertangkap sebagai entitas.** Sebagian peristiwa penting (seperti kelahiran, turunnya wahyu pertama, dan wafat Nabi) di dalam teks disebut melalui frasa kata kerja atau deskriptif ("beliau dilahirkan", "beliau wafat") sehingga tidak dikenali NER sebagai entitas *Event* bernama dan tidak muncul sebagai simpul pada graf peristiwa (Tabel 4.21). Akibatnya jaringan peristiwa didominasi peperangan; ketiadaan tonggak daur hidup ini adalah keterbatasan cakupan yang perlu diungkap secara jujur, dan penanganannya menuntut ekstraksi peristiwa berbasis makna kata kerja, bukan sekadar entitas bernama.
-3. **Ketergantungan pada kualitas NER.** Karena *node* dan *edge* berasal dari prediksi NER, kesalahan deteksi pada Subbab 4.2 sampai 4.4 (terutama nama langka yang terlewat) ikut membatasi kelengkapan graf; hal ini juga terlihat pada tipisnya relasi lokasi (`OCCURRED_AT`) yang membuat graf lokasi pada G7 mengecil.
-
-Ketiga tipe kesalahan di atas dapat ditampilkan langsung dari *knowledge graph* di Neo4j untuk ditelaah, bukan sekadar diklaim. Tipe pertama (over-ekstraksi `INVOLVED_IN`) ditunjukkan pada Gambar 4.20, yaitu keempat relasi `INVOLVED_IN` tokoh "Amr bin Umayyah" ke Perang Badr, Perang Uhud, Perang Tabuk, dan Perang Khandaq; penelusuran balik ke teks menunjukkan tiga di antaranya keliru (*false positive*) karena berasal dari kedekatan kata, bukan keterlibatan nyata, sedangkan peran historisnya yang benar adalah kurir Nabi. Tipe kedua (percampuran dua kubu) dapat ditampilkan dengan mengambil seluruh peserta `INVOLVED_IN` Perang Badr yang memuat tokoh Muslim dan Quraisy sekaligus, dan tipe ketiga (pemisahan alias) dengan menampilkan "Madinah" dan "Yatsrib" sebagai dua simpul terpisah. Kueri untuk ketiga tampilan tersebut disediakan pada berkas `sna_evidence_queries_bab4.cypher`.
-
-[SISIPKAN GAMBAR 4.20 - Contoh Kesalahan Graf: Relasi INVOLVED_IN Palsu pada Amr bin Umayyah (Neo4j Browser)]
-<!-- Screenshot Neo4j Browser. Query: `MATCH (p:Person {name:"Amr bin Umayyah"})-[r:INVOLVED_IN]->(e:Event) RETURN p,r,e` -- menampilkan 4 relasi (Perang Badr/Uhud/Tabuk/Khandaq); 3 di antaranya false-positive. -->
-
-Visualisasi langsung dari Neo4j Browser ditunjukkan pada Gambar 4.21, yaitu jaringan ego Nabi Muhammad (seluruh entitas yang terhubung langsung dengannya pada *knowledge graph*). Gambar ini memperkuat secara visual dominasi sentralitas yang terbaca pada Tabel 4.19 dan Tabel 4.20, sebab Muhammad berada di pusat sebagai satu-satunya simpul yang menautkan puluhan tokoh dan peristiwa di sekelilingnya. Sisi-sisinya berlabel jenis relasi (`KELUARGA`, `SAHABAT`, `MUSUH`, dan `INVOLVED_IN`), sehingga peran beliau sebagai poros keluarga, persahabatan, sekaligus pertentangan terlihat dalam satu pandangan. Neo4j Browser mewarnai simpul menurut labelnya, yaitu tokoh (`Person`) berwarna hijau-zaitun dan peristiwa (`Event`) berwarna biru, misalnya Baiat Aqabah Kubra, Perang Badr, dan Perang Uhud, bukan menurut komunitas; struktur komunitas itu sendiri telah dirangkum secara kuantitatif melalui modularitas Louvain pada pembahasan sebelumnya. Perlu dicatat bahwa graf ego ini menampilkan relasi naratif langsung pada *knowledge graph*, sedangkan nilai sentralitas pada Tabel 4.19 dan Tabel 4.20 dihitung dari proyeksi *co-participation* antar tokoh; keduanya berasal dari graf yang berbeda tetapi konsisten menempatkan Muhammad sebagai pusat jaringan.
-
-[SISIPKAN GAMBAR 4.21 - Visualisasi Neo4j Browser: Jaringan Ego Nabi Muhammad]
-<!-- file: docs/bimbingan/screenshots/A1_ego_muhammad.png (screenshot Neo4j Browser langsung). [PERIKSA] Screenshot ini dari KG lama (masih memuat event lifecycle spt Kelahiran/Hijrah Madinah yg tidak ada di v4) — sebaiknya di-regenerate dari KG v4 setelah import_sirah v4 ke Neo4j agar konsisten. Reproduksi: di Neo4j Browser jalankan `MATCH (m:Person {name:'Muhammad'})-[r]-(n) RETURN m,r,n` lalu tata layout & screenshot. Warna otomatis per-label (Person hijau, Event biru). -->
-
-### 4.5.6 Pengujian Fungsional Knowledge Graph
-
-Keenam fungsi yang telah didefinisikan pada Subbab 3.9.2 (F1 sampai F6, Tabel 3.21) diuji dengan menjalankan skenario kueri Cypher masing-masing pada graf, untuk memverifikasi kelayakan penelusuran relasional. Ringkasan hasilnya ditunjukkan pada Tabel 4.25. Keberhasilan tiap fungsi dinilai pada empat kriteria: kuerinya dapat dieksekusi tanpa galat, mengembalikan hasil tidak kosong, hasil sesuai fakta pada teks sumber (validasi manual), dan hasil dapat dilacak balik ke dokumen sumber melalui metadata *provenance* (`evidence`, `halaman`, `chunk_id`).
-
-[SISIPKAN TABEL 4.25 - Hasil Pengujian Fungsional per Fungsi Knowledge Graph]
-
-| Fungsi | Skenario kueri (contoh) | Eksekusi | Jumlah hasil | Hasil tidak kosong | Sesuai sumber | Terlacak |
-|--------|-------------------------|:--------:|:------------:|:------------------:|:-------------:|:--------:|
-| F1 | Tokoh dalam suatu peristiwa (Perang Badr) | ✔ | [..] | ✔ | ✔ | ✔ |
-| F2 | Peristiwa di suatu lokasi (Madinah) | ✔ | [..] | ✔ | ✔ | ✔ |
-| F3 | Peristiwa pada suatu waktu (tahun ke-2 H) | ✔ | [..] | ✔ | ✔ | ✔ |
-| F4 | Peristiwa yang melibatkan suatu tokoh (Abu Bakar) | ✔ | [..] | ✔ | ✔ | ✔ |
-| F5 | *Multi-hop* (tokoh ke peristiwa ke lokasi; Umar) | ✔ | [..] | ✔ | ✔ | ✔ |
-| F6 | Urutan kronologi peristiwa (PRECEDES) | ✔ | [..] | ✔ | ✔ | ✔ |
-
-> Kolom "Jumlah hasil" diisi dari keluaran `functional_test_queries_bab4.cypher` (query `*.count` atau query RINGKASAN). Tanda ✔/✘ pada kolom lain disesuaikan dengan hasil eksekusi nyata.
-
-<!-- [PERIKSA] Tabel 4.25 menyatakan keenam skenario berhasil (berdasarkan rancangan). Untuk mengisinya dengan bukti nyata, jalankan `data/result/neo4j/functional_test_queries_bab4.cypher` di Neo4j (setelah import_sirah_v3.cypher). File itu memuat Q1-Q6 (versi detail + versi _count) plus satu query RINGKASAN yang langsung mengeluarkan jumlah hasil keenam skenario. Catat jumlah baris tiap query ke tabel; bila ada yang kosong/janggal (mis. nama Time beda format), pakai query HELPER di file untuk menyesuaikan nilai `name`, lalu ubah tanda centang apa adanya. -->
-
-Sebagai contoh, kueri "siapa saja yang terlibat dalam Perang Badar" dengan pola `(:Person)-[:INVOLVED_IN]->(:Event {name:"Perang Badr"})` mengembalikan sejumlah tokoh yang seluruhnya dapat ditelusuri ke *chunk* sumbernya melalui properti `evidence` dan `halaman`. <!-- [PERIKSA] tampilkan daftar tokoh hasil query dan jumlahnya dari hasil eksekusi nyata sebagai ilustrasi. --> Keenam fungsi (F1 sampai F6) berhasil dipenuhi, yaitu kuerinya dapat dijalankan dan menghasilkan jawaban yang dapat diverifikasi, sehingga graf dinilai layak mendukung penelusuran berbasis hubungan pada Sirah Nabawiyah. Sebagai ilustrasi keluaran fungsional, Gambar 4.22 menampilkan hasil kueri F1 ("siapa saja yang terlibat dalam Perang Badar") langsung dari Neo4j Browser dalam bentuk graf.
-
-[SISIPKAN GAMBAR 4.22 - Hasil Kueri Fungsional F1 (Tokoh dalam Perang Badar) di Neo4j Browser]
-<!-- Screenshot Neo4j Browser. Reproduksi: `MATCH (p:Person)-[r:INVOLVED_IN]->(e:Event {name:"Perang Badr"}) RETURN p,r,e` lalu screenshot. -->
-
+<!-- SUMBER: docs/Buku-TA-Genta-fixed.pdf (buku terbaru), diekstrak 2026-07-19. Cermin TEKS untuk rujukan revisi; tabel/gambar/persamaan dipipihkan. Backup .md lama: hasil_pembahasan.md.bak_pre_pdf_sync -->
+
+<!-- Halaman buku 70 · PDF 104 -->
+BAB 4
+HASIL DAN PEMBAHASAN
+4.1 Hasil Anotasi Data
+Seluruh uji coba ekstraksi entitas pada bab ini menggunakan data berlabel yang diperoleh
+melalui proses anotasi sebagaimana dijelaskan pada Subbab 3.5. Oleh karena itu, subbab ini
+terlebih dahulu memaparkan profil data berlabel, khususnya distribusi entitas pada setiap kelas.
+Karakteristik tersebut penting untuk diperhatikan karena ketimpangan jumlah entitas antar
+kelas menjadi salah satu faktor yang dapat memengaruhi hasil pengujian pada subbab
+berikutnya.
+Data berlabel terdiri atas data latih dan data uji. Data latih mencakup 590 chunk dengan
+total 116.353 token yang digunakan sebagai data awal (seed) dalam proses pelatihan. Sementara
+itu, data uji mencakup 254 chunk dengan total 49.739 token dan 1.969 entitas yang digunakan
+sebagai acuan (ground truth) dalam evaluasi. Seluruh uji coba ekstraksi entitas pada bab ini
+menggunakan data uji yang sama agar hasil setiap skenario dapat dibandingkan secara konsisten.
+Pada data uji, kelas Person memiliki jumlah entitas terbanyak, yaitu 1.302 entitas, diikuti
+oleh Location sebanyak 474 entitas, Time sebanyak 118 entitas, dan Event sebanyak 75 entitas.
+Rangkuman statistik data latih dan data uji disajikan pada Tabel 4.1.
+Tabel 4.1 Statistik Data Latih dan Data Uji
+Statistik
+Data latih (train)
+Data uji (test)
+Jumlah chunk
+Jumlah token
+116.353
+49.739
+Jumlah entitas
+4.247
+1.969
+Person
+2.920
+1.302
+Location
+Event
+Time
+
+Tabel 4.1 menunjukkan bahwa jumlah entitas pada setiap kelas belum terdistribusi secara
+seimbang. Kelas Person mendominasi data latih dan data uji, sedangkan kelas Event memiliki
+jumlah entitas paling sedikit. Perbandingan jumlah entitas pada setiap kelas dalam data latih
+dan data uji divisualisasikan pada Gambar 4.1.
+Gambar 4.1 menyajikan perbandingan jumlah entitas pada data latih dan data uji dalam
+bentuk diagram batang berkelompok. Pada data latih, kelas Person memiliki jumlah entitas
+tertinggi, yaitu 2.920 entitas, sedangkan kelas Event hanya memiliki 167 entitas. Perbandingan
+tersebut menghasilkan rasio ketimpangan sekitar 17,5:1. Pola serupa juga ditemukan pada data
+uji, dengan 1.302 entitas Person dan 75 entitas Event, sehingga menghasilkan rasio sekitar
+17,4:1.
+Distribusi tersebut memberikan beberapa informasi penting untuk memahami hasil
+pengujian pada subbab berikutnya. Pertama, dominasi kelas Person dan Location
+mencerminkan karakteristik teks Sirah Nabawiyah sebagai narasi biografis dan historis yang
+banyak menyebutkan nama tokoh dan tempat secara eksplisit. Sebaliknya, peristiwa dan waktu
+lebih sering disampaikan melalui frasa umum atau secara tidak langsung, misalnya “beliau
+
+<!-- Halaman buku 71 · PDF 105 -->
+wafat” atau “pada tahun itu”. Ungkapan seperti ini tidak selalu termasuk dalam kategori entitas
+bernama sehingga jumlah entitas Event dan Time menjadi lebih sedikit.
+
+Gambar 4.1 Distribusi Jumlah Entitas per Kelas pada Data Latih dan Data Uji
+Kedua, ketimpangan jumlah entitas menyebabkan kelas Event dan Time memiliki contoh
+pelatihan yang lebih terbatas dibandingkan dengan kelas Person dan Location. Pada data latih,
+kelas Event hanya memiliki 167 entitas dan kelas Time memiliki 188 entitas. Keterbatasan
+contoh tersebut dapat menyebabkan model lebih sulit mempelajari pola kedua kelas sehingga
+keduanya berpotensi menghasilkan kinerja yang lebih rendah.
+Ketiga, pola distribusi kelas pada data latih dan data uji relatif serupa. Hal ini terlihat dari
+rasio ketimpangan antara kelas dengan jumlah terbanyak dan tersedikit, yaitu 17,5:1 pada data
+latih dan 17,4:1 pada data uji. Kesamaan pola tersebut menunjukkan bahwa data latih dan data
+uji memiliki karakteristik komposisi kelas yang relatif konsisten, meskipun jumlah datanya
+berbeda.
+Temuan pada tahap anotasi ini menjadi dasar dalam menafsirkan hasil pengujian
+selanjutnya. Ketimpangan jumlah entitas antarkelas melatarbelakangi pelaksanaan Uji Coba 1
+mengenai penanganan ketidakseimbangan data. Sementara itu, keterbatasan contoh pada kelas
+Event dan Time menjadi salah satu faktor yang perlu diperhatikan ketika membahas perbedaan
+kinerja setiap metode dan model pada subbab berikutnya.
+4.2 Uji Coba 1: Penanganan Ketidakseimbangan Kelas
+Uji coba pertama bertujuan mengetahui apakah ketidakseimbangan jumlah entitas
+antarkelas pada data latih, sebagaimana dipaparkan pada Subbab 4.1, dapat ditangani untuk
+meningkatkan kualitas pengenalan kelas minoritas, terutama Event dan Time. Dalam pengujian
+ini,
+skenario
+dasar
+(baseline)
+dibandingkan
+dengan
+empat
+teknik
+penanganan
+ketidakseimbangan data, yaitu weighted cross-entropy, supervised contrastive learning (SCL),
+Jaccard similarity contrastive loss (JSCL), dan augmentasi data (data augmentation).
+Teknik augmentasi data menggabungkan penggantian sebutan entitas (mention
+replacement) dengan parafrase kalimat menggunakan model bahasa. Pada proses parafrase,
+entitas dalam kalimat dipertahankan agar label yang dihasilkan tetap sesuai dengan kalimat asal.
+
+<!-- Halaman buku 72 · PDF 106 -->
+Kelima skenario dilatih menggunakan data awal (seed) yang sama, kemudian dievaluasi
+pada data uji yang terdiri atas 254 chunk, 49.739 token, dan 1.969 entitas. Agar perbandingan
+antar skenario tetap adil, hanya teknik penanganan ketidakseimbangan data yang diubah.
+Sementara itu, model dasar IndoBERT uncased, ambang batas pseudo-labelling, dan parameter
+pelatihan lainnya dibuat sama sesuai dengan prosedur pada Kode Semu 3.12.
+Kualitas pengenalan entitas diukur menggunakan pustaka seqeval pada tingkat entitas
+(entity-level). Dalam pengukuran ini, suatu entitas hanya dianggap benar apabila seluruh
+rentang token dan kategori entitasnya sesuai dengan label acuan. Evaluasi juga dilengkapi
+dengan analisis kesalahan pada tingkat token (token-level) untuk mengetahui jenis kesalahan
+yang dihasilkan oleh setiap skenario.
+Metrik utama yang digunakan adalah F1-score karena mempertimbangkan keseimbangan
+antara precision dan recall. Precision menunjukkan proporsi prediksi entitas yang benar,
+sedangkan recall menunjukkan proporsi entitas acuan yang berhasil dikenali. Hasil evaluasi
+dilaporkan dalam bentuk F1 mikro dan F1 makro. F1 mikro menggambarkan kinerja
+keseluruhan dengan menggabungkan seluruh entitas, sehingga lebih dipengaruhi oleh kelas
+mayoritas. Sebaliknya, F1 makro dihitung berdasarkan rata-rata kinerja setiap kelas sehingga
+lebih peka terhadap kinerja kelas minoritas.
+Hasil pengujian disajikan dalam dua tabel. Tabel 4.2 memuat nilai precision, recall, dan
+F1 mikro untuk menilai kinerja secara keseluruhan. Sementara itu, Tabel 4.3 menyajikan F1
+setiap kelas dan F1 makro untuk memperlihatkan pengaruh setiap teknik terhadap kelas
+minoritas.
+Tabel 4.2 Precision, Recall, dan F1-score Agregat Uji Coba 1
+Skenario
+Precision
+Recall
+F1-score (mikro)
+Baseline
+0,9524
+0,9548
+0,9536
+Weighted cross-entropy
+0,9427
+0,9533
+0,9480
+SCL
+0,9543
+0,9548
+0,9546
+JSCL
+0,9415
+0,9487
+0,9451
+Augmentation
+0,9756
+0,9756
+0,9756
+
+Tabel 4.3 F1-score per Kelas Entitas pada Uji Coba 1
+Skenario
+F1 PERSON
+F1 LOCATION
+F1 EVENT
+F1 TIME
+Macro F1
+Baseline
+0,9690
+0,9530
+0,9342
+0,7983
+0,9136
+Weighted cross-entropy
+0,9616
+0,9432
+0,9231
+0,8347
+0,9156
+SCL
+0,9687
+0,9488
+0,9600
+0,8170
+0,9236
+JSCL
+0,9611
+0,9467
+0,9600
+0,7572
+0,9062
+Augmentation
+0,9835
+0,9755
+0,9542
+0,9038
+0,9543
+
+Gambar 4.2 memvisualisasikan perbandingan F1 mikro dan F1 makro dari kelima skenario.
+Skenario augmentasi data memperoleh nilai tertinggi pada kedua metrik tersebut, sedangkan
+JSCL menghasilkan nilai terendah. SCL menempati urutan kedua dengan hasil yang sedikit
+lebih tinggi daripada baseline.
+Gambar 4.3 memperlihatkan perbandingan F1 pada setiap kelas entitas. Keunggulan
+augmentasi data terlihat paling jelas pada kelas Time, dengan nilai F1 sebesar 0,9038. Pada
+kelas Event, nilai tertinggi diperoleh SCL dan JSCL, yaitu 0,9600, sedangkan augmentasi data
+
+<!-- Halaman buku 73 · PDF 107 -->
+memperoleh nilai yang sedikit lebih rendah, yaitu 0,9542. Meskipun demikian, augmentasi data
+tetap menghasilkan kinerja paling seimbang karena meningkatkan kelas minoritas tanpa
+menurunkan kinerja kelas Person dan Location.
+
+Gambar 4.2 F1-score Agregat Lima Skenario Uji Coba 1
+
+Gambar 4.3 F1-score per Kelas pada Lima Skenario Uji Coba 1
+Berdasarkan Tabel 4.2, augmentasi data menjadi skenario terbaik dengan F1 mikro sebesar
+0,9756. Nilai tersebut lebih tinggi daripada baseline yang memperoleh 0,9536 maupun teknik
+lainnya. SCL menempati urutan kedua dengan F1 mikro sebesar 0,9546, sedikit lebih tinggi
+daripada baseline. Sebaliknya, weighted cross-entropy dan JSCL menghasilkan nilai yang lebih
+rendah daripada baseline, masing-masing sebesar 0,9480 dan 0,9451. Hasil ini menunjukkan
+bahwa penerapan teknik penanganan ketidakseimbangan data tidak selalu meningkatkan
+kinerja model.
+
+<!-- Halaman buku 74 · PDF 108 -->
+Keunggulan augmentasi data terlihat terutama pada kelas minoritas. F1 kelas Time
+meningkat dari 0,7983 pada baseline menjadi 0,9038, atau naik lebih dari sepuluh poin
+persentase. F1 kelas Event juga meningkat dari 0,9342 menjadi 0,9542. Selain itu, F1 kelas
+Person dan Location tetap tinggi dan bahkan mengalami peningkatan. Dengan demikian,
+augmentasi data tidak hanya membantu kelas minoritas, tetapi juga mempertahankan kinerja
+kelas mayoritas.
+Peningkatan tersebut terjadi karena augmentasi data menghasilkan kalimat pelatihan baru
+melalui mention replacement dan parafrase. Mention replacement mengganti suatu entitas
+dengan entitas lain yang berasal dari kelas yang sama, sedangkan parafrase menghasilkan
+variasi kalimat dengan tetap mempertahankan entitas di dalamnya. Melalui kedua proses
+tersebut, model memperoleh lebih banyak variasi konteks untuk kelas Event dan Time yang
+sebelumnya memiliki jumlah contoh terbatas.
+Hasil pada tingkat token turut mendukung temuan tersebut. Jumlah false negative pada
+kelas Time berkurang dari 36 token pada baseline menjadi 7 token setelah augmentasi. Pada
+kelas Location, jumlah false negative juga berkurang dari 33 menjadi 17 token. Secara
+keseluruhan, augmentasi data menghasilkan jumlah kesalahan paling sedikit, yaitu 78 token,
+serta hanya menghasilkan empat token dengan kesalahan klasifikasi tipe.
+Berbeda dengan augmentasi data, weighted cross-entropy dan JSCL menghasilkan F1
+mikro yang lebih rendah daripada baseline. Pada weighted cross-entropy, pemberian bobot
+lebih besar kepada kelas minoritas membuat model lebih sering memprediksi suatu token
+sebagai entitas. Hal ini terlihat dari jumlah false positive yang meningkat dari 55 token pada
+baseline menjadi 69 token. Namun, peningkatan tersebut tidak disertai perbaikan recall yang
+berarti. Nilai recall yang dihasilkan sebesar 0,9533, hampir sama dengan baseline sebesar
+0,9548. Akibatnya, precision menurun menjadi 0,9427 dan menurunkan F1 mikro secara
+keseluruhan.
+Hasil tersebut menunjukkan bahwa pemberian bobot lebih besar pada fungsi loss tidak
+secara langsung menambah variasi informasi yang dipelajari oleh model. Teknik tersebut hanya
+meningkatkan perhatian model terhadap kelas minoritas. Apabila data kelas minoritas masih
+terbatas, peningkatan perhatian tersebut dapat membuat model lebih sering menebak entitas
+tanpa memperoleh pola tambahan yang cukup untuk menghasilkan prediksi yang tepat.
+Pembahasan selanjutnya diarahkan pada Analisis kesalahan pada tingkat token dilakukan
+untuk memahami perbedaan kinerja kelima skenario secara lebih rinci. Jenis kesalahan yang
+dianalisis meliputi false positive, false negative, kesalahan klasifikasi tipe, dan kesalahan batas
+entitas (boundary). Hasil analisis tersebut disajikan pada Tabel 4.4.
+Tabel 4.4 Rincian Jenis Kesalahan Tingkat Token pada Uji Coba 1
+Skenario
+Total
+Error
+FP (over-
+detection)
+FN (entitas
+terlewat)
+Misklasifikasi
+Tipe
+Kesalahan Batas
+B/I
+Baseline
+
+Weighted
+cross-
+entropy
+SCL
+JSCL
+Augmentation
+
+<!-- Halaman buku 75 · PDF 109 -->
+Tabel 4.4 menunjukkan bahwa sebagian besar kesalahan pada seluruh skenario berasal dari
+proses pendeteksian entitas, yaitu menentukan apakah suatu token termasuk entitas atau bukan.
+Kesalahan tersebut terlihat dari tingginya jumlah false negative dan false positive. Sementara
+itu, kesalahan klasifikasi tipe dan batas entitas memiliki jumlah yang relatif lebih sedikit.
+False negative menjadi jenis kesalahan yang paling sering muncul, dengan proporsi sekitar
+48 sampai 59 persen dari keseluruhan kesalahan. Kesalahan ini terjadi ketika entitas pada label
+acuan diprediksi sebagai kelas O atau bukan entitas. Sementara itu, false positive memiliki
+proporsi sekitar 32 sampai 40 persen dan terjadi ketika token yang bukan entitas justru
+diprediksi sebagai entitas. Kesalahan klasifikasi tipe hanya berkisar antara 3 sampai 6 persen,
+sedangkan kesalahan batas B/I berkisar antara 4 sampai 10 persen.
+Pola tersebut menunjukkan bahwa model pada umumnya telah mampu membedakan tipe
+Person, Location, Event, dan Time. Tantangan utama model terletak pada keputusan awal untuk
+menentukan apakah suatu token merupakan bagian dari entitas, bukan pada penentuan jenis
+entitasnya.
+Berdasarkan pemeriksaan terhadap token yang salah diprediksi, terdapat tiga penyebab
+utama kesalahan. Pertama, false positive banyak terjadi pada kata umum atau istilah abstrak
+yang ditulis menggunakan huruf kapital atau memiliki bentuk menyerupai nama. Salah satu
+contohnya adalah kata Hijabah, yang merujuk pada jabatan pemelihara Ka'bah tetapi diprediksi
+sebagai nama lokasi. Kesalahan serupa juga terjadi ketika penanda nasab atau gelar dianggap
+sebagai bagian dari nama tokoh.
+Kedua, false negative banyak ditemukan pada nama yang jarang muncul dalam data latih,
+seperti Cina, Ukazh, dan Dzil-Majaz. Beberapa kesalahan juga dipengaruhi oleh tanda baca
+yang menempel pada token sebagai akibat dari proses OCR. Bentuk token yang tidak konsisten
+tersebut menyebabkan model kesulitan mengenali entitas.
+Ketiga, kesalahan klasifikasi tipe umumnya terjadi pada nama yang dapat merujuk pada
+lokasi sekaligus peristiwa, seperti Uhud, Badr, dan Hudaibiyah. Ambiguitas tersebut
+merupakan karakteristik teks Sirah karena suatu peristiwa sering dinamai berdasarkan lokasi
+terjadinya. Dengan demikian, kesalahan ini tidak hanya berkaitan dengan kemampuan model,
+tetapi juga dengan konteks penggunaan nama tersebut dalam kalimat.
+Untuk memberikan gambaran yang lebih jelas, Tabel 4.5 sampai Tabel 4.8 menyajikan
+contoh setiap jenis kesalahan dari skenario augmentasi data sebagai skenario terbaik. Contoh
+diambil dari prediksi terhadap data uji dan disajikan berdasarkan token, label acuan, dan hasil
+prediksi model.
+Tabel 4.5 Contoh False Positive pada Chunk 000007-007
+Token
+Ground-truth
+Prediksi
+.
+O
+O
+Hijabah
+O
+B-LOCATION
+atau
+O
+O
+Wewenang
+O
+O
+Kata Hijabah merujuk pada jabatan pemelihara Ka'bah, bukan nama tempat. Oleh karena
+itu, kata tersebut diberi label O pada data acuan. Namun, model memprediksinya sebagai
+Location. Kesalahan ini menunjukkan bahwa kata umum atau istilah yang ditulis dengan huruf
+kapital dapat dianggap sebagai entitas oleh model.
+
+<!-- Halaman buku 76 · PDF 110 -->
+Tabel 4.6 Contoh False Negative pada Chunk 000001-002
+Token
+Ground-truth
+Prediksi
+India
+B-LOCATION
+B-LOCATION
+Dan
+O
+O
+Cina
+B-LOCATION
+O
+.
+O
+O
+Pada rangkaian “India dan Cina”, model berhasil mengenali India sebagai Location, tetapi
+tidak mengenali Cina. Kesalahan ini menunjukkan bahwa nama lokasi yang jarang muncul
+dalam data latih masih berpotensi terlewat oleh model.
+Tabel 4.7 Contoh Kesalahan Klasifikasi Tipe pada Chunk 000338-001
+Token
+Ground-truth
+Prediksi
+O
+O
+Hudaibiyah.
+B-LOCATION
+B-EVENT
+.
+O
+O
+Dalam konteks tersebut, Hudaibiyah merujuk pada lokasi sehingga diberi label Location
+pada data acuan. Namun, model memprediksinya sebagai Event. Kesalahan ini terjadi karena
+Hudaibiyah dapat merujuk pada lokasi maupun peristiwa, bergantung pada konteks kalimatnya.
+Tabel 4.8 Contoh Kesalahan Batas Entitas pada Chunk 000018-001
+Token
+Ground-truth
+Prediksi
+Senin
+B-TIME
+B-TIME
+pagi
+I-TIME
+I-TIME
+,
+I-TIME
+I-TIME
+tanggal
+B-TIME
+I-TIME
+I-TIME
+I-TIME
+Rabi’ul
+I-TIME
+I-TIME
+Awwal
+I-TIME
+I-TIME
+Pada data acuan, rentang waktu “Senin pagi, tanggal 9 Rabi'ul Awwal” dibagi menjadi dua
+segmen Time. Kata “tanggal” menjadi awal segmen kedua sehingga diberi label B-TIME.
+Namun, model memprediksinya sebagai I-TIME dan menggabungkan kedua segmen tersebut
+menjadi satu entitas. Meskipun tipe entitasnya tetap benar, batas antar entitas tidak dapat
+dikenali secara tepat.
+Pola kesalahan kelima skenario juga dapat diamati melalui confusion matrix pada Gambar
+4.4 dan perbandingan jumlah kesalahan pada Gambar 4.5.
+Gambar 4.4 menyandingkan confusion matrix tingkat token dari kelima skenario.
+Pewarnaan menggunakan skala logaritmik agar sel dengan nilai kecil tetap dapat terlihat,
+meskipun jumlah token O yang diprediksi sebagai O mencapai sekitar 46.100 token.
+Secara umum, kelima skenario menunjukkan pola yang serupa. Kesalahan antartipe entitas
+memiliki jumlah yang sangat kecil dan hanya berkisar antara 4 sampai 12 token. Sebagian besar
+kesalahan terkumpul pada baris dan kolom O, yaitu token entitas yang diprediksi sebagai bukan
+entitas atau token bukan entitas yang diprediksi sebagai entitas. Pola tersebut kembali
+menunjukkan bahwa tantangan utama model terletak pada pendeteksian entitas, bukan pada
+pembedaan tipe entitas.
+Pada skenario augmentasi data, hanya terdapat empat token dengan kesalahan tipe dan
+seluruhnya merupakan Location yang diprediksi sebagai Event. Kesalahan terbesar berasal dari
+Location yang diprediksi sebagai O sebanyak 17 token, diikuti Person yang diprediksi sebagai
+
+<!-- Halaman buku 77 · PDF 111 -->
+O sebanyak 15 token dan token O yang diprediksi sebagai Person sebanyak 12 token. Selain
+itu, terdapat tujuh token O yang diprediksi sebagai Location dan tujuh token Time yang
+diprediksi sebagai O.
+Kelas minoritas juga menunjukkan hasil yang relatif baik pada skenario augmentasi data.
+Sebanyak 136 token Event diprediksi dengan benar, dengan hanya dua token yang terlewat dan
+tidak terdapat kesalahan tipe. Sementara itu, sebanyak 383 token Time diprediksi dengan benar
+dan hanya tujuh token yang terlewat. Hasil tersebut sesuai dengan rincian pada Tabel 4.4, yaitu
+25 false positive, 41 false negative, dan empat kesalahan klasifikasi tipe.
+Sebagai perbandingan, weighted cross-entropy menghasilkan lebih banyak prediksi token
+O sebagai entitas. Sebanyak 45 token O diprediksi sebagai Person, 12 token sebagai Location,
+dan delapan token sebagai Time. Pola ini menjelaskan peningkatan false positive dan penurunan
+precision pada skenario tersebut. Dengan demikian, perbedaan utama antarskenario lebih
+banyak ditemukan pada kemampuan mendeteksi keberadaan entitas daripada kemampuan
+membedakan jenis entitas.
+
+Gambar 4.4 Confusion Matrix Tingkat Token pada Lima Skenario Uji Coba 1
+Gambar 4.5 menyajikan perbandingan kesalahan kelima skenario melalui empat bagian,
+yaitu jumlah keseluruhan kesalahan, komposisi false negative setiap kelas, komposisi false
+positive setiap kelas, dan tingkat false negative setiap kelas.
+Bagian jumlah keseluruhan kesalahan menunjukkan bahwa augmentasi data menghasilkan
+kesalahan paling sedikit, yaitu 78 token, sedangkan JSCL menghasilkan kesalahan paling
+banyak, yaitu 185 token. Pada bagian false negative, SCL memiliki jumlah entitas terlewat
+paling banyak, yaitu 102 token, sedangkan augmentasi data hanya memiliki 41 token. Pada
+bagian false positive, weighted cross-entropy dan JSCL menghasilkan jumlah tertinggi, yaitu
+69 token, sedangkan augmentasi data hanya menghasilkan 25 token.
+
+<!-- Halaman buku 78 · PDF 112 -->
+Setelah jumlah kesalahan dinormalisasi berdasarkan jumlah token pada setiap kelas, kelas
+Time tetap menjadi kelas yang paling sering terlewat. Pada baseline, tingkat false negative kelas
+Time mencapai sekitar 31 persen. Augmentasi data mampu menurunkannya menjadi sekitar 6
+persen. Sebaliknya, kelas Person memiliki tingkat false negative terendah, yaitu sekitar 1
+sampai 2 persen. Temuan ini menunjukkan bahwa jumlah contoh yang terbatas membuat kelas
+minoritas lebih rentan terlewat dan augmentasi data mampu mengurangi permasalahan tersebut.
+
+Gambar 4.5 Perbandingan Kesalahan Lima Skenario Uji Coba 1
+Karena augmentasi data menghasilkan kinerja terbaik, analisis selanjutnya dilakukan untuk
+mengetahui perubahan komposisi data latih sebelum dan sesudah augmentasi. Perbandingan
+jumlah token setiap label disajikan pada Tabel 4.9.
+Tabel 4.9 Distribusi Label Token Sebelum dan Sesudah Augmentasi
+Label token
+Sebelum augmentasi
+Sesudah augmentasi
+Perubahan
+O (bukan entitas)
+108.815
+163.352
++54.537 (+50%)
+Person (B+I)
+5.519
+8.311
++2.792 (+51%)
+Location (B+I)
+1.038
+1.875
++837 (+81%)
+Time (B+I)
+1.107
++443 (+67%)
+Event (B+I)
++626 (+198%)
+Total token
+116.353
+175.588
++59.235 (+51%)
+
+<!-- Halaman buku 79 · PDF 113 -->
+Gambar 4.6 Distribusi Label Token Sebelum dan Sesudah Augmentasi
+Gambar 4.6 memvisualisasikan perubahan distribusi token dalam dua bagian agar jumlah
+token O yang jauh lebih besar tidak menutupi perubahan pada kelas entitas. Bagian pertama
+membandingkan jumlah token O sebelum dan sesudah augmentasi, yaitu dari 108.815 menjadi
+163.352 token. Bagian kedua menampilkan perubahan pada keempat kelas entitas dengan skala
+yang sama.
+Kelas Event mengalami kenaikan paling besar secara relatif, yaitu sebesar 198 persen,
+meskipun jumlahnya tetap lebih kecil dibandingkan kelas lainnya. Pada tingkat entitas yang
+dihitung berdasarkan penanda awal B, jumlah entitas meningkat dari 4.247 menjadi 6.780.
+Kelas Event bertambah dari 167 menjadi 495 entitas atau meningkat sekitar 196 persen,
+sedangkan kelas Time bertambah dari 188 menjadi 299 entitas atau meningkat sekitar 59 persen.
+Sementara itu, jumlah Person dan Location masing-masing meningkat sekitar 47 dan 75 persen.
+Peningkatan jumlah dan variasi contoh tersebut membantu model mempelajari kelas Event
+dan Time secara lebih baik. Hal ini sejalan dengan peningkatan F1 kedua kelas pada Tabel 4.3,
+khususnya kelas Time yang mengalami peningkatan paling besar.
+Tabel 4.9 juga menunjukkan bahwa jumlah token O meningkat dari 108.815 menjadi
+163.352 token. Meskipun demikian, proporsinya terhadap keseluruhan token relatif tetap, yaitu
+dari 93,5 persen menjadi 93,0 persen. Kondisi ini terjadi karena proses augmentasi
+menambahkan kalimat baru secara utuh sehingga token entitas dan token bukan entitas
+bertambah secara bersamaan.
+Token O tidak dikurangi karena NER merupakan tugas pelabelan berurutan (sequence
+labeling). Token bukan entitas membentuk konteks yang menghubungkan entitas dalam suatu
+kalimat. Menghapus token O secara langsung dapat merusak struktur kalimat dan urutan label
+BIO sehingga konteks yang diperlukan model untuk menentukan batas entitas ikut hilang.
+Selain itu, kalimat yang mengandung sedikit entitas tetap diperlukan sebagai contoh negatif.
+Kalimat tersebut membantu model mempelajari kata atau frasa yang bukan termasuk entitas.
+Hasil weighted cross-entropy memberikan gambaran mengenai risiko ketika model terlalu
+diarahkan untuk memprediksi kelas entitas. Pada skenario tersebut, jumlah false positive
+meningkat menjadi 69 token dan precision menurun menjadi 0,9427. Meskipun kondisi ini
+
+<!-- Halaman buku 80 · PDF 114 -->
+tidak sama dengan pengurangan token O, hasil tersebut menunjukkan bahwa berkurangnya
+kecenderungan model memilih kelas O dapat meningkatkan risiko deteksi entitas yang keliru.
+Distribusi data latih juga perlu tetap mendekati karakteristik teks Sirah Nabawiyah. Dalam
+data penelitian ini, sekitar sembilan dari sepuluh token merupakan token bukan entitas.
+Pengurangan token O secara berlebihan dapat menyebabkan model dilatih menggunakan
+distribusi yang tidak sesuai dengan teks sebenarnya dan meningkatkan risiko false positive
+ketika model digunakan pada data baru.
+Berdasarkan pertimbangan tersebut, penanganan ketidakseimbangan dilakukan dengan
+menambah variasi contoh kelas minoritas melalui augmentasi data, bukan dengan mengurangi
+token O. Strategi ini meningkatkan keterwakilan kelas Event dan Time tanpa menghilangkan
+konteks kalimat. Hasil pengujian menunjukkan bahwa augmentasi data menghasilkan kinerja
+paling baik dengan F1 mikro sebesar 0,9756 dan F1 makro sebesar 0,9543. Dengan demikian,
+augmentasi data dipilih sebagai teknik penanganan ketidakseimbangan yang digunakan pada
+tahap selanjutnya.
+4.3 Uji Coba 2: Komparasi Model Pra-Latih
+Uji coba kedua bertujuan mengetahui pengaruh pemilihan model pra-latih (backbone)
+terhadap kualitas pengenalan entitas. Pengujian ini dilakukan untuk menentukan model
+berbahasa Indonesia yang paling sesuai digunakan pada teks Sirah Nabawiyah dalam alur
+iterative self-training. Lima model dibandingkan dalam pengujian ini, yaitu IndoBERT uncased
+(indolem/indobert-base-uncased) sebagai baseline, cahya/bert-base-indonesian-1.5G,
+DistilBERT Indonesia, IndoBERT cased, dan RoBERTa Indonesia.
+Pengujian dilakukan menggunakan alur yang sama untuk kelima model. Data latih, ambang
+batas pseudo-labelling, dan parameter pelatihan lainnya dibuat sama sehingga komponen yang
+dibedakan hanya model pra-latihnya. Seluruh model dievaluasi pada data uji yang sama dengan
+Uji Coba 1, yaitu 254 chunk yang terdiri atas 49.739 token dan 1.969 entitas. Proses pengujian
+mengikuti prosedur pada Kode Semu 3.12.
+Kualitas model diukur menggunakan pustaka seqeval pada tingkat entitas. Metrik utama
+yang digunakan adalah F1-score karena mempertimbangkan keseimbangan antara precision
+dan recall. Hasil dilaporkan dalam bentuk F1 mikro untuk menggambarkan kinerja keseluruhan
+dan F1 makro untuk menunjukkan rata-rata kinerja setiap kelas.
+Untuk menganalisis model yang menghasilkan nilai berbeda secara mencolok, evaluasi
+dilengkapi dengan dua pemeriksaan tambahan. Pemeriksaan pertama dilakukan terhadap
+perubahan F1 dari checkpoint awal hingga iterasi terakhir untuk mengetahui apakah penurunan
+kinerja telah terjadi sejak pelatihan awal atau muncul selama proses self-training. Pemeriksaan
+kedua dilakukan terhadap kesalahan batas B/I pada tingkat token untuk mengetahui apakah
+model mengalami kesulitan dalam menentukan batas entitas.
+Hasil pengujian agregat disajikan pada Tabel 4.10, sedangkan F1 setiap kelas entitas
+disajikan pada Tabel 4.11.
+
+<!-- Halaman buku 81 · PDF 115 -->
+Tabel 4.10 Precision, Recall, dan F1-score Agregat Uji Coba 2
+Model
+Precision
+Recall
+F1-score (mikro)
+IndoBERT uncased (baseline)
+0,9524
+0,9548
+0,9536
+Cahya uncased
+0,9388
+0,9187
+0,9286
+DistilBERT uncased
+0,9502
+0,9208
+0,9353
+IndoBERT cased
+0,7289
+0,8329
+0,7774
+RoBERTa
+0,7654
+0,8532
+0,8069
+
+Tabel 4.11 F1-score per Kelas Entitas pada Uji Coba 2
+Model
+F1 Person
+F1 Location
+F1 Event
+F1 Time
+F1 makro
+IndoBERT uncased (baseline)
+0,9690
+0,9530
+0,9342
+0,7983
+0,9136
+Cahya uncased
+0,9493
+0,9232
+0,9315
+0,7203
+0,8811
+DistilBERT uncased
+0,9581
+0,9232
+0,9116
+0,7479
+0,8852
+IndoBERT cased
+0,7843
+0,8717
+0,5549
+0,5461
+0,6893
+RoBERTa
+0,8135
+0,8766
+0,7654
+0,5404
+0,7490
+
+Gambar 4.7 F1-score Agregat Lima Model pada Uji Coba 2
+Gambar 4.7 memperlihatkan perbandingan F1 mikro dan F1 makro dari kelima model.
+Berdasarkan visualisasi tersebut, model dapat dikelompokkan menjadi dua kelompok. Tiga
+model uncased, yaitu IndoBERT, Cahya BERT, dan DistilBERT, menghasilkan F1 mikro pada
+rentang 0,9286 sampai 0,9536. Sementara itu, IndoBERT cased dan RoBERTa menghasilkan
+nilai yang jauh lebih rendah, masing-masing sebesar 0,7774 dan 0,8069.
+
+<!-- Halaman buku 82 · PDF 116 -->
+Gambar 4.8 F1-score per Kelas pada Lima Model Uji Coba 2
+Gambar 4.8 memperlihatkan bahwa penurunan kinerja IndoBERT cased dan RoBERTa
+tidak terjadi secara merata pada seluruh kelas. Penurunan yang konsisten pada kedua model
+terlihat pada kelas Person dan Time. F1 Person menurun menjadi 0,7843 pada IndoBERT cased
+dan 0,8135 pada RoBERTa, sedangkan tiga model uncased memperoleh nilai antara 0,9493
+dan 0,9690. Pada kelas Time, kedua model tersebut hanya memperoleh nilai sekitar 0,54,
+sedangkan model uncased memperoleh nilai antara 0,7203 dan 0,7983.
+Kelas Event juga mengalami penurunan, terutama pada IndoBERT cased yang hanya
+memperoleh F1 sebesar 0,5549. Namun, kelas Location masih menghasilkan F1 sebesar 0,8717
+pada IndoBERT cased dan 0,8766 pada RoBERTa. Nilai tersebut tetap lebih rendah daripada
+model uncased, tetapi selisihnya tidak sebesar kelas lainnya.
+Berdasarkan Tabel 4.10, IndoBERT uncased memperoleh kinerja terbaik dengan F1 mikro
+sebesar 0,9536. DistilBERT uncased menempati urutan kedua dengan nilai 0,9353, diikuti
+Cahya uncased sebesar 0,9286. Sementara itu, IndoBERT cased dan RoBERTa tertinggal
+sekitar 15 sampai 18 poin persentase dari IndoBERT uncased.
+Perbedaan yang cukup besar tersebut perlu dianalisis lebih lanjut agar tidak langsung
+ditafsirkan bahwa model cased dan RoBERTa secara umum kurang sesuai untuk tugas NER.
+Hasil pemeriksaan menunjukkan bahwa rendahnya kinerja kedua model kemungkinan
+berkaitan dengan aspek teknis pada proses tokenisasi dan penyelarasan label dalam alur
+penelitian ini. Namun, dugaan tersebut masih memerlukan pemeriksaan kode lebih lanjut
+sehingga belum dapat dinyatakan sebagai penyebab yang pasti.
+Perbedaan pola kesalahan kelima model dapat diamati melalui confusion matrix pada
+Gambar 4.9.
+
+<!-- Halaman buku 83 · PDF 117 -->
+Gambar 4.9 Confusion Matrix Tingkat Token pada Lima Model Uji Coba 2
+Tiga model uncased menunjukkan pola yang relatif serupa dengan model pada Uji Coba 1.
+Kesalahan antartipe entitas relatif sedikit dan sebagian besar kesalahan terkumpul pada baris
+dan kolom O. Jumlah token O yang diprediksi sebagai Person pada ketiga model tersebut
+berkisar antara 23 sampai 39 token.
+Sebaliknya, IndoBERT cased dan RoBERTa menghasilkan jumlah kesalahan yang lebih
+besar. Pada IndoBERT cased, terdapat 200 token O yang diprediksi sebagai Person dan 149
+token Person yang diprediksi sebagai O. Pada RoBERTa, jumlahnya masing-masing mencapai
+165 dan 136 token. Hasil ini menunjukkan bahwa kedua model lebih sering melewatkan entitas
+Person sekaligus lebih sering menandai token bukan entitas sebagai Person.
+Berikutnya berdasarkan Gambar 4.10 jumlah keseluruhan kesalahan menunjukkan bahwa
+IndoBERT cased menghasilkan 774 kesalahan dan RoBERTa menghasilkan 677 kesalahan.
+Jumlah tersebut jauh lebih tinggi dibandingkan tiga model uncased yang menghasilkan sekitar
+165 sampai 263 kesalahan.
+Analisis false positive dan false negative menunjukkan bahwa peningkatan kesalahan
+terjadi pada kedua jenis kesalahan tersebut. Kelas Person memberikan jumlah kesalahan
+absolut terbesar karena memiliki jumlah entitas terbanyak. Pada IndoBERT cased, terdapat 200
+token bukan entitas yang diprediksi sebagai Person dan 149 token Person yang diprediksi
+sebagai O. Sementara itu, RoBERTa menghasilkan masing-masing 165 dan 136 token untuk
+kedua jenis kesalahan tersebut.
+Setelah jumlah kesalahan dinormalisasi berdasarkan jumlah token setiap kelas, kelas Event
+dan Time menunjukkan tingkat entitas terlewat yang lebih tinggi pada IndoBERT cased dan
+RoBERTa dibandingkan model uncased. Kondisi ini menunjukkan bahwa penurunan kinerja
+tidak hanya terjadi pada kelas mayoritas, tetapi juga memberikan pengaruh yang lebih besar
+terhadap kelas dengan jumlah contoh terbatas.
+
+<!-- Halaman buku 84 · PDF 118 -->
+Gambar 4.10 Perbandingan Kesalahan Lima Model Uji Coba 2
+Untuk mengetahui apakah rendahnya kinerja IndoBERT cased dan RoBERTa disebabkan
+oleh proses self-training, nilai F1 diperiksa sejak checkpoint awal hingga iterasi terakhir.
+Hasilnya disajikan pada Tabel 4.12.
+Tabel 4.12 Perubahan F1 Model Anomali Selama Self-Training
+Model
+F1 base
+F1 iterasi 2
+F1 iterasi 4
+F1 iterasi 6
+IndoBERT cased
+0,7608
+0,7821
+0,7772
+0,7770
+RoBERTa
+0,7836
+0,8018
+0,7945
+0,8068
+
+Tabel 4.12 menunjukkan bahwa nilai F1 kedua model mengalami perubahan selama proses
+self-training, tetapi tidak menurun secara terus-menerus. IndoBERT cased meningkat dari
+0,7608 menjadi 0,7821 pada iterasi kedua, kemudian sedikit menurun hingga mencapai 0,7770
+pada iterasi keenam. RoBERTa meningkat dari 0,7836 menjadi 0,8018, sempat menurun
+menjadi 0,7945, kemudian meningkat kembali menjadi 0,8068.
+Nilai akhir kedua model tetap lebih tinggi daripada nilai awalnya. Dengan demikian,
+rendahnya kinerja kedua model telah terlihat sejak checkpoint awal dan bukan baru muncul
+pada proses self-training. Meskipun demikian, hasil ini tidak sepenuhnya meniadakan
+kemungkinan bahwa self-training memengaruhi kinerja model karena terdapat perubahan nilai
+pada setiap iterasi.
+
+<!-- Halaman buku 85 · PDF 119 -->
+Bukti berikutnya diperoleh dari jumlah kesalahan batas B/I. Pada tiga model uncased,
+kesalahan batas hanya berkisar antara 7 sampai 12 token. Sebaliknya, jumlah kesalahan batas
+meningkat menjadi 138 token pada IndoBERT cased dan 133 token pada RoBERTa.
+Pada IndoBERT cased, sebanyak 122 kesalahan batas terjadi pada kelas Person, 13 pada
+Time, dan tiga pada Event. Pada RoBERTa, sebanyak 114 kesalahan terjadi pada Person dan
+13 pada Time, sedangkan sisanya tersebar pada kelas lain. Pola tersebut menunjukkan bahwa
+sebagian besar kesalahan batas terjadi pada entitas Person, terutama nama yang terdiri atas
+beberapa kata.
+Nama tokoh dalam teks Sirah sering terdiri atas beberapa token, misalnya “Abdul
+Muththalib” dan “Amr bin Luhay”. Entitas Time juga dapat berbentuk rangkaian panjang,
+misalnya “hari Senin malam tanggal 21 dari bulan Ramadhan”. Bentuk entitas seperti ini
+memerlukan penyelarasan penanda B dan I yang lebih rumit dibandingkan entitas satu token.
+Oleh karena itu, perbedaan proses tokenisasi diduga memengaruhi kemampuan model dalam
+menentukan awal dan kelanjutan suatu entitas.
+Dugaan tersebut mengarah pada kemungkinan terjadinya ketidaksesuaian penyelarasan
+label dari kata ke subword. IndoBERT cased menggunakan tokenisasi WordPiece dengan
+mempertahankan kapitalisasi, sedangkan RoBERTa menggunakan byte-level byte pair
+encoding. Sementara itu, alur awal penelitian dikembangkan dan diuji menggunakan tokenizer
+WordPiece uncased. Perbedaan cara pemecahan kata tersebut mungkin menyebabkan fungsi
+penyelarasan label tidak bekerja secara konsisten pada seluruh model.
+Namun, hasil pengujian ini belum cukup untuk menyimpulkan bahwa ketidaksesuaian
+penyelarasan label merupakan penyebab pasti. Pemeriksaan lebih lanjut terhadap fungsi
+tokenisasi
+dan
+penyelarasan
+label,
+terutama
+penggunaan
+word_ids
+dan
+is_split_into_words, masih diperlukan. Oleh karena itu, hasil yang rendah pada
+IndoBERT cased dan RoBERTa tidak dapat langsung diartikan bahwa kedua model tersebut
+secara umum lebih buruk untuk NER pada teks Sirah.
+Dari sisi jenis kesalahan, tiga model uncased menunjukkan pola yang serupa dengan Uji
+Coba 1, yaitu didominasi oleh false positive dan false negative, sedangkan kesalahan tipe dan
+batas relatif sedikit. Pada IndoBERT cased dan RoBERTa, kesalahan batas meningkat secara
+mencolok. Kedua model juga menghasilkan 39 kesalahan klasifikasi tipe. Kesalahan tersebut
+banyak melibatkan kelas Person dan Location, sehingga menguatkan dugaan adanya
+permasalahan dalam penanganan entitas yang terdiri atas beberapa token. Contoh kesalahan
+batas pada IndoBERT cased dan RoBERTa disajikan pada Tabel 4.13 dan Tabel 4.14.
+Tabel 4.13 Kesalahan Batas Person pada IndoBERT Cased, Chunk 000013-004
+Token
+Ground-truth
+Prediksi
+dari
+O
+O
+Amr
+B-PERSON
+I-PERSON
+bin
+I-PERSON
+I-PERSON
+Syu’aib
+I-PERSON
+B-PERSON
+.
+O
+O
+Nama “Amr bin Syu'aib” seharusnya dikenali sebagai satu entitas Person dengan urutan
+label B-I-I. Namun, token “Amr” diprediksi sebagai I-PERSON, sedangkan “Syu'aib”
+diprediksi sebagai B-PERSON. Akibatnya, batas awal dan kelanjutan entitas bergeser meskipun
+tipe entitasnya tetap benar.
+
+<!-- Halaman buku 86 · PDF 120 -->
+Tabel 4.14 Kesalahan Batas Person pada RoBERTa, Chunk 000007-006
+Token
+Ground-truth
+Prediksi
+dari
+O
+O
+Amr
+B-PERSON
+I-PERSON
+bin
+I-PERSON
+I-PERSON
+Syu’aib
+I-PERSON
+I-PERSON
+Pada nama “Murrah bin Auf”, token “Murrah” seharusnya menjadi awal entitas dan diberi
+label B-PERSON. Namun, model memprediksinya sebagai I-PERSON. Akibatnya, rangkaian
+nama tersebut hanya memiliki label I tanpa penanda awal B. Contoh ini memperlihatkan
+kesulitan model dalam menentukan awal entitas yang terdiri atas beberapa token.
+Pola kesalahan pada salah satu model anomali, yakni IndoBERT cased diperlihatkan secara
+lebih khusus pada Gambar 4.11.
+
+Gambar 4.11 Confusion Matrix IndoBERT Cased
+Dibandingkan dengan model dengan kinerja baik pada Gambar 4.4, kesalahan yang
+melibatkan kelas Person pada IndoBERT cased terlihat lebih banyak. Sebanyak 200 token O
+diprediksi sebagai Person, sedangkan 149 token Person diprediksi sebagai O. Nilai tersebut
+jauh lebih tinggi dibandingkan skenario augmentasi data pada Uji Coba 1 yang masing-masing
+hanya menghasilkan 12 dan 15 token.
+
+<!-- Halaman buku 87 · PDF 121 -->
+Kesalahan klasifikasi antartipe juga meningkat menjadi 39 token, dibandingkan dengan
+empat token pada skenario augmentasi data. Kesalahan tersebut tersebar pada beberapa
+pasangan kelas, terutama yang melibatkan Person dan Location.
+Perlu diperhatikan juga bahwa confusion matrix pada Gambar 4.11 disusun berdasarkan
+tipe entitas dengan menggabungkan label B dan I. Oleh karena itu, kesalahan batas B/I tidak
+ditampilkan sebagai sel yang terpisah. Token dengan tipe Person yang benar tetapi memiliki
+penanda B/I yang salah masih dapat terlihat sebagai prediksi tipe yang benar dalam matriks.
+Dengan demikian, Gambar 4.11 lebih menggambarkan kesalahan deteksi dan klasifikasi tipe,
+sedangkan kesalahan batas perlu dibaca melalui analisis token secara terpisah.
+Secara keseluruhan, IndoBERT uncased menghasilkan kinerja terbaik dan paling stabil
+dalam alur penelitian ini, dengan F1 mikro sebesar 0,9536 dan F1 makro sebesar 0,9136. Hasil
+rendah pada IndoBERT cased dan RoBERTa telah terlihat sejak pelatihan awal dan disertai
+peningkatan kesalahan batas entitas. Namun, karena dugaan permasalahan penyelarasan label
+belum diverifikasi pada tingkat kode, hasil tersebut tidak dapat digunakan untuk menyimpulkan
+bahwa model cased dan RoBERTa secara umum kurang sesuai untuk tugas NER.
+4.4 Uji Coba 3: Penambahan Fitur POS
+Uji coba ketiga bertujuan mengetahui apakah penambahan informasi kelas kata atau part-
+of-speech (POS), seperti kata benda, kata kerja, dan nama diri, dapat membantu model
+mengenali entitas secara lebih baik. Informasi kelas kata diharapkan dapat memberikan
+petunjuk tambahan kepada model. Sebagai contoh, token yang termasuk nama diri memiliki
+kemungkinan lebih besar untuk menjadi bagian dari suatu entitas.
+Pengujian dilakukan dengan membandingkan model tanpa fitur POS sebagai baseline dan
+model yang menggunakan POS sebagai fitur tambahan pada masukan. Kedua model dilatih
+menggunakan data, model dasar, dan prosedur yang sama. Dengan demikian, komponen yang
+dibedakan hanya penggunaan fitur POS.
+Kedua skenario dievaluasi pada data uji yang sama dengan dua uji coba sebelumnya, yaitu
+254 chunk yang terdiri atas 49.739 token dan 1.969 entitas. Evaluasi dilakukan menggunakan
+pustaka seqeval pada tingkat entitas. Metrik utama yang digunakan adalah F1-score, yang
+mempertimbangkan keseimbangan antara precision dan recall. Hasil dilaporkan dalam bentuk
+F1 mikro dan F1 makro serta dilengkapi dengan jumlah kesalahan pada tingkat token. Hasil
+evaluasi agregat disajikan pada Tabel 4.15, sedangkan F1 setiap kelas entitas disajikan pada
+Tabel 4.16.
+Tabel 4.15 Precision, Recall, F1-score Agregat, dan Jumlah Kesalahan Uji Coba 3
+Skenario
+Precision
+Recall
+F1-score (mikro)
+Baseline
+0,9524
+0,9548
+0,9536
+POS
+0,9628
+0,9467
+0,9547
+
+Tabel 4.16 F1-score per Kelas Entitas pada Uji Coba 3
+Skenario
+F1 Person
+F1 Location
+F1 Event
+F1 Time
+F1 makro
+Baseline
+0,9690
+0,9530
+0,9342
+0,7983
+0,9136
+POS
+0,9693
+0,9466
+0,9333
+0,8376
+0,9217
+
+<!-- Halaman buku 88 · PDF 122 -->
+Gambar 4.12 F1-score Agregat Baseline dan Model dengan Fitur POS
+Gambar 4.12 memperlihatkan bahwa nilai F1 mikro kedua skenario hampir sama. Model
+dengan fitur POS memperoleh F1 mikro sebesar 0,9547, sedangkan baseline memperoleh
+0,9536. Perbedaannya hanya sebesar 0,0011. F1 makro model dengan fitur POS juga sedikit
+lebih tinggi, yaitu 0,9217 dibandingkan 0,9136 pada baseline.
+
+Gambar 4.13 F1-score per Kelas pada Baseline dan Model dengan Fitur POS
+Gambar 4.13 menunjukkan bahwa perubahan kinerja setelah penambahan fitur POS tidak
+terjadi secara konsisten pada seluruh kelas. F1 kelas Time meningkat dari 0,7983 menjadi
+
+<!-- Halaman buku 89 · PDF 123 -->
+0,8376. Sebaliknya, F1 kelas Location menurun dari 0,9530 menjadi 0,9466. Kinerja kelas
+Person dan Event relatif tidak berubah.
+Secara agregat, penambahan fitur POS belum menunjukkan peningkatan yang jelas. F1
+mikro hanya meningkat sebesar 0,0011, sedangkan jumlah kesalahan pada tingkat token hanya
+berkurang satu, yaitu dari 165 menjadi 164 token. Karena pengujian belum dilakukan berulang
+kali menggunakan beberapa random seed dan belum dilengkapi uji signifikansi, selisih yang
+kecil tersebut belum cukup untuk menunjukkan bahwa penambahan fitur POS secara konsisten
+meningkatkan kinerja model.
+Perubahan nilai precision dan recall juga memperlihatkan pola yang berbeda. Penambahan
+fitur POS meningkatkan precision dari 0,9524 menjadi 0,9628, tetapi menurunkan recall dari
+0,9548 menjadi 0,9467. Hasil tersebut menunjukkan bahwa model menjadi lebih selektif dalam
+memprediksi entitas. Model menghasilkan lebih sedikit prediksi entitas yang keliru, tetapi pada
+saat yang sama melewatkan lebih banyak entitas yang seharusnya dikenali.
+Kenaikan F1 makro dari 0,9136 menjadi 0,9217 sebagian besar berasal dari peningkatan
+kinerja kelas Time. Kelas tersebut meningkat sebesar 0,0393, sedangkan perubahan pada tiga
+kelas lainnya relatif kecil atau justru menurun. Selain itu, kelas Time hanya memiliki 118 entitas
+dalam data uji sehingga perubahan pada beberapa prediksi dapat memberikan pengaruh yang
+lebih besar terhadap nilai F1. Oleh karena itu, peningkatan F1 makro tersebut perlu ditafsirkan
+secara hati-hati.
+Pemeriksaan terhadap data yang digunakan dalam skenario POS menunjukkan bahwa fitur
+POS yang digunakan bukan nilai sementara (placeholder). Kolom POS pada
+data_with_pos_20260610 dan data pelatihan ulang skenario POS berisi 17 kategori Universal
+Dependencies, seperti PROPN, NOUN, VERB, PRON, dan ADP. Label POS tersebut juga
+telah disejajarkan dengan token dalam kalimat.
+Sebanyak 1.131 dari 1.189 token yang berlabel Person memiliki kategori PROPN atau
+nama diri. Hasil ini menunjukkan bahwa fitur POS telah memuat informasi kelas kata yang
+sesuai dengan karakteristik entitas. Temuan eksplorasi data sebelumnya yang menunjukkan
+bahwa kolom pos_tag hanya berisi nilai “NN” berasal dari data utama versi lama dan tidak
+digunakan dalam pengujian ini.
+Dengan demikian, hasil pengujian yang relatif sama dengan baseline bukan disebabkan
+oleh penggunaan fitur POS yang kosong atau tidak bervariasi. Salah satu kemungkinan
+penjelasannya adalah bahwa sebagian informasi kelas kata telah dipelajari oleh IndoBERT
+melalui konteks kalimat selama proses pra pelatihan. Oleh karena itu, penambahan POS secara
+eksplisit mungkin hanya memberikan sedikit informasi baru. Namun, penjelasan ini masih
+berupa dugaan berdasarkan hasil pengujian dan belum diuji melalui analisis khusus terhadap
+representasi model.
+Analisis pada tingkat token menunjukkan bahwa pola kesalahan model dengan fitur POS
+masih menyerupai baseline. Sebagian besar kesalahan berasal dari keputusan untuk
+menentukan apakah suatu token merupakan entitas atau bukan, sedangkan kesalahan klasifikasi
+tipe dan batas entitas relatif sedikit.
+Berdasarkan Tabel 4.17, dimana dari total 164 token yang salah, sebanyak 106 token atau
+sekitar 65 persen merupakan false negative. Kesalahan ini terjadi ketika entitas pada label acuan
+
+<!-- Halaman buku 90 · PDF 124 -->
+diprediksi sebagai O. Sebanyak 40 token atau sekitar 24 persen merupakan false positive, yaitu
+token bukan entitas yang diprediksi sebagai entitas. Sementara itu, terdapat 10 token dengan
+kesalahan klasifikasi tipe dan delapan token dengan kesalahan batas B/I.
+Tabel 4.17 Rincian Jenis Kesalahan Tingkat Token pada Uji Coba 3
+Skenario
+Total
+Error
+FP (over-
+detection)
+FN (entitas
+terlewat)
+Misklasifikasi
+Tipe
+Kesalahan Batas
+B/I
+Baseline
+POS
+
+Dibandingkan dengan baseline, penambahan fitur POS menurunkan false positive dari 55
+menjadi 40 token. Namun, jumlah false negative meningkat dari 98 menjadi 106 token.
+Perubahan tersebut sejalan dengan peningkatan precision dan penurunan recall pada Tabel 4.15.
+Model menghasilkan lebih sedikit prediksi entitas yang salah, tetapi lebih banyak melewatkan
+entitas.
+Tambahan entitas yang terlewat terutama terlihat pada kelas Location. Jumlah token
+Location yang diprediksi sebagai O meningkat dari 33 token pada baseline menjadi 43 token
+pada skenario POS. Salah satu contohnya adalah nama tempat “Pakistan”, yang seharusnya
+diberi label B-LOCATION, tetapi diprediksi sebagai O. Contoh kesalahan tersebut disajikan
+pada Tabel 4.18.
+Tabel 4.18 Contoh False Negative pada Chunk 000002-004
+Token
+Ground-truth
+Prediksi
+pula
+O
+O
+ke
+O
+O
+Pakistan
+B-LOCATION
+O
+,
+O
+O
+dan
+O
+O
+
+Pada penggalan tersebut, “Pakistan” merupakan nama tempat sehingga diberi label B-
+LOCATION pada data acuan. Namun, model memprediksinya sebagai O. Kesalahan ini
+menunjukkan bahwa penambahan fitur POS belum sepenuhnya membantu model mengenali
+nama lokasi yang jarang muncul dalam data latih.
+Pola kesalahan model dengan fitur POS ditampilkan melalui confusion matrix pada
+Gambar 4.14. Gambar 4.14 menunjukkan bahwa sebagian besar kesalahan terkumpul pada
+baris dan kolom O. Sementara itu, kesalahan antar tipe entitas relatif sedikit, yaitu sekitar 10
+token. Pola ini menyerupai model yang berkinerja baik pada uji coba sebelumnya dan
+menunjukkan bahwa tantangan utama tetap terletak pada pendeteksian keberadaan entitas.
+Dibandingkan dengan baseline, jumlah token O yang diprediksi sebagai Person menurun
+dari 38 menjadi 28 token. Sebaliknya, jumlah token Location yang diprediksi sebagai O
+meningkat dari 33 menjadi 43 token. Pola tersebut kembali memperlihatkan bahwa fitur POS
+membuat model lebih selektif dalam memprediksi entitas. Model menghasilkan lebih sedikit
+deteksi yang keliru, tetapi melewatkan lebih banyak entitas.
+
+<!-- Halaman buku 91 · PDF 125 -->
+Gambar 4.14 Confusion Matrix Model dengan Fitur POS
+
+Gambar 4.15 Perbandingan Kesalahan Baseline dan Model dengan Fitur POS
+
+<!-- Halaman buku 92 · PDF 126 -->
+Gambar 4.15 membandingkan kesalahan kedua skenario berdasarkan jumlah keseluruhan
+kesalahan, false negative, false positive, dan tingkat false negative setiap kelas. Jumlah
+keseluruhan kesalahan kedua skenario hampir sama, yaitu 165 token pada baseline dan 164
+token pada model dengan fitur POS.
+Perbedaan yang lebih jelas terlihat pada komposisi kesalahan. Model dengan fitur POS
+menghasilkan 106 false negative, lebih tinggi daripada baseline yang menghasilkan 98 token.
+Sebaliknya, jumlah false positive menurun dari 55 menjadi 40 token. Dengan demikian,
+berkurangnya prediksi entitas yang keliru diikuti oleh bertambahnya entitas yang terlewat.
+Tingkat false negative setiap kelas juga tidak menunjukkan perbaikan yang konsisten.
+Kelas Time mengalami sedikit perbaikan, sedangkan kelas Location justru mengalami
+peningkatan jumlah entitas yang terlewat. Perubahan yang tidak searah tersebut memperkuat
+temuan bahwa penambahan fitur POS belum memberikan perbaikan secara menyeluruh.
+Berdasarkan hasil pengujian, penambahan fitur POS tidak memberikan peningkatan
+kinerja yang jelas dibandingkan baseline. F1 mikro hanya meningkat dari 0,9536 menjadi
+0,9547 dan jumlah kesalahan berkurang satu token. Peningkatan precision juga disertai
+penurunan recall, yang menunjukkan adanya pertukaran antara berkurangnya prediksi entitas
+yang salah dan bertambahnya entitas yang terlewat. Oleh karena itu, fitur POS tidak dipilih
+sebagai komponen tambahan dalam konfigurasi akhir.
+Berdasarkan ketiga uji coba, konfigurasi terbaik adalah IndoBERT uncased dengan teknik
+augmentasi data. Konfigurasi tersebut menghasilkan F1 mikro sebesar 0,9756 dan F1 makro
+sebesar 0,9543. Augmentasi data memberikan peningkatan paling jelas, khususnya pada kelas
+Time, sedangkan weighted cross-entropy, SCL, JSCL, pergantian model pra-latih, dan
+penambahan fitur POS belum menghasilkan peningkatan yang lebih baik secara keseluruhan.
+Analisis kesalahan menunjukkan bahwa sebagian besar kesalahan pada skenario yang
+berkinerja baik berasal dari false positive dan false negative. Sementara itu, kesalahan
+klasifikasi tipe dan batas entitas memiliki jumlah yang relatif kecil. Hal ini menunjukkan bahwa
+tantangan utama model terletak pada menentukan apakah suatu token merupakan bagian dari
+entitas, bukan dalam membedakan tipe entitasnya.
+Kelas Time menjadi kelas yang paling sulit dikenali pada sebagian besar skenario. Entitas
+waktu sering terdiri atas beberapa token dan dapat ditulis dalam bentuk yang beragam. Selain
+itu, jumlah contoh Time pada data latih lebih sedikit dibandingkan Person dan Location.
+Kombinasi tersebut dapat menyebabkan model lebih sulit mengenali seluruh rentang entitas
+waktu secara tepat.
+Meskipun Event juga memiliki jumlah contoh yang terbatas, kinerjanya tidak selalu
+menjadi yang terendah. Pada beberapa skenario, F1 Event bahkan lebih tinggi daripada
+Location atau Time. Oleh karena itu, jumlah data bukan satu-satunya faktor yang menentukan
+tingkat kesulitan suatu kelas. Kejelasan pola penyebutan dan variasi bentuk entitas juga dapat
+memengaruhi kinerja model.
+Kesalahan klasifikasi tipe yang ditemukan banyak melibatkan pasangan Location dan
+Event. Beberapa nama dalam teks Sirah, seperti Uhud, Badr, dan Hudaibiyah, dapat merujuk
+pada tempat maupun peristiwa. Tipe entitas yang tepat bergantung pada konteks
+penggunaannya dalam kalimat. Oleh karena itu, kesalahan pada pasangan tersebut
+
+<!-- Halaman buku 93 · PDF 127 -->
+mencerminkan adanya ambiguitas semantik dan tidak hanya disebabkan oleh keterbatasan
+model.
+Pengaruh pemotongan teks menjadi beberapa chunk belum diuji melalui pengujian terpisah.
+Pemeriksaan tidak langsung menunjukkan bahwa hanya sebagian kecil kesalahan berada di
+sekitar batas chunk. Temuan tersebut memberikan indikasi bahwa pemotongan konteks bukan
+penyebab utama kesalahan, tetapi kesimpulan ini masih perlu dibuktikan melalui pengujian
+khusus.
+Secara keseluruhan, hasil ketiga uji coba menunjukkan bahwa penambahan variasi data
+memberikan pengaruh yang lebih jelas dibandingkan perubahan fungsi loss, pergantian model
+pra-latih, maupun penambahan fitur linguistik. Oleh karena itu, IndoBERT uncased dengan
+augmentasi data digunakan sebagai konfigurasi akhir untuk menghasilkan entitas yang
+selanjutnya digunakan dalam pembangunan knowledge graph.
+4.5 Evaluasi Graf
+Evaluasi knowledge graph dilakukan untuk menilai hasil konstruksi graf dari dua sisi, yaitu
+struktur dan fungsinya. Evaluasi struktur dilakukan menggunakan Social Network Analysis
+(SNA) untuk mengetahui pola hubungan antartokoh, peristiwa, lokasi, dan periode yang
+terbentuk dalam graf. Sementara itu, evaluasi fungsional dilakukan melalui sejumlah skenario
+kueri untuk mengetahui kemampuan graf dalam mendukung penelusuran informasi relasional
+pada Sirah Nabawiyah.
+Analisis SNA disusun berdasarkan delapan skenario pengujian yang telah didefinisikan
+pada Tabel 3.20. Skenario tersebut meliputi analisis sentralitas tokoh (G1 dan G2),
+pengelompokan komunitas tokoh (G3), sentralitas peristiwa (G4), karakteristik jaringan secara
+keseluruhan (G5), studi kasus peristiwa tertentu (G6), peran lokasi dalam jaringan (G7), serta
+keterlibatan tokoh pada beberapa fase kehidupan Rasulullah SAW (G8).
+Perhitungan nilai sentralitas, komunitas, dan karakteristik jaringan dilakukan
+menggunakan NetworkX. Sementara itu, struktur yang mendasari setiap hasil analisis dapat
+ditelusuri kembali pada knowledge graph di Neo4j melalui kueri. Analisis sentralitas dan
+komunitas tokoh dilakukan menggunakan proyeksi jaringan antar tokoh. Dalam proyeksi
+tersebut, dua tokoh dihubungkan apabila keduanya terlibat dalam peristiwa yang sama atau
+memiliki hubungan kekerabatan, persahabatan, maupun permusuhan yang disebutkan secara
+eksplisit dalam teks.
+Proyeksi jaringan dibatasi pada tokoh yang terlibat dalam sekurang-kurangnya satu
+peristiwa yang dinarasikan. Tokoh yang hanya muncul dalam rantai keturunan atau nasab tanpa
+terlibat dalam suatu peristiwa tidak dimasukkan ke dalam proyeksi analisis. Pembatasan ini
+dilakukan agar nilai sentralitas lebih menggambarkan keterlibatan tokoh dalam jaringan sosial
+dan peristiwa, bukan sekadar posisinya dalam silsilah keluarga. Pembatasan tersebut hanya
+diterapkan pada tahap analisis jaringan. Seluruh tokoh dan hubungan kekerabatan tetap
+dipertahankan dalam knowledge graph sebagai bagian dari basis pengetahuan.
+4.5.1 Konstruksi Knowledge Graph
+Knowledge graph Sirah Nabawiyah dibangun berdasarkan hasil prediksi NER dari
+konfigurasi terbaik, yaitu IndoBERT uncased dengan augmentasi data. Model tersebut
+digunakan untuk mengenali entitas pada keseluruhan korpus. Entitas yang telah dikenali
+
+<!-- Halaman buku 94 · PDF 128 -->
+kemudian dihubungkan berdasarkan hasil ekstraksi relasi dan disimpan dalam basis data graf
+Neo4j. Graf hasil konstruksi memuat simpul (node) yang merepresentasikan entitas dan relasi
+(edge) yang menghubungkan entitas tersebut. Komposisi simpul yang tersimpan dalam Neo4j
+disajikan pada Tabel 4.19.
+Tabel 4.19 Komposisi Node Knowledge Graph
+Label simpul
+Jumlah
+Keterangan
+Person
+Tokoh yang disebutkan dalam teks
+Time
+Waktu yang disebutkan dalam teks
+Location
+Lokasi yang disebutkan dalam teks
+Event
+Peristiwa dalam Sirah Nabawiyah
+Period
+Fase kronologis Sirah Nabawiyah
+Total
+1.192
+Seluruh simpul yang tersimpan dalam Neo4j
+
+Berdasarkan Tabel 4.19, knowledge graph memuat 1.192 simpul yang terdiri atas 1.177
+simpul entitas utama dan 15 simpul Period. Simpul entitas utama meliputi 901 Person, 167
+Time, 74 Location, dan 35 Event. Jumlah simpul Person yang lebih besar menunjukkan bahwa
+teks Sirah Nabawiyah lebih banyak memuat penyebutan tokoh dibandingkan jenis entitas
+lainnya. Sementara itu, simpul Period ditambahkan untuk mengelompokkan peristiwa
+berdasarkan fase kronologisnya. Selain simpul, graf memuat relasi yang menggambarkan
+hubungan antar entitas. Komposisi relasi yang tersimpan dalam Neo4j disajikan pada Tabel
+4.20.
+Tabel 4.20 Komposisi Edge Knowledge Graph
+Jenis relasi
+Jumlah
+Keterangan
+KELUARGA
+Hubungan kekerabatan antar tokoh
+INVOLVED_IN
+Keterlibatan tokoh dalam peristiwa
+OCCURRED_AT
+Hubungan peristiwa dengan lokasi
+OCCURRED_ON
+Hubungan peristiwa dengan waktu
+SAHABAT
+Hubungan persahabatan antar tokoh
+PRECEDES
+Urutan kronologis antar peristiwa
+MUSUH
+Hubungan permusuhan antar tokoh
+Subtotal relasi antar entitas
+Relasi unik setelah penggabungan duplikat
+IN_PERIOD
+Hubungan peristiwa dengan periode
+Total
+Seluruh relasi yang tersimpan dalam Neo4j
+
+Pada tahap ekstraksi awal dihasilkan 705 catatan relasi antar entitas. Namun, sebanyak 12
+catatan merupakan pengulangan dari kombinasi entitas asal, jenis relasi, dan entitas tujuan yang
+
+<!-- Halaman buku 95 · PDF 129 -->
+sama. Pengulangan tersebut terjadi karena hubungan yang sama ditemukan pada beberapa
+bagian teks. Ketika data dimuat ke Neo4j, setiap catatan duplikat digabungkan dengan relasi
+identik yang telah tersimpan sehingga diperoleh 693 relasi unik antar entitas.
+Graf juga memuat 35 relasi IN_PERIOD yang menghubungkan setiap peristiwa dengan
+periode terjadinya. Setelah relasi tersebut ditambahkan, jumlah keseluruhan relasi yang
+tersimpan dalam Neo4j adalah 728 relasi. Meskipun catatan relasi yang sama digabungkan,
+bukti dari setiap kemunculannya tetap dipertahankan sebagai bagian dari metadata relasi.
+Setiap relasi dilengkapi dengan metadata sumber atau provenance berupa potongan teks
+bukti (evidence), dan nomor halaman. Apabila hubungan yang sama ditemukan pada beberapa
+bagian teks, seluruh bukti kemunculannya disimpan pada relasi tersebut. Metadata ini
+memungkinkan setiap hubungan dalam graf ditelusuri kembali ke bagian teks Sirah yang
+menjadi sumbernya. Dengan demikian, informasi dalam graf tidak hanya dapat ditelusuri
+berdasarkan hubungan antar entitas, tetapi juga dapat diperiksa kembali berdasarkan dokumen
+sumber. Contoh hasil konstruksi knowledge graph ditampilkan pada Gambar 4.16. Visualisasi
+tersebut memperlihatkan subgraf Perang Badr beserta tokoh, lokasi, dan waktu yang terhubung
+dengan peristiwa tersebut.
+
+Gambar 4.16 Subgraf Peristiwa Perang Badr
+Gambar 4.16 menunjukkan bahwa simpul Event menjadi penghubung antara beberapa jenis
+entitas. Tokoh yang terlibat dalam Perang Badr dihubungkan melalui relasi INVOLVED_IN,
+lokasi terjadinya peristiwa dihubungkan melalui relasi OCCURRED_AT, sedangkan waktu
+terjadinya peristiwa dihubungkan melalui relasi
+OCCURRED_ON. Struktur tersebut
+memperlihatkan bagaimana informasi yang sebelumnya tersebar dalam teks disusun menjadi
+hubungan antar entitas yang dapat ditelusuri melalui graf.
+Dari knowledge graph tersebut kemudian dibentuk proyeksi jaringan antar tokoh sebagai
+dasar analisis sentralitas dan komunitas. Dalam proyeksi ini, dua tokoh dihubungkan apabila
+terlibat dalam peristiwa yang sama atau memiliki hubungan kekerabatan, persahabatan,
+maupun permusuhan yang disebutkan secara eksplisit dalam teks.
+Analisis hanya melibatkan tokoh yang terhubung dengan sekurang-kurangnya satu
+peristiwa. Tokoh yang hanya muncul dalam hubungan nasab tanpa terlibat dalam suatu
+
+<!-- Halaman buku 96 · PDF 130 -->
+peristiwa dikeluarkan dari proyeksi agar hasil analisis lebih menggambarkan keterlibatan tokoh
+dalam jaringan sosial dan peristiwa. Penyaringan ini hanya diterapkan pada tahap analisis.
+Seluruh tokoh dan hubungan nasab tetap dipertahankan dalam knowledge graph. Setelah proses
+penyaringan, proyeksi jaringan yang dianalisis terdiri atas 137 node tokoh dan 1.853 edge.
+Statistik proyeksi jaringan tokoh disajikan pada Tabel 4.20.
+Tabel 4.21 Statistik Jaringan Tokoh
+Metrik
+Nilai
+Jumlah node (Person)
+Jumlah edge
+1.853
+Kepadatan (density)
+0,1989
+Rata-rata koefisien pengelompokan lokal
+0,7100
+Transitivity global
+0,7957
+Jumlah komponen
+Ukuran komponen terbesar
+128 simpul
+Rata-rata panjang lintasan pada komponen terbesar
+1,96
+Jumlah komunitas Louvain
+Modularitas Louvain
+0,2831
+
+Tabel 4.21 menunjukkan bahwa proyeksi jaringan tokoh memiliki tingkat keterhubungan
+yang cukup tinggi. Sebanyak 137 tokoh membentuk 1.853 sisi dengan nilai kepadatan sebesar
+0,1989. Artinya, sekitar 19,89 persen dari seluruh kemungkinan hubungan antar tokoh
+terbentuk dalam proyeksi jaringan.
+Nilai rata-rata koefisien pengelompokan lokal sebesar 0,7100 dan transitivity global
+sebesar 0,7957 menunjukkan bahwa tokoh yang terhubung dengan tokoh yang sama cenderung
+turut saling terhubung. Pola ini dapat muncul karena seluruh tokoh yang terlibat dalam peristiwa
+yang sama dihubungkan satu sama lain dalam proyeksi. Oleh karena itu, peristiwa yang
+melibatkan banyak tokoh akan menghasilkan kelompok dengan tingkat keterhubungan yang
+tinggi.
+Jaringan tersebut terdiri atas lima komponen. Komponen terbesar memuat 128 dari 137
+tokoh atau sekitar 93,4 persen dari keseluruhan simpul. Rata-rata panjang lintasan pada
+komponen terbesar adalah 1,96. Hal ini menunjukkan bahwa dua tokoh dalam komponen
+terbesar rata-rata dapat dihubungkan melalui sekitar dua langkah.
+Hasil deteksi komunitas menggunakan algoritma Louvain menghasilkan delapan
+komunitas dengan nilai modularitas sebesar 0,2831. Nilai tersebut menunjukkan bahwa
+pengelompokan komunitas terbentuk, tetapi batas antar komunitas tidak terlalu kuat. Kondisi
+ini dapat dipengaruhi oleh tingginya keterhubungan antar tokoh, terutama melalui peristiwa
+besar yang melibatkan banyak tokoh dari kelompok berbeda.
+
+<!-- Halaman buku 97 · PDF 131 -->
+Karakteristik jaringan yang relatif padat perlu diperhatikan ketika menafsirkan nilai
+sentralitas pada bagian berikutnya. Pada jaringan dengan banyak hubungan langsung dan
+lintasan yang pendek, ukuran tertentu seperti betweenness centrality dapat memiliki daya
+pembeda yang lebih rendah. Oleh karena itu, penilaian tokoh berpengaruh tidak hanya
+didasarkan pada satu ukuran sentralitas, tetapi mempertimbangkan beberapa ukuran secara
+bersama-sama.
+4.5.2 Tokoh Berpengaruh
+Analisis tokoh berpengaruh dilakukan melalui dua sudut pandang yang saling melengkapi.
+Skenario G1 digunakan untuk mengetahui tokoh yang memiliki posisi paling sentral dalam
+jaringan secara keseluruhan, sedangkan skenario G2 digunakan untuk mengetahui tokoh yang
+berperan sebagai penghubung antarbagian jaringan.
+Pada skenario G1, posisi tokoh dianalisis menggunakan degree centrality, closeness
+centrality, dan PageRank. Degree centrality menunjukkan banyaknya tokoh lain yang
+terhubung secara langsung. Closeness centrality menunjukkan kedekatan seorang tokoh dengan
+seluruh tokoh lain berdasarkan panjang lintasan, sedangkan PageRank mengukur kepentingan
+tokoh dengan mempertimbangkan jumlah dan tingkat kepentingan tokoh lain yang terhubung
+dengannya. Sepuluh tokoh dengan nilai PageRank tertinggi disajikan pada Tabel 4.22.
+Tabel 4.22 Sepuluh Tokoh dengan Nilai Sentralitas Tertinggi
+Peringkat
+Tokoh
+Degree centrality
+Closeness centrality
+PageRank
+Muhammad
+0,7941
+0,7906
+0,0509
+Ali bin Abu Thalib
+0,5735
+0,6516
+0,0240
+Abu Jahal
+0,5515
+0,6516
+0,0230
+Umar bin Al-Khaththab
+0,5809
+0,6552
+0,0223
+Abu Bakar
+0,5441
+0,6376
+0,0212
+Abu Sufyan bin Harb
+0,5368
+0,6376
+0,0193
+Aisyah
+0,5221
+0,6275
+0,0186
+Abu Azzah
+0,5147
+0,6242
+0,0161
+Khunais bin Hudzafah
+0,5147
+0,6242
+0,0161
+Utsman bin Affan
+0,5221
+0,6308
+0,0158
+
+Tabel 4.22 menunjukkan bahwa Muhammad menempati peringkat pertama pada ketiga
+ukuran sentralitas. Nilai degree centrality sebesar 0,7941 menunjukkan bahwa Muhammad
+terhubung secara langsung dengan sekitar 108 tokoh lain dalam proyeksi jaringan. Sebagai
+perbandingan, nilai degree centrality tertinggi berikutnya dimiliki Umar bin Al-Khaththab
+sebesar 0,5809 atau sekitar 79 hubungan langsung. Nilai PageRank Muhammad sebesar 0,0509
+juga lebih dari dua kali nilai Ali bin Abu Thalib pada peringkat kedua, yaitu 0,0240.
+Tokoh-tokoh pada peringkat berikutnya terdiri atas sahabat utama dan tokoh yang banyak
+disebut dalam berbagai peristiwa, seperti Ali bin Abu Thalib, Umar bin Al-Khaththab, Abu
+Bakar, Utsman bin Affan, dan Aisyah. Tokoh dari pihak oposisi, seperti Abu Jahal dan Abu
+
+<!-- Halaman buku 98 · PDF 132 -->
+Sufyan bin Harb, juga memperoleh nilai sentralitas yang tinggi. Kemunculan tokoh oposisi
+menunjukkan bahwa sentralitas tidak menggambarkan kedekatan atau keberpihakan kepada
+Muhammad, tetapi menggambarkan tingkat keterhubungan tokoh dalam jaringan peristiwa.
+Skenario G2 menggunakan betweenness centrality untuk mengetahui tokoh yang berperan
+sebagai penghubung lintasan antara bagian-bagian jaringan. Tokoh dengan nilai betweenness
+tinggi lebih sering dilalui oleh lintasan terpendek yang menghubungkan tokoh lain. Hasil
+perhitungannya disajikan pada Tabel 4.23.
+Tabel 4.23 Sepuluh Tokoh dengan Nilai Betweenness Centrality Tertinggi
+Peringkat
+Tokoh
+Betweenness centrality
+Muhammad
+0,2808
+Jabir bin Abdullah
+0,0635
+Ummu Kultsum
+0,0548
+Husain bin Ali
+0,0548
+Ali bin Abu Thalib
+0,0441
+Abdullah bin Ubay bin Salul
+0,0393
+Al-Barra' bin Azib
+0,0380
+Ibnu Hajar
+0,0380
+Salamah bin Al-Akwa'
+0,0373
+Abu Bakar
+0,0294
+
+Muhammad kembali menempati peringkat pertama dengan nilai betweenness centrality
+sebesar 0,2808. Nilai tersebut lebih dari empat kali nilai Jabir bin Abdullah pada peringkat
+kedua, yaitu 0,0635. Hasil ini menunjukkan bahwa Muhammad tidak hanya memiliki banyak
+hubungan langsung, tetapi juga menempati posisi penting dalam menghubungkan berbagai
+bagian jaringan.
+Namun, hasil betweenness centrality perlu ditelaah lebih lanjut. Proyeksi jaringan tokoh
+memiliki kepadatan yang relatif tinggi dan rata-rata panjang lintasan hanya 1,96. Dalam
+jaringan dengan banyak hubungan langsung dan lintasan yang pendek, terdapat banyak jalur
+alternatif yang dapat menghubungkan dua tokoh. Kondisi tersebut dapat mengurangi
+kemampuan betweenness centrality dalam membedakan peran setiap tokoh.
+Secara umum, hasil sentralitas menempatkan Muhammad sebagai pusat jaringan dengan
+selisih yang cukup besar dari tokoh lainnya. Hasil ini selaras dengan posisinya sebagai tokoh
+utama dalam teks Sirah Nabawiyah dan keterlibatannya dalam berbagai peristiwa. Meskipun
+demikian, nilai sentralitas dalam penelitian ini menggambarkan posisi tokoh dalam graf yang
+diekstraksi dari teks, bukan ukuran mutlak mengenai tingkat kepentingan tokoh secara historis.
+Sebagian nama pada sepuluh peringkat teratas mungkin terlihat berbeda dari tokoh yang
+umumnya dianggap paling berpengaruh dalam Sirah Nabawiyah. Kondisi tersebut berkaitan
+dengan cara proyeksi jaringan dibentuk. Dalam proyeksi ini, dua tokoh dihubungkan apabila
+
+<!-- Halaman buku 99 · PDF 133 -->
+keduanya terlibat dalam peristiwa yang sama. Sementara itu, relasi INVOLVED_IN diekstraksi
+berdasarkan kemunculan nama tokoh dan peristiwa yang berdekatan di dalam teks.
+Apabila seorang tokoh disebut pada bagian teks yang membahas peristiwa besar, tokoh
+tersebut dapat terhubung dengan seluruh peserta pada peristiwa yang sama. Hubungan tersebut
+kemudian membentuk kelompok yang sangat rapat karena setiap peserta dihubungkan dengan
+peserta lainnya. Akibatnya, tokoh yang hanya muncul pada beberapa bagian teks dapat
+memperoleh nilai sentralitas tinggi apabila penyebutannya berdekatan dengan peristiwa yang
+melibatkan banyak tokoh.
+Dengan demikian, peringkat sentralitas tidak hanya dipengaruhi oleh keterlibatan tokoh
+dalam peristiwa, tetapi juga oleh frekuensi dan posisi penyebutannya di dalam teks. Oleh karena
+itu, hasil sentralitas perlu diperiksa kembali menggunakan bukti teks yang tersimpan dalam
+metadata relasi.
+Salah satu contoh yang ditemukan pada proses validasi adalah Amr bin Umayyah. Pada
+graf sebelum pembobotan dan penyaringan, tokoh tersebut sempat menempati peringkat kedua
+berdasarkan PageRank dengan 119 hubungan. Posisi tersebut terlihat terlalu tinggi jika
+dibandingkan dengan perannya dalam narasi Sirah.
+Penelusuran terhadap bukti teks menunjukkan bahwa tiga dari empat relasi INVOLVED_IN
+milik Amr bin Umayyah merupakan hasil ekstraksi yang kurang tepat. Hubungannya dengan
+Perang Badr, Perang Uhud, dan Perang Tabuk muncul karena namanya disebut pada bagian
+teks yang berdekatan dengan pembahasan peristiwa tersebut, bukan karena ia terlibat langsung.
+Berdasarkan bukti teks, relasi yang sesuai adalah keterlibatannya dalam Perang Khandaq,
+sedangkan peran lain yang disebutkan adalah sebagai utusan Rasulullah SAW kepada Najasyi.
+Setelah relasi dengan bobot rendah disaring dan cakupan analisis dibatasi pada tokoh yang
+terlibat dalam peristiwa, posisi Amr bin Umayyah turun ke peringkat ke-12. Penyaringan
+tersebut juga mencegah tokoh yang hanya muncul dalam rantai nasab memperoleh nilai
+sentralitas tinggi akibat banyaknya hubungan kekerabatan. Meskipun demikian, proses tersebut
+belum sepenuhnya menghilangkan pengaruh hubungan yang terbentuk akibat penyebutan
+bersama dalam peristiwa yang sama.
+Abu Azzah dan Khunais bin Hudzafah menempati peringkat kedelapan dan kesembilan.
+Keduanya memiliki nilai sentralitas yang sama pada ketelitian yang ditampilkan dalam tabel,
+yaitu PageRank sebesar 0,0161, degree centrality sebesar 0,5147, dan closeness centrality
+sebesar 0,6242.
+Nilai degree centrality sebesar 0,5147 menunjukkan bahwa masing-masing terhubung
+dengan sekitar 70 tokoh lain. Pemeriksaan graf menunjukkan bahwa keduanya memiliki pola
+hubungan yang sama karena sama-sama dihubungkan dengan Perang Badr dan Perang Uhud.
+Dalam proyeksi co-participation, seorang tokoh yang terhubung dengan suatu peristiwa akan
+dihubungkan dengan seluruh tokoh lain yang tercatat pada peristiwa tersebut. Oleh karena itu,
+keterkaitan dengan dua peristiwa yang memiliki banyak peserta dapat menghasilkan jumlah
+hubungan yang tinggi.
+Kesamaan nilai sentralitas keduanya menunjukkan bahwa mereka memiliki lingkungan
+jaringan yang sama atau sangat mirip. Kesamaan tersebut belum dengan sendirinya
+
+<!-- Halaman buku 100 · PDF 134 -->
+membuktikan adanya kesalahan, tetapi menjadi alasan untuk memeriksa kembali bukti teks
+yang membentuk relasinya.
+Penelusuran terhadap Khunais bin Hudzafah menunjukkan bahwa relasinya dengan Perang
+Badr dan Perang Uhud berasal dari halaman yang sama, yaitu halaman 612. Bagian tersebut
+merupakan pembahasan biografis mengenai pernikahan, bukan narasi keterlibatan Khunais
+dalam kedua peperangan. Kedekatan penyebutan nama Khunais dengan nama peristiwa
+menyebabkan terbentuknya relasi INVOLVED_IN yang kurang tepat.
+Temuan ini menunjukkan bahwa Abu Azzah dan Khunais bin Hudzafah memperoleh nilai
+sentralitas tinggi karena mewarisi keterhubungan dari peristiwa besar yang dikaitkan dengan
+mereka. Mekanisme tersebut serupa dengan kasus Amr bin Umayyah dan memperlihatkan
+keterbatasan ekstraksi relasi berdasarkan kedekatan posisi dalam teks.
+Peringkat betweenness centrality juga memperlihatkan beberapa nama yang tidak selalu
+dapat ditafsirkan sebagai penghubung sosial dalam narasi Sirah. Sebagai contoh, Abu Azzah
+dan Husain bin Ali sama-sama memiliki sekitar 70 hubungan dan dikaitkan dengan Perang Badr
+serta Perang Uhud. Namun, nilai betweenness keduanya berbeda jauh, yaitu 0,0001 untuk Abu
+Azzah dan 0,0548 untuk Husain bin Ali.
+Perbedaan tersebut menunjukkan bahwa betweenness centrality tidak hanya dipengaruhi
+oleh jumlah hubungan, tetapi juga oleh posisi hubungan dan bobot sisi dalam keseluruhan
+jaringan. Pada jaringan yang padat, perubahan pada beberapa hubungan dapat menghasilkan
+perbedaan nilai betweenness yang cukup besar. Oleh karena itu, perbedaan nilai tersebut tidak
+dapat langsung diartikan sebagai perbedaan peran sosial atau historis.
+Nilai yang sama setelah pembulatan juga ditemukan pada Ummu Kultsum dan Husain bin
+Ali, yaitu 0,0548, serta pada Al-Barra' bin Azib dan Ibnu Hajar, yaitu 0,0380. Kesamaan
+tersebut menunjukkan bahwa ukuran ini memiliki daya pembeda yang terbatas pada beberapa
+bagian jaringan.
+Jabir bin Abdullah pada peringkat kedua memiliki pola yang sedikit berbeda karena
+terhubung dengan tiga peristiwa, yaitu Perang Uhud, Perang Khandaq, dan Perjanjian
+Hudaibiyah. Keterhubungan tersebut membuatnya berada pada lintasan yang menghubungkan
+beberapa kelompok peristiwa. Namun, posisi tersebut tetap terbentuk dari aturan co-
+participation dan tidak secara langsung menunjukkan bahwa Jabir berperan sebagai perantara
+dalam narasi sejarah.
+Kemunculan Ibnu Hajar juga menjadi perhatian karena penyebutann namanya berulang
+dalam teks sebagai penyebut sumber periwayatan, bukan sebagai pelaku peristiwa. Oleh karena
+itu, hasil betweenness centrality pada penelitian ini lebih tepat digunakan untuk menunjukkan
+dominasi Muhammad. Peringkat tokoh di bawahnya tetap perlu diperiksa berdasarkan
+hubungan dan bukti teks masing-masing.
+Temuan ini menegaskan bahwa analisis sentralitas perlu disertai validasi terhadap teks
+sumber.
+Pengembangan
+selanjutnya
+dapat
+menggunakan
+ekstraksi
+relasi
+yang
+mempertimbangkan makna kalimat dan kata kerja penghubung agar relasi INVOLVED_IN lebih
+tepat menggambarkan keterlibatan tokoh dalam suatu peristiwa.
+Dominasi sentralitas Muhammad juga dapat diamati melalui jaringan ego pada Gambar
+4.17. Jaringan ego tersebut dibentuk berdasarkan hubungan co-participation, yaitu hubungan
+
+<!-- Halaman buku 101 · PDF 135 -->
+antartokoh yang terbentuk karena terlibat dalam peristiwa yang sama. Penelusuran pada Neo4j
+dilakukan melalui jalur dari simpul Person menuju simpul Event, kemudian menuju simpul
+Person lainnya.
+
+Gambar 4.17 Jaringan Ego Muhammad Berdasarkan Co-participation
+
+Gambar 4.18 Jaringan Ego Abu Bakar Berdasarkan Co-participation
+Gambar 4.17 menunjukkan bahwa Muhammad terhubung melalui peristiwa yang sama
+dengan sekitar 101 tokoh. Banyaknya tokoh yang terhubung memperlihatkan luasnya
+keterlibatan Muhammad dalam berbagai peristiwa yang dinarasikan pada teks Sirah Nabawiyah.
+Sebagai pembanding, jaringan ego Abu Bakar ditampilkan secara terpisah pada Gambar
+4.18. Visualisasi dibentuk menggunakan pola penelusuran dan batas bobot yang sama agar
+hasilnya dapat dibandingkan dengan jaringan ego Muhammad.
+
+<!-- Halaman buku 102 · PDF 136 -->
+Gambar 4.18 menunjukkan bahwa Abu Bakar terhubung melalui peristiwa yang sama
+dengan sekitar 70 tokoh. Jumlah tersebut lebih sedikit dibandingkan Muhammad yang
+terhubung dengan sekitar 101 tokoh. Perbandingan kedua gambar memperlihatkan bahwa
+Muhammad memiliki cakupan keterlibatan dalam peristiwa yang lebih luas.
+Jumlah hubungan pada kedua gambar sedikit berbeda dari nilai degree pada proyeksi
+jaringan. Berdasarkan nilai degree centrality pada Tabel 4.21, Muhammad memiliki sekitar 108
+hubungan, sedangkan Abu Bakar memiliki sekitar 74 hubungan. Perbedaan ini terjadi karena
+Gambar 4.17 dan Gambar 4.18 hanya menampilkan hubungan yang terbentuk melalui
+keterlibatan pada peristiwa yang sama. Sementara itu, proyeksi yang digunakan dalam
+perhitungan sentralitas juga mencakup relasi langsung antar tokoh, seperti KELUARGA,
+SAHABAT, dan MUSUH.
+Dengan demikian, kedua visualisasi tidak menampilkan seluruh hubungan yang digunakan
+dalam perhitungan sentralitas, tetapi secara khusus memperlihatkan keterhubungan melalui
+peristiwa. Hasil tersebut tetap sejalan dengan nilai degree centrality pada Tabel 4.21, yaitu
+0,7941 untuk Muhammad dan 0,5441 untuk Abu Bakar.
+4.5.3 Komunitas Tokoh
+Analisis komunitas pada skenario G3 dilakukan menggunakan algoritma Louvain. Hasil
+analisis menghasilkan delapan komunitas dengan nilai modularitas sebesar 0,2831. Nilai
+tersebut menunjukkan bahwa struktur kelompok masih dapat dikenali, tetapi batas antar
+komunitas tidak terlalu kuat. Kondisi ini sejalan dengan karakteristik proyeksi jaringan tokoh
+yang relatif padat, sebagaimana ditunjukkan pada Tabel 4.20.
+Dua komunitas terbesar memuat sebagian besar tokoh dalam jaringan. Komunitas terbesar
+terdiri atas 66 anggota dan mencakup sejumlah tokoh utama, seperti Muhammad, Ali bin Abu
+Thalib, Umar bin Al-Khaththab, Abu Bakar, Aisyah, dan Utsman bin Affan. Berdasarkan
+tokoh-tokoh yang menonjol di dalamnya, komunitas ini dapat diinterpretasikan sebagai
+komunitas lingkar Muslim inti.
+Komunitas terbesar kedua terdiri atas 47 anggota. Komunitas ini mencakup tokoh oposisi
+Quraisy, seperti Abu Jahal dan Abu Sufyan bin Harb, serta beberapa tokoh Muslim yang banyak
+disebut dalam peristiwa peperangan, seperti Hamzah bin Abdul Muththalib dan Zaid bin
+Haritsah. Percampuran tokoh dari kelompok yang berbeda menunjukkan bahwa komunitas
+yang terbentuk tidak dapat langsung diartikan sebagai kelompok berdasarkan keberpihakan
+atau hubungan persekutuan.
+Pengelompokan tersebut dipengaruhi oleh cara proyeksi jaringan dibentuk. Dua tokoh akan
+terhubung apabila keduanya terlibat dalam peristiwa yang sama, meskipun berada pada pihak
+yang berlawanan. Sebagai contoh, tokoh dari pihak Muslim dan Quraisy dapat berada dalam
+komunitas yang sama karena sama-sama terhubung melalui Perang Badr atau Perang Uhud.
+Oleh karena itu, komunitas dalam penelitian ini lebih menggambarkan kedekatan struktural
+berdasarkan keterlibatan dalam peristiwa yang sama daripada kesamaan kelompok sosial atau
+politik.
+Nilai modularitas sebesar 0,2831 turut menunjukkan bahwa pemisahan antar komunitas
+relatif lemah. Banyak tokoh terhubung melalui peristiwa besar sehingga hubungan tidak hanya
+terkumpul dalam satu komunitas, tetapi juga melintasi beberapa komunitas. Kondisi tersebut
+menyebabkan batas antarkelompok menjadi kurang tegas.
+
+<!-- Halaman buku 103 · PDF 137 -->
+Hasil Louvain kemudian dibandingkan dengan hasil algoritma greedy modularity.
+Perbandingan keduanya menghasilkan nilai Adjusted Rand Index sebesar 0,47. Nilai ini
+menunjukkan adanya kesamaan pengelompokan pada tingkat sedang. Dengan demikian,
+sebagian pola komunitas dapat ditemukan oleh kedua algoritma, meskipun pembagian
+anggotanya tidak sepenuhnya sama.
+Penamaan “lingkar Muslim inti” dan “komunitas campuran” merupakan interpretasi
+berdasarkan tokoh-tokoh yang menonjol dalam setiap komunitas. Nama tersebut bukan label
+yang dihasilkan secara otomatis oleh algoritma Louvain. Oleh karena itu, interpretasi komunitas
+tetap perlu dibaca bersama dengan hubungan dan bukti teks yang membentuknya.
+Neo4j Browser memberikan warna simpul berdasarkan label entitas, bukan berdasarkan
+nilai properti komunitas. Pewarnaan otomatis berdasarkan komunitas memerlukan fitur
+tambahan yang tidak digunakan dalam penelitian ini. Oleh karena itu, hasil pengelompokan
+Louvain dari tahap analisis ditulis kembali ke Neo4j sebagai properti community pada setiap
+simpul Person. Properti tersebut digunakan untuk memilih dan menampilkan anggota
+komunitas tertentu tanpa mengubah struktur maupun hasil analisis jaringan.
+Komunitas terbesar, yaitu komunitas dengan identitas community = 0, ditampilkan secara
+utuh pada Gambar 4.19. Visualisasi tersebut memuat seluruh 66 anggota komunitas beserta
+hubungan yang terbentuk di antara mereka.
+
+Gambar 4.19 Subgraf Komunitas Tokoh Terbesar
+Gambar 4.19 menunjukkan bahwa anggota komunitas terbesar memiliki tingkat
+keterhubungan yang tinggi. Kerapatan tersebut terutama terbentuk karena banyak tokoh terlibat
+dalam peristiwa yang sama. Tokoh utama seperti Muhammad, Ali bin Abu Thalib, Umar bin
+Al-Khaththab, Abu Bakar, Aisyah, dan Utsman bin Affan berada dalam kelompok yang sama
+karena memiliki banyak hubungan melalui berbagai peristiwa.
+Meskipun seluruh anggota berada dalam komunitas yang sama, hal ini tidak berarti bahwa
+setiap pasangan tokoh memiliki hubungan langsung. Sebagian hubungan terbentuk secara tidak
+langsung melalui simpul Event, sedangkan sebagian lainnya berasal dari relasi antar tokoh
+seperti KELUARGA, SAHABAT, dan MUSUH. Dengan demikian, Gambar 4.19 menggambarkan
+
+<!-- Halaman buku 104 · PDF 138 -->
+kedekatan struktural dalam proyeksi jaringan, bukan hubungan sosial langsung antara seluruh
+anggota komunitas.
+Hasil deteksi komunitas menunjukkan bahwa jaringan tokoh Sirah Nabawiyah memiliki
+pola pengelompokan, tetapi pemisahannya tidak sepenuhnya tegas. Pengelompokan lebih
+banyak dipengaruhi oleh keterlibatan bersama dalam peristiwa besar daripada pembagian
+kelompok berdasarkan keberpihakan. Oleh karena itu, hasil komunitas perlu ditafsirkan sebagai
+pola struktural dalam graf hasil ekstraksi, bukan sebagai pembagian kelompok sosial atau
+politik secara mutlak.
+4.5.4 Sentralitas Peristiwa
+Pada skenario G4, dibentuk proyeksi jaringan antar peristiwa. Dua simpul Event
+dihubungkan apabila memiliki sekurang-kurangnya satu tokoh yang sama. Bobot hubungan
+ditentukan berdasarkan jumlah tokoh yang terlibat dalam kedua peristiwa tersebut.
+Proyeksi jaringan terdiri atas 35 peristiwa dan 264 sisi dengan nilai kepadatan sebesar
+0,444. Artinya, sekitar 44,4 persen dari seluruh kemungkinan hubungan antar peristiwa
+terbentuk dalam jaringan. Jaringan tersebut terdiri atas empat komponen, dengan komponen
+terbesar memuat 32 dari 35 peristiwa. Hasil ini menunjukkan bahwa sebagian besar peristiwa
+saling terhubung melalui tokoh-tokoh yang terlibat di dalamnya. Sepuluh peristiwa dengan nilai
+PageRank tertinggi disajikan pada Tabel 4.24. Kolom frekuensi menunjukkan jumlah
+kemunculan setiap peristiwa dalam data hasil ekstraksi.
+Tabel 4.24 Sepuluh Peristiwa dengan Nilai PageRank Tertinggi
+Peringkat
+Peristiwa
+PageRank
+Frekuensi
+Perang Badr
+0,0965
+Perang Uhud
+0,0889
+Perang Khandaq
+0,0674
+Perjanjian Hudaibiyah
+0,0442
+Baiat Aqabah Kubra
+0,0424
+Perang Dzul Usyairah
+0,0404
+Perang Khaibar
+0,0382
+Perang Bani Al-Ashfar
+0,0353
+Perang Dzatur Riqa'
+0,0348
+Perang Tha'if
+0,0344
+
+Tabel 4.24 menunjukkan bahwa tiga peristiwa dengan nilai PageRank tertinggi adalah
+Perang Badr sebesar 0,0965, Perang Uhud sebesar 0,0889, dan Perang Khandaq sebesar 0,0674.
+Perang Badr terhubung dengan 27 dari 34 peristiwa lainnya, sedangkan Perang Uhud terhubung
+dengan 29 peristiwa. Tingginya keterhubungan tersebut menunjukkan bahwa kedua peristiwa
+berbagi tokoh dengan sebagian besar peristiwa lain dalam graf.
+
+<!-- Halaman buku 105 · PDF 139 -->
+Dominasi peristiwa peperangan dapat dijelaskan oleh banyaknya tokoh yang disebutkan
+dalam pembahasannya. Peristiwa yang melibatkan atau menyebutkan banyak tokoh akan
+berbagi lebih banyak peserta dengan peristiwa lain sehingga memperoleh posisi yang lebih
+sentral dalam proyeksi jaringan.
+Namun, hasil tersebut juga memperlihatkan keterbatasan cakupan simpul Event. Peristiwa
+penting dalam perjalanan hidup Rasulullah SAW, seperti kelahiran, turunnya wahyu pertama,
+dan wafatnya Rasulullah SAW, tidak muncul sebagai simpul sentral. Dalam teks, peristiwa
+tersebut umumnya dinyatakan melalui frasa kerja atau uraian deskriptif, seperti “beliau
+dilahirkan”, “turunnya wahyu”, dan “beliau wafat”. Bentuk penyebutan tersebut tidak selalu
+dikenali sebagai entitas Event bernama oleh model NER.
+Akibatnya, jaringan peristiwa lebih banyak memuat peperangan dan perjanjian yang
+memiliki nama khusus. Temuan ini menunjukkan bahwa graf mampu menangkap peristiwa
+bernama dengan cukup baik, tetapi belum mencakup seluruh peristiwa penting yang dinyatakan
+melalui kata kerja atau uraian deskriptif. Peristiwa semacam itu memerlukan metode ekstraksi
+peristiwa yang tidak hanya bergantung pada pengenalan entitas bernama.
+Hasil betweenness centrality memberikan sudut pandang yang berbeda. Perang Uhud
+memperoleh nilai betweenness tertinggi sebesar 0,1958, diikuti Perang Khandaq sebesar 0,1346
+dan Perjanjian Hudaibiyah sebesar 0,0264. Dalam struktur graf, Perang Uhud berada pada
+lintasan yang menghubungkan kelompok peristiwa pada periode Madinah awal dengan
+kelompok peristiwa setelahnya. Hasil ini menunjukkan bahwa PageRank dan betweenness
+centrality menggambarkan peran struktural yang berbeda.
+Nilai PageRank juga perlu dibaca bersama dengan frekuensi kemunculan peristiwa. Perang
+Dzul Usyairah menempati peringkat keenam dengan nilai 0,0404, meskipun hanya memiliki
+satu kemunculan dalam data. Peristiwa tersebut memiliki degree sebesar 23 karena hasil
+ekstraksi menghubungkannya dengan banyak tokoh yang juga muncul pada peristiwa lain. Pola
+serupa ditemukan pada Perang Bani Al-Ashfar yang hanya memiliki satu kemunculan dan Baiat
+Aqabah Kubra yang memiliki empat kemunculan.
+Kondisi tersebut menunjukkan bahwa peristiwa dengan frekuensi rendah tetap dapat
+memperoleh sentralitas tinggi apabila dihubungkan dengan banyak tokoh. Oleh karena itu,
+sentralitas peristiwa tidak dapat langsung diartikan sebagai ukuran kepentingan historis.
+Hasilnya perlu diperiksa kembali menggunakan frekuensi, hubungan yang terbentuk, dan bukti
+teks sumber.
+Selain itu, graf hanya memuat 17 relasi PRECEDES, sedangkan proyeksi co-participation
+memiliki 264 edge. Perbedaan tersebut menunjukkan bahwa struktur jaringan peristiwa lebih
+banyak dipengaruhi oleh kesamaan tokoh daripada urutan waktu yang dinyatakan secara
+eksplisit. Oleh karena itu, hasil sentralitas pada bagian ini menggambarkan keterhubungan
+berdasarkan tokoh bersama, bukan urutan kronologis peristiwa.
+4.5.5 Peran Lokasi
+Skenario G7 digunakan untuk mengetahui lokasi yang memiliki posisi penting dalam
+jaringan. Dua lokasi dihubungkan apabila terdapat tokoh yang terlibat dalam peristiwa pada
+kedua lokasi tersebut. Bobot hubungan menunjukkan banyaknya tokoh yang dimiliki bersama
+oleh kedua lokasi.
+
+<!-- Halaman buku 106 · PDF 140 -->
+Proyeksi jaringan lokasi terdiri atas 17 node Location dan 136 edge. Nilai kepadatannya
+sebesar 1,000, yang berarti setiap lokasi terhubung dengan seluruh lokasi lainnya. Masing-
+masing lokasi memiliki degree sebesar 16 dan nilai betweenness centrality sebesar nol. Karena
+seluruh lokasi saling terhubung secara langsung, tidak ada lokasi yang berperan sebagai
+penghubung lintasan antara dua lokasi lainnya.
+Dengan demikian, degree centrality dan betweenness centrality tidak dapat membedakan
+peran setiap lokasi. Peringkat lokasi kemudian ditentukan menggunakan weighted degree, yaitu
+jumlah bobot seluruh hubungan yang dimiliki suatu lokasi. Sepuluh lokasi dengan nilai
+weighted degree tertinggi disajikan pada Tabel 4.25.
+Tabel 4.25 Sepuluh Lokasi dengan Nilai Weighted Degree Tertinggi
+Peringkat
+Lokasi
+Weighted degree
+Madinah
+Habasyah
+Makkah
+Syam
+Yatsrib
+Ash-Shafra
+Tihamah
+Badr
+Najd
+Aqabah
+
+Berdasarkan Tabel 4.25, Madinah memperoleh nilai weighted degree tertinggi, yaitu 661.
+Habasyah dan Makkah memiliki nilai yang sama, yaitu 561, kemudian diikuti Syam sebesar
+530 dan Yatsrib sebesar 528. Nilai tersebut menunjukkan bahwa peristiwa pada lokasi-lokasi
+tersebut melibatkan banyak tokoh yang juga muncul pada peristiwa di lokasi lain.
+Kemunculan Madinah dan Makkah pada posisi atas sesuai dengan keduanya sebagai lokasi
+utama dalam narasi Sirah Nabawiyah. Makkah berkaitan dengan periode awal dakwah,
+sedangkan Madinah menjadi pusat berbagai peristiwa setelah hijrah. Habasyah juga
+memperoleh nilai tinggi karena menjadi tujuan hijrah dan terhubung dengan sejumlah tokoh
+yang turut muncul dalam peristiwa lain.
+Namun, hasil ini memperlihatkan masalah normalisasi nama lokasi. Yatsrib muncul
+sebagai simpul terpisah dari Madinah, meskipun keduanya merujuk pada tempat yang sama.
+Pemisahan tersebut membagi hubungan yang seharusnya dapat dikaitkan dengan satu lokasi
+dan dapat memengaruhi nilai sentralitas Madinah. Oleh karena itu, variasi nama Madinah dan
+Yatsrib perlu digabungkan melalui normalisasi alias pada pengembangan selanjutnya.
+Ash-Shafra, Tihamah, Badr, dan Najd juga memiliki nilai weighted degree yang sama,
+yaitu 525. Kesamaan nilai tersebut menunjukkan bahwa total bobot hubungan keempat lokasi
+
+<!-- Halaman buku 107 · PDF 141 -->
+sama. Namun, kesamaan nilai belum cukup untuk membuktikan bahwa keempatnya memiliki
+kumpulan tokoh atau pola hubungan yang sepenuhnya sama. Hubungan setiap lokasi tetap perlu
+diperiksa secara terpisah sebelum ditafsirkan lebih lanjut.
+Dari 74 simpul Location yang tersimpan dalam knowledge graph, hanya 17 lokasi yang
+masuk dalam proyeksi jaringan G7. Hal ini terjadi karena proyeksi hanya melibatkan lokasi
+yang terhubung dengan peristiwa melalui relasi OCCURRED_AT dan memiliki tokoh yang dapat
+menghubungkannya dengan lokasi lain. Graf hasil konstruksi hanya memuat 44 relasi
+OCCURRED_AT, sehingga sebagian besar simpul lokasi belum terhubung ke jaringan peristiwa.
+Kondisi tersebut menunjukkan bahwa hasil G7 hanya menggambarkan lokasi yang telah
+memiliki hubungan lengkap dengan peristiwa dan tokoh. Hasilnya belum mewakili seluruh
+lokasi yang disebutkan dalam korpus. Kelengkapan jaringan lokasi dapat ditingkatkan melalui
+ekstraksi relasi lokasi dan peristiwa yang lebih menyeluruh.
+4.5.6 Keterlibatan Tokoh Lintas Fase
+Skenario G8 digunakan untuk mengetahui sejauh mana seorang tokoh terlibat dalam
+beberapa fase Sirah Nabawiyah. Penghitungan dilakukan melalui jalur dari simpul Person
+menuju Event, kemudian menuju fase terjadinya peristiwa.
+Pada konstruksi graf terdapat 15 simpul Period yang merepresentasikan pembagian
+kronologis secara lebih rinci. Untuk analisis G8, periode tersebut dikelompokkan menjadi enam
+fase utama, yaitu fase I Pra-Islam, fase II Makkah, fase III Madinah Awal, fase IV Perang Besar,
+fase V Diplomasi, dan fase VI Konsolidasi. Hubungan antara 15 simpul Period dan enam fase
+analisis perlu mengikuti pemetaan periodisasi yang telah ditetapkan pada tahap metodologi.
+Tokoh dengan keterlibatan pada fase terbanyak disajikan pada Tabel 4.26.
+Tabel 4.26 Tokoh dengan Keterlibatan Lintas Fase Terbanyak
+Peringkat
+Tokoh
+Jumlah fase
+Jumlah peristiwa
+Muhammad
+Umar bin Al-Khaththab
+Abu Bakar
+Ali bin Abu Thalib
+Zaid bin Haritsah
+Aisyah
+
+Tabel 4.26 menunjukkan bahwa Muhammad memiliki jangkauan fase paling luas.
+Muhammad terhubung dengan 22 peristiwa yang tersebar pada lima dari enam fase, yaitu fase
+I Pra-Islam, fase II Makkah, fase IV Perang Besar, fase V Diplomasi, dan fase VI Konsolidasi.
+Satu-satunya fase yang tidak muncul dalam keterlibatan Muhammad adalah fase III
+Madinah Awal. Hasil tersebut tidak dapat diartikan bahwa Muhammad tidak berperan pada fase
+tersebut. Ketiadaan hubungan lebih mungkin menunjukkan bahwa graf tidak memiliki peristiwa
+bernama pada fase Madinah Awal yang berhasil diekstraksi dan dihubungkan dengan
+Muhammad.
+
+<!-- Halaman buku 108 · PDF 142 -->
+Umar bin Al-Khaththab dan Abu Bakar masing-masing terlibat dalam tiga fase. Umar
+terhubung dengan lima peristiwa, sedangkan Abu Bakar terhubung dengan empat peristiwa. Ali
+bin Abu Thalib hanya terhubung dengan dua fase meskipun memiliki tujuh peristiwa. Hal ini
+menunjukkan bahwa banyaknya peristiwa yang diikuti tidak selalu menghasilkan jangkauan
+fase yang lebih luas karena beberapa peristiwa dapat terkumpul dalam fase yang sama.
+Berdasarkan distribusi hasil G8, sebanyak 124 tokoh hanya terhubung dengan satu fase, 17
+tokoh terhubung dengan dua fase, dua tokoh terhubung dengan tiga fase, dan satu tokoh
+terhubung dengan lima fase. Dengan demikian, analisis G8 mencakup 144 tokoh yang memiliki
+jalur menuju peristiwa dan fase. Jumlah tersebut berbeda dari 137 tokoh pada proyeksi jaringan
+sosial karena kedua analisis menggunakan kriteria penyaringan yang berbeda. Proyeksi sosial
+dibatasi untuk analisis hubungan antar tokoh, sedangkan G8 menggunakan seluruh tokoh yang
+memiliki hubungan dengan peristiwa dan fase.
+Sebagian besar tokoh hanya muncul pada satu fase. Pola tersebut menunjukkan bahwa
+banyak tokoh memiliki keterlibatan yang terbatas pada bagian tertentu dalam narasi. Hanya
+beberapa tokoh utama yang terhubung dengan peristiwa pada beberapa fase berbeda.
+Tokoh-tokoh pada peringkat atas G8 terdiri atas Muhammad, Umar bin Al-Khaththab, Abu
+Bakar, Ali bin Abu Thalib, Zaid bin Haritsah, dan Aisyah. Berbeda dengan hasil betweenness
+centrality pada Tabel 4.23, daftar ini tidak memuat nama periwayat atau tokoh yang hanya
+disebut sebagai sumber. Meskipun demikian, hasil tersebut tetap perlu dibaca secara hati-hati.
+Relasi INVOLVED_IN yang mendasari analisis dibentuk berdasarkan kedekatan nama
+tokoh dengan nama peristiwa di dalam chunk. Sebagaimana ditemukan pada validasi Subbab
+4.5.2, metode tersebut masih dapat menghasilkan hubungan yang tidak menunjukkan
+keterlibatan langsung. Oleh karena itu, jumlah fase dan peristiwa pada Tabel 4.26
+menggambarkan keterhubungan dalam graf hasil ekstraksi dan tidak dapat langsung digunakan
+sebagai ukuran keterlibatan historis tanpa pemeriksaan terhadap bukti teks.
+4.5.7 Studi Kasus Peristiwa Besar
+Skenario G6 dilakukan untuk menelaah struktur knowledge graph secara kualitatif melalui
+studi kasus lima peristiwa besar. Peristiwa dipilih dari beberapa periode yang berbeda, yaitu P8
+sampai P13, agar pemeriksaan tidak hanya berfokus pada satu bagian kronologi Sirah
+Nabawiyah. Peristiwa yang dianalisis meliputi Perang Badr, Perang Uhud, Perjanjian
+Hudaibiyah, Perang Khaibar, dan Perang Tabuk.
+Pemeriksaan dilakukan terhadap jumlah tokoh, lokasi, dan waktu yang terhubung dengan
+setiap peristiwa. Relasi tokoh diperoleh melalui INVOLVED_IN dengan batas bobot minimal
+0,3 agar hubungan dengan dukungan yang terlalu lemah tidak disertakan. Sementara itu, lokasi
+dan waktu ditelusuri melalui relasi OCCURRED_AT dan OCCURRED_ON. Ringkasan hasil
+pemeriksaan disajikan pada Tabel 4.27.
+Tabel 4.27 menunjukkan bahwa Perang Badr memiliki jumlah tokoh terbanyak, yaitu 44
+tokoh, diikuti Perang Uhud dengan 41 tokoh. Perjanjian Hudaibiyah dan Perang Khaibar
+masing-masing terhubung dengan tujuh tokoh, sedangkan Perang Tabuk hanya terhubung
+dengan empat tokoh.
+
+<!-- Halaman buku 109 · PDF 143 -->
+Tabel 4.27 Ringkasan Subgraf Lima Peristiwa Besar
+Peristiwa
+Periode
+Jumlah tokoh
+Jumlah lokasi
+Jumlah waktu
+Perang Badr
+P8
+Perang Uhud
+P9
+Perjanjian Hudaibiyah
+P11
+Perang Khaibar
+P11
+Perang Tabuk
+P13
+
+Tabel 4.27 menunjukkan bahwa Perang Badr memiliki jumlah tokoh terbanyak, yaitu 44
+tokoh, diikuti Perang Uhud dengan 41 tokoh. Perjanjian Hudaibiyah dan Perang Khaibar
+masing-masing terhubung dengan tujuh tokoh, sedangkan Perang Tabuk hanya terhubung
+dengan empat tokoh.
+Perbedaan juga ditemukan pada jumlah lokasi dan waktu. Perang Badr terhubung dengan
+sembilan lokasi dan enam entitas Time, sedangkan Perang Uhud terhubung dengan tiga lokasi
+dan sepuluh entitas Time. Perjanjian Hudaibiyah memiliki lima lokasi dan empat entitas Time,
+sementara Perang Khaibar hanya memiliki dua lokasi dan satu entitas Time. Perang Tabuk tidak
+memiliki relasi dengan simpul Location dan hanya terhubung dengan satu entitas Time.
+Ketiadaan lokasi pada Perang Tabuk tidak dapat diartikan bahwa peristiwa tersebut tidak
+memiliki tempat terjadinya. Hasil tersebut hanya menunjukkan bahwa relasi antara Perang
+Tabuk dan lokasi belum berhasil dibentuk dalam knowledge graph. Dengan demikian, angka
+pada Tabel 4.27 menggambarkan cakupan informasi yang berhasil diekstraksi dari teks, bukan
+kelengkapan informasi historis setiap peristiwa.
+Hubungan antara lima peristiwa dan tokoh-tokoh yang terlibat di dalamnya
+divisualisasikan pada Gambar 4.20. Visualisasi diambil langsung dari Neo4j Browser
+menggunakan relasi INVOLVED_IN dengan batas bobot yang sama seperti dalam penghitungan
+Tabel 4.27.
+Gambar 4.20 menampilkan lima simpul Event beserta tokoh-tokoh yang terhubung melalui
+relasi INVOLVED_IN. Visualisasi ini secara khusus digunakan untuk membandingkan
+cakupan keterlibatan tokoh pada kelima peristiwa. Perang Badr dan Perang Uhud membentuk
+kelompok yang lebih besar karena memiliki jumlah tokoh lebih banyak, sedangkan Perjanjian
+Hudaibiyah, Perang Khaibar, dan Perang Tabuk membentuk kelompok yang lebih kecil.
+Dari kelima peristiwa tersebut diperoleh 83 tokoh unik. Muhammad menjadi satu-satunya
+tokoh yang terhubung dengan seluruh lima peristiwa. Temuan ini kembali menunjukkan
+luasnya keterlibatan Muhammad dalam jaringan peristiwa yang terbentuk dari teks Sirah
+Nabawiyah.
+Dalam proyeksi co-participation, setiap tokoh yang terlibat pada peristiwa yang sama akan
+dihubungkan satu sama lain. Karena aturan tersebut, subgraf antar tokoh yang dibentuk dari
+satu peristiwa akan memiliki kepadatan sebesar 1,0. Oleh karena itu, kepadatan tidak dapat
+
+<!-- Halaman buku 110 · PDF 144 -->
+digunakan untuk membandingkan kelima peristiwa. Perbandingan lebih tepat dilakukan
+berdasarkan jumlah tokoh dan jenis entitas lain yang terhubung dengan setiap peristiwa.
+Hubungan co-participation juga tidak menunjukkan bahwa seluruh tokoh berada pada
+kelompok atau pihak yang sama. Dalam Perang Badr, tokoh dari pihak Muslim, seperti Ali bin
+Abu Thalib, Hamzah bin Abdul Muththalib, dan Utsman bin Affan, berada dalam peristiwa
+yang sama dengan tokoh Quraisy, seperti Abu Jahal, Abu Lahab, dan Abu Sufyan bin Harb.
+Seluruh tokoh tersebut memiliki relasi INVOLVED_IN dengan Perang Badr karena sama-sama
+terlibat dalam peristiwa tersebut.
+Dengan demikian, hubungan co-participation hanya menunjukkan bahwa dua tokoh
+tercatat dalam peristiwa yang sama. Hubungan tersebut tidak dapat diartikan sebagai
+persahabatan, persekutuan, atau keberpihakan pada kelompok yang sama.
+
+Gambar 4.20 Subgraf Tokoh pada Lima Peristiwa Besar
+Gambar 4.20 hanya menampilkan hubungan antara simpul Event dan Person agar
+perbandingan jumlah tokoh pada kelima peristiwa tetap mudah dibaca. Simpul Location, Time,
+dan Period tidak ditampilkan pada gambar gabungan tersebut meskipun jumlah lokasi dan
+waktu tetap dilaporkan pada Tabel 4.27.
+Subgraf setiap peristiwa dengan entitas yang lebih lengkap disajikan secara terpisah pada
+Lampiran [sesuaikan nomor lampiran]. Lampiran tersebut memuat subgraf Perang Badr, Perang
+Uhud, Perjanjian Hudaibiyah, Perang Khaibar, dan Perang Tabuk beserta seluruh entitas yang
+terhubung langsung dalam knowledge graph. Entitas tersebut mencakup Person, Location,
+Time, dan Period. Apabila tersedia, hubungan kronologis dengan peristiwa lain melalui relasi
+PRECEDES juga ditampilkan.
+Penyajian subgraf secara terpisah pada lampiran memungkinkan nama entitas dan jenis
+relasi setiap peristiwa dibaca dengan lebih jelas. Istilah “seluruh entitas” dalam konteks ini
+merujuk pada seluruh entitas yang berhasil disimpan dan dihubungkan dalam knowledge graph,
+bukan seluruh informasi historis yang berkaitan dengan peristiwa tersebut. Sebagai contoh,
+tidak munculnya simpul Location pada subgraf Perang Tabuk menunjukkan bahwa relasi
+lokasinya belum tersedia dalam graf, bukan bahwa peristiwa tersebut tidak memiliki lokasi.
+
+<!-- Halaman buku 111 · PDF 145 -->
+Secara keseluruhan, studi kasus menunjukkan bahwa knowledge graph mampu menyajikan
+hubungan antara peristiwa dan berbagai entitas yang berhasil diekstraksi dari teks. Perbedaan
+jumlah tokoh, lokasi, dan waktu pada setiap peristiwa juga dapat ditelusuri secara langsung
+melalui graf. Namun, hasil tersebut tetap merepresentasikan informasi yang berhasil dikenali
+dan dihubungkan oleh sistem, bukan gambaran sejarah yang sepenuhnya lengkap.
+4.5.8 Pengujian Fungsional Knowledge Graph
+Pengujian fungsional dilakukan untuk mengetahui kemampuan knowledge graph dalam
+menjawab kebutuhan penelusuran berbasis hubungan antar entitas. Enam fungsi yang telah
+didefinisikan pada Subbab 3.9.2 diuji melalui kueri Cypher pada Neo4j. Pengujian ini
+mencakup pencarian tokoh berdasarkan peristiwa, peristiwa berdasarkan lokasi dan waktu,
+peristiwa yang melibatkan tokoh tertentu, penelusuran lintas entitas, serta urutan kronologis
+antar peristiwa.
+Keberhasilan setiap fungsi dinilai berdasarkan empat kriteria. Pertama, kueri dapat
+dieksekusi tanpa galat. Kedua, kueri menghasilkan jawaban yang tidak kosong. Ketiga, seluruh
+jawaban yang dihasilkan sesuai dengan teks sumber berdasarkan pemeriksaan manual.
+Keempat, jawaban dapat ditelusuri kembali ke dokumen sumber melalui metadata evidence
+dan halaman. Pada kriteria ketiga, suatu fungsi hanya dinyatakan sesuai apabila seluruh hasil
+yang dikembalikan oleh kueri didukung oleh konteks teks sumber. Ringkasan hasil pengujian
+ditunjukkan pada Tabel 4.28.
+Tabel 4.28 Contoh Ketidaksesuaian Hasil dengan Teks Sumber
+Fungsi
+Skenario pengujian
+Eksekusi
+Jumlah hasil
+Tidak
+kosong
+Sesuai
+sumber
+Terlacak
+F1
+Menemukan tokoh yang
+terlibat dalam Perang
+Badr
+berhasil
+58 tokoh
+ya
+tidak
+ya
+F2
+Menemukan
+peristiwa
+yang terjadi di Madinah
+berhasil
+10 peristiwa
+ya
+tidak
+ya
+F3
+Menemukan
+peristiwa
+yang terjadi pada tahun 2
+H
+berhasil
+4 peristiwa
+ya
+tidak
+ya
+F4
+Menemukan
+peristiwa
+yang melibatkan Abu
+Bakar
+berhasil
+4 peristiwa
+ya
+tidak
+ya
+F5
+Menelusuri
+lokasi
+peristiwa
+yang
+melibatkan Umar bin Al-
+Khaththab
+berhasil
+15 lokasi
+ya
+tidak
+ya
+F6
+Menelusuri
+urutan
+kronologis
+antarperistiwa
+berhasil
+17 relasi
+ya
+tidak
+ya
+
+Tabel 4.28  menunjukkan bahwa seluruh kueri berhasil dieksekusi dan mengembalikan
+hasil yang tidak kosong. Dengan demikian, graf secara teknis telah mampu menjalankan
+
+<!-- Halaman buku 112 · PDF 146 -->
+keenam pola penelusuran yang ditetapkan. Penyusunan informasi dalam bentuk graf
+memungkinkan pertanyaan relasional dijawab melalui hubungan antar simpul, termasuk
+pertanyaan yang membutuhkan penelusuran lebih dari satu relasi.
+Meskipun demikian, seluruh fungsi masih memperoleh “tidak” pada kriteria kesesuaian
+sumber. Hal tersebut bukan berarti seluruh hasil yang dikembalikan oleh setiap kueri salah.
+Tanda silang diberikan karena pada setiap fungsi ditemukan setidaknya satu hasil yang tidak
+didukung oleh teks sumber. Untuk memperlihatkan proses pemeriksaan tersebut secara lebih
+transparan, Tabel 4.29 menyajikan satu contoh ketidaksesuaian dari setiap fungsi beserta
+potongan evidence yang digunakan dalam validasi. Tanda elipsis pada potongan evidence
+menunjukkan bagian teks yang tidak ditampilkan.
+Tabel 4.29 memperlihatkan bahwa keberadaan dua entitas dalam bagian teks yang sama
+belum selalu membuktikan adanya hubungan langsung di antara keduanya. Ketidaksesuaian
+dapat muncul karena konteks negasi, penyebutan peristiwa yang telah berlalu, penyebutan
+lokasi keberangkatan atau kepulangan, serta keterangan waktu yang sebenarnya merujuk pada
+peristiwa lain. Pada relasi kronologis, kesalahan dapat terjadi apabila urutan kemunculan
+peristiwa dalam dokumen dianggap sama dengan urutan terjadinya peristiwa.
+Pada F1, kueri untuk menemukan tokoh yang terlibat dalam Perang Badr menghasilkan 58
+tokoh. Pemeriksaan terhadap bukti sumber menunjukkan bahwa sebagian nama memang
+terlibat dalam peristiwa tersebut. Namun, beberapa nama hanya disebut dalam pembahasan
+yang berdekatan dengan Perang Badr. Contoh yang paling jelas adalah Abu Lahab karena bukti
+yang tersimpan justru menyatakan bahwa ia tidak ikut serta. Selain itu, hasil kueri juga memuat
+perawi, anggota keluarga, dan tokoh yang dibicarakan dalam konteks sebelum atau setelah
+peristiwa. Temuan ini menunjukkan bahwa relasi INVOLVED_IN masih mengalami ekstraksi
+berlebih akibat penggunaan kedekatan kemunculan entitas dalam teks.
+F2 menghasilkan sepuluh peristiwa yang terhubung dengan Madinah. Beberapa hubungan,
+seperti Perang Bu’ats dan Perang Khandaq, didukung secara langsung oleh bukti sumber. Akan
+tetapi, pada sebagian hasil lainnya, Madinah hanya disebut sebagai tempat keberangkatan,
+tempat kepulangan, atau wilayah yang dititipkan kepada seorang wakil selama pasukan
+meninggalkan kota. Penyebutan lokasi dalam pembahasan peristiwa dengan demikian belum
+selalu menunjukkan bahwa peristiwa tersebut berlangsung di lokasi itu.
+Pada F3, kueri menghasilkan empat peristiwa yang terhubung dengan keterangan waktu
+tahun 2 Hijriah. Tiga hubungan dinyatakan sesuai, yaitu Perang Buwath dan Perang Safawan
+pada bulan Rabi’ul Awwal 2 H serta Perang Abwa’ pada bulan Shafar 2 H. Sementara itu,
+hubungan antara Perang Badr dan bulan Syawwal 2 Hijriah tidak sesuai. Bukti sumber
+menyatakan bahwa peperangan yang dimaksud berlangsung tujuh hari setelah kepulangan dari
+Badr. Oleh karena itu, keterangan waktu tersebut merujuk pada peristiwa berikutnya, bukan
+Perang Badr.
+Pengujian F4 menghasilkan empat peristiwa yang terhubung dengan Abu Bakar, yaitu
+Baiat Aqabah Kubra, Perang Badr, Perang Bani Al-Ashfar, dan Perang Uhud. Meskipun
+beberapa hubungan tersebut mungkin sesuai secara historis, potongan evidence yang tersimpan
+belum menunjukkan keterlibatan Abu Bakar secara langsung. Sebagian bukti hanya memuat
+penyebutan Abu Bakar atau anggota keluarganya dalam bagian teks yang berdekatan dengan
+
+<!-- Halaman buku 113 · PDF 147 -->
+nama peristiwa. Oleh karena itu, hasil F4 belum dapat dinyatakan memenuhi kriteria kesesuaian
+sumber.
+Tabel 4.29 Contoh Ketidaksesuaian Hasil dengan Teks Sumber
+Fungsi Contoh
+hasil
+graf
+Potongan evidence
+Hasil pemeriksaan
+F1
+Abu
+Lahab
+terlibat
+dalam
+Perang Badr
+“Saat Perang Badr, Abu
+Lahab tidak ikut serta.”
+Tidak sesuai. Bukti secara
+langsung
+menyangkal
+keterlibatan Abu Lahab. Relasi
+terbentuk karena konteks negasi
+belum dipertimbangkan.
+F2
+Perang As-Sawiq
+terjadi
+Madinah
+“Urusan di Madinah beliau
+serahkan
+kepada
+Abu
+Lubabah...”
+Tidak
+sesuai.
+Madinah
+merupakan
+wilayah
+yang
+ditinggalkan dan diserahkan
+kepada seorang wakil, bukan
+lokasi berlangsungnya Perang
+As-Sawiq.
+F3
+Perang
+Badr
+terjadi pada bulan
+Syawwal
+Hijriah
+“Peperangan
+ini
+terjadi
+pada bulan Syawwal 2
+Hijriyah, selang tujuh hari
+sepulang dari Badr.”
+Tidak sesuai. Keterangan waktu
+tersebut
+merujuk
+pada
+peperangan setelah kepulangan
+dari Badr, bukan Perang Badr.
+F4
+Abu
+Bakar
+terlibat
+dalam
+Baiat
+Aqabah
+Kubra
+“Dua bulan lebih beberapa
+hari setelah Baiat Aqabah
+Kubra ... tersisa di Makkah
+kecuali Rasulullah, Abu
+Bakar dan Ali.”
+Tidak sesuai. Abu Bakar disebut
+dalam konteks keadaan setelah
+Baiat Aqabah Kubra, bukan
+sebagai
+peserta
+peristiwa
+tersebut.
+F5
+Peristiwa
+yang
+melibatkan Umar
+dalam
+Perang
+Badr berlangsung
+di Ash-Shafra
+Keterlibatan:
+“Umar
+...
+sedang
+membicarakan
+kemuliaan ... di Perang
+Badr.”
+Lokasi:
+“...meninggal dunia di Ash-
+Shafra’, empat atau lima
+hari setelah Perang Badr...”
+Tidak sesuai. Bukti pertama
+hanya
+menunjukkan
+Umar
+sedang membicarakan Perang
+Badr, sedangkan bukti kedua
+menempatkan
+Ash-Shafra
+dalam perjalanan pulang setelah
+peristiwa.
+F6
+Fathul
+Makkah
+mendahului
+Perang Uhud
+“Fathul
+Makkah
+(BAB:
+Peringatan di Makkah) →
+Perang
+Uhud
+(BAB:
+Aktivitas Pasukan antara
+Perang Badr dan Perang
+Uhud).”
+Tidak
+sesuai.
+Bukti
+hanya
+menunjukkan
+urutan
+posisi
+penyebutan dalam dokumen.
+Secara kronologis, Perang Uhud
+terjadi sebelum Fathul Makkah.
+
+Pengujian F5 menguji kemampuan graf dalam melakukan penelusuran multi-hop melalui
+jalur tokoh–peristiwa–lokasi. Kueri menghasilkan 21 jalur yang mencakup 15 lokasi unik.
+
+<!-- Halaman buku 114 · PDF 148 -->
+Perbedaan jumlah tersebut terjadi karena satu lokasi dapat muncul melalui lebih dari satu
+peristiwa. Dari seluruh jalur yang diperiksa, tiga jalur didukung secara utuh oleh bukti sumber,
+yaitu Perang Khandaq dengan lokasi Khandaq dan Madinah serta Perang Uhud dengan lokasi
+Jabal Uhud. Pada jalur lainnya, salah satu atau kedua relasi tidak didukung oleh bukti yang
+tersedia. Hasil tersebut menunjukkan bahwa kesalahan pada satu relasi dapat diteruskan dan
+memengaruhi jawaban akhir ketika penelusuran melewati beberapa relasi sekaligus.
+Pada F6, kueri menghasilkan 17 pasangan peristiwa yang dihubungkan melalui relasi
+PRECEDES. Sebanyak 14 pasangan telah menunjukkan urutan yang sesuai, sedangkan tiga
+pasangan lainnya memiliki urutan yang terbalik. Ketidaksesuaian ditemukan pada hubungan
+Fathul Makkah–Perang Uhud, Perang Asafan–Perang Khandaq, dan Perang Khandaq–Perang
+Bani Nadhir. Secara kronologis, Perang Uhud terjadi sebelum Fathul Makkah, Perang Asafan
+berlangsung setelah Perang Khandaq, dan Perang Bani Nadhir terjadi sebelum Perang Khandaq.
+Kesalahan tersebut menunjukkan bahwa urutan kemunculan peristiwa dalam dokumen belum
+selalu dapat digunakan sebagai urutan kronologis.
+Seluruh fungsi memenuhi kriteria keterlacakan karena metadata sumber tersedia pada
+setiap jenis relasi yang digunakan. Pemeriksaan kelengkapan metadata menunjukkan bahwa
+seluruh 229 relasi INVOLVED_IN, 44 relasi OCCURRED_AT, 46 relasi OCCURRED_ON,
+dan 17 relasi PRECEDES memiliki properti evidence dan halaman. Ketersediaan metadata
+tersebut memungkinkan setiap hasil ditelusuri dan diperiksa kembali ke dokumen sumber.
+Meskipun demikian, keterlacakan tidak sama dengan kesesuaian sumber. Suatu relasi dapat
+memiliki metadata yang lengkap, tetapi konteks bukti yang dirujuk justru menunjukkan bahwa
+relasi tersebut tidak tepat. Khusus pada relasi PRECEDES, isi evidence berupa pasangan nama
+peristiwa dan judul bab, bukan potongan kalimat yang secara langsung menyatakan urutan
+kronologis. Oleh karena itu, validitas relasi tersebut tetap memerlukan pemeriksaan manual
+terhadap urutan peristiwa dalam Sirah.
+Sebagai ilustrasi keluaran kueri, Gambar 4.21 menampilkan hasil F1 dalam bentuk subgraf
+yang menghubungkan simpul Perang Badr dengan tokoh-tokoh melalui relasi INVOLVED_IN.
+Visualisasi tersebut menunjukkan bahwa graf mampu menemukan dan menampilkan hubungan
+tokoh–peristiwa secara langsung. Namun, banyaknya hubungan yang ditampilkan juga
+memperlihatkan perlunya pemeriksaan terhadap konteks sumber sebelum setiap hubungan
+ditafsirkan sebagai keterlibatan historis.
+Berdasarkan keseluruhan pengujian, knowledge graph telah mampu menjalankan enam
+fungsi penelusuran yang ditetapkan, baik untuk penelusuran satu relasi maupun penelusuran
+lintas entitas. Dengan demikian, graf dapat digunakan sebagai sarana penelusuran awal dan
+eksplorasi hubungan dalam Sirah Nabawiyah. Namun, belum terpenuhinya kriteria kesesuaian
+sumber pada seluruh fungsi menunjukkan bahwa graf belum dapat digunakan sebagai sumber
+jawaban yang berdiri sendiri tanpa pemeriksaan terhadap teks.
+Kelayakan fungsional graf dalam penelitian ini karena itu bersifat terbatas. Graf telah layak
+secara operasional karena mampu menerima dan menjawab seluruh skenario kueri,
+menghasilkan jawaban yang tidak kosong, serta menyediakan metadata untuk menelusuri
+sumbernya. Akan tetapi, ketepatan semantis jawabannya masih dipengaruhi oleh kualitas hasil
+ekstraksi entitas dan pembentukan relasi. Oleh karena itu, hasil penelusuran graf tetap perlu
+
+<!-- Halaman buku 115 · PDF 149 -->
+diperlakukan sebagai titik awal untuk menemukan informasi, kemudian dikonfirmasi kembali
+melalui teks Sirah sebagai sumber primer.
+
+Gambar 4.21 Hasil Kueri Fungsional F1: Tokoh yang Terhubung dengan Perang Badr
+4.5.9 Keterbatasan Knowledge Graph
+Hasil analisis jaringan dan pengujian fungsional menunjukkan bahwa knowledge graph
+telah mampu merepresentasikan serta menelusuri hubungan antarentitas dalam Sirah
+Nabawiyah. Meskipun demikian, graf yang dihasilkan masih memiliki sejumlah keterbatasan.
+Keterbatasan tersebut perlu dijelaskan agar hasil visualisasi, perhitungan sentralitas, dan
+jawaban kueri tidak ditafsirkan sebagai gambaran sejarah yang sepenuhnya lengkap dan bebas
+kesalahan. Ringkasan keterbatasan graf beserta dampaknya ditunjukkan pada Tabel 4.30.
+Keterbatasan pertama berkaitan dengan ketergantungan graf terhadap hasil NER. Setiap
+simpul dan relasi dibentuk dari entitas yang berhasil dikenali pada tahap ekstraksi. Apabila
+suatu entitas tidak terdeteksi, informasi tersebut tidak dapat dimasukkan ke dalam graf. Kondisi
+ini terutama terlihat pada peristiwa yang tidak dituliskan sebagai nama khusus. Peristiwa seperti
+kelahiran, turunnya wahyu pertama, dan wafat Nabi umumnya dinyatakan melalui kata kerja
+atau kalimat deskriptif sehingga tidak selalu dikenali sebagai entitas Event. Akibatnya, jaringan
+peristiwa lebih banyak memuat nama peperangan, perjanjian, dan peristiwa lain yang
+disebutkan secara eksplisit.
+Keterbatasan berikutnya terdapat pada pembentukan relasi berdasarkan kedekatan
+kemunculan entitas. Pendekatan ini memungkinkan relasi dibangun secara otomatis dalam
+jumlah besar, tetapi belum selalu mampu membedakan penyebutan suatu entitas dengan
+keterlibatan yang sebenarnya. Sebagai contoh, Abu Lahab terhubung dengan Perang Badr
+meskipun teks menyatakan bahwa ia tidak ikut serta. Kesalahan tersebut terjadi karena nama
+Abu Lahab dan Perang Badr muncul dalam konteks yang berdekatan, sedangkan kata negasi
+dalam kalimat belum dipertimbangkan ketika relasi dibentuk.
+Permasalahan serupa ditemukan pada relasi lokasi dan waktu. Suatu lokasi dapat disebut
+sebagai tempat keberangkatan, tempat kepulangan, rute perjalanan, atau lokasi peristiwa lain
+yang sedang dibandingkan. Namun, kedekatan penyebutan dapat menyebabkan lokasi tersebut
+dihubungkan sebagai tempat berlangsungnya peristiwa. Keterangan waktu juga dapat merujuk
+
+<!-- Halaman buku 116 · PDF 150 -->
+pada peristiwa setelah peristiwa yang disebut sebelumnya. Tanpa pemahaman terhadap
+cakupan kalimat dan hubungan antarkalimat, sistem dapat menghubungkan keterangan tersebut
+dengan peristiwa yang tidak tepat.
+Tabel 4.30 Ringkasan Keterbatasan Knowledge Graph
+Aspek
+Keterbatasan
+Dampak terhadap hasil
+Cakupan
+entitas
+Graf bergantung pada entitas yang berhasil
+dikenali oleh model NER. Peristiwa yang
+dinyatakan melalui kata kerja atau uraian
+deskriptif tidak selalu dikenali sebagai entitas
+Event.
+Peristiwa
+penting
+seperti
+kelahiran,
+turunnya wahyu pertama, dan wafat Nabi
+belum seluruhnya muncul sebagai simpul
+peristiwa.
+Pembentukan
+relasi
+Relasi
+dibentuk
+berdasarkan
+kedekatan
+kemunculan entitas dalam bagian teks yang
+sama.
+Tokoh, lokasi, atau waktu dapat terhubung
+dengan peristiwa meskipun hanya disebut
+dalam konteks sebelum atau setelah
+peristiwa tersebut.
+Pemahaman
+konteks
+Pembentukan
+relasi
+belum
+sepenuhnya
+mempertimbangkan negasi, peran sintaksis,
+dan cakupan keterangan dalam kalimat.
+Pernyataan seperti “Abu Lahab tidak ikut
+serta” masih dapat membentuk relasi
+INVOLVED_IN.
+Makna relasi
+Relasi INVOLVED_IN belum membedakan
+bentuk keterlibatan, peran tokoh, dan pihak
+yang diwakili.
+Tokoh dari pihak Muslim dan Quraisy
+dapat berada dalam subgraf peristiwa yang
+sama tanpa keterangan mengenai peran
+atau kubunya.
+Normalisasi
+entitas
+Beberapa nama yang merujuk pada entitas
+sama masih disimpan sebagai simpul berbeda.
+Nama seperti Madinah dan Yatsrib dapat
+diperlakukan sebagai dua lokasi yang
+berbeda sehingga memengaruhi jumlah
+simpul dan hubungan.
+Relasi
+kronologis
+Sebagian
+relasi
+PRECEDES
+dibentuk
+berdasarkan
+urutan
+penyebutan
+dalam
+dokumen.
+Urutan kemunculan dalam teks dapat
+menghasilkan hubungan kronologis yang
+terbalik ketika suatu peristiwa lama
+disebut
+kembali
+pada
+pembahasan
+berikutnya.
+Penelusuran
+multi-hop
+Jawaban penelusuran lintas entitas bergantung
+pada ketepatan setiap relasi yang dilalui.
+Kesalahan
+pada
+satu
+relasi
+dapat
+diteruskan dan menghasilkan lokasi atau
+peristiwa yang tidak sesuai pada akhir
+penelusuran.
+Provenance
+Seluruh relasi memiliki evidence dan halaman,
+tetapi isi bukti tidak selalu mendukung
+hubungan secara langsung.
+Jawaban dapat ditelusuri kembali ke
+sumber,
+tetapi
+tetap
+memerlukan
+pemeriksaan manual untuk memastikan
+kebenarannya.
+Cakupan
+sumber
+Graf dibangun dari sumber Sirah yang
+digunakan dalam penelitian ini.
+Graf merepresentasikan isi dan cara
+penyajian sumber tersebut, bukan seluruh
+variasi riwayat Sirah Nabawiyah.
+
+Relasi INVOLVED_IN juga masih memiliki makna yang umum. Relasi ini menunjukkan
+bahwa tokoh terhubung dengan suatu peristiwa, tetapi belum menerangkan bentuk
+keterlibatannya. Graf belum membedakan tokoh yang bertindak sebagai pemimpin, peserta,
+
+<!-- Halaman buku 117 · PDF 151 -->
+lawan, utusan, korban, perawi, atau sekadar tokoh yang disebut dalam pembahasan. Akibatnya,
+tokoh dari pihak yang berbeda dapat berada dalam subgraf peristiwa yang sama. Pada subgraf
+Perang Badr, misalnya, tokoh dari pihak Muslim dan Quraisy sama-sama terhubung melalui
+INVOLVED_IN. Oleh karena itu, hubungan tersebut tidak dapat langsung ditafsirkan sebagai
+hubungan persekutuan atau keberpihakan.
+Keterbatasan makna relasi tersebut turut memengaruhi analisis SNA. Proyeksi co-
+participation menghubungkan dua tokoh apabila keduanya terhubung dengan peristiwa yang
+sama. Apabila suatu peristiwa memiliki banyak tokoh, seluruh tokoh tersebut dapat membentuk
+jaringan yang sangat padat. Tokoh yang sering disebut atau terhubung dengan banyak peristiwa
+kemudian memperoleh nilai sentralitas yang tinggi, termasuk apabila sebagian hubungannya
+terbentuk akibat kedekatan teks. Dengan demikian, nilai sentralitas pada penelitian ini
+menunjukkan posisi tokoh dalam graf hasil ekstraksi, bukan ukuran pengaruh sejarah secara
+mutlak.
+Normalisasi entitas yang belum sepenuhnya menyatukan variasi nama juga memengaruhi
+struktur graf. Satu entitas dapat memiliki beberapa nama, gelar, atau variasi penulisan. Madinah
+dan Yatsrib, misalnya, dapat merujuk pada lokasi yang sama, tetapi masih muncul sebagai
+simpul terpisah. Pemisahan tersebut dapat menambah jumlah simpul, membagi relasi suatu
+entitas, dan memengaruhi hasil perhitungan sentralitas maupun jumlah jawaban kueri.
+Permasalahan yang sama dapat terjadi pada nama tokoh atau peristiwa yang memiliki variasi
+ejaan.
+Pada relasi kronologis, urutan kemunculan peristiwa dalam dokumen belum selalu
+menunjukkan urutan terjadinya peristiwa. Teks Sirah dapat menyebut peristiwa yang telah
+berlalu untuk memberikan penjelasan atau perbandingan dalam pembahasan peristiwa
+berikutnya. Penggunaan posisi penyebutan sebagai dasar relasi PRECEDES karena itu
+menghasilkan tiga urutan yang terbalik pada pengujian F6. Relasi kronologis akan lebih kuat
+apabila dibentuk berdasarkan informasi waktu yang dinyatakan secara eksplisit atau melalui
+proses normalisasi waktu ke dalam nilai yang dapat dibandingkan.
+Keterbatasan relasi menjadi lebih terlihat pada penelusuran multi-hop. Pada F5, jawaban
+lokasi diperoleh melalui jalur tokoh–peristiwa–lokasi. Jawaban akhir hanya benar apabila
+hubungan tokoh–peristiwa dan peristiwa–lokasi sama-sama tepat. Jika salah satu hubungan
+tidak sesuai, kesalahan tersebut diteruskan sampai ke hasil akhir. Oleh karena itu, penelusuran
+yang melewati lebih banyak relasi memiliki risiko kesalahan yang lebih besar dibandingkan
+penelusuran satu relasi.
+Dari sisi keterlacakan, seluruh relasi inti telah dilengkapi dengan metadata evidence dan
+halaman. Kelengkapan tersebut menjadi kelebihan graf karena setiap hasil dapat diperiksa
+kembali ke dokumen sumber. Namun, pengujian fungsional memperlihatkan bahwa keberadaan
+metadata tidak selalu berarti bukti tersebut mendukung hubungan yang terbentuk. Pada
+beberapa relasi, potongan teks hanya menunjukkan penyebutan entitas dalam konteks yang
+berdekatan. Khusus pada relasi PRECEDES, evidence yang tersimpan berupa pasangan nama
+peristiwa dan judul bab, bukan kalimat sumber yang menyatakan hubungan kronologis secara
+langsung. Dengan demikian, metadata provenance mendukung proses pemeriksaan, tetapi
+belum menggantikan validasi terhadap makna teks.
+
+<!-- Halaman buku 118 · PDF 152 -->
+Graf ini juga dibangun berdasarkan sumber Sirah yang digunakan dalam penelitian. Oleh
+karena itu, struktur graf mencerminkan cakupan informasi, istilah, urutan pembahasan, dan
+sudut penyajian sumber tersebut. Perbedaan riwayat atau penulisan pada sumber Sirah lain
+belum direpresentasikan. Hasil graf dengan demikian tidak dimaksudkan untuk menyelesaikan
+perbedaan riwayat sejarah, melainkan untuk merepresentasikan hubungan entitas yang
+ditemukan dalam korpus penelitian.
+Keterbatasan tersebut membuka beberapa arah pengembangan. Pembentukan relasi dapat
+ditingkatkan dengan mempertimbangkan struktur kalimat, kata negasi, jenis tindakan, dan
+konteks antarkalimat. Normalisasi nama dapat diperluas melalui penyatuan alias dan variasi
+ejaan. Relasi INVOLVED_IN juga dapat diuraikan menjadi hubungan yang lebih khusus,
+seperti memimpin, mengikuti, melawan, mengutus, atau menjadi korban. Sementara itu, relasi
+kronologis dapat dibentuk berdasarkan informasi waktu yang telah dinormalisasi dan diperiksa
+konsistensinya.
+Berdasarkan keterbatasan tersebut, knowledge graph dalam penelitian ini paling tepat
+digunakan sebagai sarana eksplorasi dan penelusuran awal. Graf membantu pengguna
+menemukan entitas yang mungkin berkaitan, melihat struktur hubungan, dan kembali menuju
+bagian sumber yang relevan. Namun, hasilnya tidak sebaiknya diperlakukan sebagai
+kesimpulan sejarah tanpa pemeriksaan terhadap teks sumber. Posisi ini sejalan dengan hasil
+pengujian fungsional pada Subbab 4.5.8, yaitu graf telah layak secara operasional untuk
+menjalankan penelusuran relasional, tetapi ketepatan semantis setiap jawabannya masih
+memerlukan validasi manual.

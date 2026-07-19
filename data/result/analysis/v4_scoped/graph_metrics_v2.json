@@ -17,7 +17,7 @@
   "community_detection": {
     "louvain": {
       "n_communities": 8,
-      "modularity": 0.2830732290357799,
+      "modularity": 0.2830732290357791,
       "community_sizes": [
         37,
         40,
@@ -31,7 +31,7 @@
     },
     "greedy": {
       "n_communities": 10,
-      "modularity": 0.26068937034568823,
+      "modularity": 0.2606893703456877,
       "community_sizes": [
         66,
         47,
@@ -47,7 +47,7 @@
     },
     "girvan_newman": {
       "n_communities": 16,
-      "modularity": 0.03014325831819962,
+      "modularity": 0.030143258318199508,
       "community_sizes": [
         1,
         104,

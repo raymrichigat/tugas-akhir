@@ -1,225 +1,1654 @@
-# BAB 2 TINJAUAN PUSTAKA
-
-<!-- SINKRON STRUKTURAL dengan buku `docs/Buku-TA-Genta.pdf` (hlm 6-32).
-     Sumber sahih = buku Word/PDF. File ini = cermin struktur + prosa; persamaan, tabel, dan
-     gambar ditandai sebagai placeholder [Persamaan/Tabel/Gambar X] yang isinya ada di buku.
-     Perbaikan §2.3.3 (disclaimer SRL, opsi 2) diterapkan. Saran lain (nama Yifan/Du, kurung
-     sitasi, pola APA, typo Persamaan 2.13) sudah dikoreksi user di Word. SNA sengaja digabung
-     ke §2.7 atas permintaan pembimbing. -->
-
-## 2.1 Hasil Penelitian Terdahulu
-
-Penelitian ini merujuk pada sejumlah penelitian terdahulu yang berkaitan dengan tiga topik utama, yaitu pembangunan *knowledge graph* (graf pengetahuan), ekstraksi informasi melalui *Named-Entity Recognition* (NER) dan ekstraksi relasi, serta pemanfaatan *graph database* seperti Neo4j untuk penyimpanan dan penelusuran pengetahuan berbasis relasi. Penelitian-penelitian tersebut menjadi landasan untuk memahami tahapan umum konstruksi *knowledge graph*, pendekatan yang lazim diterapkan pada berbagai domain, serta bentuk evaluasi yang biasa digunakan untuk menilai kelayakan hasil konstruksi graf.
-
-Penelitian terdahulu berjudul "A Comprehensive Survey on Automatic Knowledge Graph Construction" oleh Zhong et al. (2024) menyajikan tinjauan sistematis terkait perkembangan metode konstruksi *knowledge graph* secara otomatis. Studi ini mengkaji lebih dari 300 metode dan mengelompokkan proses konstruksi ke dalam tiga tahap utama, yaitu *knowledge acquisition*, *knowledge refinement*, dan *knowledge evolution*.
-
-Penelitian kedua berjudul "A Knowledge Graph Construction Method for Complex Products Improvement Design" oleh Ren et al. (2024) membahas konstruksi *knowledge graph* pada domain produk kompleks. Metodenya melibatkan pengumpulan data multi-sumber, ekstraksi pengetahuan, serta pemodelan *function-behavior-structure* (FBS), dengan graf dikonstruksi di bawah panduan ontologi.
-
-Penelitian ketiga berjudul "Automatic knowledge-graph creation from historical documents: The Chilean dictatorship as a case study" oleh Díaz et al. (2024) berfokus pada konstruksi *knowledge graph* dari dokumen historis. Penelitian ini menggunakan *Large Language Models* (LLM) untuk mengenali entitas dan relasi, dengan interaksi yang *grounded* pada ontologi sederhana untuk menekan halusinasi, lalu dievaluasi terhadap *gold standard graph*.
-
-Penelitian keempat "BioKGrapher: Initial evaluation of automated knowledge graph construction from biomedical literature" oleh Schäfer et al. (2024) memperkenalkan alat konstruksi *knowledge graph* otomatis dari publikasi biomedis skala besar. Metodenya diawali *Named Entity Recognition and Linking* (NER+NEL), normalisasi ke UMLS, pembobotan konsep, lalu integrasi menjadi *knowledge graph* hierarkis.
-
-Penelitian kelima "Construction of a Traditional Chinese Medicine Dao Yin Science Knowledge Graph Based on Neo4j" oleh Xie et al. (2023) membangun *knowledge graph* domain Dao Yin memakai BERT-CRF untuk NER disertai pengecekan manual, lalu diimplementasikan di Neo4j dan ditelusuri melalui *Cypher*.
-
-Penelitian keenam "Construction of Military Knowledge Graph Based on Neo4j and MongoDB" oleh He et al. (2022) mengusulkan *panoramic military knowledge graph* yang menyatukan pengetahuan multi-sumber pada level semantik, dengan hasil disimpan pada Neo4j dan MongoDB.
-
-Penelitian ketujuh "Enhanced Entity Recognition of Islamic Hadiths based-on Hybrid LSTM and AraBERT Model" oleh Nados (2024) melatih model NER untuk teks hadis berbahasa Arab memakai skema BIO. Model hibrida AraBERT-LSTM mencapai akurasi sekitar 0,981, melampaui model tunggal.
-
-Penelitian kedelapan "Graph-based Named Entity Information Retrieval from News Articles using Neo4j" oleh Chaudhary et al. (2024) mengonversi teks mentah menjadi *knowledge graph* dengan mengintegrasikan *entity linking* dan *relation extraction* secara terpadu, lalu disimpan di Neo4j.
-
-Penelitian kesembilan "Knowledge Extraction from Multilingual and Historical Texts for Advanced Question Answering" oleh Graciotti (2023) menggabungkan pendekatan *Semantic Web* dan *Natural Language Processing* untuk *question answering* pada teks diakronik, serta menyoroti tantangan *noise* OCR dan bias *entity linking* pada entitas historis.
-
-Penelitian terakhir berjudul "The Construction of Knowledge Graph of Newspaper Distribution in Yan'an Period and Frontend Visualization" oleh Yifan (2023) mengusulkan konstruksi *knowledge graph* (ekstraksi informasi, penggabungan, pengolahan, penyimpanan) dilengkapi visualisasi *front-end*, menghasilkan graf dengan 15 ontologi, 27.349 relasi, 4.074 surat kabar, dan 10.616 entitas.
-[Tabel 2.1: Hasil Penelitian Terdahulu — perbandingan Penelitian, Sumber Data, Metode, Analisis untuk 10 studi di atas]
-
-Berdasarkan penelitian terdahulu, terlihat bahwa konstruksi *knowledge graph* umumnya memerlukan tahapan ekstraksi entitas dan relasi, pemodelan skema, serta penyimpanan graf yang umumnya menggunakan Neo4j agar pengetahuan dapat ditelusuri melalui kueri graf. Namun, sebagian besar studi masih berfokus pada domain berita, biomedis, militer, atau arsip sejarah tertentu, dan belum ada yang secara spesifik membangun *knowledge graph* untuk Sirah Nabawiyah berbahasa Indonesia dengan kategori entitas minimal seperti *Person*, *Event*, *Location*, dan *Time*. Selain itu, pendekatan ekstraksi berbasis SRL semi-*supervised* yang hemat data (Ariyanto et al., 2025) belum pernah dipadukan dengan konstruksi *knowledge graph* Sirah, dan *Social Network Analysis* terhadap *knowledge graph* sejarah Islam juga belum disentuh. Penelitian ini menutup celah tersebut dengan mengadaptasi alur konstruksi *knowledge graph* untuk domain Sirah, mulai dari ekstraksi entitas berbasis SRL dengan *iterative self-training*, pembangunan graf di Neo4j, hingga evaluasi terbatas untuk memastikan kualitas ekstraksi entitas dan relasi serta kelayakan graf untuk penelusuran relasional.
-
-## 2.2 Sirah Nabawiyah
-
-Sirah Nabawiyah merupakan kisah sejarah yang merekam perjalanan hidup Nabi Muhammad SAW beserta kondisi masyarakat dan berbagai peristiwa yang terjadi pada masanya (Solihin, 2022). Dalam tradisi keilmuan Islam, Sirah memiliki hubungan yang erat dengan hadis, tempat hadis menjadi salah satu sumber utama dalam penyusunan Sirah, sedangkan Sirah membantu menjelaskan hadis melalui latar belakang peristiwa dan urutan waktunya. Kajian ilmiah kontemporer juga banyak membahas hubungan keduanya, termasuk pandangan bahwa hadis merupakan bagian dari Sirah, tetapi tidak seluruh isi Sirah termasuk dalam ruang lingkup hadis (Kharis, 2024).
-
-Dalam perkembangan penulisan sejarah Islam, Sirah telah disusun sejak masa awal dan menjadi rujukan penting setelah kajian hadis atau sunnah. Karya-karya klasik, seperti Sirah Ibn Ishaq yang kemudian disempurnakan oleh Ibn Hisham, menunjukkan upaya sistematis untuk menyajikan perjalanan hidup Nabi secara berurutan serta menghimpun berbagai riwayat dalam satu narasi (Prayogi et al., 2022). Penelitian modern memandang karya-karya tersebut sebagai fondasi penting dalam studi Sirah, sekaligus mengkajinya menggunakan pendekatan historiografi kontemporer melalui analisis metode penulisan, karakteristik narasi, dan perbandingan antar karya Sirah modern. Oleh karena itu, Sirah tidak hanya dipahami sebagai teks keagamaan, tetapi juga sebagai karya sejarah yang ditulis dengan berbagai pendekatan (Abror & Rahma, 2024).
-
-Dari segi bentuk penyajian, Sirah umumnya ditulis sebagai narasi yang mengikuti urutan waktu dan memuat unsur-unsur faktual, seperti tokoh, peristiwa, lokasi, dan waktu. Hubungan antara unsur-unsur tersebut sering kali tidak dijelaskan secara langsung, melainkan tersirat dalam susunan kalimat dan paragraf, sehingga informasi mengenai hubungan antar-entitas tersebar di berbagai bagian teks. Berdasarkan karakteristik tersebut, Sirah Nabawiyah dapat dipandang sebagai korpus naratif, yaitu kumpulan teks yang kaya akan informasi mengenai tokoh dan peristiwa. Karakteristik ini menjadi landasan penelitian yang mencakup pembentukan korpus, pembersihan hasil *Optical Character Recognition* (OCR) atau pengenalan teks dari gambar, serta ekstraksi entitas dan relasi agar informasi yang terkandung di dalamnya dapat disusun secara lebih terstruktur dalam basis data graf.
-
-## 2.3 Named-Entity Recognition Berbasis Semantic Role Labelling
-
-*Named-Entity Recognition* berbasis *Semantic Role Labeling* merupakan pendekatan ekstraksi informasi yang tidak hanya menempatkan entitas sebagai unit teks yang perlu dikenali, tetapi juga sebagai bagian dari struktur makna dalam suatu peristiwa. Dalam teks naratif, informasi umumnya tersusun melalui keterlibatan tokoh, kejadian, lokasi, dan waktu yang saling berkaitan. Kajian ekstraksi naratif menempatkan narasi sebagai rangkaian peristiwa yang melibatkan beberapa aktor, berlangsung pada lokasi tertentu, dan tersusun dalam urutan temporal tertentu (Santana et al., 2023). Karakter tersebut selaras dengan teks Sirah Nabawiyah yang memuat perjalanan tokoh, rangkaian peristiwa, tempat kejadian, serta fase waktu yang membentuk struktur historis.
-
-Dalam kerangka *information extraction*, teks alami perlu diubah menjadi pengetahuan terstruktur agar dapat dianalisis lebih lanjut. Entitas, relasi, dan peristiwa menjadi komponen utama yang diekstraksi dari teks untuk mendukung berbagai proses komputasional, termasuk pembangunan *knowledge graph* (Xu et al., 2024). Pada posisi ini, NER berperan untuk mengenali unit informasi berupa entitas, sedangkan orientasi peran semantik ala SRL membantu menjelaskan peran entitas tersebut dalam suatu peristiwa. Pendekatan ini sejalan dengan kajian Ariyanto et al. (2025) yang menempatkan NER dan SRL sebagai bagian dari *information extraction* pada teks berbahasa Indonesia.
-
-### 2.3.1 Named-Entity Recognition
-
-*Named-Entity Recognition* (NER) adalah tugas dalam NLP untuk mengenali *span* teks yang menyebut entitas bernama dan mengklasifikasikannya ke dalam kategori semantik yang telah ditentukan, seperti *person*, *location*, dan *organization* (J. Li et al., 2022). Dalam penerapannya, NER tidak hanya membantu memahami isi teks secara semantik, tetapi juga menjadi fondasi bagi berbagai tugas lanjutan seperti *information extraction* dan *relation extraction*, sistem tanya jawab, serta konstruksi struktur pengetahuan seperti *knowledge base* dan *knowledge graph* (Xu et al., 2024; Zhao et al., 2024). Jenis label entitas yang biasa digunakan dalam NER ditunjukkan pada Tabel 2.2, dan seluruh label tersebut dapat disesuaikan dengan kebutuhan atau konteks analisis pada domain tertentu.
-
-[Tabel 2.2: Contoh Daftar Label NER — PERSON, LOC, ORG, DATE, TIME, EVENT beserta deskripsinya]
-
-[Gambar 2.1: Contoh Hasil Penerapan NER pada Teks Bahasa Inggris (Chaudhary et al., 2024)]
-
-Sebagai gambaran, Gambar 2.1 menunjukkan penerapan NER pada potongan paragraf teks berbahasa Inggris. Setiap entitas yang ditemukan diberi label dengan warna berbeda, seperti PERSON untuk "Tencent", ORG untuk "Google", "IBM", dan "Microsoft", serta DATE untuk "2018-2024" dan "2017". Gambaran ini menunjukkan NER menandai dan mengelompokkan elemen penting dalam teks sehingga informasi menjadi lebih terstruktur.
-
-Pada pendekatan *sequence labeling*, NER dilakukan dengan memberikan label pada setiap token dalam kalimat. Salah satu skema pelabelan yang umum digunakan adalah BIO atau *Begin-Inside-Outside*. Skema BIO membedakan token awal entitas, token lanjutan dari entitas yang sama, dan token yang tidak termasuk entitas, sehingga model tidak hanya mengenali jenis entitas tetapi juga batas awal dan akhir entitas dalam teks (J. Li et al., 2022). Penjelasan setiap label BIO dirangkum pada Tabel 2.3.
-
-[Tabel 2.3: Penjelasan Label BIO — B-XXX (awal entitas), I-XXX (lanjutan entitas), O (di luar entitas)]
-
-Perkembangan *deep learning* membuat NER tidak lagi bergantung pada aturan manual atau fitur linguistik eksplisit. Model NER modern umumnya terdiri atas representasi input, *context encoder*, dan *tag decoder*, yang mencerminkan proses representasi token, pemahaman konteks, dan prediksi label entitas (J. Li et al., 2022). Pada bahasa Indonesia, NER masih menghadapi tantangan berupa keterbatasan korpus dan inkonsistensi anotasi yang dapat memengaruhi akurasi model (Oryza et al., 2020), sehingga penting bagi penelitian ini untuk menjaga konsistensi anotasi pada korpus Sirah Nabawiyah yang bersifat domain spesifik.
-
-Dalam penelitian ini, entitas yang digunakan meliputi *Person*, *Event*, *Location*, dan *Time*. Pemilihan kategori tersebut disesuaikan dengan karakter Sirah Nabawiyah sebagai teks naratif-historis. *Person* merepresentasikan tokoh, *Event* merepresentasikan peristiwa penting, *Location* merepresentasikan tempat kejadian, sedangkan *Time* merepresentasikan waktu atau fase peristiwa.
-
-### 2.3.2 Semantic Role Labelling
-
-*Semantic Role Labeling* (SRL) merupakan tugas NLP yang merepresentasikan makna kalimat melalui struktur predikat dan argumen. Predikat biasanya menunjukkan tindakan, keadaan, atau peristiwa, sedangkan argumen menunjukkan unsur yang terlibat dalam predikat tersebut. Kajian *Universal Proposition Bank* 2.0 menempatkan SRL sebagai analisis semantik dangkal yang membantu menjembatani struktur sintaksis menuju representasi makna melalui identifikasi predikat, penentuan makna predikat, identifikasi argumen, dan pemberian label peran semantik pada setiap argumen (Jindal et al., 2022).
-
-Dalam *information extraction*, SRL berfungsi memperjelas hubungan antara predikat dan argumen dalam teks tidak terstruktur. Kajian sistematis tentang SRL pada data *low-resource* menempatkan SRL sebagai salah satu tugas penting untuk mengidentifikasi peran semantik sehingga pemahaman terhadap teks dapat diperkaya (Ariyanto et al., 2025). Posisi ini penting karena teks naratif sering kali menyimpan hubungan antarentitas secara implisit melalui struktur kalimat, bukan melalui relasi yang ditulis secara eksplisit.
-
-Pada teks Sirah Nabawiyah, kebutuhan terhadap orientasi peran muncul karena tokoh, lokasi, waktu, dan peristiwa sering berada dalam satu rangkaian narasi. Kalimat seperti "Nabi Muhammad hijrah ke Madinah" tidak hanya memuat entitas *Person* dan *Location*, tetapi juga memuat peristiwa dan arah keterlibatan tokoh di dalamnya. NER dapat mengenali "Nabi Muhammad" sebagai *Person*, "hijrah" sebagai *Event*, dan "Madinah" sebagai *Location*, sedangkan kerangka peran semantik membantu memahami bahwa tokoh tersebut berperan sebagai pihak yang terlibat dalam peristiwa hijrah dan Madinah berperan sebagai tujuan atau lokasi peristiwa.
-
-### 2.3.3 SRL-Based Named-Entity Recognition
-
-*SRL-Based Named-Entity Recognition* dalam penelitian ini mengacu pada pendekatan *information extraction* yang mengaitkan pengenalan entitas dengan peran semantik dalam suatu peristiwa. Pendekatan ini selaras dengan kajian Ariyanto et al. (2025) yang menempatkan *Named-Entity Recognition* dan *Semantic Role Labeling* sebagai bagian penting dalam ekstraksi informasi teks Indonesia. Dalam kerangka tersebut, NER digunakan untuk mengenali entitas, sedangkan orientasi peran semantik ala SRL dipakai sebagai dasar konseptual dalam menentukan kategori entitas yang diekstraksi.
-
-Penguatan hubungan antara NER dan SRL juga terlihat pada dataset peristiwa krisis berbahasa Indonesia yang dikembangkan oleh Ariyanto et al. (2025). Dataset tersebut menyediakan label argumen untuk tugas SRL dan label entitas untuk tugas NER dalam satu kerangka data, yang menunjukkan bahwa entitas dan peran semantik dapat digunakan secara saling melengkapi dalam *information extraction*. Gagasan ini relevan dengan penelitian Sirah Nabawiyah karena teks yang digunakan juga memuat struktur peristiwa yang melibatkan tokoh, lokasi, waktu, dan kejadian tertentu. Dalam penelitian ini, pendekatan *SRL-Based NER* tidak dimaksudkan untuk menggantikan NER, melainkan untuk memperkuat hasil pengenalan entitas melalui konteks peran semantik. Entitas *Person*, *Event*, *Location*, dan *Time* tidak hanya dikenali sebagai label, tetapi juga diarahkan untuk dipahami melalui keterlibatannya dalam suatu peristiwa. Tokoh dapat berperan sebagai pelaku, saksi, lawan, atau pihak yang terlibat, lokasi dapat berfungsi sebagai tempat kejadian atau tujuan perpindahan, sedangkan waktu dapat menunjukkan urutan atau fase historis. Perlu ditegaskan bahwa penelitian ini tidak menjalankan pengurai (*parser*) SRL secara penuh. Orientasi peran tersebut diwujudkan secara praktis pada tahap pelabelan awal semi-otomatis (Subbab 3.5.1) melalui pencocokan kamus entitas (*gazetteer*) dan pola ekspresi reguler (*regex*), sehingga istilah *SRL-Based* di sini mengikuti kerangka konseptual Ariyanto et al. (2025) sebagai landasan pemikiran, bukan sebagai modul SRL yang dijalankan pada teks.
-
-Hubungan antara SRL dan *knowledge graph* terlihat pada metode yang mengubah teks menjadi graf berbasis *frame*. TakeFive, misalnya, merupakan metode *semantic role labeling* yang melakukan *dependency parsing*, mengidentifikasi kata yang memunculkan *frame* leksikal, menemukan *role* dan *filler* untuk tiap *frame*, lalu memformalkan hasilnya sebagai *knowledge graph* (Alam et al., 2021). Pendekatan tersebut menunjukkan bahwa peran semantik dapat menjadi jembatan antara analisis kalimat dan representasi pengetahuan berbasis relasi. Dengan demikian, kerangka *SRL-Based NER* dalam penelitian ini diposisikan sebagai jembatan konseptual antara pengenalan entitas dan pembangunan *knowledge graph* Sirah Nabawiyah: NER menghasilkan entitas utama dari teks, sedangkan orientasi peran membantu menafsirkan peran entitas tersebut dalam struktur peristiwa, yang kemudian diarahkan untuk membentuk relasi seperti tokoh-terlibat-dalam-peristiwa, peristiwa-terjadi-di-lokasi, dan peristiwa-terjadi-pada-waktu tertentu.
-## 2.4 Transformer-Based Model untuk Sequence Labeling
-
-*Transformer-based model* merupakan pendekatan pemodelan bahasa yang banyak digunakan dalam tugas *Natural Language Processing*, termasuk *sequence labeling*. Pada tugas *sequence labeling*, setiap token dalam suatu urutan teks diberi label tertentu sesuai konteksnya. NER termasuk tugas *sequence labeling* karena model perlu menentukan label entitas pada setiap token, misalnya apakah token tersebut termasuk *Person*, *Event*, *Location*, *Time*, atau bukan entitas.
-
-Perkembangan model berbasis *Transformer* menjadi penting dalam NER karena model ini mampu menghasilkan representasi token yang mempertimbangkan konteks kalimat. Kajian mutakhir menunjukkan bahwa pendekatan berbasis *Transformer* dan LLM menjadi bagian penting dalam perkembangan NER modern karena kemampuannya menangkap konteks (Keraghel et al., 2024). Kajian lain menempatkan mekanisme *self-attention* sebagai mekanisme utama yang membantu model menangkap ketergantungan kontekstual antar-token secara lebih efektif dibandingkan pendekatan berbasis fitur manual (Fu, 2025). Oleh karena itu, pendekatan *Transformer-based model* relevan digunakan pada penelitian ini karena teks Sirah Nabawiyah memiliki struktur naratif yang panjang, kaya tokoh, serta memuat hubungan antar-kata yang bergantung pada konteks peristiwa.
-
-### 2.4.1 Transformer
-
-*Transformer* merupakan arsitektur *deep learning* yang banyak digunakan dalam pemrosesan bahasa alami karena kemampuannya membangun representasi kontekstual dari urutan token. Paaß dan Giesselbach (2023) menjelaskan bahwa model bahasa berbasis *attention* memproses teks sebagai urutan token dan menghasilkan *contextual embedding* untuk setiap token. Rahali dan Akhloufi (2023) menyatakan bahwa arsitektur *Transformer* menggunakan *self-attention* untuk menangkap ketergantungan jarak jauh dalam urutan masukan, sehingga makna suatu token dipengaruhi oleh token lain dalam konteks yang sama. Hal ini sejalan dengan Patwardhan et al. (2023) yang menjelaskan bahwa model *Transformer* seperti BERT mampu mempelajari representasi kontekstual kata berdasarkan konteks token di sekitarnya. Selain itu, Sajun et al. (2024) menggambarkan arsitektur *Transformer* sebagai model yang terdiri atas komponen utama seperti *multi-head attention*, *feed-forward network*, *positional encoding*, serta struktur *encoder* dan *decoder*, sebagaimana ditunjukkan pada Gambar 2.2.
-Pada tugas NER, kemampuan menangkap konteks sangat penting karena label suatu token sering bergantung pada token di sekitarnya, misalnya suatu kata dapat dikenali sebagai nama tokoh apabila muncul bersama gelar, kata kerja tertentu, atau konteks peristiwa. Kajian NER berbasis *Transformer* pada dokumen hukum Indonesia menunjukkan bahwa model seperti IndoBERT, IndoRoBERTa, mBERT, dan XLM-RoBERTa dapat mengenali entitas pada domain spesifik dengan performa kompetitif (Yulianti et al., 2024). Ilustrasi pemanfaatan *Transformer* dalam pelabelan token ditunjukkan pada Gambar 2.3.
-
-[Gambar 2.2: Ilustrasi Arsitektur Transformer (Sajun et al., 2024)]
-[Gambar 2.3: Ilustrasi Pelabelan Token dengan Transformer (Schweter & Akbik, 2021)]
-
-Pada Gambar 2.3, setiap token masukan diproses bersama konteks di sekitarnya sehingga menghasilkan representasi kontekstual yang kemudian digunakan untuk memprediksi label token, misalnya B-LOC untuk token awal entitas lokasi dan O untuk token yang tidak termasuk entitas. Dalam penelitian ini, *Transformer* diposisikan sebagai dasar arsitektur model untuk menghasilkan representasi token dari teks Sirah Nabawiyah sebelum dilakukan klasifikasi token pada proses *sequence labeling*.
-
-### 2.4.2 BERT dan IndoBERT
-
-BERT merupakan salah satu model berbasis *Transformer encoder* yang banyak digunakan dalam tugas NLP karena mampu menghasilkan representasi kata secara kontekstual. Dalam tugas NER, BERT digunakan untuk menghasilkan *embedding* setiap token berdasarkan konteks kalimatnya, yang kemudian diproses oleh lapisan klasifikasi untuk menentukan label entitas. Penerapan BERT dalam NER domain khusus terlihat pada penelitian Ge et al. (2024) yang menggunakan BERT untuk memperoleh representasi kata sebelum diproses dalam model BERT-BiLSTM-CRF pada domain *dietary elderly*. Secara arsitektural, BERT dibangun dari tumpukan *Transformer encoder*, dengan setiap *encoder layer* memuat *input representation*, *attention mechanism*, dan *feedforward neural network*, sebagaimana ilustrasi pada Gambar 2.4.
-
-[Gambar 2.4: Ilustrasi Arsitektur BERT (Ge et al., 2024)]
-
-Pada konteks bahasa Indonesia, model *pre-trained* berbasis BERT menjadi penting karena karakteristik bahasa, kosakata, dan struktur kalimatnya berbeda dari bahasa Inggris. Model yang dilatih pada korpus Indonesia dapat memberikan representasi token yang lebih sesuai untuk teks berbahasa Indonesia (Yulianti et al., 2024). Dalam penelitian ini, digunakan lima model berbasis *Transformer* sebagai skenario perbandingan. Model `indolem/indobert-base-uncased` digunakan sebagai *baseline*, sedangkan empat model lain digunakan sebagai pembanding untuk melihat pengaruh variasi model *pre-trained* terhadap performa NER. Informasi model yang digunakan ditunjukkan pada Tabel 2.4.
-
-[Tabel 2.4: Perbandingan Model yang Digunakan — indolem/indobert-base-uncased (baseline), cahya/bert-base-indonesian-1.5G, cahya/distilbert-base-indonesian, indobenchmark/indobert-base-p1, cahya/roberta-base-indonesian-1.5G]
-
-Dengan membandingkan kelima model tersebut, penelitian ini dapat melihat model mana yang paling sesuai untuk mengenali entitas *Person*, *Event*, *Location*, dan *Time* pada teks Sirah Nabawiyah.
-
-## 2.5 Strategi Penanganan Ketidakseimbangan Label
-
-Ketidakseimbangan label merupakan salah satu tantangan dalam tugas NER, terutama pada pendekatan *sequence labeling*. Sebagian besar token biasanya berlabel O karena tidak termasuk entitas, sedangkan token yang merepresentasikan entitas seperti *Person*, *Event*, *Location*, dan *Time* muncul dalam jumlah lebih sedikit. Kondisi ini dapat membuat model lebih mudah mempelajari kelas mayoritas dan kurang sensitif terhadap kelas minoritas (Nemoto et al., 2025). Selain itu, strategi *re-weighting* token juga digunakan untuk mengurangi dominasi kelas mayoritas dalam proses pembelajaran model NER (Luo et al., 2023). Berdasarkan karakteristik tersebut, penelitian ini mempertimbangkan beberapa strategi, yaitu *class weight*, *data augmentation*, *supervised contrastive learning*, dan *joint supervised contrastive learning*.
-
-### 2.5.1 Class Weight
-
-*Class weight* merupakan strategi penanganan ketidakseimbangan label dengan memberikan bobot berbeda pada setiap kelas ketika menghitung fungsi *loss*. Kelas dengan jumlah sampel lebih sedikit diberi bobot lebih besar, dan sebaliknya. Pendekatan ini berkaitan dengan *weighted cross-entropy*, yaitu modifikasi *cross-entropy* yang mempertimbangkan bobot kelas dalam optimasi (Nemoto et al., 2025).
-
-[Persamaan 2.1: bobot mentah kelas, w_c^raw = N / (C × n_c), dengan N=jumlah token, C=jumlah kelas, n_c=jumlah token kelas c]
-
-Dalam penelitian ini, bobot mentah tidak dipakai langsung karena bobot kelas minoritas dapat menjadi terlalu besar. Bobot dinormalisasi terhadap label O dan diberi *tempering* akar kuadrat agar perbedaan bobot antar-label tetap proporsional.
-
-[Persamaan 2.2: w_c = sqrt(w_c^raw / w_O^raw)]
-[Persamaan 2.3: bentuk setara, w_c = sqrt(n_O / n_c)]
-[Persamaan 2.4: weighted cross-entropy, L_WCE, memakai bobot w di atas]
-
-Pendekatan ini sejalan dengan *re-weighting* pada NER, yaitu pemberian bobot terhadap token atau kelas agar model tidak terlalu didominasi label mayoritas (Luo et al., 2023).
-
-### 2.5.2 Data Augmentation
-
-*Data augmentation* merupakan strategi menambah variasi data latih melalui pembentukan sampel baru dari data yang tersedia. Pada NER, augmentasi harus dilakukan hati-hati karena perubahan token dapat memengaruhi batas entitas dan label BIO. Elwing Torres et al. (2026) mengevaluasi teknik seperti *mention replacement* dan *contextual word replacement* pada NER domain *low-resource*, dan menyimpulkan bahwa augmentasi membantu ketika data latih terbatas tetapi jumlah serta jenisnya perlu disesuaikan dengan karakteristik dataset.
-
-[Persamaan 2.5: D_aug = D ∪ {T_k(x_i, y_i)}, dengan D=dataset awal, T_k=transformasi ke-k, y_i=label yang harus tetap konsisten]
-
-Dalam konteks NER, salah satu bentuk augmentasi adalah mengganti *mention* entitas dengan *mention* lain bertipe sama sehingga struktur label tetap terjaga. Chen et al. (2024) juga menunjukkan bahwa *data augmentation* dapat diterapkan pada NER medis untuk meningkatkan variasi data ketika data berlabel terbatas.
-### 2.5.3 Supervised Contrastive Learning
-
-*Supervised Contrastive Learning* (SCL) merupakan strategi pembelajaran representasi yang mendorong sampel berlabel sama agar berdekatan, sementara sampel berlabel berbeda dibuat lebih berjauhan. Pada NER, prinsip ini dapat diterapkan pada level token sehingga token dengan label entitas sama memiliki representasi yang lebih konsisten. Das et al. (2022) melalui CONTaiNER menerapkan *contrastive learning* pada *few-shot* NER untuk mendekatkan representasi token dari kategori sama dan menjauhkan token dari kategori berbeda.
-
-[Persamaan 2.6: L_SCL, dengan B=ukuran batch, P(i)=sampel positif berlabel sama dengan anchor i, A(i)=seluruh pembanding, z=embedding, sim(.)=fungsi kesamaan, tau=temperature]
-
-Dalam penelitian ini, SCL dapat membantu model membentuk representasi token yang lebih diskriminatif, terutama pada label entitas yang jumlahnya lebih sedikit.
-
-### 2.5.4 Joint Supervised Contrastive Learning
-
-*Joint Supervised Contrastive Learning* (JSCL) merupakan pengembangan dari *supervised contrastive learning* dengan mempertimbangkan kemiripan antarlabel secara lebih fleksibel. Representasi tidak hanya dipelajari berdasarkan kesamaan label identik, tetapi juga tingkat kesamaan antarlabel. Pendekatan yang digunakan memanfaatkan kesamaan Jaccard untuk mengatur kedekatan representasi berdasarkan *overlap* label.
-
-[Persamaan 2.7: kesamaan Jaccard, J(y_i, y_j) = |y_i ∩ y_j| / (|y_i ∪ y_j| + eps)]
-[Persamaan 2.8: bobot pasangan, alpha_ij dinormalisasi dari J(y_i, y_j)]
-[Persamaan 2.9: L_JSCL memakai bobot alpha_ij]
-[Persamaan 2.10: loss gabungan, L_total = L_CE + lambda × L_JSCL]
-
-Dalam skenario NER, JSCL memberi ruang pada relasi antarlabel yang tidak sepenuhnya identik, misalnya label dengan kategori entitas sama tetapi posisi BIO berbeda, sehingga representasi token diarahkan berdasarkan tingkat kedekatan semantik atau struktural antarlabel, bukan sekadar benar-salah label secara kaku.
-
-## 2.6 POS Tagging
-
-*Part-of-Speech Tagging* atau POS *tagging* merupakan proses pemberian label kelas kata pada setiap token dalam teks, seperti nomina, verba, adjektiva, adverbia, numeralia, dan preposisi. Dalam NLP, POS *tagging* membantu sistem mengenali fungsi gramatikal suatu kata dalam kalimat, dan menjadi tahap pendukung bagi tugas lain seperti *parsing*, *information extraction*, *machine translation*, serta analisis semantik (Chiche & Yitagesu, 2022). Ilustrasi sederhana proses POS *tagging* ditunjukkan pada Tabel 2.5.
-
-[Tabel 2.5: Contoh Penggunaan POS Tagging — Token, POS Tag, Keterangan, Contoh label NER; mis. "Nabi" PROPN B-PERSON, "hijrah" VERB B-EVENT, "Madinah" PROPN B-LOCATION, "tahun/622/M" TIME]
-
-Pada teks naratif, termasuk Sirah Nabawiyah, informasi penting tidak hanya muncul sebagai entitas tetapi juga melalui struktur gramatikal kalimat. Tokoh biasanya muncul sebagai nomina atau *proper noun*, tindakan dan peristiwa sering direpresentasikan melalui verba, sedangkan lokasi dan waktu dapat dikenali melalui kombinasi nomina, numeralia, preposisi, atau keterangan waktu. Dalam konteks NER, POS *tagging* dapat digunakan sebagai informasi pendukung karena kelas kata tertentu sering berkaitan dengan kemunculan entitas. Penelitian Y. Chen et al. (2023) pada NER bahasa Korea menunjukkan bahwa penggunaan fitur linguistik spesifik bahasa dapat memengaruhi performa pengenalan entitas.
-
-Perkembangan POS *tagging* juga mengikuti perkembangan *deep learning* dan *Transformer*. H. Li et al. (2022) mengembangkan pendekatan POS *tagging* yang menggabungkan *rule-based preprocessing* dan *Transformer*. Untuk bahasa Indonesia dan bahasa daerah, POS *tagging* memiliki tantangan tersendiri akibat keterbatasan korpus beranotasi; Enrique et al. (2024) meneliti POS *tagging* bahasa Jawa sebagai bahasa *low-resource* memanfaatkan *transfer learning* lintas bahasa dan model *Transformer* seperti IndoBERT, mBERT, dan XLM-RoBERTa. Dalam penelitian ini, POS *tagging* diposisikan sebagai informasi linguistik pendukung untuk membantu analisis token pada teks Sirah Nabawiyah, bukan sebagai tujuan utama.
-
-## 2.7 Knowledge Graph
-*Knowledge Graph* merupakan representasi pengetahuan dalam bentuk graf yang menghubungkan entitas melalui relasi semantik. Peng et al. (2023) menjelaskan bahwa *knowledge graph* direpresentasikan sebagai graf berarah yang terdiri atas *node* (entitas, objek, atau konsep) dan *edge* (relasi semantik antar-entitas). Satuan dasar dalam *knowledge graph* dapat dipahami sebagai *triple*, yaitu kombinasi subjek, predikat, dan objek; Ji et al. (2022) menuliskannya sebagai *head*, *relation*, dan *tail*. Misalnya, informasi "Nabi Muhammad hijrah ke Madinah" dapat direpresentasikan sebagai *triple* (Nabi Muhammad, hijrah ke, Madinah).
-
-[Gambar 2.5: Ilustrasi triple pada Knowledge Graph (Ji et al., 2022)]
-
-*Knowledge graph* memiliki beberapa komponen utama, yaitu entitas, relasi, atribut, dan skema. Choi dan Jung (2025) menjelaskan bahwa konstruksi *knowledge graph* mencakup proses *extraction*, *learning*, dan *evaluation*. Zhong et al. (2024) merinci tahapan *automatic knowledge graph construction* seperti *named entity recognition*, *entity typing*, *entity linking*, *relation extraction*, dan *knowledge graph refinement*, yang menunjukkan NER berperan sebagai langkah awal karena entitas yang dikenali menjadi dasar pembentukan *node*.
-
-Pada teks Sirah Nabawiyah, *knowledge graph* relevan karena teks memuat banyak informasi naratif yang saling berkaitan (tokoh, peristiwa, tempat, waktu). Untuk penyimpanan dan pengelolaannya, penelitian ini menggunakan Neo4j yang menerapkan model *labeled property graph* (menyimpan *node*, *relationship*, *label*, dan *property*) serta bahasa kueri *Cypher* untuk menelusuri pola relasi.
-
-Setelah *knowledge graph* terbentuk, graf dapat dianalisis menggunakan *Social Network Analysis* (SNA). Dalam penelitian ini, SNA bukan metode utama ekstraksi, melainkan pendekatan pendukung untuk membaca struktur hubungan pada graf. Menurut Adniati et al. (2023), SNA menerapkan konsep teori graf, dengan simpul sebagai representasi aktor atau entitas dan sisi sebagai representasi hubungan.
-
-[Persamaan 2.11: G = (V, E), dengan V=himpunan simpul, E=himpunan sisi]
-
-Fitur analisis graf yang digunakan pada penelitian ini mencakup ukuran sentralitas dan ukuran tingkat graf berikut.
-
-[Persamaan 2.12: degree centrality, C_D(v) = deg(v) / (n-1)]
-[Persamaan 2.13: betweenness centrality, C_B(v) = jumlah rasio jalur terpendek s ke t yang melewati v][Persamaan 2.14: closeness centrality, C_C(v) = (n-1) / jumlah jarak terpendek d(u,v)]
-[Persamaan 2.15: density (graf tak berarah), D = 2m / (n(n-1))]
-[Persamaan 2.16: modularity Louvain, Q]
-[Persamaan 2.17: proyeksi co-participation antartokoh, A_PP = B B^T]
-[Persamaan 2.18: PageRank, PR(i)]
-[Persamaan 2.19: local clustering coefficient, C_v = 2 e_v / (k_v (k_v - 1))]
-[Persamaan 2.20: transitivity, T = 3 × jumlah segitiga / jumlah triplet terhubung]
-
-*Degree centrality* menunjukkan jumlah hubungan langsung suatu simpul; *betweenness centrality* menunjukkan peran simpul sebagai penghubung jalur terpendek; *closeness centrality* menunjukkan kedekatan struktural terhadap simpul lain (Adniati et al., 2023). *Density* mengukur kepadatan jaringan, dan deteksi komunitas dengan *Louvain method* berbasis *modularity* digunakan untuk melihat pengelompokan tokoh (Anuar et al., 2024). Graf antartokoh dibentuk melalui hubungan *co-participation* (dua tokoh terlibat pada peristiwa sama), *PageRank* menilai kepentingan relatif simpul (Zhang et al., 2021), sedangkan *clustering coefficient* dan *transitivity* mengukur kecenderungan terbentuknya hubungan segitiga (Sosa et al., 2021). Analisis juga dapat dilakukan melalui pembentukan sub-graf untuk mengamati lima peristiwa besar, serta graf lokasi untuk melihat lokasi yang berperan sentral. Hasil analisis ini tidak dimaknai sebagai penilaian historis atau keagamaan terhadap suatu tokoh, tetapi sebagai gambaran struktural berdasarkan relasi yang berhasil diekstraksi dari teks.
-
-Selain analisis struktural dengan SNA di atas, kelayakan *knowledge graph* sebagai produk akhir juga perlu dinilai dari sisi fungsionalnya, yaitu apakah graf mampu menjalankan fungsi yang menjadi tujuan pembangunannya. Berbeda dengan metrik yang mengukur akurasi atau karakteristik struktur, evaluasi fungsional bersifat berbasis kebutuhan (*black-box*), yaitu graf diuji dengan mengajukan sejumlah pertanyaan penelusuran lalu menilai apakah graf dapat menjawabnya dengan benar dan dapat dipertanggungjawabkan ke sumbernya, tanpa memeriksa implementasi internalnya. [SITASI: sumber 2020+ tentang evaluasi fungsional atau berbasis tugas (*task-based*) pada *knowledge graph*]
-
-Pendekatan yang lazim digunakan untuk maksud ini adalah *competency questions* (pertanyaan kompetensi), yaitu sekumpulan pertanyaan yang ditetapkan terlebih dahulu dan harus mampu dijawab oleh *knowledge graph* atau ontologi. *Competency questions* berperan ganda, yaitu sebagai spesifikasi kebutuhan yang menentukan cakupan pengetahuan yang harus direpresentasikan, sekaligus sebagai alat validasi karena keberhasilan graf dinilai dari kemampuannya menjawab pertanyaan-pertanyaan tersebut. [SITASI: sumber 2020+ tentang *competency questions* untuk evaluasi ontologi atau *knowledge graph*] Pada penelitian ini, *competency questions* diwujudkan sebagai sejumlah kebutuhan fungsional yang didefinisikan lebih dahulu, lalu diterjemahkan menjadi kueri *Cypher* dan diuji pada graf, sebagaimana dirinci pada Bab 3.
-<!-- [CATATAN] Dua [SITASI] di atas perlu diisi sumber NYATA 2020-2026 (jangan mengarang).
-     Konsep competency questions berasal dari Gruninger & Fox (1995) = terlalu lama untuk sumber utama;
-     boleh disebut sebagai asal-usul HANYA bila pembimbing izinkan + ditemani sumber 2020+.
-     Kata kunci pencarian: "competency questions knowledge graph/ontology evaluation 2020..2026",
-     "task-based / functional evaluation knowledge graph". Anchor yang sudah dimiliki: Choi & Jung (2025)
-     di subbab ini menyebut tahap evaluation pada konstruksi KG = pijakan generik bila perlu. -->
-
-## 2.8 Metrik Evaluasi
-
-Evaluasi pada *Named-Entity Recognition* (NER) dilakukan untuk mengukur kemampuan model dalam mengenali dan mengklasifikasikan entitas secara benar, dengan memperhatikan kesesuaian batas entitas dan jenis entitas terhadap anotasi sebenarnya. Evaluasi NER umumnya menggunakan tiga metrik utama, yaitu *precision*, *recall*, dan *F1-score*, serta dapat dilakukan dengan pendekatan *exact match* (batas dan tipe entitas harus sama persis) atau *relaxed match* (mempertimbangkan kecocokan parsial) (Seow et al., 2025). Karena distribusi label dalam NER sering tidak seimbang (Nemoto et al., 2025), ketiga metrik tersebut lebih sesuai daripada akurasi.
-
-**1. Precision.** *Precision* mengukur proporsi prediksi entitas yang benar dibandingkan seluruh entitas yang diprediksi. Nilai *precision* tinggi menunjukkan sedikit *false positive* (Keraghel et al., 2024).
-
-[Persamaan 2.21: Precision = TP / (TP + FP)]
-
-**2. Recall.** *Recall* mengukur proporsi entitas sebenarnya yang berhasil dikenali model, sehingga menunjukkan kemampuan menangkap sebanyak mungkin entitas pada teks (Keraghel et al., 2024).
-
-[Persamaan 2.22: Recall = TP / (TP + FN)]
-
-**3. F1-Score.** *F1-score* merupakan rata-rata harmonik antara *precision* dan *recall*, memberikan ukuran seimbang antara ketepatan prediksi dan kemampuan menemukan entitas, terutama pada data dengan distribusi label tidak seimbang (Keraghel et al., 2024; Seow et al., 2025).
-
-[Persamaan 2.23: F1 = 2 × Precision × Recall / (Precision + Recall)]
-[Persamaan 2.24: F1 = 2TP / (2TP + FP + FN)]
-
-**4. Micro Average dan Macro Average.** Evaluasi NER juga dirangkum menggunakan *micro-F1* dan *macro-F1* (Le-Duc et al., 2025). *Micro-F1* menjumlahkan seluruh TP, FP, dan FN dari semua kelas terlebih dahulu sehingga lebih dipengaruhi kelas mayoritas, sedangkan *macro-F1* menghitung F1 tiap kelas lalu merata-ratakannya sehingga lebih sensitif terhadap kelas minoritas. Pada MultiCoNER II, *entity-level macro-F1* digunakan sebagai metrik *leaderboard* karena memperlakukan seluruh label setara (Tan et al., 2023; Fetahu et al., 2023).
-
-[Persamaan 2.25: F1_micro]
-[Persamaan 2.26: F1_macro = (1/C) × jumlah F1 tiap kelas]
-
-Karena penelitian ini menangani ketidakseimbangan label, *macro-F1* penting untuk melihat performa terhadap label minoritas, sementara *micro-F1* digunakan untuk melihat performa model secara umum.
-
+<!-- SUMBER: docs/Buku-TA-Genta-fixed.pdf (buku terbaru), diekstrak 2026-07-19. Cermin TEKS untuk rujukan revisi; tabel/gambar/persamaan dipipihkan. Backup .md lama: tinjauan_pustaka.md.bak_pre_pdf_sync -->
+
+<!-- Halaman buku 6 · PDF 40 -->
+BAB 2
+TINJAUAN PUSTAKA
+2.1 Hasil Penelitian Terdahulu
+Penelitian ini merujuk pada sejumlah penelitian terdahulu yang berkaitan dengan tiga topik
+utama, yaitu pembangunan knowledge graph (graf pengetahuan), ekstraksi informasi melalui
+Named Entity Recognition (NER) dan ekstraksi relasi, serta pemanfaatan graph database
+seperti Neo4j untuk penyimpanan dan penelusuran pengetahuan berbasis relasi. Penelitian-
+penelitian tersebut menjadi landasan untuk memahami tahapan umum konstruksi knowledge
+graph, pendekatan yang lazim diterapkan pada berbagai domain, serta bentuk evaluasi yang
+biasa digunakan untuk menilai kelayakan hasil konstruksi graf.
+Penelitian terdahulu berjudul “A Comprehensive Survey on Automatic Knowledge Graph
+Construction” yang dilakukan oleh Zhong et al. (2024) menyajikan tinjauan sistematis terkait
+perkembangan metode konstruksi knowledge graph secara otomatis. Studi ini mengkaji lebih
+dari 300 metode dan melakukan pengelompokan proses konstruksi knowledge graph ke dalam
+tiga tahap utama, yaitu knowledge acquisition, knowledge refinement, dan knowledge evolution.
+Tahap knowledge acquisition meliputi proses perolehan entitas dengan tipe yang lebih spesifik,
+penyelesaian coreference, serta ekstraksi relasi antar-entitas dalam skenario yang kompleks.
+Sementara itu, tahap refinement berfokus pada penyempurnaan graf seperti knowledge graph
+completion dan knowledge fusion, dan tahap evolution membahas dinamika pengetahuan dalam
+berbagai kondisi (Zhong et al., 2024).
+Penelitian kedua berjudul “A Knowledge Graph Construction Method for Complex
+Products Improvement Design” oleh Ren et al. (2024) membahas konstruksi knowledge graph
+pada domain produk kompleks untuk mendukung perbaikan desain dan pengambilan keputusan
+berbasis pengetahuan. Penelitian ini menyoroti tantangan data heterogen sepanjang siklus hidup
+produk dan mengusulkan kerangka representasi pengetahuan terpadu dengan memanfaatkan
+knowledge graph. Metode yang digunakan melibatkan pengumpulan data multi-sumber,
+ekstraksi pengetahuan, serta representasi pengetahuan desain dan pengetahuan historis melalui
+model function–behavior–structure (FBS). Selanjutnya, knowledge graph dikonstruksi di
+bawah panduan ontologi untuk menjadi basis pengetahuan yang mendukung knowledge reuse
+dan rekomendasi Solusi (Ren et al., 2024).
+Penelitian ketiga berjudul “Automatic knowledge-graph creation from historical
+documents: The Chilean dictatorship as a case study” oleh Díaz et al. (2024) berfokus pada
+konstruksi knowledge graph dari dokumen historis terkait periode diktator Chile (1973–1990).
+Penelitian ini menggunakan Large Language Models (LLM) untuk mengenali entitas dan relasi
+secara otomatis serta menyelesaikan konflik nilai. Untuk menekan halusinasi, interaksi dengan
+LLM dibuat grounded menggunakan ontologi sederhana yang membatasi tipe entitas dan relasi.
+Evaluasi dilakukan dengan membandingkan graf otomatis terhadap gold standard graph yang
+dibuat dari subset dokumen, dan hasilnya menunjukkan bahwa pendekatan otomatis mampu
+mengenali sebagian besar entitas dalam gold standard. Studi ini menekankan bahwa perbedaan
+hasil tidak selalu berasal dari kegagalan ekstraksi, tetapi dapat dipengaruhi oleh perbedaan
+granularitas representasi informasi pada graf (Díaz et al., 2024)
+Penelitian keempat “BioKGrapher: Initial evaluation of automated knowledge graph
+construction from biomedical literature” oleh Schäfer et al. (2024) Dimana berawal dari
+
+<!-- Halaman buku 7 · PDF 41 -->
+masalah ledakan literatur biomedis yang menyulitkan ekstraksi dan penataan pengetahuan
+secara manual. Penelitian ini memperkenalkan BioKGrapher, yaitu alat konstruksi knowledge
+graph otomatis dari publikasi skala besar berbasis PubMed IDs, dengan fokus pada konsep
+biomedis terkait kondisi medis tertentu. Metode yang digunakan diawali dengan Named Entity
+Recognition and Linking (NER+NEL) untuk mengekstraksi dan menormalisasi konsep
+biomedis, kemudian memetakan konsep ke Unified Medical Language System (UMLS).
+Konsep yang diekstraksi selanjutnya diberi bobot dan diurutkan ulang menggunakan metode
+seperti Kullback-Leibler divergence dan penyeimbangan frekuensi lokal, lalu diintegrasikan
+menjadi knowledge graph hierarkis dengan relasi yang dibentuk menggunakan terminologi
+standar seperti SNOMED CT dan NCIt. Hasil penelitian menunjukkan bahwa knowledge graph
+yang dibangun dapat disejajarkan dengan pedoman klinis (GGPO) dengan F1-score hingga 0,6,
+serta memberikan peningkatan performa pada tugas klasifikasi multi-label, dengan peningkatan
+micro F1 hingga 0,89 poin persentase dibandingkan knowledge graph non-spesifik, dan 2,16
+poin dibandingkan model dasar (Schäfer et al., 2024).
+Penelitian kelima “Construction of a Traditional Chinese Medicine Dao Yin Science
+Knowledge Graph Based on Neo4j” oleh Xie et al. (2023) bertujuan membangun knowledge
+graph untuk domain Dao Yin pada pengobatan tradisional Tiongkok agar pengguna dapat
+melakukan pencarian, pembelajaran, dan diseminasi pengetahuan melalui kueri graf. Metode
+yang digunakan memanfaatkan BERT–CRF untuk melakukan NER pada literatur terkait Dao
+Yin, disertai pengecekan manual guna meningkatkan akurasi. Relasi antarentitas kemudian
+dibangun berdasarkan karakteristik domain dan diimplementasikan dalam Neo4j. Knowledge
+graph yang dihasilkan mencakup 3.152 dokumen, berisi 2.262 simpul entitas dan 5.108 data
+relasi, dengan 7 kategori atribut entitas dan 7 tipe relasi. Graf ini dapat ditelusuri menggunakan
+kueri cypher, sehingga memudahkan pengguna dalam mengakses pengetahuan secara
+terstruktur (Xie et al., 2023).
+Penelitian keenam “Construction of Military Knowledge Graph Based on Neo4j and
+MongoDB” oleh He et al. (2022) membahas kebutuhan untuk menambang informasi yang
+akurat dari data intelijen medan perang yang berasal dari berbagai sumber dan memiliki format
+yang beragam. Tantangan utama yang dihadapi adalah kondisi kelebihan informasi serta
+kesulitan dalam membedakan informasi yang valid dan yang tidak. Penelitian ini mengusulkan
+konstruksi panoramic military knowledge graph dengan menyatukan representasi pengetahuan
+dari berbagai sumber pada level semantik. Pendekatan ini dirancang untuk mendukung
+akumulasi pengetahuan sekaligus memungkinkan penggabungan dan pengaitan informasi dari
+berbagai sumber secara lebih terstruktur. Hasil akhir disimpan pada Neo4j dan MongoDB untuk
+menyediakan representasi pengetahuan yang lebih intuitif dan mudah diterapkan. Penelitian ini
+juga membahas skenario penerapan sistem serta arah pengembangan ke depan (He et al., 2022).
+Penelitian ketujuh “Enhanced Entity Recognition of Islamic Hadiths based-on Hybrid
+LSTM and AraBERT Model” oleh Nados (2024) berfokus pada pelatihan, evaluasi, dan
+pengembangan model Named-Entity Recognition (NER) untuk teks hadis Islam berbahasa Arab.
+Penelitian ini menggunakan dataset Hadith Noor dan menerapkan skema penandaan Begin–
+Inside–Outside (BIO) dalam proses pelabelan urutan kata setelah teks melalui tahap tokenisasi.
+Dataset mengandung delapan tipe entitas seperti nama perawi dan lokasi. Penelitian ini
+membandingkan tiga model, yaitu AraBERT, LSTM, dan AraBERT-LSTM yang
+menggabungkan keduanya. Model hibrida mencapai performa tertinggi dengan akurasi sekitar
+0,981 (Nados, 2024).
+
+<!-- Halaman buku 8 · PDF 42 -->
+Penelitian kedelapan “Graph-based Named Entity Information Retrieval from News
+Articles using Neo4j” oleh Chaudhary et al. (2024) bertujuan membangun sistem yang
+mengonversi teks mentah menjadi knowledge graph untuk mendukung penelusuran informasi
+berbasis graf. Penelitian ini menekankan bahwa penggunaan alat entity linking dan relation
+extraction yang tersedia secara terpisah, seperti Spacy, NLTK, Flair dapat menjadi kurang
+efisien jika tidak diintegrasikan dengan baik. Oleh karena itu, penelitian ini mengusulkan
+pendekatan yang mengintegrasikan berbagai alat tersebut secara lebih terpadu agar proses
+pembentukan graf menjadi lebih efisien. Hasil utama penelitian adalah knowledge graph yang
+disimpan pada graph database Neo4j dan dapat dimanfaatkan untuk keperluan analisis data
+serta pengambilan keputusan (Chaudhary et al., 2024).
+Penelitian kesembilan berjudul “Knowledge Extraction from Multilingual and Historical
+Texts for Advanced Question Answering” oleh Graciotti (2023) membahas tantangan
+pembangunan knowledge graph dari teks, khususnya ketika berhadapan dengan dokumen
+multibahasa dan historis. Penelitian ini mengusulkan metode yang menggabungkan pendekatan
+Semantic Web dan Natural Language Processing untuk mendukung aplikasi question
+answering pada repositori teks diakronik, yaitu teks yang berasal dari berbagai periode waktu
+yang berbeda. Studi ini juga menyoroti kesulitan khas teks historis, seperti penurunan kualitas
+data akibat proses OCR yang tidak sempurna, serta tantangan Entity Linking yang cenderung
+lebih akurat untuk entitas modern dibandingkan entitas historis. Framework yang diusulkan
+dievaluasi menggunakan korpus dokumen historis pada domain Musical Heritage (Graciotti,
+2023).
+Penelitian terakhir berjudul “The Construction of Knowledge Graph of Newspaper
+Distribution in Yan’an Period and Frontend Visualization” oleh Du Yifan (2023) mengangkat
+permasalahan data distribusi surat kabar pada periode Yan'an yang tersebar dan tidak terhubung
+dengan baik, serta penyajian teks secara linear yang menghambat pemanfaatan literatur secara
+optimal. Untuk mengatasi permasalahan tersebut, penelitian ini mengusulkan metode
+konstruksi knowledge graph yang mencakup beberapa tahapan, yaitu ekstraksi informasi,
+penggabungan pengetahuan dari berbagai sumber, pengolahan pengetahuan, serta penyimpanan
+dan pembangunan graf. Selain membangun knowledge graph, penelitian ini juga
+merealisasikan sistem visualisasi front-end untuk mendukung kueri, analisis, dan penyajian
+hasil. Knowledge graph yang dihasilkan memuat 15 ontologi, 27.349 relasi, 4.074 surat kabar,
+dan 10.616 entitas (Du, 2023)
+Ringkasan perbandingan penelitian terdahulu yang menjadi rujukan ditunjukkan pada
+Tabel 2.1
+Tabel 2.1 Hasil Penelitian Terdahulu
+Penelitian
+Sumber Data
+Metode
+Analisis
+A
+Comprehensive
+Survey on Automatic
+Knowledge
+Graph
+Construction (Zhong
+et al., 2024)
+Survey
+>300
+metode KGC
+Review
+sistematis;
+memetakan
+KGC ke tahap
+akuisisi–
+refinement–
+evolution
+Penelitian
+ini
+menunjukkan
+bahwa konstruksi knowledge
+graph dapat dipahami sebagai
+proses bertahap, mulai dari
+akuisisi pengetahuan (ekstraksi
+entitas
+dan
+relasi,
+serta
+coreference resolution) hingga
+penyempurnaan dan evolusi
+graf. Kerangka ini membantu
+
+<!-- Halaman buku 9 · PDF 43 -->
+merumuskan alur konstruksi
+graf pada penelitian Sirah
+Nabawiyah
+agar
+setiap
+tahapannya jelas dan terukur.
+A Knowledge Graph
+Construction Method
+for Complex Products
+Improvement
+Design
+(Ren et al., 2024)
+Data heterogen
+siklus
+hidup
+produk
+Ekstraksi
+pengetahuan
+multi-sumber;
+pemodelan
+FBS; ontologi
+Penelitian
+ini
+menunjukkan
+bahwa
+pemodelan
+berbasis
+ontologi dan kerangka FBS
+dapat menyatukan pengetahuan
+dari data yang beragam ke
+dalam representasi graf yang
+konsisten. Hal ini menegaskan
+pentingnya perancangan skema
+atau
+ontologi
+sebelum
+membangun graf, meskipun
+domain
+yang
+digunakan
+berbeda dari Sirah Nabawiyah.
+Automatic knowledge-
+graph creation from
+historical documents:
+The
+Chilean
+dictatorship as a case
+study (Díaz et al.,
+2024)
+Dokumen
+historis
+dan
+subset
+gold
+standard
+untuk
+ekstraksi
+entitas
+&
+relasi;
+grounding
+ontologi
+sederhana;
+evaluasi
+vs
+gold standard
+Penelitian
+ini
+menunjukkan
+bahwa konstruksi knowledge
+graph otomatis pada dokumen
+historis
+mampu
+mengenali
+sebagian besar entitas pada gold
+standard
+ketika
+proses
+ekstraksi dibatasi oleh ontologi
+untuk mengurangi halusinasi
+model.
+Perbedaan
+hasil
+terutama
+dipengaruhi
+oleh
+granularitas representasi, yaitu
+tingkat
+detail
+dalam
+merepresentasikan
+peristiwa
+dan lokasi. Temuan ini relevan
+untuk
+penelitian
+Sirah
+Nabawiyah yang berpotensi
+menghadapi tantangan serupa.
+BioKGrapher: Initial
+evaluation
+of
+automated knowledge
+graph
+construction
+from
+biomedical
+literature (Schäfer et
+al., 2024)
+Literatur
+biomedis
+(PubMed IDs)
+NER+NEL;
+normalisasi
+UMLS;
+pembobotan
+konsep;
+pembentukan
+KG hierarkis
+Penelitian
+ini
+menunjukkan
+bahwa konstruksi knowledge
+graph
+otomatis
+dapat
+disejajarkan dengan pedoman
+klinis dengan nilai F1 hingga
+0,6,
+serta
+memberikan
+peningkatan
+performa
+pada
+tugas klasifikasi multi-label.
+Hasil
+ini
+menjadi
+contoh
+evaluasi berbasis metrik yang
+dapat
+menginspirasi
+pendekatan evaluasi pada graf
+Sirah Nabawiyah.
+Construction
+of
+a
+Traditional
+Chinese
+Medicine
+Dao
+Yin
+Science
+Knowledge
+3152 dokumen
+Dao Yin
+BERT–CRF
+dan
+proofreading
+manual;
+Penelitian
+ini
+menunjukkan
+bahwa NER berbasis BERT-
+CRF
+yang
+dilengkapi
+pengecekan
+manual
+dapat
+
+<!-- Halaman buku 10 · PDF 44 -->
+Graph Based on Neo4j
+(Xie et al., 2023)
+pembentukan
+relasi;
+implementasi
+Neo4j
+dan
+Cypher
+menghasilkan knowledge graph
+berskala
+besar,
+mencakup
+ribuan dokumen dengan ribuan
+simpul dan relasi, serta dapat
+ditelusuri
+melalui
+Cypher.
+Penelitian ini relevan karena
+menampilkan alur praktis dari
+NER,
+pembentukan
+relasi,
+hingga implementasi di Neo4j,
+yang serupa dengan target
+konstruksi
+graf
+Sirah
+Nabawiyah.
+Construction
+of
+Military
+Knowledge
+Graph Based on Neo4j
+and MongoDB (He et
+al., 2022)
+Informasi
+intelijen militer
+multi-sumber
+heterogen
+Penyatuan
+representasi
+pengetahuan;
+fusi semantik;
+penyimpanan
+Neo4j
+dan
+MongoDB
+Penelitian
+ini
+menunjukkan
+bahwa knowledge graph dapat
+digunakan untuk menyatukan
+dan
+mengaitkan
+informasi
+heterogen pada level semantik,
+sehingga mengurangi masalah
+kelebihan informasi sekaligus
+meningkatkan
+keterhubungan
+pengetahuan. Studi ini relevan
+sebagai
+referensi
+konsep
+penggabungan
+dan
+penyelarasan
+pengetahuan,
+meskipun domainnya bukan
+Sirah Nabawiyah.
+Enhanced
+Entity
+Recognition of Islamic
+Hadiths
+based-on
+Hybrid
+LSTM
+and
+AraBERT
+Model
+(Nados, 2024)
+Hadith
+Noor
+dataset (Arab),
+8 tipe entitas
+BIO
+tagging;
+komparasi
+AraBERT
+vs
+LSTM
+vs
+AraBERT–
+LSTM
+Penelitian
+ini
+menunjukkan
+bahwa
+model
+hibrida
+AraBERT-LSTM
+mencapai
+performa tinggi untuk NER
+pada teks hadis berbahasa Arab
+dengan akurasi sekitar 0,981,
+melampaui
+model
+tunggal.
+Temuan
+ini
+memperkuat
+argumen bahwa NER efektif
+diterapkan pada teks keislaman,
+namun perlu adaptasi bahasa
+dan
+kategori
+label
+untuk
+konteks
+Sirah
+Nabawiyah
+berbahasa Indonesia.
+Graph-based
+Named
+Entity
+Information
+Retrieval from News
+Articles using Neo4j
+(Chaudhary
+et
+al.,
+2024)
+Artikel berita
+Integrasi entity
+linkage
+dan
+relation
+extraction;
+konstruksi KG;
+Neo4j
+Penelitian
+ini
+menunjukkan
+bahwa mengintegrasikan entity
+linking dan ekstraksi relasi
+secara
+terpadu
+dapat
+mengonversi
+teks
+mentah
+menjadi
+knowledge
+graph
+dengan
+lebih
+efisien
+dibandingkan penggunaan alat
+yang terpisah-pisah. Temuan
+ini relevan karena mendukung
+
+<!-- Halaman buku 11 · PDF 45 -->
+gagasan alur terpadu dalam
+membangun
+graf
+Sirah
+Nabawiyah di Neo4j.
+Knowledge Extraction
+from Multilingual and
+Historical Texts for
+Advanced
+Question
+Answering (Graciotti,
+2023)
+Korpus
+dokumen
+historis
+(Musical
+Heritage)
+Kombinasi
+Semantic Web
+dan
+NLP;
+menangani
+noise OCR dan
+bias
+entity
+linking
+Penelitian
+ini
+menunjukkan
+bahwa konstruksi pengetahuan
+dari teks historis menghadapi
+tantangan
+khas,
+seperti
+penurunan kualitas data akibat
+OCR yang tidak sempurna dan
+entity linking yang cenderung
+lebih
+akurat
+untuk
+entitas
+modern dibandingkan entitas
+historis. Temuan ini relevan
+karena teks Sirah Nabawiyah
+berpotensi mengandung noise
+serupa dan variasi penulisan
+entitas yang beragam.
+The Construction of
+Knowledge Graph of
+Newspaper
+Distribution in Yan’an
+Period and Frontend
+Visualization
+(Yifan,
+2023)
+Data
+surat
+kabar/periode
+Yan’an
+IE
++
+knowledge
+fusion
++
+processing
++
+storage;
+visualisasi
+front-end
+Penelitian
+ini
+menunjukkan
+bahwa knowledge graph dapat
+meningkatkan
+keterhubungan
+data historis yang sebelumnya
+tersebar,
+yang
+dibuktikan
+dengan graf berskala besar
+mencakup 15 ontologi, puluhan
+ribu relasi, dan ribuan entitas,
+serta
+didukung
+visualisasi
+untuk
+kueri
+dan
+analisis.
+Temuan ini relevan sebagai
+bukti bahwa knowledge graph
+efektif diterapkan pada korpus
+historis, meskipun penelitian
+Sirah Nabawiyah tidak wajib
+membangun
+antarmuka
+visualisasi.
+
+Berdasarkan penelitian terdahulu, terlihat bahwa konstruksi knowledge graph umumnya
+memerlukan tahapan ekstraksi entitas dan relasi, pemodelan skema, serta penyimpanan graf
+yang umumnya menggunakan Neo4j agar pengetahuan dapat ditelusuri melalui kueri graf.
+Namun, sebagian besar studi masih berfokus pada domain berita, biomedis, militer, atau arsip
+sejarah tertentu, dan belum ada yang secara spesifik membangun knowledge graph untuk Sirah
+Nabawiyah berbahasa Indonesia dengan kategori entitas minimal seperti Person, Event,
+Location, dan Time. Selain itu, pendekatan ekstraksi berbasis SRL semi-supervised yang hemat
+data (Ariyanto et al., 2025) belum pernah dipadukan dengan konstruksi knowledge graph Sirah,
+dan analisis jaringan (Social Network Analysis) terhadap knowledge graph sejarah Islam juga
+belum disentuh oleh penelitian yang ditinjau. Penelitian ini menutup celah tersebut dengan
+mengadaptasi alur konstruksi knowledge graph untuk domain Sirah, mulai dari ekstraksi entitas
+berbasis SRL dengan iterative self-training, pembangunan graf di Neo4j, hingga evaluasi
+
+<!-- Halaman buku 12 · PDF 46 -->
+terbatas untuk memastikan kualitas ekstraksi entitas dan relasi serta kelayakan graf untuk
+penelusuran relasional.
+2.2 Sirah Nabawiyah
+Sirah Nabawiyah merupakan kisah sejarah yang merekam perjalanan hidup Nabi
+Muhammad SAW beserta kondisi masyarakat dan berbagai peristiwa yang terjadi pada
+masanya (Solihin, 2022). Dalam tradisi keilmuan Islam, Sirah memiliki hubungan yang erat
+dengan hadis, dimana hadis menjadi salah satu sumber utama dalam penyusunan Sirah,
+sedangkan Sirah membantu menjelaskan hadis melalui latar belakang peristiwa dan urutan
+waktunya. Kajian ilmiah kontemporer juga banyak membahas hubungan keduanya, termasuk
+pandangan bahwa hadis merupakan bagian dari Sirah, tetapi tidak seluruh isi Sirah termasuk
+dalam ruang lingkup hadis (Kharis, 2024).
+Dalam perkembangan penulisan sejarah Islam, Sirah telah disusun sejak masa awal dan
+menjadi rujukan penting setelah kajian hadis atau sunnah. Karya-karya klasik, seperti Sirah Ibn
+Ishaq yang kemudian disempurnakan oleh Ibn Hisham, menunjukkan adanya upaya sistematis
+untuk menyajikan perjalanan hidup Nabi secara berurutan serta menghimpun berbagai riwayat
+dalam satu narasi (Prayogi et al., 2022). Penelitian modern memandang karya-karya tersebut
+sebagai fondasi penting dalam studi Sirah. Selain itu, karya tersebut juga dikaji menggunakan
+pendekatan historiografi kontemporer, yaitu kajian tentang cara penulisan sejarah, melalui
+analisis metode penulisan, karakteristik narasi, dan perbandingan antar karya Sirah modern.
+Oleh karena itu, Sirah tidak hanya dipahami sebagai teks keagamaan, tetapi juga sebagai karya
+sejarah yang ditulis dengan berbagai pendekatan (Abror & Rahma, 2024).
+Dari segi bentuk penyajian, Sirah umumnya ditulis sebagai narasi yang mengikuti urutan
+waktu dan memuat unsur-unsur faktual, seperti tokoh, peristiwa, lokasi, dan waktu. Hubungan
+antara unsur-unsur tersebut sering kali tidak dijelaskan secara langsung, melainkan tersirat
+dalam susunan kalimat dan paragraf. Karakteristik naratif ini menyebabkan informasi mengenai
+hubungan antar-entitas tersebar di berbagai bagian teks. Berdasarkan karakteristik tersebut,
+Sirah Nabawiyah dapat dipandang sebagai korpus naratif, yaitu kumpulan teks yang kaya akan
+informasi mengenai tokoh dan peristiwa. Karakteristik ini menjadi landasan penelitian yang
+mencakup pembentukan korpus, pembersihan hasil Optical Character Recognition (OCR) atau
+pengenalan teks dari gambar, serta ekstraksi entitas dan relasi agar informasi yang terkandung
+di dalamnya dapat disusun secara lebih terstruktur dalam basis data graf.
+2.3 Named-Entity Recognition Berbasis Semantic Role Labelling
+Named-Entity Recognition berbasis Semantic Role Labeling merupakan pendekatan
+ekstraksi informasi yang tidak hanya menempatkan entitas sebagai unit teks yang perlu dikenali,
+tetapi juga sebagai bagian dari struktur makna dalam suatu peristiwa. Dalam teks naratif,
+informasi umumnya tersusun melalui keterlibatan tokoh, kejadian, lokasi, dan waktu yang
+saling berkaitan. Kajian ekstraksi naratif menempatkan narasi sebagai rangkaian peristiwa yang
+melibatkan beberapa aktor, berlangsung pada lokasi tertentu, dan tersusun dalam urutan
+temporal tertentu (Santana et al., 2023). Karakter tersebut selaras dengan teks Sirah Nabawiyah
+yang memuat perjalanan tokoh, rangkaian peristiwa, tempat kejadian, serta fase waktu yang
+membentuk struktur historis.
+Dalam kerangka information extraction, teks alami perlu diubah menjadi pengetahuan
+terstruktur agar dapat dianalisis lebih lanjut. Entitas, relasi, dan peristiwa menjadi komponen
+
+<!-- Halaman buku 13 · PDF 47 -->
+utama yang diekstraksi dari teks untuk mendukung berbagai proses komputasional, termasuk
+pembangunan knowledge graph (Xu et al., 2024). Pada posisi ini, NER berperan untuk
+mengenali unit informasi berupa entitas, sedangkan SRL membantu menjelaskan peran
+semantik entitas tersebut dalam suatu peristiwa. Pendekatan ini sejalan dengan kajian Ariyanto
+et al. (2025) yang menempatkan NER dan SRL sebagai bagian dari information extraction pada
+teks berbahasa Indonesia.
+2.3.1 Named-Entity Recognition
+Named-Entity Recognition (NER) adalah tugas dalam NLP untuk mengenali span teks yang
+menyebut entitas bernama dan mengklasifikasikannya ke dalam kategori semantik yang telah
+ditentukan, seperti person, location, dan organization (J. Li et al., 2022). Dalam penerapannya,
+NER tidak hanya membantu dalam memahami isi teks secara semantik, tetapi juga menjadi
+fondasi bagi berbagai tugas lanjutan seperti information extraction dan relation extraction,
+sistem tanya jawab, serta konstruksi struktur pengetahuan seperti knowledge base dan
+knowledge graph (Xu et al., 2024; Zhao et al., 2024). Jenis label entitas yang biasa digunakan
+dalam NER dapat dilihat pada Tabel 2.2 yang terdapat banyak tipe. Seluruh label tersebut dapat
+disesuaikan dengan kebutuhan atau konteks analisis pada domain tertentu.
+Tabel 2.2 Contoh Daftar Label NER
+Label
+Deskripsi
+PERSON
+Nama orang atau tokoh, bisa berupa nama asli atau nama panggilan
+LOC
+Nama lokasi geografis, seperti nama tempat, kota, gunung, dll
+ORG
+Nama organisasi atau institusi
+DATE
+Informasi waktu bisa berupa tanggal atau periode
+TIME
+Sama seperti “DATE” tetapi dengan durasi kurang dari 1 hari atau waktu spesifik tertentu
+EVENT
+Nama sebuah kejadian, seperti perang,
+
+Gambar 2.1 Contoh Hasil Penerapan NER pada Teks Bahasa Inggris (Chaudhary et al., 2024)
+Sebagai gambaran, Gambar 2.1 menunjukkan penerapan NER pada potongan paragraf
+sebuah teks berbahasa Inggris. Setiap entitas yang ditemukan diberikan label dengan warna
+berbeda-beda, seperti PERSON untuk “Tencent”, lalu ORG untuk “Google”, “IBM”, dan
+“Microsoft”, serta DATE untuk “2018-2024” dan “2017”. Gambaran ini menunjukkan NER
+
+<!-- Halaman buku 14 · PDF 48 -->
+menandai dan mengelompokkan elemen penting dalam teks, sehingga informasi yang diterima
+lebih terstruktur.
+Pada pendekatan sequence labeling, NER dilakukan dengan memberikan label pada setiap
+token dalam kalimat. Salah satu skema pelabelan yang umum digunakan adalah BIO atau
+Begin-Inside-Outside. Skema BIO membedakan token awal entitas, token lanjutan dari entitas
+yang sama, dan token yang tidak termasuk entitas. Melalui skema tersebut, model tidak hanya
+mengenali jenis entitas, tetapi juga batas awal dan akhir entitas dalam teks. Penggunaan skema
+BIO dalam NER juga ditunjukkan dalam kajian deep learning untuk NER sebagai salah satu
+bentuk representasi label pada tugas sequence labeling (J. Li et al., 2022). Tabel 2.3 di bawah
+merangkum penjelasan untuk setiap label dalam skema BIO
+Tabel 2.3 Penjelasan Label BIO
+Label
+Keterangan
+B-XXX
+Menandai awal token dari entitas XXX
+I-XXX
+Menandai lanjutan token dari entitas XXX yang sama dengan tag sebelumnya
+O
+Menandai token yang berada di luar entitas
+
+Berikutnya, perkembangan deep learning membuat NER tidak lagi bergantung pada aturan
+manual atau fitur linguistik eksplisit. Model NER modern umumnya terdiri atas representasi
+input, context encoder, dan tag decoder, yang mencerminkan proses representasi token,
+pemahaman konteks, dan prediksi label entitas (J. Li et al., 2022). Pada bahasa Indonesia, NER
+masih menghadapi tantangan berupa keterbatasan korpus dan inkonsistensi anotasi. Hal ini
+dapat memengaruhi akurasi model dalam mengenali entitas (Oryza et al., 2020), sehingga
+penting bagi penelitian ini untuk menjaga konsistensi anotasi pada korpus Sirah Nabawiyah
+yang bersifat domain spesifik.
+Dalam penelitian ini, entitas yang digunakan meliputi Person, Event, Location, dan Time.
+Pemilihan kategori tersebut disesuaikan dengan karakter Sirah Nabawiyah sebagai teks naratif-
+historis yang memuat tokoh, peristiwa, tempat, dan keterangan waktu. Person
+merepresentasikan
+tokoh,
+Event
+merepresentasikan
+peristiwa
+penting,
+Location
+merepresentasikan tempat kejadian, sedangkan Time merepresentasikan waktu atau fase
+peristiwa.
+2.3.2 Semantic Role Labelling
+Semantic Role Labeling (SRL) merupakan tugas NLP yang merepresentasikan makna
+kalimat melalui struktur predikat dan argumen. Predikat biasanya menunjukkan tindakan,
+keadaan, atau peristiwa, sedangkan argumen menunjukkan unsur yang terlibat dalam predikat
+tersebut. Kajian Universal Proposition Bank 2.0 menempatkan SRL sebagai analisis semantik
+dangkal yang membantu menjembatani struktur sintaksis menuju representasi makna melalui
+identifikasi predikat, penentuan makna predikat, identifikasi argumen, dan pemberian label
+peran semantik pada setiap argumen (Jindal et al., 2022).
+Dalam information extraction, SRL berfungsi untuk memperjelas hubungan antara
+predikat dan argumen dalam teks tidak terstruktur. Kajian sistematis tentang SRL pada data
+low-resource menempatkan SRL sebagai salah satu tugas penting untuk mengidentifikasi peran
+semantik sehingga pemahaman terhadap teks dapat diperkaya (Ariyanto et al., 2025). Posisi ini
+penting karena teks naratif sering kali menyimpan hubungan antarentitas secara implisit melalui
+struktur kalimat, bukan melalui relasi yang ditulis secara eksplisit.
+
+<!-- Halaman buku 15 · PDF 49 -->
+Pada teks Sirah Nabawiyah, kebutuhan terhadap SRL muncul karena tokoh, lokasi, waktu,
+dan peristiwa sering berada dalam satu rangkaian narasi. Kalimat seperti “Nabi Muhammad
+hijrah ke Madinah” tidak hanya memuat entitas Person dan Location, tetapi juga memuat
+peristiwa dan arah keterlibatan tokoh di dalamnya. NER dapat mengenali “Nabi Muhammad”
+sebagai Person, “hijrah” sebagai Event, dan “Madinah” sebagai Location, sedangkan SRL
+membantu memahami bahwa tokoh tersebut berperan sebagai pihak yang terlibat dalam
+peristiwa hijrah dan Madinah berperan sebagai tujuan atau lokasi peristiwa.
+2.3.3 SRL-Based Named-Entity Recognition
+SRL-Based Named-Entity Recognition dalam penelitian ini mengacu pada pendekatan
+information extraction yang mengaitkan pengenalan entitas dengan peran semantik dalam suatu
+peristiwa. Pendekatan ini selaras dengan kajian Ariyanto et al. (2025) yang menempatkan
+Named-Entity Recognition dan Semantic Role Labeling sebagai bagian penting dalam ekstraksi
+informasi teks Indonesia. Dalam kerangka tersebut, NER digunakan untuk mengenali entitas,
+sedangkan SRL digunakan untuk memahami peran entitas dalam struktur kalimat atau peristiwa.
+Penguatan hubungan antara NER dan SRL juga terlihat pada dataset peristiwa krisis
+berbahasa Indonesia yang dikembangkan oleh Ariyanto et al. (2025). Dataset tersebut
+menyediakan label argumen untuk tugas SRL dan label entitas untuk tugas NER dalam satu
+kerangka data. Pola tersebut menunjukkan bahwa entitas dan peran semantik dapat digunakan
+secara saling melengkapi dalam proses information extraction. Gagasan ini relevan dengan
+penelitian Sirah Nabawiyah karena teks yang digunakan juga memuat struktur peristiwa yang
+melibatkan tokoh, lokasi, waktu, dan kejadian tertentu. Dalam penelitian ini, pendekatan SRL-
+Based NER tidak dimaksudkan untuk menggantikan NER, melainkan untuk memperkuat hasil
+pengenalan entitas melalui konteks peran semantik. Entitas Person, Event, Location, dan Time
+tidak hanya dikenali sebagai label, tetapi juga diarahkan untuk dipahami melalui
+keterlibatannya dalam suatu peristiwa. Tokoh dapat berperan sebagai pelaku, saksi, lawan, atau
+pihak yang terlibat. Lokasi dapat berfungsi sebagai tempat kejadian atau tujuan perpindahan,
+sedangkan waktu dapat menunjukkan urutan atau fase historis.
+Hubungan antara SRL dan knowledge graph terlihat pada metode yang mengubah teks
+menjadi graf berbasis frame. TakeFive, misalnya, merupakan metode semantic role labeling
+yang melakukan dependency parsing, mengidentifikasi kata yang memunculkan frame leksikal,
+menemukan role dan filler untuk tiap frame, lalu memformalkan hasilnya sebagai knowledge
+graph (Alam et al., 2021). Pendekatan tersebut menunjukkan bahwa SRL dapat menjadi
+jembatan antara analisis kalimat dan representasi pengetahuan berbasis relasi. Dengan demikian,
+SRL-Based NER dalam penelitian ini diposisikan sebagai jembatan antara pengenalan entitas
+dan pembangunan knowledge graph Sirah Nabawiyah. NER menghasilkan entitas utama dari
+teks, sedangkan SRL membantu menafsirkan peran entitas tersebut dalam struktur peristiwa.
+Hasil ekstraksi kemudian diarahkan untuk membentuk relasi seperti tokoh-terlibat-dalam-
+peristiwa, peristiwa-terjadi-di-lokasi, dan peristiwa-terjadi-pada-waktu tertentu.
+2.4 Transformer-Based Model untuk Sequence Labeling
+Transformer-based model merupakan pendekatan pemodelan bahasa yang banyak
+digunakan dalam tugas Natural Language Processing, termasuk sequence labeling. Pada tugas
+sequence labeling, setiap token dalam suatu urutan teks diberi label tertentu sesuai dengan
+konteksnya. NER termasuk ke dalam tugas sequence labeling karena model perlu menentukan
+
+<!-- Halaman buku 16 · PDF 50 -->
+label entitas pada setiap token, misalnya apakah token tersebut termasuk Person, Event,
+Location, Time, atau bukan entitas.
+Perkembangan model berbasis Transformer menjadi penting dalam NER karena model ini
+mampu menghasilkan representasi token yang mempertimbangkan konteks kalimat. Kajian
+mutakhir tentang NER menunjukkan bahwa pendekatan berbasis Transformer dan LLM
+menjadi bagian penting dalam perkembangan NER modern, terutama karena kemampuannya
+menangkap konteks dan meningkatkan kinerja pada berbagai domain teks (Keraghel et al.,
+2024). Kajian lain tentang Transformer untuk NER juga menempatkan mekanisme self-
+attention sebagai mekanisme utama yang membantu model menangkap ketergantungan
+kontekstual antar-token secara lebih efektif dibandingkan pendekatan berbasis fitur manual (Fu,
+2025). Oleh karena itu, pendekatan Transformer-based model relevan digunakan dalam
+penelitian ini karena teks Sirah Nabawiyah memiliki struktur naratif yang panjang, kaya tokoh,
+serta memuat hubungan antar-kata yang bergantung pada konteks peristiwa.
+2.4.1 Transformer
+Transformer merupakan arsitektur deep learning yang banyak digunakan dalam
+pemrosesan bahasa alami karena kemampuannya membangun representasi kontekstual dari
+urutan token. Paaß & Giesselbach, (2023) menjelaskan bahwa model bahasa berbasis attention
+memproses teks sebagai urutan token dan menghasilkan contextual embedding untuk setiap
+token. Dalam pemrosesan bahasa alami, mekanisme attention memungkinkan model
+memperhatikan hubungan antara satu token dan token lain dalam kalimat. Rahali dan Akhloufi
+(2023) menyatakan bahwa arsitektur Transformer menggunakan self-attention untuk
+menangkap ketergantungan jarak jauh dalam urutan masukan. Mekanisme ini membantu model
+memahami bahwa makna suatu token tidak selalu berdiri sendiri, tetapi dipengaruhi oleh token
+lain yang muncul dalam konteks yang sama. Hal ini sejalan dengan Patwardhan et al. (2023),
+yang menjelaskan bahwa model Transformer seperti BERT mampu mempelajari representasi
+kontekstual kata berdasarkan konteks token di sekitarnya. Selain itu, Sajun et al. (2024)
+menggambarkan arsitektur Transformer sebagai model yang terdiri atas komponen utama
+seperti multi-head attention, feed-forward network, positional encoding, serta struktur encoder
+dan decoder. Gambaran arsitektur tersebut dapat terlihat pada Gambar 2.2.
+Pada tugas NER, kemampuan menangkap konteks sangat penting karena label suatu token
+sering kali bergantung pada token di sekitarnya. Misalnya, suatu kata dapat dikenali sebagai
+nama tokoh apabila muncul bersama gelar, kata kerja tertentu, atau konteks peristiwa. Kajian
+NER berbasis Transformer pada dokumen hukum Indonesia menunjukkan bahwa model seperti
+IndoBERT, IndoRoBERTa, mBERT, dan XLM-RoBERTa dapat digunakan untuk mengenali
+entitas pada domain spesifik dengan performa yang kompetitif (Yulianti et al., 2024). Temuan
+tersebut menunjukkan bahwa Transformer relevan digunakan pada tugas NER yang
+membutuhkan pemahaman konteks dan domain.
+Mekanisme attention pada Transformer memungkinkan setiap token memperoleh
+representasi berdasarkan hubungan dengan token lain dalam satu konteks. Pada tugas sequence
+labeling seperti NER, representasi kontekstual tersebut digunakan untuk menentukan label
+setiap token. Dengan cara ini, model tidak hanya membaca token secara terpisah, tetapi juga
+mempertimbangkan konteks kiri dan kanan yang dapat memengaruhi makna token. Ilustrasi
+pemanfaatan Transformer dalam pelabelan token ditunjukkan pada Gambar 2.3
+
+<!-- Halaman buku 17 · PDF 51 -->
+Gambar 2.2 Ilustrasi Arsitektur Transformer (Sajun et al., 2024)
+
+Gambar 2.3 Ilustrasi Pelabelan Token dengan Transformer (Schweter & Akbik, 2021)
+Pada Gambar 2.3, setiap token input diproses bersama konteks di sekitarnya sehingga
+menghasilkan representasi kontekstual. Representasi tersebut kemudian digunakan untuk
+memprediksi label token, misalnya B-LOC untuk token awal entitas lokasi dan O untuk token
+yang tidak termasuk entitas. Dalam penelitian ini, prinsip serupa digunakan untuk mengenali
+
+<!-- Halaman buku 18 · PDF 52 -->
+entitas pada teks Sirah Nabawiyah, yaitu Person, Event, Location, dan Time. Dalam penelitian
+ini, Transformer diposisikan sebagai dasar arsitektur model untuk menghasilkan representasi
+token dari teks Sirah Nabawiyah. Representasi tersebut kemudian digunakan dalam proses
+sequence labeling untuk menentukan label entitas pada setiap token. Dengan demikian,
+Transformer berperan sebagai komponen utama dalam membangun pemahaman kontekstual
+terhadap teks sebelum dilakukan klasifikasi token.
+2.4.2 BERT dan IndoBERT
+BERT merupakan salah satu model berbasis Transformer encoder yang banyak digunakan
+dalam tugas NLP karena mampu menghasilkan representasi kata secara kontekstual. Dalam
+tugas NER, BERT digunakan untuk menghasilkan embedding setiap token berdasarkan konteks
+kalimatnya. Representasi tersebut kemudian dapat diproses oleh lapisan klasifikasi atau
+dikombinasikan dengan arsitektur lain untuk menentukan label entitas. Penerapan BERT dalam
+NER domain khusus terlihat pada penelitian Ge et al. (2024), yang menggunakan BERT untuk
+memperoleh representasi kata sebelum diproses lebih lanjut dalam model BERT-BiLSTM-CRF
+pada domain dietary elderly.
+Secara arsitektural, BERT dibangun dari tumpukan Transformer encoder yang
+menghasilkan representasi kontekstual untuk setiap token. Setiap encoder layer memuat
+komponen utama seperti input representation, attention mechanism, dan feedforward neural
+network. Representasi yang dihasilkan oleh beberapa lapisan encoder kemudian dapat
+diteruskan ke lapisan output sesuai tugas yang dikerjakan, termasuk klasifikasi token pada NER.
+Ilustrasi arsitektur BERT ditunjukkan pada Gambar 2.4.
+
+Gambar 2.4 Ilustrasi Arsitektur BERT (Ge et al., 2024)
+Pada Gambar 2.4, teks input diproses melalui beberapa lapisan Transformer encoder
+sehingga setiap token memperoleh representasi kontekstual. Mekanisme attention membantu
+model memperhatikan hubungan antar-token, sedangkan feedforward neural network
+memproses hasil representasi pada setiap lapisan. Dalam tugas NER, representasi token tersebut
+
+<!-- Halaman buku 19 · PDF 53 -->
+dapat dipetakan ke label entitas melalui lapisan klasifikasi, sehingga model dapat menentukan
+kategori entitas pada setiap token.
+Pada konteks bahasa Indonesia, model pre-trained berbasis BERT menjadi penting karena
+karakteristik bahasa, kosakata, dan struktur kalimat bahasa Indonesia berbeda dari bahasa
+Inggris. Model bahasa Indonesia yang telah dilatih pada korpus Indonesia dapat memberikan
+representasi token yang lebih sesuai untuk teks berbahasa Indonesia. Dalam penelitian NER
+dokumen hukum Indonesia, model berbasis Transformer seperti IndoBERT dan IndoRoBERTa
+digunakan sebagai model pembanding untuk mengekstraksi entitas dari dokumen berbahasa
+Indonesia (Yulianti et al., 2024). Hal ini menunjukkan bahwa penggunaan model bahasa
+Indonesia berbasis Transformer relevan untuk tugas NER pada domain khusus.
+Dalam penelitian ini, digunakan lima model berbasis Transformer sebagai skenario
+perbandingan. Model indolem/indobert-base-uncased digunakan sebagai baseline, sedangkan
+empat model lain digunakan sebagai pembanding untuk melihat pengaruh variasi model pre-
+trained terhadap performa NER. Pemilihan beberapa model dilakukan karena setiap model
+memiliki karakteristik berbeda, baik dari sisi arsitektur, sumber data pelatihan, maupun ukuran
+model. Informasi terkait dengan model yang digunakan dapat dilihat pada Tabel 2.4
+Tabel 2.4 Perbandingan Model yang digunakan
+Model
+Peran
+Karakter Umum
+indolem/indobert-base-uncased
+Baseline
+IndoBERT uncased untuk bahasa Indonesia
+cahya/bert-base-indonesian-
+1.5G
+Model Pembanding
+BERT-base uncased yang dilatih pada korpus bahasa
+Indonesia
+cahya/distilbert-base-
+indonesian
+Versi distilasi dari Indonesian BERT base model
+indobenchmark/indobert-base-
+p1
+IndoBERT phase 1 berbasis objective MLM dan
+NSP
+cahya/roberta-base-indonesian-
+1.5G
+Variasi RoBERTa untuk bahasa Indonesia
+
+Model
+cahya/bert-base-indonesian-1.5G
+dan
+cahya/distilbert-base-indonesian
+merepresentasikan dua variasi model Indonesia, yaitu BERT-base dan DistilBERT. Model
+indobenchmark/indobert-base-p1 merepresentasikan model IndoBERT dari IndoBenchmark,
+sedangkan cahya/roberta-base-indonesian-1.5G digunakan sebagai pembanding dari keluarga
+RoBERTa. Dengan membandingkan kelima model tersebut, penelitian ini dapat melihat model
+mana yang paling sesuai untuk mengenali entitas Person, Event, Location, dan Time pada teks
+Sirah Nabawiyah.
+2.5 Strategi Penanganan Ketidakseimbangan Label
+Ketidakseimbangan label merupakan salah satu tantangan dalam tugas NER, terutama pada
+pendekatan sequence labeling. Dalam NER, sebagian besar token biasanya berlabel O karena
+tidak termasuk entitas, sedangkan token yang merepresentasikan entitas seperti Person, Event,
+Location, dan Time muncul dalam jumlah lebih sedikit. Kondisi ini dapat membuat model lebih
+mudah mempelajari kelas mayoritas dan kurang sensitif terhadap kelas minoritas.
+Pada tugas NER, ketidakseimbangan label dapat memengaruhi kemampuan model dalam
+mengenali entitas yang jarang muncul. Weighted cross-entropy sering digunakan untuk
+menangani ketimpangan distribusi kelas dengan memberikan bobot berbeda pada setiap kelas
+
+<!-- Halaman buku 20 · PDF 54 -->
+(Nemoto et al., 2025). Selain itu, strategi re-weighting token juga digunakan untuk mengurangi
+dominasi kelas mayoritas dalam proses pembelajaran model NER (Luo et al., 2023).
+Berdasarkan karakteristik tersebut, penelitian ini mempertimbangkan beberapa strategi
+penanganan ketidakseimbangan label, yaitu class weight, data augmentation, supervised
+contrastive learning, dan joint supervised contrastive learning.
+2.5.1 Class Weight
+Class weight merupakan strategi penanganan ketidakseimbangan label dengan
+memberikan bobot berbeda pada setiap kelas ketika menghitung fungsi loss. Kelas dengan
+jumlah sampel lebih sedikit diberi bobot lebih besar, sedangkan kelas dengan jumlah sampel
+lebih banyak diberi bobot lebih kecil. Pendekatan ini berkaitan dengan weighted cross-entropy,
+yaitu modifikasi dari cross-entropy yang mempertimbangkan bobot kelas dalam proses
+optimasi. Nemoto et al. (2025) menyebutkan bahwa weighted cross-entropy umum digunakan
+untuk menangani data imbalance dengan memberikan class-specific weight berdasarkan jumlah
+sampel pada setiap kelas.
+Secara umum, bobot awal suatu kelas dapat dihitung berdasarkan frekuensi kemunculan
+label pada data latih. Jika 𝑁 menyatakan jumlah seluruh token, 𝐶 menyatakan jumlah kelas,
+dan 𝑛𝑐  menyatakan jumlah token pada kelas 𝑐, maka bobot awal kelas dapat dirumuskan
+sebagai berikut.
+𝑤𝑐
+𝑟𝑎𝑤 =
+𝑁
+𝐶 × 𝑛𝑐
+
+(2.1)
+
+Dalam penelitian ini, pendekatan class weight tidak menggunakan bobot mentah secara
+langsung karena bobot kelas minoritas dapat menjadi terlalu besar. Oleh karena itu, bobot
+dinormalisasi terhadap label O dan diberi tempering menggunakan akar kuadrat agar perbedaan
+bobot antar-label tetap proporsional. Rumus bobot yang digunakan adalah sebagai berikut.
+𝑤𝑐 = √𝑤𝑐
+𝑟𝑎𝑤
+𝑤𝑂
+𝑟𝑎𝑤
+(2.2)
+
+Karena 𝑤𝑐
+𝑟𝑎𝑤 berbanding terbalik dengan jumlah sampel kelas, persamaan tersebut juga
+dapat ditulis sebagai:
+𝑤𝑐 = √
+𝑛𝑂
+𝑛𝑐
+
+(2.3)
+
+Bobot tersebut kemudian digunakan dalam weighted cross-entropy. Jika 𝑀menyatakan
+jumlah token yang dihitung, 𝑧𝑡,𝑐menyatakan logit token ke-𝑡 untuk kelas 𝑐, dan 𝑦𝑡adalah label
+sebenarnya dari token ke-𝑡, maka fungsi loss dapat ditulis sebagai berikut.
+𝐿𝑊𝐶𝐸 = − 1
+𝑀 ∑ 𝑤𝑦𝑡
+𝑀
+𝑡=1
+log
+exp(𝑧𝑡,𝑦𝑡)
+∑
+exp(𝑧𝑡,𝑐)
+𝐶
+𝑐=1
+
+(2.4)
+
+<!-- Halaman buku 21 · PDF 55 -->
+Pendekatan ini sejalan dengan re-weighting pada NER, yaitu pemberian bobot terhadap
+token atau kelas agar model tidak terlalu didominasi oleh label mayoritas. Penelitian yang
+dilakukan oleh Luo et al. (2023) menunjukkan bahwa re-weighting token dapat digunakan
+untuk mengatasi ketidakseimbangan label pada NER dengan memberikan bobot yang
+dipengaruhi oleh frekuensi kelas.
+2.5.2 Data Augmentation
+Data augmentation merupakan strategi untuk menambah variasi data latih melalui
+pembentukan sampel baru dari data yang telah tersedia. Pada NER, augmentasi harus dilakukan
+secara hati-hati karena perubahan token dapat memengaruhi batas entitas dan label BIO. Elwing
+Torres et al. (2026) mengevaluasi teknik augmentasi seperti mention replacement dan
+contextual word replacement pada NER di domain low resource. Hasil kajian tersebut
+menunjukkan bahwa augmentasi dapat membantu ketika data latih terbatas, tetapi jumlah dan
+jenis augmentasi tetap perlu disesuaikan dengan karakteristik dataset. Secara umum, proses
+augmentasi dapat ditulis sebagai berikut.
+𝐷𝑎𝑢𝑔 = 𝐷 ∪ {𝑇𝑘(𝑥𝑖, 𝑦𝑖)}𝑖=1
+𝑁
+(2.5)
+Pada persamaan tersebut, 𝐷 adalah dataset awal, 𝑇𝑘 adalah fungsi transformasi ke-𝑘 ,
+𝑥𝑖adalah teks masukan, dan 𝑦𝑖adalah label yang harus tetap konsisten setelah proses augmentasi.
+Dalam konteks NER, salah satu bentuk augmentasi adalah mengganti mention entitas dengan
+mention lain yang memiliki tipe sama, sehingga struktur label tetap terjaga. Chen et al. (2024)
+juga menunjukkan bahwa pendekatan data augmentation dapat diterapkan pada NER medis
+untuk meningkatkan variasi data, khususnya ketika data berlabel terbatas.
+2.5.3 Supervised Contrastive Learning
+Supervised Contrastive Learning (SCL) merupakan metode pembelajaran representasi
+yang memanfaatkan informasi label untuk mengatur posisi sampel dalam ruang representasi.
+Setiap sampel diperlakukan sebagai anchor. Sampel lain dengan label yang sama menjadi
+pasangan positif, sedangkan sampel dengan label berbeda menjadi pasangan negatif. Model
+kemudian diarahkan untuk mendekatkan representasi pasangan positif dan menjauhkan
+representasi pasangan negatif (Khosla et al., 2021).
+Berbeda dari cross-entropy yang berfokus pada ketepatan prediksi setiap sampel, SCL
+secara langsung mengatur struktur ruang representasi. Token atau sampel yang berasal dari
+kelas sama diarahkan agar membentuk kelompok yang lebih rapat, sedangkan kelompok dari
+kelas berbeda dibuat lebih terpisah. Dengan demikian, model diharapkan menghasilkan
+representasi yang lebih diskriminatif dan memiliki batas antarkelas yang lebih jelas.
+Fungsi kerugian SCL dapat dirumuskan sebagai berikut:
+𝐿𝑆𝐶𝐿 = − ∑
+|𝑃(𝑖)|
+𝐵
+𝑖=1
+∑ log
+exp(sim(𝑧𝑖, 𝑧𝑝)/𝜏))
+∑
+exp(sim(𝑧𝑖, 𝑧𝑎)/𝜏))
+𝑎∈𝐴(𝑖)
+𝑝∈𝑃(𝑖)
+
+(2.6)
+
+Pada Persamaan (2.6), 𝐵 merupakan jumlah sampel dalam satu batch, 𝑧𝑖 merupakan
+representasi dari anchor, dan 𝑃(𝑖)merupakan himpunan pasangan positif yang memiliki label
+sama dengan anchor. Sementara itu, 𝐴(𝑖)merupakan himpunan sampel pembanding selain
+anchor, sim(⋅) merupakan fungsi kesamaan antarreprentasi, dan 𝜏 merupakan parameter
+
+<!-- Halaman buku 22 · PDF 56 -->
+temperature. Parameter temperature mengatur tingkat sensitivitas model terhadap perbedaan
+nilai kesamaan antarsampel.
+Dalam NER, SCL dapat diterapkan pada tingkat token. Token yang memiliki label entitas
+sama diarahkan agar memiliki representasi yang berdekatan, sedangkan token dengan label
+berbeda dibuat lebih terpisah. Das et al. (2022) menerapkan contrastive learning pada few-shot
+NER melalui CONTaiNER dengan mengoptimalkan perbedaan distribusi representasi
+antartoken. Pendekatan tersebut menunjukkan bahwa contrastive learning dapat membantu
+membentuk representasi token yang lebih baik pada kondisi data berlabel terbatas.
+Dalam penelitian ini, SCL digunakan sebagai salah satu strategi untuk menangani
+ketidakseimbangan label. Melalui pembentukan representasi yang lebih terstruktur, token dari
+label minoritas diharapkan tidak mudah tertutup oleh dominasi representasi label mayoritas.
+2.5.4 Jaccard Similarity Contrastive Loss
+SCL menentukan pasangan positif berdasarkan kesamaan label secara tegas. Sampel
+dengan label yang sama diperlakukan sebagai pasangan positif, sedangkan sampel dengan label
+berbeda menjadi pasangan negatif. Pendekatan tersebut belum mempertimbangkan
+kemungkinan adanya kemiripan sebagian di antara label. Untuk mengatasi keterbatasan
+tersebut, Lin et al. (2023) memperkenalkan Jaccard Similarity Contrastive Loss (JSCL), yaitu
+fungsi kerugian kontrastif yang menggunakan koefisien Jaccard untuk mengukur tingkat
+kemiripan antar himpunan label.
+Pada JSCL, pasangan dengan label yang sama memiliki tingkat kemiripan tertinggi
+sehingga diarahkan untuk lebih berdekatan. Sementara itu, pasangan yang hanya memiliki
+sebagian kesamaan tetap dapat memperoleh bobot kedekatan, tetapi nilainya lebih kecil.
+Pendekatan ini membuat hubungan antar sampel tidak hanya dibedakan secara biner sebagai
+pasangan positif atau negatif, melainkan berdasarkan tingkat kemiripan labelnya (Lin et al.,
+2023).
+Kesamaan antara label 𝑦𝑖dan 𝑦𝑗dihitung menggunakan koefisien Jaccard sebagai berikut:
+𝐽(𝑦𝑖, 𝑦𝑗) =
+|𝑦𝑖 ∩ 𝑦𝑗|
+|𝑦𝑖 ∪ 𝑦𝑗| + 𝜖
+(2.7)
+
+Pada Persamaan (2.7), 𝑦𝑖 dan 𝑦𝑗 merupakan representasi label dari token ke-𝑖 dan token
+ke- 𝑗 . Notasi |𝑦𝑖 ∩ 𝑦𝑗| menunjukkan jumlah atribut label yang sama, sedangkan |𝑦𝑖 ∪ 𝑦𝑗|
+menunjukkan seluruh atribut yang terdapat pada kedua label. Nilai 𝜀 ditambahkan untuk
+mencegah pembagian dengan nol. Nilai Jaccard berada pada rentang 0 hingga 1. Nilai yang
+semakin mendekati 1 menunjukkan bahwa kedua label memiliki tingkat kemiripan yang
+semakin tinggi.
+Nilai Jaccard kemudian dinormalisasi untuk membentuk bobot pasangan 𝛼𝑖𝑗 sebagai
+berikut:
+𝛼𝑖𝑗 =
+𝐽(𝐲𝑖, 𝐲𝑗)
+∑
+𝐽
+𝑝∈𝐴(𝑖) (𝐲𝑖, 𝐲𝑝) + 𝜀
+(2.8)
+
+<!-- Halaman buku 23 · PDF 57 -->
+Bobot 𝛼𝑖𝑗menentukan besarnya kontribusi pasangan token ke-𝑖 dan token ke-𝑗 terhadap
+fungsi kerugian. Pasangan dengan kesamaan label yang lebih tinggi memperoleh bobot lebih
+besar dibandingkan pasangan dengan tingkat kesamaan yang lebih rendah.
+Bobot tersebut selanjutnya digunakan dalam fungsi kerugian JSCL sebagai berikut:
+𝐿JSCL = − 1
+𝐵 ∑ ∑ 𝛼𝑖𝑗
+𝑗∈𝐴(𝑖)
+𝐵
+𝑖=1
+log
+exp(sim(𝐳𝑖, 𝐳𝑗) /𝜏)
+∑
+exp(sim(𝐳𝑖, 𝐳𝑎) /𝜏)
+𝑎∈𝐴(𝑖)
+
+(2.9)
+
+Pada Persamaan (2.9), 𝑧𝑖dan 𝑧𝑗merupakan representasi token, sedangkan 𝛼𝑖𝑗merupakan
+bobot yang diperoleh dari kesamaan Jaccard. Melalui pembobotan tersebut, model diarahkan
+untuk membentuk jarak antartoken sesuai dengan tingkat kemiripan labelnya.
+JSCL pada penelitian Lin et al. (2023) awalnya diterapkan pada klasifikasi teks multilabel.
+Dalam penelitian ini, prinsip tersebut diadaptasi pada NER tingkat token dengan menggunakan
+representasi label BIO yang diterapkan dalam kode. Adaptasi ini memungkinkan hubungan
+antarlabel dipertimbangkan secara lebih fleksibel daripada SCL biasa.
+Fungsi kerugian JSCL kemudian digabungkan dengan cross-entropy agar model tetap
+mempelajari klasifikasi label sekaligus membentuk ruang representasi token yang lebih
+terstruktur:
+ 𝐿𝑡𝑜𝑡𝑎𝑙 = 𝐿𝐶𝐸 + 𝜆𝐿𝐽𝑆𝐶𝐿
+(2.10)
+Pada Persamaan (2.10), 𝐿CE merupakan fungsi kerugian untuk klasifikasi label, sedangkan
+𝐿JSCL digunakan untuk mengatur struktur representasi token. Parameter 𝜆 mengendalikan
+besarnya kontribusi JSCL terhadap fungsi kerugian total.
+2.6 POS Tagging
+Part-of-Speech Tagging atau POS tagging merupakan proses pemberian label kelas kata
+pada setiap token dalam teks, seperti nomina, verba, adjektiva, adverbia, numeralia, preposisi,
+dan kelas kata lainnya. DalamNLP, POS tagging digunakan untuk membantu sistem mengenali
+fungsi gramatikal suatu kata dalam kalimat. Chiche dan Yitagesu, (2022) menjelaskan bahwa
+POS tagging merupakan salah satu tugas penting dalam NLP karena dapat menjadi tahap
+pendukung bagi berbagai tugas lain, seperti parsing, information extraction, machine
+translation, dan analisis semantik. Ilustrasi sederhana proses POS tagging dapat dilihat pada
+Tabel 2.5.
+Berdasarkan Tabel 2.5, setiap token dalam kalimat diberi label kelas kata sesuai fungsi
+gramatikalnya. Token “Nabi” dan “Muhammad” diberi label PROPN karena merujuk pada
+nama tokoh, sedangkan “Madinah” juga diberi label PROPN karena merujuk pada nama lokasi.
+Token “hijrah” berperan sebagai verba yang merepresentasikan tindakan atau peristiwa.
+Sementara itu, “tahun”, “622”, dan “M” membentuk ekspresi waktu. Contoh ini menunjukkan
+bahwa POS tagging dapat membantu memperlihatkan pola gramatikal yang berkaitan dengan
+kemunculan entitas dalam teks.
+
+<!-- Halaman buku 24 · PDF 58 -->
+Tabel 2.5 Contoh Penggunaan POS Tagging
+Token
+POS Tag
+Keterangan
+Contoh label NER
+Nabi
+PROPN
+Nama diri/gelar tokoh
+B-PERSON
+Muhammad
+PROPN
+nama diri
+I-PERSON
+hijrah
+VERB
+tindakan/peristiwa
+B-EVENT
+ke
+ADP
+preposisi
+O
+Madinah
+PROPN
+nama tempat
+B-LOCATION
+pada
+ADP
+preposisi waktu
+O
+tahun
+NOUN
+penanda waktu
+B-TIME
+NUM
+numeralia
+I-TIME
+PROPN/SYM
+penanda kalender
+I-TIME
+
+Pada teks naratif, termasuk teks Sirah Nabawiyah, informasi penting tidak hanya muncul
+dalam bentuk entitas, tetapi juga melalui struktur gramatikal kalimat. Tokoh biasanya muncul
+sebagai nomina atau proper noun, tindakan dan peristiwa sering direpresentasikan melalui
+verba, sedangkan lokasi dan waktu dapat dikenali melalui kombinasi nomina, numeralia,
+preposisi, atau keterangan waktu. Dengan demikian, POS tagging dapat membantu
+memberikan informasi linguistik tambahan untuk memahami hubungan antar-unsur dalam
+kalimat.
+Dalam konteks NER, POS tagging dapat digunakan sebagai informasi pendukung karena
+kelas kata tertentu sering berkaitan dengan kemunculan entitas. Misalnya, token yang berperan
+sebagai nama tokoh atau lokasi umumnya berkaitan dengan kategori nomina/proper noun,
+sedangkan token yang menggambarkan kejadian dapat berkaitan dengan verba atau nomina
+peristiwa. Penelitian (Y. Chen et al., 2023) pada NER bahasa Korea menunjukkan bahwa
+penggunaan fitur linguistik spesifik bahasa, termasuk informasi morfologis dan struktur token,
+dapat memengaruhi performa pengenalan entitas. Hal ini menunjukkan bahwa informasi
+linguistik seperti POS dapat membantu model memahami karakteristik token secara lebih
+kontekstual.
+Perkembangan POS tagging juga mengikuti perkembangan model deep learning dan
+Transformer. (H. Li et al., 2022) mengembangkan pendekatan POS tagging dengan
+menggabungkan rule-based preprocessing dan Transformer, yang menunjukkan bahwa
+mekanisme attention dapat digunakan untuk menangkap konteks antar-token dalam pelabelan
+kelas kata. Pendekatan semacam ini relevan dengan penelitian berbasis sequence labeling
+karena POS tagging dan NER sama-sama melakukan prediksi label pada level token.
+Untuk bahasa Indonesia dan bahasa daerah di Indonesia, POS tagging juga memiliki
+tantangan tersendiri, terutama karena keterbatasan korpus beranotasi dan variasi struktur bahasa.
+Enrique et al. (2024) meneliti POS tagging bahasa Jawa sebagai bahasa low-resource dengan
+memanfaatkan transfer learning lintas bahasa dan model Transformer seperti IndoBERT,
+mBERT, dan XLM-RoBERTa. Kajian tersebut menunjukkan bahwa pendekatan berbasis
+Transformer dapat dimanfaatkan untuk tugas POS tagging pada bahasa dengan sumber daya
+terbatas, termasuk bahasa yang memiliki kedekatan dengan bahasa Indonesia.
+Dalam penelitian ini, POS tagging diposisikan sebagai informasi linguistik pendukung
+untuk membantu analisis token pada teks Sirah Nabawiyah. Informasi kelas kata dapat
+digunakan untuk melihat pola kemunculan entitas dan peristiwa, misalnya kemunculan tokoh
+sebagai nomina, peristiwa sebagai verba atau nomina peristiwa, serta lokasi dan waktu sebagai
+
+<!-- Halaman buku 25 · PDF 59 -->
+frasa yang memiliki pola gramatikal tertentu. Dengan demikian, POS tagging tidak berdiri
+sebagai tujuan utama penelitian, tetapi berperan sebagai komponen pendukung dalam proses
+pemahaman struktur teks dan pengembangan representasi informasi yang lebih terarah.
+2.7 Knowledge Graph
+Knowledge Graph merupakan representasi pengetahuan dalam bentuk graf yang
+menghubungkan entitas melalui relasi semantik. Dalam struktur ini, informasi tidak hanya
+disimpan sebagai data terpisah, tetapi juga sebagai hubungan antarunit informasi. Peng et al.
+(2023) menjelaskan bahwa knowledge graph direpresentasikan sebagai graf berarah yang
+terdiri atas node dan edge. Node merepresentasikan entitas, objek, atau konsep, sedangkan edge
+merepresentasikan relasi semantik antar-entitas. Dengan bentuk tersebut, knowledge graph
+dapat digunakan untuk merepresentasikan pengetahuan yang saling terhubung dan
+memudahkan proses penelusuran hubungan antar-entitas.
+Secara umum, satuan dasar dalam knowledge graph dapat dipahami sebagai triple, yaitu
+kombinasi antara subjek, predikat, dan objek. Ji et al. (2022) menjelaskan bahwa knowledge
+graph merepresentasikan fakta dalam bentuk hubungan terstruktur antarentitas, yang umumnya
+ditulis sebagai head, relation, dan tail. Sejalan dengan itu, Peng et al. (2023) menyebutkan
+bahwa relasi dalam knowledge graph menghubungkan dua entitas melalui edge yang bermakna
+semantik. Dengan demikian, subjek dan objek dalam triple merepresentasikan entitas atau
+konsep, sedangkan predikat merepresentasikan hubungan di antara keduanya. Misalnya,
+informasi “Nabi Muhammad hijrah ke Madinah” dapat direpresentasikan sebagai triple (Nabi
+Muhammad, hijrah ke, Madinah). Bentuk triple semacam ini memungkinkan informasi naratif
+diubah menjadi struktur yang lebih eksplisit dan dapat ditelusuri secara komputasional.
+
+Gambar 2.5 Ilustrasi triple pada Knowledge Graph (Ji et al., 2022)
+Struktur knowledge graph dapat divisualisasikan sebagai jaringan entitas yang
+dihubungkan oleh relasi tertentu. Ji et al. (2022) menunjukkan bahwa knowledge graph
+merepresentasikan pengetahuan melalui hubungan terstruktur antar-entitas, sehingga suatu
+entitas dapat memiliki banyak relasi dengan entitas lain. Ilustrasi pada Gambar 2.5
+memperlihatkan bagaimana entitas seperti tokoh, konsep, institusi, penghargaan, dan bidang
+ilmu saling terhubung melalui relasi seperti SonOf, ProposedBy, WinnerOf, dan TheoryOf.
+
+<!-- Halaman buku 26 · PDF 60 -->
+Berdasarkan Gambar 2.5, knowledge graph memungkinkan suatu entitas direpresentasikan
+tidak hanya sebagai simpul tunggal, tetapi juga sebagai bagian dari jaringan pengetahuan yang
+lebih luas. Entitas “Albert Einstein”, misalnya, terhubung dengan entitas lain melalui beberapa
+relasi, seperti hubungan keluarga, pendidikan, penghargaan, dan bidang keilmuan. Pola
+representasi seperti ini relevan dengan penelitian ini karena teks Sirah Nabawiyah juga memuat
+entitas yang saling berhubungan, seperti tokoh, peristiwa, lokasi, dan waktu. Dengan demikian,
+hasil ekstraksi entitas dari teks Sirah dapat dikembangkan menjadi graf pengetahuan yang
+memperlihatkan keterhubungan antar-unit informasi secara lebih eksplisit.
+Knowledge graph memiliki beberapa komponen utama, yaitu entitas, relasi, atribut, dan
+skema. Entitas merupakan objek atau konsep yang menjadi simpul dalam graf, seperti tokoh,
+tempat, peristiwa, atau waktu. Relasi menunjukkan keterhubungan antar-entitas, misalnya
+melakukan, berada_di, terjadi_pada, atau menemani. Atribut digunakan untuk menyimpan
+informasi tambahan pada entitas atau relasi, seperti nama, kategori, sumber teks, atau
+keterangan waktu. Skema berfungsi sebagai rancangan konseptual yang mengatur jenis entitas
+dan relasi yang digunakan agar representasi pengetahuan tetap konsisten. Choi dan Jung, (2025)
+menjelaskan bahwa konstruksi knowledge graph mencakup proses extraction, learning, dan
+evaluation, sehingga konstruksi knowledge graph tidak hanya berhenti pada ekstraksi entitas,
+tetapi juga mencakup pembentukan relasi, pembelajaran struktur, dan evaluasi kualitas graf.
+Dalam penelitian berbasis teks, knowledge graph dibangun melalui proses ekstraksi
+informasi dari data tidak terstruktur. Zhong et al. (2024) menjelaskan bahwa automatic
+knowledge graph construction mencakup tahapan seperti named entity recognition, entity
+typing, entity linking, relation extraction, dan knowledge graph refinement. Tahapan tersebut
+menunjukkan bahwa NER memiliki peran penting sebagai langkah awal karena entitas yang
+dikenali dari teks dapat menjadi dasar pembentukan node dalam graf. Setelah entitas diperoleh,
+relasi antar-entitas dapat disusun untuk membentuk representasi pengetahuan yang lebih
+terstruktur.
+Pada teks Sirah Nabawiyah, knowledge graph relevan karena teks Sirah memuat banyak
+informasi naratif yang saling berkaitan, seperti tokoh, peristiwa, tempat, dan waktu. Narasi
+tentang hijrah, peperangan, perjanjian, dakwah, atau interaksi antar-tokoh dapat
+direpresentasikan sebagai jaringan entitas dan relasi. Misalnya, entitas Nabi Muhammad, Abu
+Bakar, Hijrah, Madinah, dan 622 M dapat dihubungkan untuk menunjukkan siapa yang terlibat,
+peristiwa apa yang terjadi, ke mana peristiwa berlangsung, dan kapan peristiwa tersebut terjadi.
+Dengan demikian, knowledge graph dapat membantu mengubah teks Sirah dari narasi linear
+menjadi struktur pengetahuan yang lebih mudah ditelusuri, divisualisasikan, dan dianalisis.
+Untuk penyimpanan dan pengelolaan knowledge graph, salah satu basis data graf yang
+dapat digunakan adalah Neo4j. Neo4j menggunakan model labeled property graph, yaitu model
+graf yang menyimpan node, relationship, label, dan property. Model ini memungkinkan entitas
+direpresentasikan sebagai node, hubungan sebagai relationship, dan informasi tambahan
+sebagai property. Neo4j juga menggunakan bahasa kueri Cypher untuk menelusuri pola relasi
+dalam graf. Dalam konteks penelitian ini, Neo4j dapat digunakan untuk menyimpan hasil
+ekstraksi entitas dan relasi dari teks Sirah Nabawiyah, sehingga pengetahuan yang telah
+diekstraksi dapat ditampilkan dalam bentuk graf dan dianalisis berdasarkan keterhubungan
+antar-entitas.
+
+<!-- Halaman buku 27 · PDF 61 -->
+Setelah knowledge graph terbentuk, graf tersebut dapat dianalisis menggunakan fitur-fitur
+analisis graf. Salah satu pendekatan yang dapat digunakan adalah Social Network Analysis
+(SNA). Dalam penelitian ini, SNA tidak digunakan sebagai metode utama untuk mengekstraksi
+entitas, tetapi sebagai pendekatan pendukung untuk membaca struktur hubungan yang telah
+terbentuk dalam knowledge graph. Menurut Adniati et al. (2023), SNA menerapkan konsep
+teori graf, dengan simpul sebagai representasi aktor atau entitas dan sisi sebagai representasi
+hubungan di antara simpul tersebut. Secara umum, graf dalam penelitian ini dapat dinyatakan
+sebagai berikut.
+𝐺 = (𝑉, 𝐸)
+(2.11)
+Pada persamaan tersebut, 𝐺  merepresentasikan graf, 𝑉  merepresentasikan himpunan
+simpul, dan 𝐸 merepresentasikan himpunan sisi. Dalam penelitian ini, simpul dapat berupa
+tokoh, peristiwa, lokasi, atau waktu, sedangkan sisi menunjukkan hubungan antar-entitas yang
+terbentuk dalam graf.
+Salah satu fitur analisis graf yang digunakan adalah degree centrality. Metrik ini
+menunjukkan jumlah hubungan langsung yang dimiliki oleh suatu simpul. (Adniati et al., 2023)
+menjelaskan bahwa degree centrality dapat digunakan untuk melihat simpul yang memiliki
+posisi sentral berdasarkan banyaknya hubungan dalam jaringan. Dalam konteks knowledge
+graph Sirah Nabawiyah, entitas dengan nilai degree centrality tinggi dapat dipahami sebagai
+entitas yang banyak terhubung dengan entitas lain, misalnya tokoh yang banyak terlibat dalam
+peristiwa atau peristiwa yang memiliki banyak keterkaitan dengan tokoh, lokasi, dan waktu.
+Persamaan degree centrality adalah sebagai berikut.
+𝐶𝐷(𝑣) = deg(𝑣)
+𝑛 − 1
+
+(2.12)
+
+Pada persamaan tersebut, 𝐶𝐷(𝑣) menunjukkan nilai degree centrality pada simpul 𝑣.
+Sementara itu, deg(𝑣) menunjukkan jumlah hubungan langsung yang dimiliki oleh simpul 𝑣,
+dan 𝑛 menunjukkan jumlah seluruh simpul dalam jaringan.
+Fitur berikutnya adalah betweenness centrality. Metrik ini digunakan untuk melihat
+sejauh mana suatu simpul berperan sebagai penghubung antara simpul-simpul lain. Simpul
+dengan nilai betweenness centrality tinggi menunjukkan bahwa simpul tersebut sering berada
+pada jalur terpendek yang menghubungkan dua simpul lain. Dalam penelitian ini, metrik
+tersebut dapat membantu mengidentifikasi tokoh atau peristiwa yang berperan sebagai
+penghubung dalam struktur relasi Sirah Nabawiyah.
+
+𝐶𝐵(𝑣) = ∑ 𝜎𝑠𝑡(𝑣)
+𝜎𝑠𝑡
+𝑠,𝑡∈𝑉
+
+(2.13)
+
+Pada persamaan tersebut, 𝐶𝐵(𝑣) menunjukkan nilai betweenness centrality pada simpul
+𝑣. Simbol 𝜎𝑠𝑡  menunjukkan jumlah jalur terpendek dari simpul 𝑠 ke simpul 𝑡, sedangkan
+𝜎𝑠𝑡(𝑣) menunjukkan jumlah jalur terpendek dari simpul 𝑡 ke simpul 𝑡 yang melewati simpul 𝑣.
+
+<!-- Halaman buku 28 · PDF 62 -->
+Selain itu, terdapat fitur closeness centrality yang digunakan untuk melihat kedekatan
+suatu simpul terhadap simpul-simpul lain dalam jaringan. Menurut Adniati et al. (2023),
+closeness centrality menunjukkan simpul yang memiliki jarak minimum terhadap simpul lain
+dalam jaringan. Dalam konteks knowledge graph, metrik ini dapat digunakan untuk melihat
+entitas yang secara struktural dekat dengan banyak entitas lain.
+
+𝐶𝐶(𝑣) =
+𝑛 − 1
+∑
+𝑑
+𝑢∈𝑉,𝑢≠𝑣
+(𝑢, 𝑣)
+(2.14)
+
+Pada persamaan tersebut, 𝐶𝐶(𝑣) menunjukkan nilai closeness centrality pada simpul 𝑣.
+Simbol 𝑑(𝑢, 𝑣) menunjukkan jarak terpendek antara simpul 𝑢 dan simpul 𝑣, sedangkan 𝑛
+menunjukkan jumlah seluruh simpul dalam jaringan.
+Selain metrik centrality, analisis knowledge graph juga dapat menggunakan density untuk
+melihat tingkat kepadatan jaringan. Density menunjukkan perbandingan antara jumlah
+hubungan yang terbentuk dengan jumlah hubungan yang mungkin terbentuk dalam graf. Pada
+graf tidak berarah, density dapat dirumuskan sebagai berikut.
+𝐷 =
+2𝑚
+𝑛(𝑛 − 1)
+(2.15)
+
+Pada persamaan tersebut, 𝐷 menunjukkan nilai kepadatan jaringan atau density. Simbol
+𝑚 menunjukkan jumlah sisi atau relasi dalam graf, sedangkan 𝑛 menunjukkan jumlah simpul
+dalam graf.
+Untuk melihat apakah tokoh-tokoh dalam graf membentuk kelompok tertentu, analisis
+knowledge graph juga dapat menggunakan deteksi komunitas. Anuar et al. (2024) menjelaskan
+bahwa community detection digunakan untuk mengidentifikasi kelompok node yang memiliki
+kepadatan hubungan tinggi di dalam komunitas dan kepadatan hubungan yang lebih rendah
+dengan komunitas lain. Salah satu metode yang dapat digunakan adalah Louvain method, yaitu
+algoritma deteksi komunitas berbasis modularity. Modularity digunakan untuk mengukur
+kualitas pembagian komunitas dalam graf, sebagaimana dirumuskan sebagai berikut.
+𝑄 = 1
+2𝑚 ∑ (𝐴𝑖𝑗 − 𝑘𝑖𝑘𝑗
+2𝑚 )
+𝑖𝑗
+𝛿(𝐶𝑖, 𝐶𝑗)
+(2.16)
+
+Pada persamaan tersebut, 𝑄 menunjukkan nilai modularity, 𝐴𝑖𝑗  menunjukkan elemen
+adjacency matrix antara simpul 𝑖 dan simpul 𝑗, 𝑘𝑖 dan 𝑘𝑗 menunjukkan derajat simpul 𝑖 dan
+simpul 𝑗, 𝑚 menunjukkan jumlah sisi dalam graf, sedangkan 𝛿(𝐶𝑖, 𝐶𝑗) bernilai 1 apabila simpul
+𝑖 dan simpul 𝑗 berada dalam komunitas yang sama, serta bernilai 0 apabila keduanya berada
+dalam komunitas yang berbeda. Dalam penelitian ini, Louvain dapat digunakan untuk melihat
+apakah tokoh dalam knowledge graph Sirah Nabawiyah terbagi menjadi kelompok berdasarkan
+kedekatan relasi atau keterlibatan pada peristiwa yang sama.
+
+<!-- Halaman buku 29 · PDF 63 -->
+Pada analisis peristiwa, graf dapat dibentuk melalui hubungan co-participation, yaitu
+hubungan yang terbentuk ketika dua tokoh terlibat dalam peristiwa yang sama. Secara
+sederhana, apabila (B) merupakan matriks keterlibatan tokoh dan peristiwa, maka graf co-
+participation antartokoh dapat dibentuk melalui proyeksi berikut.
+𝐴𝑃𝑃 = 𝐵𝐵𝑇
+(2.17)
+
+Pada persamaan tersebut, 𝐴𝑃𝑃 menunjukkan matriks hubungan antar-tokoh, sedangkan 𝐵
+menunjukkan matriks keterlibatan tokoh terhadap peristiwa. Nilai pada 𝐴𝑃𝑃  menunjukkan
+seberapa sering dua tokoh terhubung melalui peristiwa yang sama. Dalam penelitian ini,
+pendekatan co-participation dapat digunakan untuk melihat keterkaitan antar-tokoh serta
+peristiwa yang berperan penting dalam membentuk hubungan tersebut.
+Untuk menilai peristiwa yang memiliki posisi penting dalam narasi, metrik PageRank
+juga dapat digunakan. PageRank menilai kepentingan suatu simpul tidak hanya berdasarkan
+jumlah hubungan yang dimiliki, tetapi juga berdasarkan kepentingan simpul lain yang
+terhubung dengannya. PageRank merupakan ukuran centrality yang digunakan untuk menilai
+kepentingan relatif node dalam jaringan (Zhang et al., 2021). Secara umum, PageRank dapat
+dirumuskan sebagai berikut.
+𝑃𝑅(𝑖) = 𝛾 ∑ 𝑎𝑗𝑖
+𝑑𝑗
+𝑜𝑢𝑡
+𝑗∈𝑉
+𝑃𝑅(𝑗) + 1 − 𝛾
+𝑛
+
+(2.18)
+
+Pada persamaan tersebut, 𝑃𝑅(𝑖)  menunjukkan nilai PageRank pada simpul 𝑖 , 𝛾
+menunjukkan damping factor, 𝑎𝑗𝑖 menunjukkan ada atau tidaknya sisi dari simpul 𝑗 ke simpul
+𝑖, 𝑑𝑗
+𝑜𝑢𝑡 menunjukkan jumlah sisi keluar dari simpul 𝑗, dan 𝑛 menunjukkan jumlah seluruh
+simpul dalam graf. Dalam konteks penelitian ini, PageRank dapat digunakan untuk
+mengidentifikasi peristiwa yang tidak hanya memiliki banyak relasi, tetapi juga terhubung
+dengan tokoh, lokasi, atau entitas lain yang memiliki posisi penting dalam knowledge graph.
+Untuk membaca karakter struktur jaringan secara keseluruhan, analisis juga dapat
+dilengkapi dengan clustering coefficient dan transitivity. Sosa et al. (2021) menjelaskan bahwa
+metrik jaringan dapat digunakan untuk mengukur karakteristik struktural jaringan, baik pada
+tingkat node maupun graf secara keseluruhan. Clustering coefficient menunjukkan
+kecenderungan tetangga dari suatu simpul untuk saling terhubung. Pada graf tidak berarah,
+local clustering coefficient dapat dirumuskan sebagai berikut.
+𝐶𝑣 =
+2𝑒𝑣
+𝑘𝑣(𝑘𝑣 − 1)
+(2.19)
+
+Pada persamaan tersebut, 𝐶𝑣 menunjukkan nilai clustering coefficient pada simpul 𝑣, 𝑒𝑣
+menunjukkan jumlah hubungan yang terbentuk di antara tetangga simpul 𝑣 , dan 𝑘𝑣
+menunjukkan jumlah tetangga simpul 𝑣 . Sementara itu, transitivity menunjukkan
+kecenderungan terbentuknya hubungan segitiga dalam jaringan secara keseluruhan. Transitivity
+dapat dirumuskan sebagai berikut.
+
+<!-- Halaman buku 30 · PDF 64 -->
+𝑇 =
+3 × jumlah segitiga
+jumlah triplet terhubung
+(2.20)
+
+Dalam penelitian ini, clustering coefficient dan transitivity dapat digunakan untuk melihat
+apakah knowledge graph Sirah Nabawiyah memiliki struktur hubungan yang rapat, tersebar,
+atau membentuk kelompok-kelompok relasi tertentu.
+Analisis knowledge graph juga dapat dilakukan melalui pembentukan sub-graf. Sub-graf
+merupakan bagian dari graf yang hanya memuat simpul dan relasi tertentu sesuai kebutuhan
+analisis. Dalam penelitian ini, sub-graf dapat digunakan untuk mengamati struktur hubungan
+pada lima peristiwa besar dalam Sirah Nabawiyah. Dengan membatasi graf pada entitas dan
+relasi yang relevan, analisis dapat dilakukan secara lebih terfokus.
+Selain diterapkan pada tokoh dan peristiwa, fitur analisis graf juga dapat diterapkan pada
+entitas lokasi. Graf lokasi dapat digunakan untuk melihat lokasi yang memiliki peran sentral
+berdasarkan keterhubungannya dengan tokoh atau peristiwa tertentu. Dengan demikian, analisis
+knowledge graph dalam penelitian ini tidak hanya berfokus pada tokoh, tetapi juga dapat
+digunakan untuk membaca peran peristiwa, lokasi, dan struktur jaringan secara keseluruhan.
+Dengan demikian, fitur-fitur analisis graf seperti degree centrality, betweenness
+centrality, closeness centrality, density, deteksi komunitas, PageRank, clustering coefficient,
+transitivity, sub-graf, dan graf lokasi dapat digunakan untuk menganalisis struktur knowledge
+graph Sirah Nabawiyah. Hasil analisis ini tidak dimaknai sebagai penilaian historis atau
+keagamaan terhadap suatu tokoh, tetapi sebagai gambaran struktural berdasarkan relasi yang
+berhasil diekstraksi dari teks.
+Setelah knowledge graph dibangun dan dianalisis secara struktural, kelayakannya juga
+perlu dinilai berdasarkan fungsi yang menjadi tujuan pembangunannya. Evaluasi knowledge
+graph dapat dilakukan melalui beberapa pendekatan, seperti perbandingan dengan gold
+standard, penilaian oleh pakar, dan evaluasi berbasis aplikasi. Evaluasi berbasis aplikasi
+menilai sejauh mana graf mampu menjawab pertanyaan yang berkaitan dengan kebutuhan
+pengguna atau tujuan penggunaannya (Verma et al., 2023).
+Dalam penelitian ini, evaluasi fungsional dilakukan untuk memastikan bahwa knowledge
+graph mampu mendukung penelusuran hubungan antara tokoh, peristiwa, lokasi, dan waktu
+dalam Sirah Nabawiyah. Pengujian dilakukan berdasarkan kebutuhan yang telah ditetapkan
+dengan memperhatikan masukan berupa pertanyaan atau kueri dan keluaran berupa informasi
+yang dihasilkan oleh graf. Dengan demikian, pengujian tidak berfokus pada proses internal
+pembentukan graf, tetapi pada kesesuaian hasil penelusuran dengan fungsi yang diharapkan.
+Pendekatan tersebut dapat dipandang sebagai pengujian black-box karena penilaian dilakukan
+berdasarkan fungsi dan hasil yang diberikan oleh graf.
+Pendekatan yang digunakan dalam evaluasi ini adalah competency questions atau
+pertanyaan kompetensi. Competency questions merupakan pertanyaan yang menggambarkan
+informasi yang harus dapat disediakan oleh knowledge graph. Greco et al. (2025) menjelaskan
+bahwa competency questions berisi pertanyaan khusus yang harus mampu dijawab oleh
+ontologi dan dapat digunakan sebagai tolok ukur praktis untuk menilai kesesuaiannya dengan
+tujuan yang telah ditetapkan. Dengan demikian, pertanyaan tersebut membantu menentukan
+ruang lingkup pengetahuan, konsep, dan hubungan yang perlu direpresentasikan. Competency
+
+<!-- Halaman buku 31 · PDF 65 -->
+questions juga dapat digunakan pada tahap penentuan ruang lingkup dan validasi untuk
+memeriksa apakah graf telah memuat pengetahuan yang dibutuhkan (Keet & Khan, 2025).
+Dalam pelaksanaannya, competency questions yang disusun dalam bahasa alami
+diterjemahkan menjadi kueri formal yang sesuai dengan teknologi penyimpanan graf. Hasil
+kueri kemudian diperiksa untuk mengetahui apakah graf mampu memberikan jawaban yang
+sesuai. Farrugia et al. (2025) menerapkan pendekatan tersebut dengan menyusun pertanyaan
+berdasarkan kebutuhan informasi pengguna, menerjemahkannya menjadi kueri SPARQL,
+kemudian memeriksa ketepatan dan kelengkapan jawaban yang dihasilkan. Pendekatan serupa
+juga digunakan untuk mengevaluasi kemampuan knowledge graph dalam menjawab
+pertanyaan khusus sesuai dengan domain penelitian melalui sejumlah kueri SPARQL (Illueca
+Fernández et al., 2025).
+Pada penelitian ini, competency questions disusun berdasarkan tujuan penelitian dan
+kebutuhan penelusuran informasi yang telah dijelaskan pada bagian latar belakang. Setiap
+pertanyaan kemudian diwujudkan sebagai kebutuhan fungsional dan diterjemahkan menjadi
+skenario kueri Cypher karena knowledge graph disimpan menggunakan Neo4j. Fungsi graf
+dinyatakan terpenuhi apabila kueri dapat dijalankan, menghasilkan pola hubungan yang
+diharapkan, serta memberikan informasi yang sesuai dan dapat diverifikasi berdasarkan sumber
+teks Sirah Nabawiyah.
+2.8 Metrik Evaluasi
+Evaluasi pada Named-Entity Recognition (NER) dilakukan untuk mengukur kemampuan
+model dalam mengenali dan mengklasifikasikan entitas secara benar. Dalam tugas NER,
+evaluasi tidak hanya memperhatikan apakah suatu token diberi label yang benar, tetapi juga
+apakah batas entitas dan jenis entitas yang diprediksi sesuai dengan anotasi sebenarnya.
+Evaluasi NER umumnya menggunakan tiga metrik utama, yaitu precision, recall, dan F1-score.
+Selain itu, evaluasi dapat dilakukan dengan pendekatan exact match, yaitu prediksi dianggap
+benar apabila batas entitas dan tipe entitas sama persis dengan ground truth, atau relaxed match
+yang masih mempertimbangkan kecocokan parsial (Seow et al., 2025).
+Dalam penelitian ini, metrik evaluasi digunakan untuk menilai performa model dalam
+mengenali label entitas seperti PERSON, EVENT, LOCATION, dan TIME. Karena distribusi
+label dalam NER sering tidak seimbang, evaluasi tidak cukup hanya melihat akurasi. (Nemoto
+et al., 2025) menjelaskan bahwa NER memiliki permasalahan ketidakseimbangan data karena
+kelas non-entitas umumnya jauh lebih dominan dibandingkan kelas entitas. Oleh karena itu,
+precision, recall, dan F1-score lebih sesuai digunakan karena dapat menunjukkan kemampuan
+model dalam mengurangi kesalahan prediksi entitas, baik berupa prediksi palsu maupun entitas
+yang tidak berhasil dikenali. Precision, recall, dan F1-score juga disebut sebagai metrik
+tradisional yang banyak digunakan dalam evaluasi entity recognition (Jonathan et al., 2023).
+1. Precision
+Precision mengukur proporsi prediksi entitas yang benar dibandingkan seluruh entitas yang
+diprediksi oleh model. Keraghel et al. (2024) menjelaskan bahwa precision menunjukkan
+berapa banyak entitas yang dikenali model benar-benar sesuai dengan entitas sebenarnya.
+Dengan demikian, nilai precision yang tinggi menunjukkan bahwa model menghasilkan sedikit
+false positive, yaitu kesalahan ketika model memprediksi suatu token atau span sebagai entitas
+padahal prediksi tersebut tidak sesuai dengan ground truth (Keraghel et al., 2024).
+
+<!-- Halaman buku 32 · PDF 66 -->
+𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 =
+𝑇𝑃
+𝑇𝑃 + 𝐹𝑃
+(2.21)
+
+Simbol Keterangan
+𝑇𝑃
+True Positive, jumlah entitas yang diprediksi benar
+𝐹𝑃
+False Positive, jumlah entitas yang diprediksi sebagai entitas tetapi sebenarnya
+salah
+
+2. Recall
+Recall mengukur proporsi entitas sebenarnya yang berhasil dikenali oleh model. Dengan
+kata lain, recall menunjukkan kemampuan model dalam menemukan seluruh entitas yang ada
+pada data. Pada evaluasi NER, recall penting karena model tidak hanya diharapkan
+menghasilkan prediksi yang tepat, tetapi juga mampu menangkap sebanyak mungkin entitas
+yang terdapat pada teks. Keraghel et al. (2024) menjelaskan bahwa recall menunjukkan jumlah
+entitas yang dikenali dengan benar dibandingkan seluruh entitas yang seharusnya dikenali oleh
+model (Keraghel et al., 2024).
+𝑅𝑒𝑐𝑎𝑙𝑙 =
+𝑇𝑃
+𝑇𝑃 + 𝐹𝑁
+(2.22)
+
+Simbol Keterangan
+𝑇𝑃
+True Positive, jumlah entitas yang diprediksi benar
+𝐹𝑁
+False Negative, jumlah entitas yang seharusnya dikenali tetapi tidak terprediksi
+
+3. F1-Score
+F1-score merupakan rata-rata harmonik antara precision dan recall. Metrik ini digunakan
+untuk memperoleh ukuran yang seimbang antara ketepatan prediksi dan kemampuan model
+menemukan entitas. Seow et al. (2025) menempatkan F1-score sebagai salah satu metrik utama
+dalam evaluasi NER, bersama precision dan recall. F1-score penting digunakan ketika
+penelitian perlu melihat keseimbangan antara prediksi yang tepat dan entitas yang berhasil
+ditemukan, terutama pada data yang memiliki distribusi label tidak seimbang (Keraghel et al.,
+2024; Seow et al., 2025).
+𝐹1 = 2 × 𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 × 𝑅𝑒𝑐𝑎𝑙𝑙
+𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 + 𝑅𝑒𝑐𝑎𝑙𝑙
+(2.23)
+
+Jika ditulis berdasarkan 𝑇𝑃, 𝐹𝑃, dan 𝐹𝑁, F1-score dapat dirumuskan sebagai berikut.
+𝐹1 =
+2𝑇𝑃
+2𝑇𝑃 + 𝐹𝑃 + 𝐹𝑁
+(2.24)
+
+4. Micro Average dan Macro Average
+
+<!-- Halaman buku 33 · PDF 67 -->
+Selain F1-score untuk setiap label, evaluasi NER juga dapat dirangkum menggunakan
+micro-F1 dan macro-F1. Kedua metrik ini digunakan untuk melihat performa model pada
+keseluruhan label, tetapi dengan cara agregasi yang berbeda. Dalam studi NER, micro-F1 dan
+macro-F1 sering digunakan untuk membandingkan performa model secara keseluruhan
+maupun performa antarkelas, sebagaimana digunakan dalam evaluasi medical spoken NER
+oleh (Le-Duc et al., 2025).
+Micro-F1 menghitung performa model secara global dengan menjumlahkan seluruh 𝑇𝑃,
+𝐹𝑃, dan 𝐹𝑁dari semua kelas terlebih dahulu, kemudian menghitung nilai F1 dari total tersebut.
+Dengan demikian, micro-F1 lebih dipengaruhi oleh kelas dengan jumlah data lebih besar. Pada
+data NER yang tidak seimbang, micro-F1 dapat menggambarkan performa umum model, tetapi
+nilainya dapat lebih merefleksikan kelas mayoritas.
+𝐹1𝑚𝑖𝑐𝑟𝑜 =
+2 ∑
+𝑇
+𝐶
+𝑐=1
+𝑃𝑐
+2 ∑
+𝑇
+𝐶
+𝑐=1
+𝑃𝑐 + ∑
+𝐹
+𝐶
+𝑐=1
+𝑃𝑐 + ∑
+𝐹
+𝐶
+𝑐=1
+𝑁𝑐
+
+(2.25)
+
+Berbeda dengan micro-F1, macro-F1 menghitung F1-score untuk setiap kelas terlebih
+dahulu, kemudian mengambil rata-ratanya. Pendekatan ini memberi bobot yang sama pada
+setiap kelas, sehingga lebih sensitif terhadap performa kelas minoritas. Pada MultiCoNER II,
+entity-level macro-F1 digunakan sebagai metrik evaluasi leaderboard karena memperlakukan
+seluruh label secara setara (Tan et al., 2023). Hal ini juga sejalan dengan halaman resmi
+MultiCoNER II yang menyatakan bahwa ranking final dihitung menggunakan macro averaged
+F1 scores (Fetahu et al., 2023).
+𝐹1𝑚𝑎𝑐𝑟𝑜 = 1
+𝐶 ∑ 𝐹
+𝐶
+𝑐=1
+1𝑐
+(2.26)
+
+Dengan demikian, micro-F1 dan macro-F1 memberikan sudut pandang evaluasi yang
+berbeda. Micro-F1 menggambarkan performa keseluruhan model berdasarkan total prediksi,
+sedangkan macro-F1 menunjukkan apakah model mampu bekerja secara seimbang pada setiap
+kelas. Karena penelitian ini menangani ketidakseimbangan label, macro-F1 penting untuk
+melihat performa model terhadap label minoritas, sementara micro-F1 digunakan untuk melihat
+performa model secara umum.
