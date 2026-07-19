@@ -95,30 +95,33 @@ Rasio ketimpangan mayoritas–minoritas terparah (**PERSON : EVENT**):
 
 ### Apakah 8,8:1 sudah "tidak imbalance"? (jawaban berbasis literatur)
 
-**Tidak.** Berdasarkan literatur *imbalanced learning*:
+**Tidak.** Berdasarkan literatur *imbalanced learning* di NLP:
 
-- **Tidak ada ambang universal.** Konvensi yang lazim dipakai: dataset dianggap imbalanced bila
-  *Imbalance Ratio* (IR) **> 1,5** — di atas nilai ini performa kelas minoritas biasanya menurun
-  signifikan (banyak studi memakai IR 1,5 sebagai batas seleksi dataset imbalanced).
-- Sebagian kajian mengkategorikan: **IR rendah ≤ 2, sedang 2–9, tinggi > 9**. Dengan skema ini,
-  augmentasi memindahkan dataset dari **ketimpangan tinggi (17,4:1)** ke **ketimpangan sedang
-  (8,8:1)** — **masih imbalanced**, jauh dari seimbang (≈1:1).
+- **Tidak ada ambang universal** yang menyatakan sebuah dataset sudah "seimbang". Ketimpangan
+  bersifat gradual: makin besar *Imbalance Ratio* (IR, rasio jumlah kelas mayoritas terhadap
+  minoritas), makin besar kecenderungan performa kelas minoritas menurun. Henning dkk. (2023)
+  menegaskan bahwa ketimpangan kelas merupakan masalah umum pada tugas NLP, termasuk klasifikasi
+  token seperti NER, yang menurunkan kinerja pada kelas minoritas dan biasanya ditangani melalui
+  penyesuaian data atau fungsi kerugian.
+- Secara deskriptif rasio dapat digambarkan dari ringan hingga berat, tetapi ini istilah umum,
+  **bukan standar baku berambang tetap**. Yang dapat dinyatakan secara faktual: augmentasi
+  **menurunkan** rasio PERSON:EVENT dari **≈17,4:1 menjadi ≈8,8:1** — berkurang cukup jauh, tetapi
+  **masih jauh dari seimbang (≈1:1)**.
 
 Maka kesimpulan yang dipakai di buku **diperbaiki** menjadi:
 
-> **"Data augmentation berhasil menurunkan tingkat ketimpangan kelas dari kategori tinggi
-> (rasio PERSON:EVENT ≈17,4:1) ke kategori sedang (≈8,8:1), meskipun distribusi antarkelas
-> belum seimbang."**
+> **"Data augmentation berhasil menurunkan tingkat ketimpangan kelas (rasio PERSON:EVENT dari
+> ≈17,4:1 menjadi ≈8,8:1), meskipun distribusi antarkelas belum seimbang."**
 
 Tiga hal dibedakan eksplisit: (1) **jumlah data bertambah**; (2) **rasio ketimpangan berkurang**
 (inilah yang dicapai); (3) **kondisi benar-benar seimbang (≈1:1) tidak tercapai**.
 
-> 🔎 **Untuk sitasi buku (perlu diverifikasi penulis proyek):** rujukan yang relevan & dapat
-> diperiksa — López, Fernández, García dkk., *"An insight into classification with imbalanced
-> data: Empirical results and current trends…"*, **Information Sciences (2013)**
-> (`sci2s.ugr.es`). Ambang kategori low/moderate/high (≤2 / 2–9 / >9) muncul di beberapa kajian
-> lebih baru — **pastikan sumber persisnya sebelum menuliskan angka ambang** agar tidak salah
-> atribusi. Jangan menyalin ambang tanpa mengecek papernya langsung.
+> 🔎 **Sitasi (recent, dalam 5 tahun):** Henning, S., Beluch, W., Fraser, A., & Friedrich, A.
+> (2023). *A Survey of Methods for Addressing Class Imbalance in Deep-Learning Based Natural
+> Language Processing.* Proceedings of EACL 2023 (`aclanthology.org/2023.eacl-main.38`; arXiv
+> 2210.04675). **Menggantikan López dkk. (2013)** yang di luar 5 tahun. Catatan jujur: **jangan**
+> menuliskan ambang numerik low/moderate/high (≤2 / 2–9 / >9) sebagai standar berkutip — itu
+> konvensi deskriptif, bukan definisi baku, dan tidak perlu diklaim bersumber.
 
 ### Mengapa PERSON (mayoritas) ikut naik +51 %?
 
