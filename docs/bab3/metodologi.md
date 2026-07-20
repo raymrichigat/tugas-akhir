@@ -6,11 +6,32 @@
 
 Penelitian tugas akhir ini bertujuan untuk membangun Knowledge Graph Sirah Nabawiyah menggunakan pendekatan Named-Entity Recognition berbasis Semantic Role Labeling. Untuk mencapai tujuan tersebut, penelitian ini dilakukan melalui beberapa tahapan utama. Alur pengerjaan penelitian ditampilkan dalam bentuk flowchart sebagaimana ditunjukkan pada Gambar 3.1.
 
-Gambar 3.1 Diagram Alir Metodologi Penelitian ini membutuhkan dukungan perangkat keras dan perangkat lunak sebagai penunjang seluruh proses pengerjaan, mulai dari tahap pengolahan data hingga konstruksi Knowledge Graph. Perangkat keras yang digunakan dalam penelitian ini adalah laptop sebagai media utama. Spesifikasi perangkat keras tersebut dapat dilihat pada Tabel 3.1. Tabel 3.1 Spesifikasi Perangkat Keras Penelitian Komponen Spesifikasi Prosesor Intel Core i7-8750H @ 2.20GHz RAM 16 GB Penyimpanan 1 TB GPU opsional
+Gambar 3.1 Diagram Alir Metodologi Penelitian ini membutuhkan dukungan perangkat keras dan perangkat lunak sebagai penunjang seluruh proses pengerjaan, mulai dari tahap pengolahan data hingga konstruksi Knowledge Graph. Perangkat keras yang digunakan dalam penelitian ini adalah laptop sebagai media utama. Spesifikasi perangkat keras tersebut dapat dilihat pada Tabel 3.1. **Tabel 3.1 Spesifikasi Perangkat Keras Penelitian**
+
+| Komponen | Spesifikasi |
+|---|---|
+| Prosesor | Intel Core i7-8750H @ 2.20GHz |
+| RAM | 16 GB |
+| Penyimpanan | 1 TB |
+| GPU | opsional |
 
 Khusus pada tahap pelatihan model SRL-Based Named-Entity Recognition berbasis IndoBERT yang membutuhkan akselerasi Graphics Processing Unit (GPU), proses pelatihan dilakukan melalui lingkungan komputasi awan Google Colab dengan dukungan GPU NVIDIA Tesla T4. Sementara itu, tahapan lain seperti preparasi dataset, preprocessing data, chunking, anotasi, ekstraksi relasi, dan konstruksi Knowledge Graph dapat dijalankan menggunakan CPU pada komputer lokal. Dengan demikian, penggunaan GPU pada komputer lokal bersifat opsional dan tidak menjadi kebutuhan utama dalam keseluruhan proses penelitian.
 
-Seluruh proses implementasi dilakukan menggunakan bahasa pemrograman Python pada lingkungan Jupyter Notebook. Penggunaan Jupyter Notebook bertujuan untuk memudahkan proses eksperimen secara bertahap, pengujian setiap modul, serta pencatatan keluaran dari masing-masing tahapan. Daftar perangkat lunak dan pustaka utama yang digunakan dalam penelitian ini ditunjukkan pada Tabel 3.2. Tabel 3.2 Spesifikasi Perangkat Lunak Penelitian Komponen Nama Perangkat Lunak Spesifikasi Fungsi Bahasa Pemrograman Python Versi 3.10.6 Bahasa utama implementasi seluruh tahap pipeline Lingkungan Kerja Jupyter Notebook, Google Colab GPU T4 Eksekusi eksperimen bertahap dan pelatihan model dengan akselerasi GPU OCR PaddleOCR Versi 2.7.0.3, konfigurasi Bahasa Indonesia Mengekstraksi teks dari citra hasil pindai halaman PDF Konversi PDF ke citra PyMuPDF, Pillow PyMuPDF 1.20.2, Pillow 10.0.0 Mengubah tiap halaman PDF menjadi citra untuk diproses OCR Pemodelan NER PyTorch, Hugging Face Transformers, IndoBERT PyTorch 2.12.0, Transformers 5.9.0, model indolem/indobert- base-uncased Melatih dan menjalankan model NER berbasis IndoBERT Evaluasi NER seqeval, scikit-learn seqeval 1.2.2, scikit-learn 1.7.2 Menghitung metrik evaluasi entitas (presisi, recall, F1) Pengolahan Data pandas, numpy pandas 2.3.3, numpy 1.23.5 Manipulasi dan pengolahan data tabular antar tahap Pencocokan String jellyfish Jaro-Winkler Mengelompokkan variasi penulisan nama entitas (alias clustering) Basis Data Graf Neo4j Desktop Versi 2.1.3 Menyimpan dan mengueri Knowledge Graph Analisis Jaringan Network-X, python- louvain NetworkX 3.4.2 Analisis jaringan sosial (sentralitas, deteksi komunitas) Utilitas regex, tqdm regex 2026.5.9, tqdm 4.67.1 Pencocokan pola teks dan penampil progres proses
+Seluruh proses implementasi dilakukan menggunakan bahasa pemrograman Python pada lingkungan Jupyter Notebook. Penggunaan Jupyter Notebook bertujuan untuk memudahkan proses eksperimen secara bertahap, pengujian setiap modul, serta pencatatan keluaran dari masing-masing tahapan. Daftar perangkat lunak dan pustaka utama yang digunakan dalam penelitian ini ditunjukkan pada Tabel 3.2. **Tabel 3.2 Spesifikasi Perangkat Lunak Penelitian**
+
+| Komponen | Nama Perangkat Lunak | Spesifikasi | Fungsi |
+|---|---|---|---|
+| Bahasa Pemrograman | Python | Versi 3.10.6 | Bahasa utama implementasi seluruh tahap pipeline |
+| Lingkungan Kerja | Jupyter Notebook, Google Colab | GPU T4 | Eksekusi eksperimen bertahap dan pelatihan model dengan akselerasi GPU |
+| OCR | PaddleOCR | Versi 2.7.0.3, konfigurasi Bahasa Indonesia | Mengekstraksi teks dari citra hasil pindai halaman PDF |
+| Konversi PDF ke citra | PyMuPDF, Pillow | PyMuPDF 1.20.2, Pillow 10.0.0 | Mengubah tiap halaman PDF menjadi citra untuk diproses OCR |
+| Pemodelan NER | PyTorch, Hugging Face Transformers, IndoBERT | PyTorch 2.12.0, Transformers 5.9.0, model indolem/indobert- base-uncased | Melatih dan menjalankan model NER berbasis IndoBERT |
+| Evaluasi NER | seqeval, scikit-learn | seqeval 1.2.2, scikit-learn 1.7.2 | Menghitung metrik evaluasi entitas (presisi, recall, F1) |
+| Pengolahan Data | pandas, numpy | pandas 2.3.3, numpy 1.23.5 | Manipulasi dan pengolahan data tabular antar tahap |
+| Pencocokan String | jellyfish | Jaro-Winkler | Mengelompokkan variasi penulisan nama entitas (alias clustering) |
+| Basis Data Graf | Neo4j Desktop | Versi 2.1.3 | Menyimpan dan mengueri Knowledge Graph |
+| Analisis Jaringan | Network-X, python- louvain | NetworkX 3.4.2 | Analisis jaringan sosial (sentralitas, deteksi komunitas) |
+| Utilitas | regex, tqdm | regex 2026.5.9, tqdm 4.67.1 | Pencocokan pola teks dan penampil progres proses |
 
 ## 3.2 Preparasi Dataset
 
@@ -93,11 +114,14 @@ Dokumen JSON terstruktur kemudian diratakan (flatten) menjadi tabel agar mudah d
 28.     RETURN dataset
 29. END
 
-Kode Semu 3.2 Konversi Data JSON menjadi CSV Kode Semu 3.2 menunjukkan tahapan umum proses perataan (flattening) dokumen JSON terstruktur menjadi bentuk tabel. Proses ini diawali dengan menelusuri struktur dokumen dua tingkat, yaitu bab dan sub-bab yang berada di dalamnya. Pada setiap sub-bab, daftar nomor halaman diringkas ke dalam bentuk rentang halaman, sedangkan potongan isi teks digabungkan menjadi satu kesatuan teks utuh. Selanjutnya, informasi tersebut disusun bersama judul bab dan judul sub-bab menjadi satu baris data. Setelah seluruh sub-bab selesai diproses, kumpulan baris data tersebut diubah menjadi dataframe dan disimpan dalam format CSV. Hasil akhir dari proses ini berupa dataset tabular yang terdiri atas kolom judul_bab, judul_sub_bab, halaman, dan teks. Struktur dataset tersebut dijelaskan pada Tabel 3.4, dengan setiap baris merepresentasikan satu sub-bab beserta isi teksnya. Dengan demikian, keluaran dari tahap ini menyajikan teks Sirah dalam format yang lebih ringkas dan mudah diolah pada tahap selanjutnya, tanpa menghilangkan keterhubungan teks dengan bab, sub-bab, dan halaman sumbernya. Tabel 3.4 Struktur Keluaran Dataset Nama Kolom Tipe Data Deskripsi Contoh Nilai judul_bab String Nama bab utama hasil segmentasi berdasarkan daftar isi POSISI BANGSA ARAB DAN KAUMNYA judul_sub_bab String Nama sub-bab di bawah bab terkait Posisi Bangsa Arab
+Kode Semu 3.2 Konversi Data JSON menjadi CSV Kode Semu 3.2 menunjukkan tahapan umum proses perataan (flattening) dokumen JSON terstruktur menjadi bentuk tabel. Proses ini diawali dengan menelusuri struktur dokumen dua tingkat, yaitu bab dan sub-bab yang berada di dalamnya. Pada setiap sub-bab, daftar nomor halaman diringkas ke dalam bentuk rentang halaman, sedangkan potongan isi teks digabungkan menjadi satu kesatuan teks utuh. Selanjutnya, informasi tersebut disusun bersama judul bab dan judul sub-bab menjadi satu baris data. Setelah seluruh sub-bab selesai diproses, kumpulan baris data tersebut diubah menjadi dataframe dan disimpan dalam format CSV. Hasil akhir dari proses ini berupa dataset tabular yang terdiri atas kolom judul_bab, judul_sub_bab, halaman, dan teks. Struktur dataset tersebut dijelaskan pada Tabel 3.4, dengan setiap baris merepresentasikan satu sub-bab beserta isi teksnya. Dengan demikian, keluaran dari tahap ini menyajikan teks Sirah dalam format yang lebih ringkas dan mudah diolah pada tahap selanjutnya, tanpa menghilangkan keterhubungan teks dengan bab, sub-bab, dan halaman sumbernya. **Tabel 3.4 Struktur Keluaran Dataset**
 
-halaman String Rentang halaman sumber konten sub-bab 34-35
-
-teks String Isi teks sub-bab yang sudah dibersihkan dan digabung Menurut bahasa, Arab artinya padang pasir, tanah gundul, dan gersang yang tiada air dan tanamannya …
+| Nama Kolom | Tipe Data | Deskripsi | Contoh Nilai |
+|---|---|---|---|
+| judul_bab | String | Nama bab utama hasil segmentasi berdasarkan daftar isi | POSISI BANGSA ARAB DAN KAUMNYA |
+| judul_sub_bab | String | Nama sub-bab di bawah bab terkait | Posisi Bangsa Arab |
+| halaman | String | Rentang halaman sumber konten sub-bab | 34-35 |
+| teks | String | Isi teks sub-bab yang sudah dibersihkan dan digabung | Menurut bahasa, Arab artinya padang pasir, tanah gundul, dan gersang yang tiada air dan tanamannya … |
 
 ## 3.3 Preprocessing
 
@@ -126,7 +150,22 @@ Gambar 3.3 Diagram Alir Tahapan Preprocessing Proses preprocessing diawali denga
 22.     RETURN clean_dataset
 23. END Kode Semu 3.3 Preprocessing Teks Hasil OCR Hasil akhir dari proses ini berupa dataset bersih yang memuat kolom judul_bab, judul_sub_bab, halaman, dan teks_clean. Keluaran tahap ini tidak hanya berfungsi untuk
 
-menghilangkan noise hasil OCR, tetapi juga menjaga konsistensi penulisan nama entitas yang mengandung prefiks dan apostrof Arab agar teks lebih siap digunakan pada tahap chunking dan ekstraksi entitas. Sebagai contoh, fragmen OCR Al- Julunda diperbaiki menjadi Al-Julunda, sedangkan penulisan apostrof yang tidak konsisten seperti Ka`bah diseragamkan menjadi Ka'bah. Perbaikan ini membantu mempertahankan bentuk nama entitas secara lebih konsisten sehingga dapat mendukung proses NER pada tahap berikutnya. Contoh perubahan nyata pada beberapa kalimat dari korpus untuk tiap jenis operasi preprocessing ditunjukkan pada Tabel 3.5. Tabel 3.5 Contoh Perubahan Hasil Preprocessing Operasi Sebelum Sesudah Perbaikan spasi prefiks Arab (Al-/Ar-) Al- Ahzab Al-Ahzab Al- Walid Al-Walid Mariah Al- Qibtiyah Mariah Al-Qibtiyah Normalisasi varian apostrof/ain Qur`an Qur'an Isra`kan Isra'kan Al-Qur`anul Al-Qur'anul Penghapusan simbol non-informatif Muhammad & Muhammad Muththalib & Muththalib Rasulullah @ Rasulullah Pembersihan gibberish (token/segmen/kalimat) ... bin Sawa 430 431 6. ... bin Sawa (021) 8507590, 8506702 Fax. (seluruh kalimat dihapus) xI Ls xO J JI J O aa O s!LcK ... (seluruh kalimat dihapus)
+menghilangkan noise hasil OCR, tetapi juga menjaga konsistensi penulisan nama entitas yang mengandung prefiks dan apostrof Arab agar teks lebih siap digunakan pada tahap chunking dan ekstraksi entitas. Sebagai contoh, fragmen OCR Al- Julunda diperbaiki menjadi Al-Julunda, sedangkan penulisan apostrof yang tidak konsisten seperti Ka`bah diseragamkan menjadi Ka'bah. Perbaikan ini membantu mempertahankan bentuk nama entitas secara lebih konsisten sehingga dapat mendukung proses NER pada tahap berikutnya. Contoh perubahan nyata pada beberapa kalimat dari korpus untuk tiap jenis operasi preprocessing ditunjukkan pada Tabel 3.5. **Tabel 3.5 Contoh Perubahan Hasil Preprocessing**
+
+| Operasi | Sebelum | Sesudah |
+|---|---|---|
+| Perbaikan spasi prefiks Arab (Al-/Ar-) | Al- Ahzab | Al-Ahzab |
+|  | Al- Walid | Al-Walid |
+|  | Mariah Al- Qibtiyah | Mariah Al-Qibtiyah |
+| Normalisasi varian apostrof/ain | Qur`an | Qur'an |
+|  | Isra`kan | Isra'kan |
+|  | Al-Qur`anul | Al-Qur'anul |
+| Penghapusan simbol non-informatif | Muhammad & | Muhammad |
+|  | Muththalib & | Muththalib |
+|  | Rasulullah @ | Rasulullah |
+| Pembersihan gibberish (token/segmen/kalimat) | ... bin Sawa 430 431 6. | ... bin Sawa |
+|  | (021) 8507590, 8506702 Fax. | (seluruh kalimat dihapus) |
+|  | xI Ls xO J JI J O aa O s!LcK ... | (seluruh kalimat dihapus) | xI Ls xO J JI J O aa O s!LcK ... (seluruh kalimat dihapus)
 
 ## 3.4 Chunking
 
@@ -164,9 +203,17 @@ INPUT  : clean_dataset (CSV hasil preprocessing)          MAX_CHARS = 1500 OUTPU
 36. RETURN chunks
 37. END Kode Semu 3.4 Chunking Data Kode Semu 3.4 menunjukkan tahapan umum pemecahan teks sub-bab menjadi chunk berukuran terkendali. Proses dimulai dengan memecah teks bersih menjadi kalimat, lalu memasukkan kalimat tersebut satu per satu ke dalam penampung selama total panjang teks belum melebihi batas 1500 karakter. Jika penambahan kalimat berikutnya menyebabkan batas tersebut terlampaui, isi penampung disimpan sebagai satu chunk. Selanjutnya, penampung baru dibentuk dengan menyertakan satu kalimat terakhir dari chunk sebelumnya sebagai overlap. Mekanisme ini digunakan agar hubungan konteks antar-chunk tetap terjaga. Setiap chunk yang terbentuk diberi identitas unik dan metadata sumber agar dapat dilacak kembali ke dokumen asalnya. Metadata tersebut mencakup informasi bab, sub-bab, dan halaman sumber. Sisa kalimat yang masih berada di dalam penampung pada akhir pemrosesan juga disimpan sebagai chunk terakhir. Hasil akhir dari tahap ini berupa kumpulan chunk dengan
 
-identitas unik, yang dibentuk dari gabungan nomor dokumen dan urutan chunk, serta dilengkapi atribut sumbernya. Dengan demikian, keluaran tahap ini menyajikan teks dalam potongan yang lebih ringkas dan efisien untuk proses anotasi maupun NER, tanpa menghilangkan keterhubungannya dengan lokasi asal dalam dokumen Sirah. Atribut setiap chunk dijelaskan pada Penjelasan Hasil Keluaran ChunkingTabel 3.6. Tabel 3.6 Penjelasan Hasil Keluaran Chunking Nama Kolom Tipe Data Deskripsi Nilai chunk_id String Identitas unik setiap chunk 000000-001 doc_id String Identitas dokumen atau sub-bab asal chunk_index
+identitas unik, yang dibentuk dari gabungan nomor dokumen dan urutan chunk, serta dilengkapi atribut sumbernya. Dengan demikian, keluaran tahap ini menyajikan teks dalam potongan yang lebih ringkas dan efisien untuk proses anotasi maupun NER, tanpa menghilangkan keterhubungannya dengan lokasi asal dalam dokumen Sirah. Atribut setiap chunk dijelaskan pada Penjelasan Hasil Keluaran ChunkingTabel 3.6. **Tabel 3.6 Penjelasan Hasil Keluaran Chunking**
 
-Urutan chunk dalam dokumen judul_bab String Bab sumber POSISI BANGSA ARAB DAN KAUMNYA judul_sub_bab String Sub-bab sumber UNLABELED SECTION halaman String Halaman sumber pada dokumen asli teks_chunk String Isi potongan teks "Pada hakikatnya istilah Sirah Nabawiyah merupakan ungkapan tentang risalah yang dibawa Rasulullah kepada manusia, untuk mengeluarkan mereka dari kegelapan kepada cahaya, dari penyembahan terhadap hamba kepada penyembahan Allah. ..."
+| Nama Kolom | Tipe Data | Deskripsi | Nilai |
+|---|---|---|---|
+| chunk_id | String | Identitas unik setiap chunk | 000000-001 |
+| doc_id | String | Identitas dokumen atau sub-bab asal | 0 |
+| chunk_index |  | Urutan chunk dalam dokumen | 1 |
+| judul_bab | String | Bab sumber | POSISI BANGSA ARAB DAN KAUMNYA |
+| judul_sub_bab | String | Sub-bab sumber | UNLABELED SECTION |
+| halaman | String | Halaman sumber pada dokumen asli | 34 |
+| teks_chunk | String | Isi potongan teks | "Pada hakikatnya istilah Sirah Nabawiyah merupakan ungkapan tentang risalah yang dibawa Rasulullah kepada manusia, untuk mengeluarkan mereka dari kegelapan kepada cahaya, dari penyembahan terhadap hamba kepada penyembahan Allah. ..." |
 
 ## 3.5 Pelabelan Data
 
@@ -209,13 +256,28 @@ ALGORITMA:
 32. END FOR 33.
 34. SaveCSV(prelabelled, "sirah_prelabelled.csv") 35.
 36. RETURN prelabelled
-37. END Kode Semu 3.5 Pelabelan Awal Semi-Otomatis Kode Semu 3.5 menunjukkan tahapan umum pembentukan kandidat anotasi entitas secara semi-otomatis dari kumpulan chunk. Proses diawali dengan menormalisasi tanda kutip pada teks di setiap chunk agar bentuk penulisan entitas menjadi lebih konsisten. Setelah itu, sistem mencari kandidat entitas untuk empat jenis label, yaitu PERSON, EVENT, LOCATION, dan TIME, dengan menggunakan dua pendekatan utama, yaitu pencocokan kamus entitas (gazetteer) dan pencocokan pola regular expression (regex). Pola regex yang digunakan mencakup pola nama Arab bernasab, nama peperangan, serta ungkapan waktu. Kandidat entitas yang saling tumpang tindih kemudian dibersihkan melalui proses deduplikasi dengan memprioritaskan rentang teks yang lebih panjang atau lebih spesifik. Setiap kandidat yang tersisa dicatat sebagai satu baris data yang memuat identitas chunk, teks entitas, label, serta posisi awal dan akhir karakter. Hasil akhir dari proses ini berupa berkas pra-anotasi dengan satu baris untuk setiap entitas. Dengan demikian, keluaran dari tahap ini menyediakan kandidat anotasi awal dengan cakupan yang cukup luas, tetapi tetap memerlukan verifikasi manual untuk memastikan ketepatan label dan batas entitas. Pendekatan ini digunakan untuk mempercepat proses pelabelan dibandingkan anotasi manual secara penuh. Sebagai contoh, sebagian kandidat entitas dari salah satu chunk dengan identitas 000354-001 ditunjukkan pada Tabel 3.7. Tabel 3.7 Contoh Kandidat Pra-anotasi Semi-Otomatis Entitas Label start_char end_char bulan Dzul Qi'dah TIME Rasulullah PERSON Abu Bakar Ash-Shiddiq PERSON Ali bin Abu Thalib PERSON Abu Bakar PERSON
+37. END Kode Semu 3.5 Pelabelan Awal Semi-Otomatis Kode Semu 3.5 menunjukkan tahapan umum pembentukan kandidat anotasi entitas secara semi-otomatis dari kumpulan chunk. Proses diawali dengan menormalisasi tanda kutip pada teks di setiap chunk agar bentuk penulisan entitas menjadi lebih konsisten. Setelah itu, sistem mencari kandidat entitas untuk empat jenis label, yaitu PERSON, EVENT, LOCATION, dan TIME, dengan menggunakan dua pendekatan utama, yaitu pencocokan kamus entitas (gazetteer) dan pencocokan pola regular expression (regex). Pola regex yang digunakan mencakup pola nama Arab bernasab, nama peperangan, serta ungkapan waktu. Kandidat entitas yang saling tumpang tindih kemudian dibersihkan melalui proses deduplikasi dengan memprioritaskan rentang teks yang lebih panjang atau lebih spesifik. Setiap kandidat yang tersisa dicatat sebagai satu baris data yang memuat identitas chunk, teks entitas, label, serta posisi awal dan akhir karakter. Hasil akhir dari proses ini berupa berkas pra-anotasi dengan satu baris untuk setiap entitas. Dengan demikian, keluaran dari tahap ini menyediakan kandidat anotasi awal dengan cakupan yang cukup luas, tetapi tetap memerlukan verifikasi manual untuk memastikan ketepatan label dan batas entitas. Pendekatan ini digunakan untuk mempercepat proses pelabelan dibandingkan anotasi manual secara penuh. Sebagai contoh, sebagian kandidat entitas dari salah satu chunk dengan identitas 000354-001 ditunjukkan pada Tabel 3.7. **Tabel 3.7 Contoh Kandidat Pra-anotasi Semi-Otomatis**
+
+| Entitas | Label | start_char | end_char |
+|---|---|---|---|
+| bulan Dzul Qi'dah | TIME | 5 | 22 |
+| Rasulullah | PERSON | 50 | 60 |
+| Abu Bakar Ash-Shiddiq | PERSON | 70 | 91 |
+| Ali bin Abu Thalib | PERSON | 316 | 334 |
+| Abu Bakar | PERSON | 431 | 440 | Abu Bakar Ash-Shiddiq PERSON Ali bin Abu Thalib PERSON Abu Bakar PERSON
 
 ### 3.5.2 Koreksi Manual
 
 Berkas pra-anotasi yang dihasilkan pada tahap sebelumnya kemudian ditinjau dan dikoreksi secara manual oleh peneliti. Koreksi ini dilakukan dengan berpedoman pada empat label utama. Label PERSON digunakan untuk nama tokoh atau individu, termasuk nama kabilah atau kelompok Bani apabila diperlakukan sebagai entitas pelaku dalam teks, misalnya Abu Bakar dan Bani Quraizhah. Label EVENT digunakan untuk nama peristiwa, seperti Perang Badar dan Hijrah. Label LOCATION digunakan untuk nama tempat, seperti Makkah, Madinah, dan Gua Hira. Adapun label TIME digunakan untuk ungkapan waktu atau periode, seperti tahun ke-2 Hijriah dan bulan Ramadhan.
 
-Proses koreksi manual mencakup penambahan entitas yang belum terdeteksi, penghapusan kandidat entitas yang tidak sesuai, serta perbaikan batas awal dan akhir entitas. Tahap ini penting untuk memastikan bahwa data anotasi yang digunakan pada proses pelatihan dan evaluasi memiliki kualitas yang lebih terkontrol. Contoh daftar label beserta keterangannya ditunjukkan pada Tabel 3.8. Tabel 3.8 Skema Label Entitas Label Keterangan Contoh PERSON Nama tokoh, individu, atau kabilah/Bani Muhammad, Abu Bakar, Bani Quraizhah EVENT Nama peristiwa Perang Badar, Hijrah, Fathu Makkah LOCATION Nama tempat atau wilayah Makkah, Madinah, Gua Hira TIME Ungkapan waktu atau periode tahun ke-2 Hijriah, bulan Ramadhan
+Proses koreksi manual mencakup penambahan entitas yang belum terdeteksi, penghapusan kandidat entitas yang tidak sesuai, serta perbaikan batas awal dan akhir entitas. Tahap ini penting untuk memastikan bahwa data anotasi yang digunakan pada proses pelatihan dan evaluasi memiliki kualitas yang lebih terkontrol. Contoh daftar label beserta keterangannya ditunjukkan pada Tabel 3.8. **Tabel 3.8 Skema Label Entitas**
+
+| Label | Keterangan | Contoh |
+|---|---|---|
+| PERSON | Nama tokoh, individu, atau kabilah/Bani | Muhammad, Abu Bakar, Bani Quraizhah |
+| EVENT | Nama peristiwa | Perang Badar, Hijrah, Fathu Makkah |
+| LOCATION | Nama tempat atau wilayah | Makkah, Madinah, Gua Hira |
+| TIME | Ungkapan waktu atau periode | tahun ke-2 Hijriah, bulan Ramadhan |
 
 ### 3.5.3 Konversi Menjadi Format BIO
 
@@ -260,9 +322,32 @@ Anotasi tingkat rentang (span) selanjutnya dikonversi ke dalam format token-per-
 48. RETURN train, test, unlabelled
 49. END Kode Semu 3.6 Konversi ke BIO dan Pembagian Data Kode Semu 3.6 menunjukkan tahapan umum konversi anotasi span menjadi format token berlabel BIO sekaligus proses pembagian data. Proses diawali dengan mengelompokkan entitas berdasarkan chunk asalnya. Selanjutnya, setiap chunk ditokenisasi sambil mencatat posisi karakter dari masing-masing token. Token kemudian diberi tag BIO berdasarkan kesesuaiannya dengan rentang entitas. Apabila terdapat entitas yang saling tumpang tindih, entitas dengan rentang yang lebih panjang diprioritaskan agar batas entitas yang lebih spesifik tetap dipertahankan. Setelah seluruh token diberi label, data berlabel dibagi pada tingkat chunk, bukan pada tingkat token, untuk mencegah terjadinya kebocoran data antara data latih dan data uji. Pembagian dilakukan secara stratified berdasarkan bab, dengan komposisi 70% sebagai data latih atau seed data dan 30% sebagai data uji atau ground truth. Sementara itu, chunk lain di luar data seed digunakan sebagai data tak berlabel untuk proses pseudo-labelling. Hasil akhir dari tahap ini berupa tiga berkas, yaitu data latih, data uji, dan data tak berlabel dalam format token BIO. Dengan demikian, keluaran tahap ini menyediakan data dalam bentuk sequence labeling yang dapat langsung digunakan untuk melatih dan mengevaluasi model NER, sekaligus menjaga pemisahan data secara bersih agar tidak terjadi kebocoran antara data latih dan data uji. Format token berlabel terdiri atas beberapa kolom, yaitu text_id, id, token, pos_tag, dan label. Kolom text_id menunjukkan identitas chunk, kolom id menunjukkan identitas token dalam chunk, kolom token berisi kata hasil tokenisasi, kolom pos_tag berisi nilai tetap NN sebagai placeholder yang mengikuti format notebook acuan,
 
-sedangkan kolom label berisi tag BIO. Kolom pos_tag tidak digunakan dalam proses pelatihan model. Contoh hasil penandaan BIO ditunjukkan pada Tabel 3.9. Tabel 3.9 Contoh Penandaan BIO Token Label Rasulullah B-PERSON hijrah O ke O Madinah B-LOCATION pada O tahun B-TIME pertama I-TIME Hijriah I-TIME
+sedangkan kolom label berisi tag BIO. Kolom pos_tag tidak digunakan dalam proses pelatihan model. Contoh hasil penandaan BIO ditunjukkan pada Tabel 3.9. **Tabel 3.9 Contoh Penandaan BIO**
 
-Sebagai gambaran hasil agregat, berkas pra-anotasi memuat sekitar 6.000 baris entitas. Setelah proses konversi dan pembagian data, data latih berisi sekitar 101.021 token, sedangkan data uji berisi sekitar 42.558 token dengan 1.772 entitas. Distribusi label pada data latih menunjukkan adanya ketidakseimbangan kelas yang cukup tajam dan dirangkum pada Tabel 3.10. Distribusi ini menjadi dasar pertimbangan dalam penerapan strategi penanganan kelas minoritas pada tahap NER. Tabel 3.10 Distribusi Label Data Latih Token Label Persentase O 94.070 93,1% B-PERSON 2.634 2,61% I-PERSON 2.289 2,27% B-LOCATION 1.013 1,00% I-TIME 0,44% B-TIME 0,23% I-EVENT 0,14% B-EVENT 0,13% I-LOCATION 0,07%
+| Token | Label |
+|---|---|
+| Rasulullah | B-PERSON |
+| hijrah | O |
+| ke | O |
+| Madinah | B-LOCATION |
+| pada | O |
+| tahun | B-TIME |
+| pertama | I-TIME |
+| Hijriah | I-TIME | Hijriah I-TIME
+
+Sebagai gambaran hasil agregat, berkas pra-anotasi memuat sekitar 6.000 baris entitas. Setelah proses konversi dan pembagian data, data latih berisi sekitar 101.021 token, sedangkan data uji berisi sekitar 42.558 token dengan 1.772 entitas. Distribusi label pada data latih menunjukkan adanya ketidakseimbangan kelas yang cukup tajam dan dirangkum pada Tabel 3.10. Distribusi ini menjadi dasar pertimbangan dalam penerapan strategi penanganan kelas minoritas pada tahap NER. **Tabel 3.10 Distribusi Label Data Latih**
+
+| Token | Label | Persentase |
+|---|---|---|
+| O | 94.070 | 93,1% |
+| B-PERSON | 2.634 | 2,61% |
+| I-PERSON | 2.289 | 2,27% |
+| B-LOCATION | 1.013 | 1,00% |
+| I-TIME | 442 | 0,44% |
+| B-TIME | 236 | 0,23% |
+| I-EVENT | 137 | 0,14% |
+| B-EVENT | 128 | 0,13% |
+| I-LOCATION | 72 | 0,07% | 0,07%
 
 Tabel 3.10 memperlihatkan bahwa kelas O sangat dominan dibandingkan label entitas lainnya. Selain itu, entitas EVENT serta sebagian entitas TIME dan LOCATION tergolong sebagai kelas minoritas ekstrem, dengan rasio ketidakseimbangan mencapai 25 banding 1. Kondisi ini menjadi salah satu alasan perlunya teknik penanganan ketidakseimbangan kelas pada tahap pemodelan NER berikutnya.
 
@@ -307,9 +392,29 @@ Gambar 3.6 Diagram Alir Tahapan Ekstraksi Entitas Pada strategi iterative self-t
 42. RETURN best_model, entities_all
 43. END Kode Semu 3.7 Iterative Self-Training NER Kode Semu 3.7 menunjukkan tahapan umum perluasan anotasi entitas dari seed data terbatas ke seluruh korpus melalui iterative self-training. Proses diawali dengan melatih model IndoBERT sebagai token classification berskema BIO menggunakan data berlabel awal. Selanjutnya, model memprediksi label pada kumpulan data tak berlabel. Kalimat yang memiliki rata-rata keyakinan entitas mencapai ambang batas 0,9 diterima sebagai label semu dan ditambahkan ke dalam data latih. Setelah itu, model dilatih ulang dan dievaluasi menggunakan data uji. Model disimpan sebagai model terbaik apabila memperoleh peningkatan skor seqeval F1 pada data uji. Proses tersebut diulang hingga tidak terdapat label semu baru yang memenuhi ambang batas atau hingga mencapai batas maksimum enam iterasi. Setelah proses self-training mencapai kondisi konvergen, model terbaik digunakan untuk memprediksi entitas pada seluruh chunk tak berlabel. Hasil prediksi tersebut kemudian digabungkan dengan anotasi manual dari data latih dan data uji. Apabila terjadi tumpang tindih antara anotasi manual dan prediksi otomatis, anotasi manual diprioritaskan karena telah melalui proses verifikasi manusia. Hasil akhir dari tahap ini berupa model NER terbaik dan daftar entitas gabungan yang mencakup seluruh chunk korpus beserta label dan posisi karakternya. Dengan demikian, tahap ini tidak
 
-hanya menghasilkan model pengenal entitas, tetapi juga memperluas anotasi entitas ke seluruh korpus secara semi-supervised tanpa harus melakukan pelabelan manual terhadap seluruh teks Sirah. Hyperparameter pelatihan dijelaskan pada Tabel 3.11. Nilai-nilai ini mengikuti notebook acuan pembimbing dan metode Ariyanto et al. (2025). Tabel 3.11 Hyperparameter Pelatihan NER Parameter Nilai Keterangan Model dasar indolem/indobert-base- uncased IndoBERT uncased, panjang token maksimum Learning rate 2e-5 Laju pembelajaran fine-tuning Batch size Ukuran batch latih dan evaluasi Epoch tiap iterasi Jumlah epoch tiap iterasi self-training Threshold 0,9 Ambang rata-rata keyakinan entitas per kalimat Sampling rate 1,0 Memakai semua kalimat di atas ambang Agg. Strategy Simple Strategi agregasi sub-token Iterasi maksimum Batas iterasi self-training
+hanya menghasilkan model pengenal entitas, tetapi juga memperluas anotasi entitas ke seluruh korpus secara semi-supervised tanpa harus melakukan pelabelan manual terhadap seluruh teks Sirah. Hyperparameter pelatihan dijelaskan pada Tabel 3.11. Nilai-nilai ini mengikuti notebook acuan pembimbing dan metode Ariyanto et al. (2025). **Tabel 3.11 Hyperparameter Pelatihan NER**
 
-Keluaran dari tahap ini berupa daftar entitas gabungan untuk seluruh chunk korpus. Pada chunk yang telah memiliki anotasi manual, yaitu data latih dan data uji dari tahap pelabelan data, anotasi manual dipertahankan sebagai sumber utama karena memiliki kualitas yang lebih terkontrol dibandingkan prediksi otomatis. Sementara itu, pada chunk yang tidak memiliki anotasi manual, entitas diperoleh dari hasil prediksi model NER terbaik yang dihasilkan melalui proses iterative self-training. Kedua sumber entitas tersebut kemudian digabungkan sehingga korpus dapat direpresentasikan dalam bentuk daftar entitas berlabel dengan atribut chunk_id, entity_text, label, start_char, dan end_char. Daftar entitas gabungan ini selanjutnya digunakan sebagai masukan pada tahap penyatuan nama entitas. Sebagai contoh keluaran, sebagian entitas hasil ekstraksi NER pada chunk 000099- 001 (halaman 233) ditunjukkan pada Tabel 3.12. Tabel 3.12 Contoh Keluaran Ekstraksi Entitas NER Entitas Label start_char end_char Madinah LOCATION Perjanjian Hudaibiyah EVENT Fathu Makkah EVENT bulan Ramadhan TIME Rasulullah PERSON bulan Rabi'ul Awwal TIME
+| Parameter | Nilai | Keterangan |
+|---|---|---|
+| Model dasar | indolem/indobert-base- uncased | IndoBERT uncased, panjang token maksimum 512 |
+| Learning rate | 2e-5 | Laju pembelajaran fine-tuning |
+| Batch size | 16 | Ukuran batch latih dan evaluasi |
+| Epoch tiap iterasi | 10 | Jumlah epoch tiap iterasi self-training |
+| Threshold | 0,9 | Ambang rata-rata keyakinan entitas per kalimat |
+| Sampling rate | 1,0 | Memakai semua kalimat di atas ambang |
+| Agg. Strategy | Simple | Strategi agregasi sub-token |
+| Iterasi maksimum | 6 | Batas iterasi self-training |
+
+Keluaran dari tahap ini berupa daftar entitas gabungan untuk seluruh chunk korpus. Pada chunk yang telah memiliki anotasi manual, yaitu data latih dan data uji dari tahap pelabelan data, anotasi manual dipertahankan sebagai sumber utama karena memiliki kualitas yang lebih terkontrol dibandingkan prediksi otomatis. Sementara itu, pada chunk yang tidak memiliki anotasi manual, entitas diperoleh dari hasil prediksi model NER terbaik yang dihasilkan melalui proses iterative self-training. Kedua sumber entitas tersebut kemudian digabungkan sehingga korpus dapat direpresentasikan dalam bentuk daftar entitas berlabel dengan atribut chunk_id, entity_text, label, start_char, dan end_char. Daftar entitas gabungan ini selanjutnya digunakan sebagai masukan pada tahap penyatuan nama entitas. Sebagai contoh keluaran, sebagian entitas hasil ekstraksi NER pada chunk 000099- 001 (halaman 233) ditunjukkan pada Tabel 3.12. **Tabel 3.12 Contoh Keluaran Ekstraksi Entitas NER**
+
+| Entitas | Label | start_char | end_char |
+|---|---|---|---|
+| Madinah | LOCATION | 8 | 15 |
+| Perjanjian Hudaibiyah | EVENT | 280 | 301 |
+| Fathu Makkah | EVENT | 423 | 435 |
+| bulan Ramadhan | TIME | 441 | 455 |
+| Rasulullah | PERSON | 740 | 750 |
+| bulan Rabi'ul Awwal | TIME | 756 | 775 | TIME
 
 ## 3.7 Konstruksi Knowledge Graph
 
@@ -361,13 +466,29 @@ ALGORITMA:
 34. RETURN alias_map
 35. END Kode Semu 3.8 Alias Clustering Kode Semu 3.8 menunjukkan tahapan umum penyatuan variasi penulisan nama entitas ke dalam satu bentuk kanonik. Proses diawali dengan pengelompokan manual, yaitu memetakan
 
-sejumlah variasi nama yang telah dipastikan merujuk pada entitas yang sama ke nama kanoniknya. Selanjutnya, pada setiap label entitas dilakukan pencocokan kemiripan string menggunakan algoritma Jaro-Winkler. Nama-nama entitas diurutkan dari bentuk yang paling panjang agar bentuk nama yang lebih lengkap dapat digunakan sebagai acuan kanonik. Sepasang nama hanya disatukan apabila memenuhi beberapa kriteria, yaitu skor kemiripan mencapai ambang 0,93, lolos seluruh aturan pengaman, dan tidak termasuk dalam daftar pasangan terlarang. Hasil akhir dari proses ini berupa peta alias yang memetakan setiap variasi nama ke bentuk kanoniknya, serta laporan klaster yang digunakan untuk peninjauan manual. Dengan demikian, tahap ini memastikan bahwa satu entitas yang ditulis dalam beberapa variasi tetap direpresentasikan sebagai satu node pada knowledge graph. Hal ini penting agar relasi dan analisis jaringan tidak terpecah akibat duplikasi nama. Output dari tahap ini berupa berkas alias_map.json yang memuat pemetaan variasi nama ke bentuk kanonik. Sebagai gambaran hasil, tahap ini menghasilkan sekitar 143 variasi nama yang dipetakan ke dalam sekitar 109 klaster kanonik. Peta alias tersebut kemudian digunakan pada tahap pembentukan relasi dan konstruksi graf agar setiap entitas dapat direpresentasikan secara konsisten sebagai satu node. Contoh pemetaan variasi nama ke bentuk kanoniknya ditunjukkan pada Tabel 3.13. Tabel 3.13 Contoh Pemetaan Variasi Nama ke Bentuk Kanonik Variasi Nama Bentuk Kanonik Jenis Variasi Rasulullah Muhammad Sebutan berbeda Muhammad bin Abdullah Nama bernasab Abu Bakar Ash-Shiddiq Abu Bakar Gelar tambahan Abu Bakkar Variasi ejaan (artefak OCR) Umar Umar bin Al-Khaththab Bentuk pendek Umar bin Al-Khathab Variasi ejaan (artefak OCR) Abu Sofyan Abu Sufyan bin Harb Variasi ejaan
+sejumlah variasi nama yang telah dipastikan merujuk pada entitas yang sama ke nama kanoniknya. Selanjutnya, pada setiap label entitas dilakukan pencocokan kemiripan string menggunakan algoritma Jaro-Winkler. Nama-nama entitas diurutkan dari bentuk yang paling panjang agar bentuk nama yang lebih lengkap dapat digunakan sebagai acuan kanonik. Sepasang nama hanya disatukan apabila memenuhi beberapa kriteria, yaitu skor kemiripan mencapai ambang 0,93, lolos seluruh aturan pengaman, dan tidak termasuk dalam daftar pasangan terlarang. Hasil akhir dari proses ini berupa peta alias yang memetakan setiap variasi nama ke bentuk kanoniknya, serta laporan klaster yang digunakan untuk peninjauan manual. Dengan demikian, tahap ini memastikan bahwa satu entitas yang ditulis dalam beberapa variasi tetap direpresentasikan sebagai satu node pada knowledge graph. Hal ini penting agar relasi dan analisis jaringan tidak terpecah akibat duplikasi nama. Output dari tahap ini berupa berkas alias_map.json yang memuat pemetaan variasi nama ke bentuk kanonik. Sebagai gambaran hasil, tahap ini menghasilkan sekitar 143 variasi nama yang dipetakan ke dalam sekitar 109 klaster kanonik. Peta alias tersebut kemudian digunakan pada tahap pembentukan relasi dan konstruksi graf agar setiap entitas dapat direpresentasikan secara konsisten sebagai satu node. Contoh pemetaan variasi nama ke bentuk kanoniknya ditunjukkan pada Tabel 3.13. **Tabel 3.13 Contoh Pemetaan Variasi Nama ke Bentuk Kanonik**
+
+| Variasi Nama | Bentuk Kanonik | Jenis Variasi |
+|---|---|---|
+| Rasulullah | Muhammad | Sebutan berbeda |
+| Muhammad bin Abdullah |  | Nama bernasab |
+| Abu Bakar Ash-Shiddiq | Abu Bakar | Gelar tambahan |
+| Abu Bakkar |  | Variasi ejaan (artefak OCR) |
+| Umar | Umar bin Al-Khaththab | Bentuk pendek |
+| Umar bin Al-Khathab |  | Variasi ejaan (artefak OCR) |
+| Abu Sofyan | Abu Sufyan bin Harb | Variasi ejaan | (artefak OCR) Umar Umar bin Al-Khaththab Bentuk pendek Umar bin Al-Khathab Variasi ejaan (artefak OCR) Abu Sofyan Abu Sufyan bin Harb Variasi ejaan
 
 ### 3.7.2 Pembentukan Relasi
 
 Tahap pembentukan relasi bertujuan untuk menghubungkan entitas hasil ekstraksi ke dalam pasangan node-edge sehingga terbentuk struktur pengetahuan yang siap dimasukkan ke basis data graf. Diagram alir tahap pembentukan relasi ditunjukkan pada Gambar 3.9. Proses pembentukan relasi diawali dengan normalisasi nama entitas menggunakan peta alias dari tahap sebelumnya. Normalisasi ini dilakukan agar entitas yang sama, meskipun ditulis dalam beberapa variasi, tetap dikenali sebagai satu node. Setelah itu, relasi dibentuk berdasarkan kemunculan bersama (co-occurrence) entitas dalam chunk yang sama dengan mempertimbangkan kedekatan posisi antar-kemunculan entitas (proximity). Dua entitas dianggap berada dalam konteks yang sama apabila muncul dalam satu kalimat atau berada pada jarak kurang dari 200 karakter. Dalam penelitian ini, entitas EVENT diperlakukan sebagai pusat keterhubungan karena peristiwa dalam teks Sirah berperan sebagai penghubung antara tokoh, lokasi, dan waktu. Relasi inti yang dibentuk mengikuti kombinasi label entitas, sebagaimana dijelaskan pada Tabel 3.14.
 
-Gambar 3.9 Diagram Alir Tahapan Pembentukan Relasi Tabel 3.14 Rancangan Tipe Relasi Inti Pasangan Entitas Tipe Relasi Makna PERSON ke EVENT INVOLVED_IN Tokoh terlibat dalam peristiwa EVENT ke LOCATION OCCURRED_AT Peristiwa terjadi di suatu tempat EVENT ke TIME OCCURRED_ON Peristiwa terjadi pada suatu waktu
+Gambar 3.9 Diagram Alir Tahapan Pembentukan Relasi **Tabel 3.14 Rancangan Tipe Relasi Inti**
+
+| Pasangan Entitas | Tipe Relasi | Makna |
+|---|---|---|
+| PERSON ke EVENT | INVOLVED_IN | Tokoh terlibat dalam peristiwa |
+| EVENT ke LOCATION | OCCURRED_AT | Peristiwa terjadi di suatu tempat |
+| EVENT ke TIME | OCCURRED_ON | Peristiwa terjadi pada suatu waktu |
 
 Selain relasi inti, penelitian ini juga membentuk relasi antartokoh, yaitu KELUARGA, SAHABAT, dan MUSUH. Relasi tersebut dikenali melalui pola kata pemicu pada kalimat bukti, misalnya kata putra, menikahi, sahabat, dan memerangi Relasi yang sama dari konteks berbeda kemudian digabung melalui proses deduplikasi. Pada tahap ini, bukti pendukung dari berbagai konteks dihimpun, sedangkan bobot relasi (weight) dihitung untuk menunjukkan kekuatan hubungan antar-entitas. Implementasi tahap pembentukan relasi ditunjukkan pada Kode Semu 3.9. INPUT  : - entities_all (entitas hasil NER) - alias_map    (peta nama kanonik) - chunks       (teks untuk konteks dan evidence)
 
@@ -423,11 +544,36 @@ ALGORITMA:
 52. RETURN nodes, edges
 53. END Kode Semu 3.9 Pembentukan Relasi Kode Semu 3.9 menunjukkan tahapan umum pembentukan relasi antar-entitas menjadi pasangan node-edge. Proses dimulai dengan menormalisasi nama setiap entitas menggunakan peta alias agar variasi penulisan dikenali sebagai satu node. Selanjutnya, entitas dikelompokkan berdasarkan chunk asalnya dan dipisahkan menurut tipe labelnya. Untuk setiap entitas peristiwa dalam sebuah chunk, sistem membentuk relasi ke tokoh melalui INVOLVED_IN, ke lokasi melalui OCCURRED_AT, dan ke waktu melalui OCCURRED_ON, selama pasangan entitas tersebut berada dalam konteks yang sama dan lolos pemeriksaan guard. Sementara itu, relasi antar-tokoh seperti KELUARGA, SAHABAT, dan MUSUH dibentuk berdasarkan kemunculan pola kata pemicu pada kalimat bukti. Relasi yang sama dari beberapa konteks kemudian digabung dengan tetap menyimpan evidence dan menghitung bobot relasi. Daftar node unik dibangun dari seluruh entitas yang telah dinormalisasi. Hasil akhir dari proses ini berupa berkas daftar node (nodes.csv) dan
 
-daftar edge (edges.csv) yang masing-masing dilengkapi atribut dan provenance. Dengan demikian, keluaran tahap ini tidak hanya merepresentasikan entitas sebagai titik dalam graf, tetapi juga memuat keterhubungan bermakna antara tokoh, peristiwa, lokasi, dan waktu yang siap dimuat ke dalam basis data graf. Atribut node dan edge dijelaskan pada Tabel 3.15 dan Tabel 3.16. Tabel 3.15 Atribut Node Kolom Deskripsi Contoh Nilai node_id Identitas unik node (hash dari label dan nama kanonik) 48f98905d5c8 name Nama entitas dalam bentuk kanonik Muhammad label Tipe entitas (PERSON/EVENT/LOCATION/TIME) PERSON aliases Variasi nama lain yang dipetakan ke node ini Rasulullah | Muhammad Bin Abdullah frequency Jumlah kemunculan entitas chunk_ids Daftar chunk sumber 000000-001 | 000002-005 | 000002- 011 | ...
+daftar edge (edges.csv) yang masing-masing dilengkapi atribut dan provenance. Dengan demikian, keluaran tahap ini tidak hanya merepresentasikan entitas sebagai titik dalam graf, tetapi juga memuat keterhubungan bermakna antara tokoh, peristiwa, lokasi, dan waktu yang siap dimuat ke dalam basis data graf. Atribut node dan edge dijelaskan pada Tabel 3.15 dan Tabel 3.16. **Tabel 3.15 Atribut Node**
 
-Tabel 3.16 Atribut Edge Kolom Deskripsi Contoh Nilai source_name, source_label Node asal dan tipenya Amr bin Al-Ash, PERSON relation_type Tipe relasi (INVOLVED_IN, OCCURRED_AT, OCCURRED_ON, KELUARGA, SAHABAT, MUSUH) INVOLVED_IN target_name, target_label Node tujuan dan tipenya Perang Badr, EVENT weight Bobot relasi (gabungan skor kedekatan dan skor periode) 0,5 frequency Jumlah chunk yang mendukung relasi evidence, halaman, chunk_id Bukti dan provenance relasi "... riwayat Ibnu Ishaq ...", 133-137, 000052- 006 | 000052-007
+| Kolom | Deskripsi | Contoh Nilai |
+|---|---|---|
+| node_id | Identitas unik node (hash dari label dan nama kanonik) | 48f98905d5c8 |
+| name | Nama entitas dalam bentuk kanonik | Muhammad |
+| label | Tipe entitas (PERSON/EVENT/LOCATION/TIME) | PERSON |
+| aliases | Variasi nama lain yang dipetakan ke node ini | Rasulullah / Muhammad Bin Abdullah |
+| frequency | Jumlah kemunculan entitas | 719 |
+| chunk_ids | Daftar chunk sumber | 000000-001 / 000002-005 / 000002- 011 / ... |
 
-Bobot relasi dihitung dari kombinasi skor kedekatan (proximity) entitas dalam teks dan skor periode (kesesuaian relasi dengan periode peristiwa, lihat subbab 3.7.3). Contoh hasil satu relasi adalah (Person: Abu Bakar) - [INVOLVED_IN] → (Event: Hijrah ke Madinah) dengan evidence berupa cuplikan kalimat sumber dan weight tertentu. Beberapa contoh edge nyata untuk tiap tipe relasi ditunjukkan pada Tabel 3.17. Keluaran tahap ini berupa nodes.csv dan edges.csv. Tabel 3.17 Contoh Edge Hasil Pembentukan Relasi Sumber (label) Relasi Tujuan (label) weight halaman Amr bin Al-Ash (Person) INVOLVED_IN Perang Badr (Event) 0,5 133-137 Perang Badr (Event) OCCURRED_AT Yatsrib (Location) 0,5 165-168 Perang Yarmuk (Event) OCCURRED_ON Tahun 13 H (Time) 0,5 47-48 Ibrahim (Person) KELUARGA Isma'il (Person) 0,55 -
+**Tabel 3.16 Atribut Edge**
+
+| Kolom | Deskripsi | Contoh Nilai |
+|---|---|---|
+| source_name, source_label | Node asal dan tipenya | Amr bin Al-Ash, PERSON |
+| relation_type | Tipe relasi (INVOLVED_IN, OCCURRED_AT, OCCURRED_ON, KELUARGA, SAHABAT, MUSUH) | INVOLVED_IN |
+| target_name, target_label | Node tujuan dan tipenya | Perang Badr, EVENT |
+| weight | Bobot relasi (gabungan skor kedekatan dan skor periode) | 0,5 |
+| frequency | Jumlah chunk yang mendukung relasi | 2 |
+| evidence, halaman, chunk_id | Bukti dan provenance relasi | "... riwayat Ibnu Ishaq ...", 133-137, 000052- 006 / 000052-007 |
+
+Bobot relasi dihitung dari kombinasi skor kedekatan (proximity) entitas dalam teks dan skor periode (kesesuaian relasi dengan periode peristiwa, lihat subbab 3.7.3). Contoh hasil satu relasi adalah (Person: Abu Bakar) - [INVOLVED_IN] → (Event: Hijrah ke Madinah) dengan evidence berupa cuplikan kalimat sumber dan weight tertentu. Beberapa contoh edge nyata untuk tiap tipe relasi ditunjukkan pada Tabel 3.17. Keluaran tahap ini berupa nodes.csv dan edges.csv. **Tabel 3.17 Contoh Edge Hasil Pembentukan Relasi**
+
+| Sumber (label) | Relasi | Tujuan (label) | weight | halaman |
+|---|---|---|---|---|
+| Amr bin Al-Ash (Person) | INVOLVED_IN | Perang Badr (Event) | 0,5 | 133-137 |
+| Perang Badr (Event) | OCCURRED_AT | Yatsrib (Location) | 0,5 | 165-168 |
+| Perang Yarmuk (Event) | OCCURRED_ON | Tahun 13 H (Time) | 0,5 | 47-48 |
+| Ibrahim (Person) | KELUARGA | Isma'il (Person) | 0,55 | - | 0,55 -
 
 ### 3.7.3 Periodisasi Peristiwa
 
@@ -476,7 +622,15 @@ ALGORITMA:
 47. RETURN graph
 48. END Kode Semu 3.10 Periodisasi dan Kronologi Peristiwa Kode Semu 3.10 menunjukkan tahapan umum penempatan setiap peristiwa ke dalam periode kronologis Sirah sekaligus pembentukan urutan antar-peristiwa. Proses dimulai dengan memetakan setiap node EVENT ke bab tempat peristiwa tersebut paling sering muncul. Bab tersebut kemudian digunakan untuk menentukan periode dan rentang halaman berdasarkan pengelompokan periode yang telah disusun dari daftar isi. Selanjutnya, peristiwa yang memiliki frekuensi kemunculan memadai diurutkan berdasarkan halaman bab secara kronologis. Urutan tersebut kemudian dirapikan agar tidak menghasilkan urutan ganda dari bab yang sama. Setelah urutan kronologis terbentuk, sistem membangun relasi PRECEDES antara satu peristiwa dan peristiwa berikutnya. Relasi ini membentuk rantai kronologi yang menggambarkan alur peristiwa dalam narasi Sirah. Hasil pemetaan periode kemudian disimpan sebagai berkas keluaran. Hasil akhir dari tahap ini berupa peta periode setiap peristiwa beserta rentang halamannya, serta kumpulan relasi PRECEDES antar-peristiwa. Dengan demikian, tahap periodisasi memberikan dimensi waktu pada knowledge graph, sehingga setiap peristiwa tidak hanya terhubung dengan tokoh dan tempat, tetapi juga tersusun dalam urutan kronologis. Sebagai gambaran hasil, daftar isi dikelompokkan menjadi sekitar 15 periode dengan kode P0 sampai P14, yang tergabung ke dalam beberapa fase besar. Setiap peristiwa yang cukup sering muncul memperoleh atribut periode_bab dan page_range, serta dapat terhubung dengan peristiwa berikutnya melalui relasi PRECEDES. Relasi tersebut membentuk rantai kronologi peristiwa dari awal hingga akhir narasi Sirah. Contoh pemetaan beberapa peristiwa ke dalam periode dan rentang halaman secara kronologis ditunjukkan pada Tabel 3.18.
 
-Tabel 3.18 Contoh Pemetaan Peristiwa ke Periode Peristiwa periode_bab page_range frequency Kelahiran Nabi Nasab & Kelahiran Nabi 73-93 Hijrah Ke Habasyah Dakwah Jahriyah & Tekanan Quraisy 133-160 Hijrah Ke Madinah Hijrah ke Madinah 214-232 Perang Badr Perang Badr & Dampaknya 266-304 Fathul Makkah Perang Mu'tah & Penaklukan Makkah 524-536
+**Tabel 3.18 Contoh Pemetaan Peristiwa ke Periode**
+
+| Peristiwa | periode_bab | page_range | frequency |
+|---|---|---|---|
+| Kelahiran Nabi | Nasab & Kelahiran Nabi | 73-93 | 29 |
+| Hijrah Ke Habasyah | Dakwah Jahriyah & Tekanan Quraisy | 133-160 | 13 |
+| Hijrah Ke Madinah | Hijrah ke Madinah | 214-232 | 26 |
+| Perang Badr | Perang Badr & Dampaknya | 266-304 | 51 |
+| Fathul Makkah | Perang Mu'tah & Penaklukan Makkah | 524-536 | 3 |
 
 ### 3.7.4 Konstruksi Graf di Neo4j
 
@@ -548,7 +702,13 @@ ALGORITMA:
 
 12. ) 13.
 14. RETURN metrics
-15. END Kode Semu 3.12 Evaluasi NER Kode Semu 3.12 menunjukkan tahapan umum evaluasi kualitas hasil NER pada data uji. Proses dimulai dengan mengambil urutan label sebenarnya (ground truth) dalam format BIO dari data uji. Selanjutnya, model NER terbaik digunakan untuk memprediksi label pada token yang sama. Urutan label hasil prediksi kemudian dibandingkan dengan urutan label acuan pada tingkat entitas menggunakan pustaka seqeval. Dalam perbandingan ini, entitas hanya dihitung benar apabila seluruh rentang token dan kategori labelnya tepat. Dari hasil perbandingan tersebut, sistem menghitung Precision, Recall, dan F1-score untuk setiap label, serta nilai agregat macro-average dan micro-average. Hasil akhir dari tahap ini berupa kumpulan metrik evaluasi per label dan metrik agregat. Dengan demikian, keluaran tahap evaluasi memberikan ukuran objektif terhadap kemampuan model dalam mengenali entitas pada data yang tidak digunakan selama proses pelatihan, sehingga dapat menjadi dasar pembahasan kualitas model NER pada Bab 4. Untuk menguji metode secara lebih mendalam, penelitian ini merancang tiga skenario uji coba. Setiap skenario memvariasikan satu komponen pada alur ekstraksi NER, sedangkan prosedur evaluasi dan data uji yang digunakan tetap sama. Penggunaan prosedur evaluasi yang konsisten memungkinkan hasil antar skenario dibandingkan secara lebih adil. Rancangan ketiga skenario uji coba tersebut dirangkum pada Tabel 3.19. Tabel 3.19 Rancangan Uji Coba Evaluasi NER Skenario Penjelasan Metrik Evaluasi Uji Coba 1: Penanganan ketidakseimbangan kelas Memvariasikan teknik penanganan data tidak seimbang (alur dasar vs weighted cross-entropy vs contrastive learning vs augmentation) untuk menguji pengaruhnya terhadap kelas minoritas Precision, Recall, dan F1-Score (per label dan macro-average) Uji Coba 2: Perbandingan model Memvariasikan model dasar (backbone) pada iterative self-training untuk menguji model pra-latih mana yang paling sesuai Precision, Recall, dan F1-Score (per label dan agregat antar model) Uji Coba 3: Pengaruh modul POS-tag Memvariasikan ada atau tidaknya modul POS-tag untuk menguji pengaruh informasi POS-tag terhadap prediksi entitas Precision, Recall, dan F1-Score (per label, dengan dan tanpa POS- tag)
+15. END Kode Semu 3.12 Evaluasi NER Kode Semu 3.12 menunjukkan tahapan umum evaluasi kualitas hasil NER pada data uji. Proses dimulai dengan mengambil urutan label sebenarnya (ground truth) dalam format BIO dari data uji. Selanjutnya, model NER terbaik digunakan untuk memprediksi label pada token yang sama. Urutan label hasil prediksi kemudian dibandingkan dengan urutan label acuan pada tingkat entitas menggunakan pustaka seqeval. Dalam perbandingan ini, entitas hanya dihitung benar apabila seluruh rentang token dan kategori labelnya tepat. Dari hasil perbandingan tersebut, sistem menghitung Precision, Recall, dan F1-score untuk setiap label, serta nilai agregat macro-average dan micro-average. Hasil akhir dari tahap ini berupa kumpulan metrik evaluasi per label dan metrik agregat. Dengan demikian, keluaran tahap evaluasi memberikan ukuran objektif terhadap kemampuan model dalam mengenali entitas pada data yang tidak digunakan selama proses pelatihan, sehingga dapat menjadi dasar pembahasan kualitas model NER pada Bab 4. Untuk menguji metode secara lebih mendalam, penelitian ini merancang tiga skenario uji coba. Setiap skenario memvariasikan satu komponen pada alur ekstraksi NER, sedangkan prosedur evaluasi dan data uji yang digunakan tetap sama. Penggunaan prosedur evaluasi yang konsisten memungkinkan hasil antar skenario dibandingkan secara lebih adil. Rancangan ketiga skenario uji coba tersebut dirangkum pada Tabel 3.19. **Tabel 3.19 Rancangan Uji Coba Evaluasi NER**
+
+| Skenario | Penjelasan | Metrik Evaluasi |
+|---|---|---|
+| Uji Coba 1: Penanganan ketidakseimbangan kelas | Memvariasikan teknik penanganan data tidak seimbang (alur dasar vs weighted cross-entropy vs contrastive learning vs augmentation) untuk menguji pengaruhnya terhadap kelas minoritas | Precision, Recall, dan F1-Score (per label dan macro-average) |
+| Uji Coba 2: Perbandingan model | Memvariasikan model dasar (backbone) pada iterative self-training untuk menguji model pra-latih mana yang paling sesuai | Precision, Recall, dan F1-Score (per label dan agregat antar model) |
+| Uji Coba 3: Pengaruh modul POS-tag | Memvariasikan ada atau tidaknya modul POS-tag untuk menguji pengaruh informasi POS-tag terhadap prediksi entitas | Precision, Recall, dan F1-Score (per label, dengan dan tanpa POS- tag) |
 
 ### 3.8.1 Uji Coba 1: Penanganan Ketidakseimbangan Kelas
 
@@ -568,7 +728,18 @@ Setelah knowledge graph terbentuk, dilakukan analisis jaringan untuk memahami st
 
 ### 3.9.1 Analisis Jaringan dengan Social Network Analysis
 
-Bagian ini menganalisis struktur knowledge graph yang terbentuk menggunakan Social Network Analysis (SNA), terutama pada jaringan antar tokoh (Person) yang terhubung melalui keterlibatan bersama pada peristiwa yang sama. Analisis bertujuan mengetahui tokoh dan peristiwa yang paling berperan serta kelompok tokoh yang sering muncul bersama. Analisis jaringan dilakukan melalui beberapa tahap. Pertama, dibentuk proyeksi jaringan tokoh, yaitu jaringan yang menghubungkan dua tokoh apabila keduanya terlibat dalam peristiwa yang sama (co-participation). Bobot sisi pada jaringan ini digunakan untuk menunjukkan kekuatan keterhubungan antar-tokoh. Kedua, dihitung metrik sentralitas pada tingkat node, meliputi degree centrality, betweenness centrality, closeness centrality, dan PageRank (Elmezain et al., 2021; Zhang et al., 2021). Ketiga, dihitung metrik pada tingkat graf, yaitu kepadatan jaringan (density), koefisien pengelompokan (transitivity), ukuran jaringan, dan jumlah komponen. Keempat, dilakukan deteksi komunitas menggunakan algoritma Louvain, dengan kualitas pembagian komunitas diukur berdasarkan nilai modularitas (Q) (Anuar et al., 2024). Analisis jaringan ini dirancang ke dalam delapan skenario pengujian, yaitu G1 sampai G7, yang mencakup analisis pada tingkat tokoh, graf keseluruhan, peristiwa, lokasi, dan keterlibatan lintas fase, sebagaimana ditunjukkan pada Tabel 3.20. Pseudocode untuk perhitungan metrik inti pada jaringan tokoh disajikan pada Kode Semu 3.13. Tabel 3.20 Rancangan Skenario Pengujian Analisis Jaringan Kode Skenario (Pertanyaan yang dijawab) Entitas Metode G1 Tokoh mana yang paling sentral dan paling terlibat Person Degree centrality G2 Tokoh mana yang menjadi penghubung/jembatan antar kelompok Person Betweenness centrality G3 Apakah tokoh terbagi menjadi kelompok- kelompok Person Deteksi komunitas (Louvain) G4 Peristiwa mana yang paling sentral dalam narasi Event Co-participation (PageRank/degree) G5 Bagaimana karakter struktur jaringan keseluruhan Graf keseluruhan Density, clustering, transitivity G6 Bagaimana wujud sub-graf lima peristiwa besar Event (5) Ekstraksi sub-graf dan analisisnya G7 Lokasi mana yang punya peran sentral Location Graf lokasi G8 Tokoh mana yang terlibat di paling banyak babak (fase) Person → Event → fase Jumlah fase unik tempat tokoh terlibat
+Bagian ini menganalisis struktur knowledge graph yang terbentuk menggunakan Social Network Analysis (SNA), terutama pada jaringan antar tokoh (Person) yang terhubung melalui keterlibatan bersama pada peristiwa yang sama. Analisis bertujuan mengetahui tokoh dan peristiwa yang paling berperan serta kelompok tokoh yang sering muncul bersama. Analisis jaringan dilakukan melalui beberapa tahap. Pertama, dibentuk proyeksi jaringan tokoh, yaitu jaringan yang menghubungkan dua tokoh apabila keduanya terlibat dalam peristiwa yang sama (co-participation). Bobot sisi pada jaringan ini digunakan untuk menunjukkan kekuatan keterhubungan antar-tokoh. Kedua, dihitung metrik sentralitas pada tingkat node, meliputi degree centrality, betweenness centrality, closeness centrality, dan PageRank (Elmezain et al., 2021; Zhang et al., 2021). Ketiga, dihitung metrik pada tingkat graf, yaitu kepadatan jaringan (density), koefisien pengelompokan (transitivity), ukuran jaringan, dan jumlah komponen. Keempat, dilakukan deteksi komunitas menggunakan algoritma Louvain, dengan kualitas pembagian komunitas diukur berdasarkan nilai modularitas (Q) (Anuar et al., 2024). Analisis jaringan ini dirancang ke dalam delapan skenario pengujian, yaitu G1 sampai G7, yang mencakup analisis pada tingkat tokoh, graf keseluruhan, peristiwa, lokasi, dan keterlibatan lintas fase, sebagaimana ditunjukkan pada Tabel 3.20. Pseudocode untuk perhitungan metrik inti pada jaringan tokoh disajikan pada Kode Semu 3.13. **Tabel 3.20 Rancangan Skenario Pengujian Analisis Jaringan**
+
+| Kode | Skenario (Pertanyaan yang dijawab) | Entitas | Metode |
+|---|---|---|---|
+| G1 | Tokoh mana yang paling sentral dan paling terlibat | Person | Degree centrality |
+| G2 | Tokoh mana yang menjadi penghubung/jembatan antar kelompok | Person | Betweenness centrality |
+| G3 | Apakah tokoh terbagi menjadi kelompok- kelompok | Person | Deteksi komunitas (Louvain) |
+| G4 | Peristiwa mana yang paling sentral dalam narasi | Event | Co-participation (PageRank/degree) |
+| G5 | Bagaimana karakter struktur jaringan keseluruhan | Graf keseluruhan | Density, clustering, transitivity |
+| G6 | Bagaimana wujud sub-graf lima peristiwa besar | Event (5) | Ekstraksi sub-graf dan analisisnya |
+| G7 | Lokasi mana yang punya peran sentral | Location | Graf lokasi |
+| G8 | Tokoh mana yang terlibat di paling banyak babak (fase) | Person → Event → fase | Jumlah fase unik tempat tokoh terlibat |
 
 INPUT  : graph (knowledge graph) OUTPUT : metrik_centrality, komunitas, metrik_graf ALGORITMA:
 
@@ -599,19 +770,16 @@ INPUT  : graph (knowledge graph) OUTPUT : metrik_centrality, komunitas, metrik_g
 
 Evaluasi fungsional graf bertujuan untuk memastikan bahwa knowledge graph yang telah dibangun mampu menjalankan fungsi utamanya, yaitu mendukung penelusuran informasi berdasarkan hubungan antar entitas. Evaluasi ini memiliki fokus yang berbeda dari dua evaluasi sebelumnya. Evaluasi kualitas NER pada Subbab 3.8 menilai kemampuan model dalam mengenali entitas menggunakan metrik seperti F1-score, sedangkan analisis SNA pada Subbab
 3.9.1 digunakan untuk mengkaji struktur jaringan melalui metrik sentralitas dan komunitas.
-Sementara itu, evaluasi fungsional menilai apakah graf dapat digunakan untuk menelusuri informasi relasional dalam Sirah Nabawiyah. Dengan demikian, jika evaluasi sebelumnya berfokus pada akurasi model dan struktur jaringan, evaluasi fungsional berfokus pada kegunaan graf yang telah dibangun. Evaluasi fungsional dilakukan menggunakan pengujian berbasis kebutuhan (black-box). Pengujian ini menilai kemampuan graf dalam menjalankan fungsi yang telah ditetapkan tanpa membahas proses internal pembentukannya. Oleh karena itu, fungsi-fungsi yang harus dipenuhi oleh graf ditentukan terlebih dahulu sebelum pengujian dilakukan. Pertanyaan seperti “siapa saja yang terlibat dalam suatu peristiwa?” atau “di mana lokasi peristiwa yang melibatkan tokoh tertentu?” memerlukan penelusuran hubungan antar simpul. Kemampuan menelusuri hubungan tersebut menjadi salah satu alasan informasi Sirah Nabawiyah direpresentasikan dalam bentuk graf. Fungsi yang diuji disusun berdasarkan tujuan penelitian pada Subbab 1.4 dan kebutuhan penelusuran informasi yang telah dijelaskan pada bagian latar belakang. Knowledge graph dinyatakan layak secara fungsional apabila mampu memenuhi enam fungsi yang didefinisikan pada Tabel 3.21. Setiap fungsi diuji melalui satu skenario kueri Cypher yang mewakili kebutuhan penelusuran tersebut. Definisi setiap fungsi beserta skenario kueri dan pola relasi yang digunakan ditunjukkan pada Tabel 3.21. Tabel 3.21 Skenario Kueri Evaluasi Graf Fungsi Kebutuhan Fungsional Skenario Kueri (Contoh Pertanyaan) Pola Relasi F1 Menemukan tokoh yang terlibat pada suatu peristiwa Siapa saja yang terlibat dalam Perang Badar? (Person)-[INVOLVED_IN]-
->(Event)
-F2 Menemukan peristiwa yang terjadi di suatu lokasi Peristiwa apa saja yang terjadi di Madinah? (Event)-[OCCURRED_AT]-
->(Location)
-F3 Menemukan peristiwa yang terjadi pada suatu waktu Peristiwa apa yang terjadi pada tahun ke-2 Hijriah? (Event)-[OCCURRED_ON]-
->(Time)
-F4 Menemukan peristiwa yang melibatkan tokoh tertentu Peristiwa apa saja yang melibatkan Abu Bakar? (Person)-[INVOLVED_IN]-
->(Event)
-F5 Menelusuri rantai relasi lintas- entitas (multi-hop), yaitu melewati lebih dari satu relasi sekaligus Di mana lokasi peristiwa yang melibatkan Umar bin Khattab? (Person)-[INVOLVED_IN]-
->(Event)-[OCCURRED_AT]-
->(Location)
-F6 Menelusuri urutan kronologis antar peristiwa Urutan peristiwa berdasarkan relasi mendahului (Event)-[PRECEDES]-
->(Event)
+Sementara itu, evaluasi fungsional menilai apakah graf dapat digunakan untuk menelusuri informasi relasional dalam Sirah Nabawiyah. Dengan demikian, jika evaluasi sebelumnya berfokus pada akurasi model dan struktur jaringan, evaluasi fungsional berfokus pada kegunaan graf yang telah dibangun. Evaluasi fungsional dilakukan menggunakan pengujian berbasis kebutuhan (black-box). Pengujian ini menilai kemampuan graf dalam menjalankan fungsi yang telah ditetapkan tanpa membahas proses internal pembentukannya. Oleh karena itu, fungsi-fungsi yang harus dipenuhi oleh graf ditentukan terlebih dahulu sebelum pengujian dilakukan. Pertanyaan seperti “siapa saja yang terlibat dalam suatu peristiwa?” atau “di mana lokasi peristiwa yang melibatkan tokoh tertentu?” memerlukan penelusuran hubungan antar simpul. Kemampuan menelusuri hubungan tersebut menjadi salah satu alasan informasi Sirah Nabawiyah direpresentasikan dalam bentuk graf. Fungsi yang diuji disusun berdasarkan tujuan penelitian pada Subbab 1.4 dan kebutuhan penelusuran informasi yang telah dijelaskan pada bagian latar belakang. Knowledge graph dinyatakan layak secara fungsional apabila mampu memenuhi enam fungsi yang didefinisikan pada Tabel 3.21. Setiap fungsi diuji melalui satu skenario kueri Cypher yang mewakili kebutuhan penelusuran tersebut. Definisi setiap fungsi beserta skenario kueri dan pola relasi yang digunakan ditunjukkan pada Tabel 3.21. **Tabel 3.21 Skenario Kueri Evaluasi Graf**
+
+| Fungsi | Kebutuhan Fungsional | Skenario Kueri (Contoh Pertanyaan) | Pola Relasi |
+|---|---|---|---|
+| F1 | Menemukan tokoh yang terlibat pada suatu peristiwa | Siapa saja yang terlibat dalam Perang Badar? | (Person)-[INVOLVED_IN]- >(Event) |
+| F2 | Menemukan peristiwa yang terjadi di suatu lokasi | Peristiwa apa saja yang terjadi di Madinah? | (Event)-[OCCURRED_AT]- >(Location) |
+| F3 | Menemukan peristiwa yang terjadi pada suatu waktu | Peristiwa apa yang terjadi pada tahun ke-2 Hijriah? | (Event)-[OCCURRED_ON]- >(Time) |
+| F4 | Menemukan peristiwa yang melibatkan tokoh tertentu | Peristiwa apa saja yang melibatkan Abu Bakar? | (Person)-[INVOLVED_IN]- >(Event) |
+| F5 | Menelusuri rantai relasi lintas- entitas (multi-hop), yaitu melewati lebih dari satu relasi sekaligus | Di mana lokasi peristiwa yang melibatkan Umar bin Khattab? | (Person)-[INVOLVED_IN]- >(Event)-[OCCURRED_AT]- >(Location) |
+| F6 | Menelusuri urutan kronologis antar peristiwa | Urutan peristiwa berdasarkan relasi mendahului | (Event)-[PRECEDES]- >(Event) |
 
 Keberhasilan setiap fungsi dinilai dengan menjalankan skenario kueri pada graf, kemudian memeriksa hasilnya berdasarkan empat kriteria. Pertama, kueri dapat dijalankan tanpa menghasilkan galat, yang menunjukkan bahwa kueri dapat diproses sesuai dengan struktur graf yang digunakan. Kedua, kueri menghasilkan data, yang menunjukkan bahwa entitas dan relasi yang dibutuhkan tersedia serta saling terhubung dalam graf. Kriteria ini diterapkan pada kasus pengujian yang telah diketahui memiliki jawaban dalam teks sumber. Ketiga, informasi yang dihasilkan sesuai dengan fakta dalam teks Sirah Nabawiyah berdasarkan pemeriksaan manual. Kriteria ini memastikan bahwa hasil kueri tidak hanya tersedia, tetapi juga sesuai dengan sumber data. Keempat, hasil kueri dapat ditelusuri kembali ke dokumen sumber melalui metadata provenance, seperti evidence (potongan teks bukti) dan halaman. Kriteria tersebut memastikan bahwa setiap informasi yang dihasilkan oleh graf memiliki sumber yang jelas dan dapat dipertanggungjawabkan. Keluaran pengujian disajikan dalam bentuk tabel hasil eksekusi kueri yang memuat status keberhasilan dan jumlah hasil yang diperoleh. Beberapa hasil kueri juga ditampilkan sebagai contoh untuk memperlihatkan kemampuan graf dalam menjawab kebutuhan penelusuran. Berdasarkan keseluruhan hasil tersebut, dilakukan penilaian terhadap kelayakan knowledge graph dalam mendukung penelusuran informasi relasional pada Sirah Nabawiyah.
 
