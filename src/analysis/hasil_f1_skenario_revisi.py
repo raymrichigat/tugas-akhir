@@ -44,7 +44,7 @@ DATA = [
     ("POS-tag",      0.9547, "P", False),
     ("cahya\nuncased", 0.9286, "B", False),
     ("DistilBERT",   0.9353, "B", False),
-    ("IndoBERT\ncased", 0.7774, "B", False),
+    ("IndoBERT\nphase-1", 0.7774, "B", False),
     ("RoBERTa",      0.8069, "B", False),
 ]
 BASELINE = 0.9536
