@@ -18,6 +18,8 @@ Anuar, S. H. H., Abas, Z. A., Yunos, N. M., Mukhtar, M. F., Setiadi, T., & Shibg
 
 Ariyanto, ... et al. (2025). Transformer-based semantic role labeling for crisis events using semi-supervised learning on low-resource language Twitter texts. *IEEE Access.* **[PERIKSA: lengkapi daftar penulis, volume, dan halaman dari berkas di `lama/`]** <!-- Bab 1.1, Bab 3.6 (sumber utama metode SRL + iterative self-training) -->
 
+Choi, S., & Jung, Y. (2025). Knowledge graph construction: Extraction, learning, and evaluation. *Applied Sciences, 15*(7), 3727. https://doi.org/10.3390/app15073727 **[PERIKSA: nama depan penulis (Seungmin Choi, Yuchul Jung) diambil dari hasil pencarian web; halaman MDPI 403 saat diakses — konfirmasi ke sumber asli]** <!-- Bab 2.7 & Bab 3.7.2 (dasar pembentukan relasi berbasis co-occurrence pada konstruksi KG) -->
+
 Dai, X., & Adel, H. (2020). An analysis of simple data augmentation for named entity recognition. *Proceedings of the 28th International Conference on Computational Linguistics (COLING)*, 3861–3867. **[PERIKSA: konfirmasi rentang halaman]** <!-- Bab 3.9.1 & Bab 4.1 (data augmentation / mention replacement) -->
 
 Elmezain, M., Othman, E. A., & Ibrahim, H. M. (2021). Temporal degree-degree and closeness-closeness: A new centrality metrics for social network analysis. *Mathematics, 9*(22), 2850. https://doi.org/10.3390/math9222850 **[TERVERIFIKASI]** <!-- Bab 3.10.1 & Bab 4.4.2 (ukuran sentralitas) -->
@@ -41,6 +43,8 @@ Ren, ... et al. (2024). *[Judul lengkap belum tersedia di repo].* **[SALIN DARI 
 Xie, ... et al. (2023). *[Judul lengkap belum tersedia di repo].* **[SALIN DARI PROPOSAL]** <!-- Bab 1.1 (KG pengobatan tradisional, NER + Cypher) -->
 
 Zhang, P., Wang, T., & Yan, J. (2021). PageRank centrality and algorithms for weighted, directed networks. *Physica A: Statistical Mechanics and Its Applications, 586*, 126438. https://doi.org/10.1016/j.physa.2021.126438 **[TERVERIFIKASI]** <!-- Bab 3.10.1 & Bab 4.4.2 (PageRank) -->
+
+Zhao, X., Deng, Y., Yang, M., Wang, L., Zhang, R., Cheng, H., Lam, W., Shen, Y., & Xu, R. (2023). A comprehensive survey on relation extraction: Recent advances and new frontiers. *arXiv:2306.02051.* https://doi.org/10.48550/arXiv.2306.02051 **[PERIKSA: konfirmasi daftar penulis lengkap dan status publikasi (arXiv/ACM Computing Surveys)]** <!-- Bab 2.7 & Bab 3.7.2 (ekstraksi relasi umumnya memakai model terlatih; kontras dengan heuristik penelitian ini) -->
 
 Zhong, ... et al. (2024). *[Judul lengkap belum tersedia di repo].* **[SALIN DARI PROPOSAL]** <!-- Bab 1.1 (knowledge graph sebagai node-edge; survei KGC) -->
 
@@ -106,6 +110,24 @@ Entri **[TERVERIFIKASI]** di bawah dapat langsung disalin (sudah ada di `docs/ba
   note    = {PERIKSA: lengkapi volume, halaman, dan DOI dari berkas di folder lama/}
 }
 
+@article{choi2025kgc,
+  author  = {Choi, Seungmin and Jung, Yuchul},
+  title   = {Knowledge Graph Construction: Extraction, Learning, and Evaluation},
+  journal = {Applied Sciences},
+  volume  = {15}, number = {7}, pages = {3727}, year = {2025},
+  doi     = {10.3390/app15073727},
+  note    = {PERIKSA: nama depan penulis dari hasil pencarian web; konfirmasi ke sumber asli}
+}
+
+@article{zhao2023re,
+  author  = {Zhao, Xiaoyan and Deng, Yang and Yang, Min and Wang, Lingzhi and Zhang, Rui and Cheng, Hong and Lam, Wai and Shen, Ying and Xu, Ruifeng},
+  title   = {A Comprehensive Survey on Relation Extraction: Recent Advances and New Frontiers},
+  journal = {arXiv preprint arXiv:2306.02051},
+  year    = {2023},
+  doi     = {10.48550/arXiv.2306.02051},
+  note    = {PERIKSA: konfirmasi daftar penulis lengkap dan status publikasi}
+}
+
 % ---------- SALIN DARI PROPOSAL (belum ada di repo) ----------
 % abror2024, kusumah2022, pratama2022, hambarde2023, gana2025,
 % zhong2024, ren2024, xie2023, he2022
@@ -123,6 +145,8 @@ Entri **[TERVERIFIKASI]** di bawah dapat langsung disalin (sudah ada di `docs/ba
 | Zhang et al. (2021) | 3, 4 | ✅ TERVERIFIKASI |
 | Koto et al. (2020) / IndoBERT | (2), 3, 4 | ✅ TERVERIFIKASI |
 | Khosla et al. (2020) | 3, 4 | ⚠️ PERIKSA halaman |
+| Choi & Jung (2025) | 2, 3 | ⚠️ PERIKSA nama depan penulis |
+| Zhao et al. (2023) | 2, 3 | ⚠️ PERIKSA penulis/status publikasi |
 | Dai & Adel (2020) | 3, 4 | ⚠️ PERIKSA halaman |
 | Ariyanto et al. (2025) | 1, 3 | ⚠️ PERIKSA penulis/volume (berkas di `lama/`) |
 | Abror & Rahma (2024) | 1 | ❗ SALIN DARI PROPOSAL |
