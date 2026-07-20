@@ -16,7 +16,15 @@ Uji coba pertama bertujuan mengetahui apakah ketidakseimbangan jumlah entitas an
 
 Kelima skenario dilatih menggunakan data awal (seed) yang sama, kemudian dievaluasi pada data uji yang terdiri atas 254 chunk, 49.739 token, dan 1.969 entitas. Agar perbandingan antar skenario tetap adil, hanya teknik penanganan ketidakseimbangan data yang diubah. Sementara itu, model dasar IndoBERT uncased, ambang batas pseudo-labelling, dan parameter pelatihan lainnya dibuat sama sesuai dengan prosedur pada Kode Semu 3.12. Kualitas pengenalan entitas diukur menggunakan pustaka seqeval pada tingkat entitas (entity-level). Dalam pengukuran ini, suatu entitas hanya dianggap benar apabila seluruh rentang token dan kategori entitasnya sesuai dengan label acuan. Evaluasi juga dilengkapi dengan analisis kesalahan pada tingkat token (token-level) untuk mengetahui jenis kesalahan yang dihasilkan oleh setiap skenario. Metrik utama yang digunakan adalah F1-score karena mempertimbangkan keseimbangan antara precision dan recall. Precision menunjukkan proporsi prediksi entitas yang benar, sedangkan recall menunjukkan proporsi entitas acuan yang berhasil dikenali. Hasil evaluasi dilaporkan dalam bentuk F1 mikro dan F1 makro. F1 mikro menggambarkan kinerja keseluruhan dengan menggabungkan seluruh entitas, sehingga lebih dipengaruhi oleh kelas mayoritas. Sebaliknya, F1 makro dihitung berdasarkan rata-rata kinerja setiap kelas sehingga lebih peka terhadap kinerja kelas minoritas. Hasil pengujian disajikan dalam dua tabel. Tabel 4.2 memuat nilai precision, recall, dan F1 mikro untuk menilai kinerja secara keseluruhan. Sementara itu, Tabel 4.3 menyajikan F1 setiap kelas dan F1 makro untuk memperlihatkan pengaruh setiap teknik terhadap kelas minoritas. Tabel 4.2 Precision, Recall, dan F1-score Agregat Uji Coba 1 Skenario Precision Recall F1-score (mikro) Baseline 0,9524 0,9548 0,9536 Weighted cross-entropy 0,9427 0,9533 0,9480 SCL 0,9543 0,9548 0,9546 JSCL 0,9415 0,9487 0,9451 Augmentation 0,9756 0,9756 0,9756
 
-Tabel 4.3 F1-score per Kelas Entitas pada Uji Coba 1 Skenario F1 PERSON F1 LOCATION F1 EVENT F1 TIME Macro F1 Baseline 0,9690 0,9530 0,9342 0,7983 0,9136 Weighted cross-entropy 0,9616 0,9432 0,9231 0,8347 0,9156 SCL 0,9687 0,9488 0,9600 0,8170 0,9236 JSCL 0,9611 0,9467 0,9600 0,7572 0,9062 Augmentation 0,9835 0,9755 0,9542 0,9038 0,9543
+**Tabel 4.3 F1-score per Kelas Entitas pada Uji Coba 1**
+
+| Skenario | F1 PERSON | F1 LOCATION | F1 EVENT | F1 TIME | Macro F1 |
+|---|---|---|---|---|---|
+| Baseline | 0,9690 | 0,9530 | 0,9342 | 0,7983 | 0,9136 |
+| Weighted cross-entropy | 0,9616 | 0,9432 | 0,9231 | 0,8347 | 0,9156 |
+| SCL | 0,9687 | 0,9488 | 0,9600 | 0,8170 | 0,9236 |
+| JSCL | 0,9611 | 0,9467 | 0,9600 | 0,7572 | 0,9062 |
+| Augmentation | 0,9835 | 0,9755 | 0,9542 | 0,9038 | 0,9543 |
 
 Gambar 4.2 memvisualisasikan perbandingan F1 mikro dan F1 makro dari kelima skenario. Skenario augmentasi data memperoleh nilai tertinggi pada kedua metrik tersebut, sedangkan JSCL menghasilkan nilai terendah. SCL menempati urutan kedua dengan hasil yang sedikit lebih tinggi daripada baseline. Gambar 4.3 memperlihatkan perbandingan F1 pada setiap kelas entitas. Keunggulan augmentasi data terlihat paling jelas pada kelas Time, dengan nilai F1 sebesar 0,9038. Pada kelas Event, nilai tertinggi diperoleh SCL dan JSCL, yaitu 0,9600, sedangkan augmentasi data memperoleh nilai yang sedikit lebih rendah, yaitu 0,9542. Meskipun demikian, augmentasi data tetap menghasilkan kinerja paling seimbang karena meningkatkan kelas minoritas tanpa menurunkan kinerja kelas Person dan Location.
 
@@ -52,9 +60,25 @@ dari 93,5 persen menjadi 93,0 persen. Kondisi ini terjadi karena proses augmenta
 
 Uji coba kedua bertujuan mengetahui pengaruh pemilihan model pra-latih (backbone) terhadap kualitas pengenalan entitas. Pengujian ini dilakukan untuk menentukan model berbahasa Indonesia yang paling sesuai digunakan pada teks Sirah Nabawiyah dalam alur iterative self-training. Lima model dibandingkan dalam pengujian ini, yaitu IndoBERT uncased (indolem/indobert-base-uncased) sebagai baseline, cahya/bert-base-indonesian-1.5G, DistilBERT Indonesia, IndoBERT cased, dan RoBERTa Indonesia. Pengujian dilakukan menggunakan alur yang sama untuk kelima model. Data latih, ambang batas pseudo-labelling, dan parameter pelatihan lainnya dibuat sama sehingga komponen yang dibedakan hanya model pra-latihnya. Seluruh model dievaluasi pada data uji yang sama dengan Uji Coba 1, yaitu 254 chunk yang terdiri atas 49.739 token dan 1.969 entitas. Proses pengujian mengikuti prosedur pada Kode Semu 3.12. Kualitas model diukur menggunakan pustaka seqeval pada tingkat entitas. Metrik utama yang digunakan adalah F1-score karena mempertimbangkan keseimbangan antara precision dan recall. Hasil dilaporkan dalam bentuk F1 mikro untuk menggambarkan kinerja keseluruhan dan F1 makro untuk menunjukkan rata-rata kinerja setiap kelas. Untuk menganalisis model yang menghasilkan nilai berbeda secara mencolok, evaluasi dilengkapi dengan dua pemeriksaan tambahan. Pemeriksaan pertama dilakukan terhadap perubahan F1 dari checkpoint awal hingga iterasi terakhir untuk mengetahui apakah penurunan kinerja telah terjadi sejak pelatihan awal atau muncul selama proses self-training. Pemeriksaan kedua dilakukan terhadap kesalahan batas B/I pada tingkat token untuk mengetahui apakah model mengalami kesulitan dalam menentukan batas entitas. Hasil pengujian agregat disajikan pada Tabel 4.10, sedangkan F1 setiap kelas entitas disajikan pada Tabel 4.11.
 
-Tabel 4.10 Precision, Recall, dan F1-score Agregat Uji Coba 2 Model Precision Recall F1-score (mikro) IndoBERT uncased (baseline) 0,9524 0,9548 0,9536 Cahya uncased 0,9388 0,9187 0,9286 DistilBERT uncased 0,9502 0,9208 0,9353 IndoBERT cased 0,7289 0,8329 0,7774 RoBERTa 0,7654 0,8532 0,8069
+**Tabel 4.10 Precision, Recall, dan F1-score Agregat Uji Coba 2**
 
-Tabel 4.11 F1-score per Kelas Entitas pada Uji Coba 2 Model F1 Person F1 Location F1 Event F1 Time F1 makro IndoBERT uncased (baseline) 0,9690 0,9530 0,9342 0,7983 0,9136 Cahya uncased 0,9493 0,9232 0,9315 0,7203 0,8811 DistilBERT uncased 0,9581 0,9232 0,9116 0,7479 0,8852 IndoBERT cased 0,7843 0,8717 0,5549 0,5461 0,6893 RoBERTa 0,8135 0,8766 0,7654 0,5404 0,7490
+| Model | Precision | Recall | F1-score (mikro) |
+|---|---|---|---|
+| IndoBERT uncased (baseline) | 0,9524 | 0,9548 | 0,9536 |
+| Cahya uncased | 0,9388 | 0,9187 | 0,9286 |
+| DistilBERT uncased | 0,9502 | 0,9208 | 0,9353 |
+| IndoBERT cased | 0,7289 | 0,8329 | 0,7774 |
+| RoBERTa | 0,7654 | 0,8532 | 0,8069 |
+
+**Tabel 4.11 F1-score per Kelas Entitas pada Uji Coba 2**
+
+| Model | F1 Person | F1 Location | F1 Event | F1 Time | F1 makro |
+|---|---|---|---|---|---|
+| IndoBERT uncased (baseline) | 0,9690 | 0,9530 | 0,9342 | 0,7983 | 0,9136 |
+| Cahya uncased | 0,9493 | 0,9232 | 0,9315 | 0,7203 | 0,8811 |
+| DistilBERT uncased | 0,9581 | 0,9232 | 0,9116 | 0,7479 | 0,8852 |
+| IndoBERT cased | 0,7843 | 0,8717 | 0,5549 | 0,5461 | 0,6893 |
+| RoBERTa | 0,8135 | 0,8766 | 0,7654 | 0,5404 | 0,7490 |
 
 Gambar 4.7 F1-score Agregat Lima Model pada Uji Coba 2 Gambar 4.7 memperlihatkan perbandingan F1 mikro dan F1 makro dari kelima model. Berdasarkan visualisasi tersebut, model dapat dikelompokkan menjadi dua kelompok. Tiga model uncased, yaitu IndoBERT, Cahya BERT, dan DistilBERT, menghasilkan F1 mikro pada rentang 0,9286 sampai 0,9536. Sementara itu, IndoBERT cased dan RoBERTa menghasilkan nilai yang jauh lebih rendah, masing-masing sebesar 0,7774 dan 0,8069.
 
