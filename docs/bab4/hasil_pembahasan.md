@@ -62,7 +62,6 @@ Keunggulan augmentasi data terlihat terutama pada kelas minoritas. F1 kelas Time
 
 | Token | Ground-truth | Prediksi |
 |---|---|---|
-| . | O | O |
 | Hijabah | O | B-LOCATION |
 | atau | O | O |
 | Wewenang | O | O | O O Kata Hijabah merujuk pada jabatan pemelihara Ka'bah, bukan nama tempat. Oleh karena itu, kata tersebut diberi label O pada data acuan. Namun, model memprediksinya sebagai Location. Kesalahan ini menunjukkan bahwa kata umum atau istilah yang ditulis dengan huruf kapital dapat dianggap sebagai entitas oleh model.
@@ -74,23 +73,24 @@ Keunggulan augmentasi data terlihat terutama pada kelas minoritas. F1 kelas Time
 | India | B-LOCATION | B-LOCATION |
 | Dan | O | O |
 | Cina | B-LOCATION | O |
-| . | O | O | B-LOCATION Dan O O Cina B-LOCATION O . O O Pada rangkaian “India dan Cina”, model berhasil mengenali India sebagai Location, tetapi tidak mengenali Cina. Kesalahan ini menunjukkan bahwa nama lokasi yang jarang muncul dalam data latih masih berpotensi terlewat oleh model. **Tabel 4.7 Contoh Kesalahan Klasifikasi Tipe pada Chunk 000338-001**
+Pada rangkaian “India dan Cina”, model berhasil mengenali India sebagai Location, tetapi tidak mengenali Cina. Kesalahan ini menunjukkan bahwa nama lokasi yang jarang muncul dalam data latih masih berpotensi terlewat oleh model. **Tabel 4.7 Contoh Kesalahan Klasifikasi Tipe pada Chunk 000338-001**
 
 | Token | Ground-truth | Prediksi |
 |---|---|---|
 | di | O | O |
-| Hudaibiyah. | B-LOCATION | B-EVENT |
-| . | O | O | . O O Dalam konteks tersebut, Hudaibiyah merujuk pada lokasi sehingga diberi label Location pada data acuan. Namun, model memprediksinya sebagai Event. Kesalahan ini terjadi karena Hudaibiyah dapat merujuk pada lokasi maupun peristiwa, bergantung pada konteks kalimatnya. **Tabel 4.8 Contoh Kesalahan Batas Entitas pada Chunk 000018-001**
+| Hudaibiyah | B-LOCATION | B-EVENT |
+Dalam konteks tersebut, Hudaibiyah merujuk pada lokasi sehingga diberi label Location pada data acuan. Namun, model memprediksinya sebagai Event. Kesalahan ini terjadi karena Hudaibiyah dapat merujuk pada lokasi maupun peristiwa, bergantung pada konteks kalimatnya. **Tabel 4.8 Contoh Kesalahan Batas Entitas pada Chunk 000018-001**
 
 | Token | Ground-truth | Prediksi |
 |---|---|---|
 | Senin | B-TIME | B-TIME |
 | pagi | I-TIME | I-TIME |
-| , | I-TIME | I-TIME |
 | tanggal | B-TIME | I-TIME |
 | 9 | I-TIME | I-TIME |
 | Rabi’ul | I-TIME | I-TIME |
-| Awwal | I-TIME | I-TIME | I-TIME , I-TIME I-TIME tanggal B-TIME I-TIME I-TIME I-TIME Rabi’ul I-TIME I-TIME Awwal I-TIME I-TIME Pada data acuan, rentang waktu “Senin pagi, tanggal 9 Rabi'ul Awwal” dibagi menjadi dua segmen Time. Kata “tanggal” menjadi awal segmen kedua sehingga diberi label B-TIME. Namun, model memprediksinya sebagai I-TIME dan menggabungkan kedua segmen tersebut menjadi satu entitas. Meskipun tipe entitasnya tetap benar, batas antar entitas tidak dapat dikenali secara tepat. Pola kesalahan kelima skenario juga dapat diamati melalui confusion matrix pada Gambar 4.4 dan perbandingan jumlah kesalahan pada Gambar 4.5.
+| Awwal | I-TIME | I-TIME |
+
+Pada data acuan, rentang waktu “Senin pagi, tanggal 9 Rabi'ul Awwal” dibagi menjadi dua segmen Time. Kata “tanggal” menjadi awal segmen kedua sehingga diberi label B-TIME. Namun, model memprediksinya sebagai I-TIME dan menggabungkan kedua segmen tersebut menjadi satu entitas. Meskipun tipe entitasnya tetap benar, batas antar entitas tidak dapat dikenali secara tepat. Pola kesalahan kelima skenario juga dapat diamati melalui confusion matrix pada Gambar 4.4 dan perbandingan jumlah kesalahan pada Gambar 4.5.
 
 Gambar 4.4 menampilkan confusion matrix tingkat token pada skenario augmentasi data sebagai skenario terbaik, sedangkan confusion matrix untuk kelima skenario selengkapnya disajikan pada Lampiran A. Pewarnaan menggunakan skala logaritmik agar sel dengan nilai kecil tetap dapat terlihat, meskipun jumlah token O yang diprediksi sebagai O mencapai sekitar 46.100 token. Berdasarkan confusion matrix seluruh skenario pada Lampiran A, kelima skenario menunjukkan pola yang serupa. Kesalahan antartipe entitas memiliki jumlah yang sangat kecil dan hanya berkisar antara 4 sampai 12 token. Sebagian besar kesalahan terkumpul pada baris dan kolom O, yaitu token entitas yang diprediksi sebagai bukan entitas atau token bukan entitas yang diprediksi sebagai entitas. Pola tersebut kembali menunjukkan bahwa tantangan utama model terletak pada pendeteksian entitas, bukan pada pembedaan tipe entitas. Pada skenario augmentasi data, hanya terdapat empat token dengan kesalahan tipe dan seluruhnya merupakan Location yang diprediksi sebagai Event. Kesalahan terbesar berasal dari Location yang diprediksi sebagai O sebanyak 17 token, diikuti Person yang diprediksi sebagai O sebanyak 15 token dan token O yang diprediksi sebagai Person sebanyak 12 token. Selain itu, terdapat tujuh token O yang diprediksi sebagai Location dan tujuh token Time yang diprediksi sebagai O. Kelas minoritas juga menunjukkan hasil yang relatif baik pada skenario augmentasi data. Sebanyak 136 token Event diprediksi dengan benar, dengan hanya dua token yang terlewat dan tidak terdapat kesalahan tipe. Sementara itu, sebanyak 383 token Time diprediksi dengan benar dan hanya tujuh token yang terlewat. Hasil tersebut sesuai dengan rincian pada Tabel 4.4, yaitu 25 false positive, 41 false negative, dan empat kesalahan klasifikasi tipe. Sebagai perbandingan, weighted cross-entropy menghasilkan lebih banyak prediksi token O sebagai entitas. Sebanyak 45 token O diprediksi sebagai Person, 12 token sebagai Location, dan delapan token sebagai Time. Pola ini menjelaskan peningkatan false positive dan penurunan precision pada skenario tersebut. Dengan demikian, perbedaan utama antarskenario lebih banyak ditemukan pada kemampuan mendeteksi keberadaan entitas daripada kemampuan membedakan jenis entitas.
 
@@ -188,7 +188,7 @@ Bukti berikutnya diperoleh dari jumlah kesalahan batas B/I. Pada tiga model unca
 | Amr | B-PERSON | I-PERSON |
 | bin | I-PERSON | I-PERSON |
 | Syu’aib | I-PERSON | B-PERSON |
-| . | O | O | I-PERSON bin I-PERSON I-PERSON Syu’aib I-PERSON B-PERSON . O O Nama “Amr bin Syu'aib” seharusnya dikenali sebagai satu entitas Person dengan urutan label B-I-I. Namun, token “Amr” diprediksi sebagai I-PERSON, sedangkan “Syu'aib” diprediksi sebagai B-PERSON. Akibatnya, batas awal dan kelanjutan entitas bergeser meskipun tipe entitasnya tetap benar.
+Nama “Amr bin Syu'aib” seharusnya dikenali sebagai satu entitas Person dengan urutan label B-I-I. Namun, token “Amr” diprediksi sebagai I-PERSON, sedangkan “Syu'aib” diprediksi sebagai B-PERSON. Akibatnya, batas awal dan kelanjutan entitas bergeser meskipun tipe entitasnya tetap benar.
 
 **Tabel 4.14 Kesalahan Batas Person pada RoBERTa, Chunk 000007-006**
 
@@ -233,8 +233,7 @@ Dibandingkan dengan baseline, penambahan fitur POS menurunkan false positive dar
 | pula | O | O |
 | ke | O | O |
 | Pakistan | B-LOCATION | O |
-| , | O | O |
-| dan | O | O | O , O O dan O O
+| dan | O | O |
 
 Pada penggalan tersebut, “Pakistan” merupakan nama tempat sehingga diberi label B- LOCATION pada data acuan. Namun, model memprediksinya sebagai O. Kesalahan ini menunjukkan bahwa penambahan fitur POS belum sepenuhnya membantu model mengenali nama lokasi yang jarang muncul dalam data latih. Pola kesalahan model dengan fitur POS ditampilkan melalui confusion matrix pada Gambar 4.14. Gambar 4.14 menunjukkan bahwa sebagian besar kesalahan terkumpul pada baris dan kolom O. Sementara itu, kesalahan antar tipe entitas relatif sedikit, yaitu sekitar 10 token. Pola ini menyerupai model yang berkinerja baik pada uji coba sebelumnya dan menunjukkan bahwa tantangan utama tetap terletak pada pendeteksian keberadaan entitas. Dibandingkan dengan baseline, jumlah token O yang diprediksi sebagai Person menurun dari 38 menjadi 28 token. Sebaliknya, jumlah token Location yang diprediksi sebagai O meningkat dari 33 menjadi 43 token. Pola tersebut kembali memperlihatkan bahwa fitur POS membuat model lebih selektif dalam memprediksi entitas. Model menghasilkan lebih sedikit deteksi yang keliru, tetapi melewatkan lebih banyak entitas.
 

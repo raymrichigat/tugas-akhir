@@ -361,11 +361,45 @@ Sebagai gambaran hasil agregat, berkas pra-anotasi memuat sekitar 6.000 baris en
 
 Tabel 3.10 memperlihatkan bahwa kelas O sangat dominan dibandingkan label entitas lainnya. Selain itu, entitas EVENT serta sebagian entitas TIME dan LOCATION tergolong sebagai kelas minoritas ekstrem, dengan rasio ketidakseimbangan mencapai 25 banding 1. Kondisi ini menjadi salah satu alasan perlunya teknik penanganan ketidakseimbangan kelas pada tahap pemodelan NER berikutnya.
 
+Sebagai contoh satu record data latih yang sebenarnya, chunk 000384-001 (halaman 613, bab "Rumah Tangga Nabawi", sub-bab "Shafiyah binti Huyai bin Akhthab") memuat teks "... dia salah seorang dari tawanan Khaibar. Lalu Rasulullah memilihnya untuk diri beliau sendiri, membebaskannya dan menikahinya setelah penaklukkan Khaibar pada tahun 7 H." Sebagian token berlabel dari record tersebut ditunjukkan pada tabel berikut. Kolom pos_tag pada seluruh record data latih bernilai NN sebagai placeholder dan tidak digunakan model, sedangkan text_id menandai chunk asal setiap token.
+
+**Tabel Contoh Satu Record Data Latih (chunk 000384-001)**
+
+| text_id | id | Token | pos_tag | Label BIO |
+|---|---:|---|---|---|
+| 000384-001 | 13 | tawanan | NN | O |
+| 000384-001 | 14 | Khaibar | NN | B-LOCATION |
+| 000384-001 | 16 | Lalu | NN | O |
+| 000384-001 | 17 | Rasulullah | NN | B-PERSON |
+| 000384-001 | 28 | penaklukkan | NN | O |
+| 000384-001 | 29 | Khaibar | NN | B-EVENT |
+| 000384-001 | 30 | pada | NN | O |
+| 000384-001 | 31 | tahun | NN | B-TIME |
+| 000384-001 | 32 | 7 | NN | I-TIME |
+| 000384-001 | 33 | H | NN | I-TIME |
+
+Record ini memuat empat entitas, yaitu Khaibar (Location), Rasulullah (Person), Khaibar (Event), dan tahun 7 H (Time). Kata "Khaibar" muncul dua kali dengan label berbeda, yaitu Location pada "tawanan Khaibar" dan Event pada "penaklukkan Khaibar". Perbedaan label untuk kata yang sama ini menegaskan bahwa model mengklasifikasikan token dengan mempertimbangkan konteks kalimat, bukan setiap kata secara terpisah.
+
 ## 3.6 Ekstraksi Entitas
 
 Tahap ekstraksi entitas bertujuan untuk memperluas cakupan anotasi dari seed data yang terbatas ke seluruh korpus. Penelitian ini menggunakan model NER berbasis IndoBERT dengan strategi semi-supervised learning melalui iterative self-training, mengikuti pendekatan (Ariyanto et al., 2025). Model dibangun menggunakan indolem/indobert-base- uncased sebagai model token classification dengan skema penandaan BIO. Diagram alir tahap ekstraksi entitas ditunjukkan pada Gambar 3.6.
 
 Sebelum masuk ke proses pelatihan, perlu dibedakan empat istilah yang digunakan pada tahap ini. Chunk adalah potongan teks yang dapat memuat beberapa kalimat dan menjadi unit yang diberikan ke model. Token atau kata adalah unit hasil tokenisasi awal yang diberi label BIO. Subtoken adalah pecahan token yang dihasilkan tokenizer WordPiece IndoBERT dan menjadi unit yang benar-benar diproses model. Batch adalah kumpulan beberapa sequence yang diproses bersamaan dalam satu langkah pelatihan. IndoBERT melakukan klasifikasi token atas satu urutan token yang memiliki konteks, bukan mengklasifikasikan setiap kata secara terpisah, dengan panjang maksimum 512 subtoken. Karena satu kata dapat dipecah menjadi beberapa subtoken, label BIO pada tingkat kata diselaraskan ke tingkat subtoken dengan aturan berikut: hanya subtoken pertama dari setiap kata yang diberi label, sedangkan subtoken lanjutan serta token khusus ([CLS] dan [SEP]) diberi nilai -100 sehingga diabaikan oleh fungsi kerugian. Sebagai contoh, kata "Umair" dipecah menjadi subtoken "uma" dan "##ir"; hanya "uma" yang menerima label I-PERSON, sedangkan "##ir" diberi nilai -100. Penyelarasan ini diimplementasikan menggunakan fungsi word_ids() dari tokenizer.
+
+Sebagai contoh alur ekstraksi yang berjalan, kalimat "... Mush'ab bin Umair kembali ke Makkah ..." dari data uji (chunk 000083-007, halaman 199-202) diproses sebagai berikut. Kalimat ditokenisasi menjadi urutan token, lalu model memprediksi label BIO tiap token, kemudian token berlabel B- dan I- yang berurutan digabung menjadi entitas akhir. Hasilnya ditunjukkan pada tabel berikut.
+
+**Tabel Contoh Alur Ekstraksi NER (chunk 000083-007)**
+
+| Token | Prediksi BIO | Entitas terbentuk |
+|---|---|---|
+| Mush'ab | B-PERSON | Mush'ab bin Umair (Person) |
+| bin | I-PERSON |  |
+| Umair | I-PERSON |  |
+| kembali | O |  |
+| ke | O |  |
+| Makkah | B-LOCATION | Makkah (Location) |
+
+Pada contoh ini prediksi model sama persis dengan label acuan. Kedua entitas hasil ekstraksi, yaitu Mush'ab bin Umair (Person) dan Makkah (Location), selanjutnya menjadi kandidat node dan baru dihubungkan pada tahap konstruksi knowledge graph, bukan oleh model NER.
 
 Gambar 3.6 Diagram Alir Tahapan Ekstraksi Entitas Pada strategi iterative self-training, model terlebih dahulu dilatih melalui proses fine- tuning menggunakan seed data berlabel. Setelah itu, model digunakan untuk memprediksi label pada data tak berlabel. Hanya prediksi dengan tingkat keyakinan tinggi yang diterima sebagai label semu (pseudo-label) dan ditambahkan ke dalam data latih untuk proses pelatihan ulang. Proses ini dilakukan secara berulang hingga tidak terdapat label semu baru yang memenuhi kriteria atau hingga mencapai batas jumlah iterasi yang telah ditentukan. Dalam penelitian ini, sebuah kalimat diterima sebagai label semu apabila rata-rata keyakinan entitas pada kalimat tersebut mencapai ambang batas (threshold) 0,9. Implementasi tahap ini ditunjukkan pada **Kode Semu 3.7**
 
@@ -431,7 +465,9 @@ Tahap penyatuan nama bertujuan untuk menormalisasi variasi penulisan nama entita
 
 Gambar 3.8 Diagram Alir Tahapan Normalisasi Alias Proses penyatuan nama dilakukan melalui dua tahap utama. Tahap pertama adalah pengelompokan manual (manual clustering) terhadap entitas yang telah dipastikan merujuk pada objek yang sama berdasarkan pengetahuan domain. Pengelompokan ini mencakup entitas berlabel PERSON, LOCATION, dan EVENT. Tahap kedua adalah pencocokan kemiripan string menggunakan algoritma Jaro-Winkler. Algoritma ini digunakan karena memberikan bobot lebih besar pada kesamaan prefiks, sehingga sesuai dengan karakteristik sebagian nama Arab yang memiliki kemiripan pada bagian awal nama, sementara variasinya sering muncul pada bagian akhir. Jaro-Winkler di sini berperan sebagai ukuran kemiripan string, bukan sebagai algoritma clustering, sehingga keluaran tahap ini berupa peta alias (alias map), bukan klaster yang dievaluasi berdasarkan kualitas klaster.
 
-Ambang kemiripan ditetapkan sebesar 0,93, lebih tinggi daripada ambang umum 0,85. Penetapan ambang yang lebih ketat dilakukan karena banyak nama Arab memiliki pola struktural yang mirip, tetapi merujuk pada entitas yang berbeda, misalnya Abu Bakar dan Abu Bashir. Untuk mengurangi risiko false positive, diterapkan sejumlah aturan pengaman. Aturan tersebut mencakup kewajiban kemiripan bagian pembeda setelah prefiks majemuk di atas 0,90, kecocokan bagian patronimik seperti bin atau binti, rasio panjang kedua nama tidak kurang dari 0,80, serta penggunaan daftar pasangan terlarang (exclude pairs) untuk nama yang mirip secara leksikal tetapi berbeda entitas, seperti Sa'd bin Mu'adz dan Sa'd bin Ubadah. Implementasi tahap ini ditunjukkan pada **Kode Semu 3.8**
+Ambang kemiripan ditetapkan sebesar 0,93, lebih tinggi daripada ambang umum 0,85. Penetapan ambang yang lebih ketat dilakukan karena banyak nama Arab memiliki pola struktural yang mirip, tetapi merujuk pada entitas yang berbeda, misalnya Abu Bakar dan Abu Bashir. Untuk mengurangi risiko false positive, diterapkan sejumlah aturan pengaman. Aturan tersebut mencakup kewajiban kemiripan bagian pembeda setelah prefiks majemuk di atas 0,90, kecocokan bagian patronimik seperti bin atau binti, rasio panjang kedua nama tidak kurang dari 0,80, serta penggunaan daftar pasangan terlarang (exclude pairs) untuk nama yang mirip secara leksikal tetapi berbeda entitas, seperti Sa'd bin Mu'adz dan Sa'd bin Ubadah.
+
+Ambang 0,93 tersebut ditetapkan berdasarkan uji beberapa nilai ambang, bukan sekadar dinaikkan dari nilai umum 0,85. Pada rentang 0,85 sampai 0,95, jumlah pasangan nama yang digabung menurun dari 359 pasangan pada ambang 0,85 menjadi 137 pada 0,90, 103 pada 0,93, dan 90 pada 0,95. Menurunkan ambang ke 0,85 menambah 256 pasangan dibandingkan 0,93, tetapi dari 256 pasangan borderline tersebut, 255 pasangan ternyata merujuk pada entitas yang berbeda, sehingga penurunan ambang tidak menambah normalisasi yang benar melainkan menimbulkan penggabungan yang keliru. Contoh pasangan yang akan salah digabung apabila ambang diturunkan antara lain Umayyah bin Zaid dengan Usamah bin Zaid (0,921), Perang Tabuk dengan Perang Yarmuk (0,920), dan Perang Bani Qainuqa' dengan Perang Bani Quraizhah (0,914). Ambang 0,93 dipilih karena pada tingkat kemiripan tersebut penggabungan praktis hanya terjadi pada variasi ejaan atau artefak OCR, bukan pada nama yang berbeda. Sebagai konsekuensi memilih presisi di atas recall, ambang ini dapat melewatkan sebagian variasi sah yang skornya tepat di bawah ambang, dan variasi seperti itu dapat ditambahkan secara manual ke daftar klaster apabila ditemukan saat peninjauan. Implementasi tahap ini ditunjukkan pada **Kode Semu 3.8**
 
 | Kode Semu |
 |---|
@@ -498,6 +534,8 @@ Tahap pembentukan relasi bertujuan untuk menghubungkan entitas hasil ekstraksi k
 Ambang 200 karakter tersebut didasarkan pada karakteristik korpus, bukan angka yang ditetapkan sembarang. Panjang kalimat pada korpus memiliki median sekitar 100 karakter dan sekitar 84,9% kalimat berada pada 200 karakter atau kurang, sehingga jendela 200 karakter kira-kira menampung satu kalimat penuh beserta sedikit margin ke kalimat tetangga. Selain itu, sekitar 82,7% pasangan entitas yang berurutan dalam satu chunk berjarak kurang dari 200 karakter. Kedekatan posisi juga menentukan bobot relasi secara bertingkat, yaitu 0,4 untuk jarak kurang dari 50 karakter, 0,3 untuk kurang dari 100 karakter, dan 0,2 untuk kurang dari 200 karakter. Dengan demikian, tidak seluruh entitas dalam satu sub-bab otomatis dihubungkan, melainkan hanya pasangan yang memenuhi syarat konteks tersebut. Ambang ini merupakan heuristik yang diadaptasi untuk korpus naratif Sirah.
 
 Sebagai contoh relasi yang benar, kalimat "Abdurrahman bin Auf menuturkan, 'Tatkala aku sedang berada di tengah barisan pada Perang Badr…'" menghasilkan relasi keterlibatan Abdurrahman bin Auf pada Perang Badr yang didukung konteks satu kalimat. Sebaliknya, relasi dapat keliru pada tiga pola, yaitu adanya negasi, penyebut yang berperan sebagai perawi dan bukan pelaku, serta penyebutan peristiwa lain yang kebetulan berdekatan. Karena pembentukan relasi berbasis kedekatan tidak memeriksa negasi, kalimat yang menyatakan ketidakterlibatan tetap dapat menghasilkan relasi keterlibatan. Sebagai contoh, kalimat "Saat Perang Badr, Abu Lahab tidak ikut serta" tetap menghasilkan relasi Abu Lahab terlibat pada Perang Badr. Deteksi negasi tidak diterapkan pada penelitian ini dan dinyatakan sebagai keterbatasan. Dengan demikian, relasi yang terbentuk merupakan hasil induksi heuristik berbasis kedekatan, bukan hasil semantic relation extraction penuh dengan model relasi terlatih.
+
+Untuk menyaring sebagian relasi yang keliru, pembentukan relasi dilengkapi tiga aturan penolakan berbasis pola pada kalimat bukti. Aturan InvalidInvolvedIn membatalkan relasi keterlibatan tokoh pada peristiwa apabila tokoh tersebut sebenarnya berperan sebagai perawi, disebut dalam rujukan ayat Al-Qur'an, atau dinyatakan meninggal dunia, sehingga bukan pelaku peristiwa. Aturan InvalidOccurredAt menerima relasi lokasi apabila nama peristiwa memuat nama lokasi atau peristiwa merupakan penaklukan lokasi tersebut, dan membatalkannya apabila cocok dengan pola penyebutan lokasi yang bukan tempat berlangsungnya peristiwa. Aturan InvalidOccurredOn membatalkan relasi waktu apabila keterangan waktu cocok dengan pola yang menunjukkan waktu tersebut merujuk pada peristiwa lain. Ketiga aturan ini merupakan penyaring berbasis pola, bukan analisis makna kalimat secara penuh, sehingga sebagian kesalahan seperti pengabaian negasi tetap tidak tertangani dan dinyatakan sebagai keterbatasan.
 
 Gambar 3.9 Diagram Alir Tahapan Pembentukan Relasi **Tabel 3.14 Rancangan Tipe Relasi Inti**
 
