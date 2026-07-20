@@ -65,6 +65,21 @@ SCENARIOS = {
 LABELS = ["PERSON", "LOCATION", "EVENT", "TIME"]
 CONF_CLASSES = ["O", "PERSON", "LOCATION", "EVENT", "TIME"]
 
+# Nama tampilan rapi untuk JUDUL gambar confusion (key SCENARIOS dipertahankan
+# apa adanya karena dipakai untuk nama berkas dan oleh skrip lain yang mengimpor modul ini).
+DISPLAY = {
+    "S1-baseline (indolem uncased)": "IndoBERT uncased (baseline)",
+    "S2-weighted-CE":                "Weighted Cross-Entropy",
+    "S3a-SCL":                       "Supervised Contrastive Learning (SCL)",
+    "S3b-JSCL":                      "Jaccard Similarity Contrastive Loss (JSCL)",
+    "S4-augmentation":               "Augmentasi Data",
+    "S5-POS-tag":                    "Modul POS-tag",
+    "B-indobert-cased (p1)":         "IndoBERT phase-1",
+    "B-roberta (indo)":              "RoBERTa",
+    "B-cahya-bert-1.5G":             "cahya BERT",
+    "B-distilbert":                  "DistilBERT",
+}
+
 
 def to_dash(lbl: str) -> str:
     lbl = str(lbl)
@@ -216,7 +231,7 @@ def main() -> None:
         f1_new = f1_score(ts_n, ps_n)
         rep_new = seq_report(ts_n, ps_n, digits=4)
         pl = per_label_f1(rep_new)
-        plot_confusion(gold_new, pred, f"{tag}", CONF_DIR / f"{tag.split()[0]}.png")
+        plot_confusion(gold_new, pred, DISPLAY.get(tag, tag), CONF_DIR / f"{tag.split()[0]}.png")
         print(f"{tag:32s} F1 {f1_old:.4f} -> {f1_new:.4f}  ({f1_new-f1_old:+.4f})")
         rows.append({"tag": tag, "f1_old": f1_old, "f1_new": f1_new,
                      "P": precision_score(ts_n, ps_n), "R": recall_score(ts_n, ps_n),
