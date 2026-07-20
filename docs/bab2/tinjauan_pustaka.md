@@ -180,7 +180,6 @@ Pada Persamaan (2.12), 𝐶𝐷(𝑣) menunjukkan nilai degree centrality pada s
 > **𝐶𝐵(𝑣) = ∑ 𝜎𝑠𝑡(𝑣) 𝜎𝑠𝑡 𝑠,𝑡∈𝑉**  (2.13)
 
 Pada Persamaan (2.13), 𝐶𝐵(𝑣) menunjukkan nilai betweenness centrality pada simpul 𝑣. Simbol 𝜎𝑠𝑡  menunjukkan jumlah jalur terpendek dari simpul 𝑠 ke simpul 𝑡, sedangkan
-<!-- ✳ REVISI (Pak Aldi #2): perbaiki "𝑡 ke 𝑡" → "𝑠 ke 𝑡" -->
 𝜎𝑠𝑡(𝑣) menunjukkan jumlah jalur terpendek dari simpul 𝑠 ke simpul 𝑡 yang melewati simpul 𝑣.
 
 Selain itu, terdapat fitur closeness centrality yang digunakan untuk melihat kedekatan suatu simpul terhadap simpul-simpul lain dalam jaringan. Menurut Adniati et al. (2023), closeness centrality menunjukkan simpul yang memiliki jarak minimum terhadap simpul lain dalam jaringan. Dalam konteks knowledge graph, metrik ini dapat digunakan untuk melihat entitas yang secara struktural dekat dengan banyak entitas lain.
@@ -250,47 +249,3 @@ Berbeda dengan micro-F1, macro-F1 menghitung F1-score untuk setiap kelas terlebi
 > **𝐹1𝑚𝑎𝑐𝑟𝑜 = 1 𝐶 ∑ 𝐹 𝐶 𝑐=1 1𝑐**  (2.26)
 
 Dengan demikian, micro-F1 dan macro-F1 memberikan sudut pandang evaluasi yang berbeda. Micro-F1 menggambarkan performa keseluruhan model berdasarkan total prediksi, sedangkan macro-F1 menunjukkan apakah model mampu bekerja secara seimbang pada setiap kelas. Karena penelitian ini menangani ketidakseimbangan label, macro-F1 penting untuk melihat performa model terhadap label minoritas, sementara micro-F1 digunakan untuk melihat performa model secara umum.
-
-<!-- ================================================================= -->
-<!-- ✳ SISIPAN REVISI SIDANG — teks baru untuk bab ini (letak ada di tiap blok). -->
-<!-- Perbaikan kecil sudah disisipkan inline di badan bab (cari penanda ✳ REVISI). -->
-<!-- ================================================================= -->
-
-## 2.x Confusion Matrix (subbab baru)
-
-Confusion matrix merupakan tabel yang membandingkan label acuan dengan label prediksi model untuk setiap kelas, sehingga memperlihatkan bukan hanya jumlah prediksi yang benar tetapi juga pola kesalahan antarkelas. Baris menyatakan kelas acuan dan kolom menyatakan kelas prediksi. Sel pada diagonal berisi prediksi yang benar, sedangkan sel di luar diagonal menunjukkan kekeliruan klasifikasi antarkelas.
-
-Pada penelitian ini confusion matrix disajikan pada dua tingkat yang perlu dibedakan secara tegas. Tingkat entitas menggunakan empat tipe entitas, yaitu Person, Location, Event, dan Time, untuk menilai kecocokan tipe pada entitas yang terdeteksi. Tingkat token menggunakan skema BIO dengan sembilan kelas, yaitu label O serta label B- dan I- untuk masing-masing tipe entitas, sehingga evaluasi pada tingkat token bukan sekadar empat kelas. Dari confusion matrix dapat diturunkan nilai precision, recall, dan F1-score untuk setiap kelas.
-
-## 2.x Ketidakseimbangan Kelas dan Penanganannya (tambahan)
-
-Ketidakseimbangan kelas terjadi ketika jumlah contoh antarkelas sangat berbeda. Pada NER, ketidakseimbangan bersifat berjenjang. Pada tingkat token, label O jauh mendominasi seluruh token entitas. Pada tingkat kelas entitas, tipe tertentu seperti Person jauh lebih banyak daripada tipe yang lebih jarang seperti Event dan Time. Henning dkk. (2023) menyatakan bahwa model NLP cenderung berkinerja buruk pada kelas yang jarang muncul, dan penanganannya dapat berupa penambahan data melalui augmentasi, penyesuaian bobot pada fungsi kerugian, atau perubahan representasi. Tidak terdapat ambang universal yang menyatakan sebuah dataset telah seimbang. Keberhasilan penanganan ketidakseimbangan diukur dari peningkatan kinerja kelas minoritas tanpa mengorbankan kelas mayoritas (Nemoto dkk., 2024), bukan dari tercapainya rasio satu banding satu.
-
-## 2.x Model Pra-latih Cased dan Uncased (tambahan, sebelum pembahasan hasil)
-
-Model bahasa pra-latih dapat dibedakan menjadi cased dan uncased berdasarkan perlakuannya terhadap huruf kapital. Model cased mempertahankan informasi kapitalisasi sehingga penulisan dengan huruf kapital dan huruf kecil diperlakukan berbeda, sedangkan model uncased menormalkan seluruh huruf menjadi huruf kecil sesuai mekanisme tokenizer-nya. Karakteristik ini relevan untuk NER pada teks Sirah Nabawiyah karena nama tokoh, lokasi, waktu, dan peristiwa umumnya diawali huruf kapital. Model uncased menghilangkan sinyal kapitalisasi tersebut, sementara model cased mempertahankannya.
-
-## 2.7 Pengujian Fungsional dan Validitas Semantis (tambahan setelah paragraf competency questions)
-
-Evaluasi berbasis competency questions dalam penelitian ini digunakan untuk menilai kesesuaian knowledge graph dengan tujuan penelusuran yang telah ditetapkan. Evaluasi tersebut tidak dimaksudkan untuk mengukur kelengkapan seluruh fakta dalam knowledge graph atau membandingkan keseluruhan isi graf dengan gold standard. Penilaian dilakukan pada dua tingkat, yaitu keberhasilan operasional kueri dan ketepatan semantis jawaban. Keberhasilan operasional menunjukkan bahwa pola penelusuran dapat dijalankan, sedangkan ketepatan semantis menunjukkan bahwa hubungan yang dikembalikan oleh kueri didukung oleh konteks teks sumber.
-
-Selain kelayakan fungsional, ketepatan isi knowledge graph dinilai dari proporsi jawaban kueri yang benar-benar didukung teks sumber. Karena tidak tersedia acuan lengkap seluruh relasi yang seharusnya ada, ketepatan tersebut diperkirakan dengan memeriksa secara manual setiap jawaban yang dikembalikan kueri terhadap sumber, lalu dinyatakan sebagai validitas semantis dan dihitung dengan Persamaan (2.x):
-
-> kesesuaian semantis fungsi ke-i = (jumlah jawaban yang didukung sumber ÷ jumlah seluruh jawaban
-> yang diperiksa) × 100%
-
-## 2.x Dasar Konstruksi Knowledge Graph (tambahan rujukan)
-
-Pembentukan knowledge graph dari teks umumnya mengikuti tahapan ekstraksi entitas, ekstraksi relasi, dan integrasi ke dalam graf (survei konstruksi knowledge graph, 2024–2025). Penyatuan variasi nama entitas ke bentuk kanonik merupakan bagian dari tugas entity normalization (Sevgili dkk., 2022). Pada penelitian ini, penyatuan nama dilakukan dengan pendekatan yang lebih sederhana, yaitu normalisasi alias berbasis kesamaan string Jaro-Winkler dan validasi manual, bukan model entity linking berbasis pembelajaran. Demikian pula, relasi antar entitas dibentuk melalui induksi heuristik berbasis kedekatan, bukan semantic relation extraction penuh dengan model relasi terlatih.
-
-> ⚠️ Lengkapi sitasi persis (penulis, tahun, halaman) dari `docs/revisi/artefak/referensi_konstruksi_kg.md`.
-
-## Perbaikan notasi Persamaan (2.13) betweenness
-
-✅ SUDAH diterapkan inline di badan Bab 2 (cari penanda `✳ REVISI (Pak Aldi #2)`): "𝜎𝑠𝑡(𝑣) …
-jalur terpendek dari simpul **𝒔** ke simpul **𝒕** yang melewati simpul 𝑣".
-
-> BELUM (butuh keputusanmu, audit tulisan): (a) rujuk tiap persamaan dengan nomor eksplisit
-> ("…pada Persamaan (2.x)"), bukan "persamaan di bawah ini"; (b) pastikan tiap simbol/variabel
-> pada Persamaan (2.11)–(2.19) didefinisikan (Bu Ratih #3). Ini audit per-persamaan — bisa aku
-> bantu telusuri kalau kamu mau.

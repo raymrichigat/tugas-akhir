@@ -32,7 +32,6 @@ Penelitian ini bertujuan membangun knowledge graph Sirah Nabawiyah menggunakan N
 1. Menyiapkan data teks Sirah Nabawiyah menjadi dataset yang siap digunakan.
 2. Mengekstraksi entitas dari teks Sirah Nabawiyah menggunakan Named-Entity Recognition (NER) berbasis SRL dengan strategi iterative self-training.
 3. Merancang skema dan membangun knowledge graph berbasis entitas Person, Event, Location, dan Time beserta relasinya menggunakan Neo4j.
-<!-- ✳ REVISI (Temuan #1): SNA hanya mendeskripsikan struktur; pisahkan tiga peran (NER/SNA/fungsional) -->
 4. Mengevaluasi hasil NER melalui tiga skenario uji coba serta menganalisis knowledge graph yang dibangun, termasuk analisis jaringan menggunakan Social Network Analysis dan pengujian fungsional graf, untuk menguji kualitas ekstraksi entitas, mendeskripsikan struktur jaringan, dan menilai
 
 kelayakan graf dalam mendukung penelusuran informasi pada Sirah Nabawiyah. Luaran utama penelitian ini berbentuk knowledge graph Sirah Nabawiyah yang tersimpan dan dapat ditelusuri pada graph database Neo4j melalui kueri Cypher. Selain itu, penelitian ini juga menghasilkan dataset teks Sirah berlabel entitas dan model NER terlatih sebagai luaran pendukung. Dengan demikian, luaran penelitian ini berupa graf pengetahuan beserta data dan modelnya, bukan aplikasi atau program siap pakai bagi pengguna akhir.
