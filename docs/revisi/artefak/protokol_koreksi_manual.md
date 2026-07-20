@@ -5,17 +5,12 @@
 > `data/result/manual_labelling/gold_review/koreksi_gold_showcase.md` (+ `.csv`) dan
 > `docs/anotasi_guideline.md`.
 
-## ⚠️ Catatan framing (baca dulu — perlu keputusanmu/konfirmasi pembimbing)
+## Ruang lingkup
 
-Ada dua "koreksi gold" yang **berbeda** dan jangan tertukar:
-1. **Koreksi saat MEMBUAT gold** (semi-otomatis → satu pass review manual). **Ini yang diminta Bu
-   Ratih #5** dan wajar didokumentasikan sebagai metodologi anotasi. Isi artefak ini.
-2. **Koreksi GT data uji pasca-hasil** (untuk hitung ulang F1) — dulu diarahkan **cukup lisan**,
-   tidak ditulis di Bab 3, karena membuat F1 lama/baru tak sebanding.
-
-Artefak ini **hanya** untuk #1 — dibingkai sebagai **cara gold dibentuk** (pre-labelling +
-review), bukan sebagai perubahan test pasca-hasil. **Konfirmasikan ke pembimbing** seberapa detail
-yang boleh masuk buku agar tidak bertabrakan dengan arahan #2.
+Artefak ini mendokumentasikan **koreksi manual sebagai bagian dari pembuatan gold**: pelabelan
+**semi-otomatis** (kamus + regex) diikuti **satu pass review manual** untuk memperbaiki kualitas
+anotasi. Fokusnya pada **cara gold dibentuk sebelum evaluasi** — sebagai bagian metodologi
+anotasi. Ini menjawab Bu Ratih #5 dan tidak masuk ke pembahasan perbandingan F1.
 
 ## 1. Mengapa koreksi manual diperlukan
 

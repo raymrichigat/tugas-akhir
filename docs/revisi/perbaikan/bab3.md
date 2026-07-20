@@ -57,10 +57,10 @@ Sumber: `docs/revisi/artefak/definisi_token_subtoken.md`. Definisi 4 istilah + c
 pertama = label, lanjutan & special = `-100`; `word_ids()`; max 512). Pindahkan dari Bab 4 ke
 metodologi.
 
-## P-3.9. Protokol koreksi manual (Bu Ratih #5) 🧰⚠️
+## P-3.9. Protokol koreksi manual (Bu Ratih #5) 🧰
 Sumber: `docs/revisi/artefak/protokol_koreksi_manual.md` (+ showcase asli
 `data/result/manual_labelling/gold_review/koreksi_gold_showcase.md` + pedoman
-`docs/anotasi_guideline.md`). Alasan koreksi (semi-auto→error) + 99 koreksi terkategori (kelewat/
-batas/LOC↔EVENT/palsu/OCR/tipe) + contoh before→after + anotator tunggal (keterbatasan, no IAA).
-**⚠️ KONFIRMASI framing dulu:** ini koreksi saat MEMBUAT gold (metodologi, boleh); jangan tertukar
-dgn koreksi GT-test pasca-hasil (arahan lama: lisan saja). Tanya pembimbing seberapa detail.
+`docs/anotasi_guideline.md`). Framing = **koreksi saat MEMBUAT gold** (semi-auto → satu pass review
+manual); metodologi anotasi, tidak menyentuh perbandingan F1. Alasan koreksi (semi-auto→error) +
+99 koreksi terkategori (kelewat/batas/LOC↔EVENT/palsu/OCR/tipe) + contoh before→after + anotator
+tunggal (keterbatasan, no IAA).

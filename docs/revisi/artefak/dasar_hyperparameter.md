@@ -46,8 +46,10 @@ tercantum di disertasi penulis pertama (`lama/7025221021-Doctoral.pdf`).
   **membatasi di 6 iterasi** sebagai titik henti praktis (konvergensi F1 sudah landai). Nyatakan
   ini apa adanya, jangan klaim "6 dari Ariyanto dkk."
 - Nilai-nilai lain (lr/batch/epoch/weight decay/seed/threshold) **memang** dari referensi.
-- Pak Aldi menyarankan **konfirmasi ke peneliti acuan** — ini sedang dilakukan (menghubungi
-  penulis pertama, Mbak Amelia).
+- Pak Aldi menyarankan konfirmasi ke peneliti acuan **jika belum ada dokumentasi**. Karena
+  konfigurasi ini **sudah terbit** di makalah peer-reviewed (IEEE Access 2025) + disertasi, dasar
+  hyperparameter **sudah terpenuhi lewat sitasi** — lebih kuat daripada konfirmasi lisan. Tidak
+  perlu konfirmasi tambahan.
 
 ---
 
