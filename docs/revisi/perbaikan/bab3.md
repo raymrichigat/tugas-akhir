@@ -5,6 +5,12 @@
 Sumber: `docs/revisi/artefak/contoh_ner_dan_data_latih.md` (contoh Mush'ab bin Umair → Makkah).
 Satukan Tabel 3.9 (BIO) + Tabel 3.12 (hasil NER) jadi **satu contoh berjalan**.
 
+## P-3.1b. Alur NER → KG UTUH satu contoh (Bu Nanik #5, Bu Dini #7) 🧰
+Sumber: `docs/revisi/artefak/contoh_ner_ke_kg_utuh.md` — SATU data (Abu Jahal → Perang Badr, chunk
+000071-003) ditelusuri 8 tahap: teks → BIO → entitas → normalisasi alias → pasangan → relasi
+INVOLVED_IN (w=0,5) → node/edge → Cypher Neo4j. Jadikan satu gambar/tabel alur menyeluruh (Bu Dini
+minta jangan terpisah-pisah).
+
 ## P-3.2. Satu record data latih utuh (Bu Nanik #2, Bu Dini #5) 🧰
 
 Sumber: idem — record `000384-001` (chunk_id, teks, token, BIO, metadata, POS). **Nyatakan POS =

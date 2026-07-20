@@ -33,8 +33,9 @@ Pembahasan hasil cased/uncased/RoBERTa di hal 84–86 **jangan ditulis ulang**; 
 - Audit semua simbol (SNA, loss, Jaccard, augmentasi) agar tiap variabel didefinisikan; rujuk tiap
   persamaan dengan nomor eksplisit.
 
-## P-2.6. (Opsional) rujukan konstruksi KG & co-occurrence RE (Bu Nanik #7/#9) 📝
-
-Jika ingin, tambahkan rujukan ekstraksi relasi berbasis co-occurrence / konstruksi KG dari teks —
-kandidat (VERIFIKASI, ≤5 tahun): arXiv:2306.02051 (2023); MDPI Applied Sciences (2025). Boleh juga
-cukup framing "heuristik yang diadaptasi" (lihat `dasar_cooccurrence_200_karakter.md`).
+## P-2.6. Rujukan konstruksi KG, entity linking, relation extraction (Bu Nanik #7/#9) 🧰
+Sumber: `docs/revisi/artefak/referensi_konstruksi_kg.md` — rujukan nyata ≤5 tahun (KG construction
+MDPI Appl.Sci 2025 / CMES 2024; RE survey arXiv 2306.02051 2023; entity linking Sevgili dkk. 2022
+Semantic Web) + tabel "diadopsi vs dimodifikasi untuk Sirah" + batas klaim (relasi = induksi
+heuristik, bukan semantic RE penuh; normalisasi alias = versi sederhana, bukan neural EL). Cek
+penulis/halaman sebelum tulis.
