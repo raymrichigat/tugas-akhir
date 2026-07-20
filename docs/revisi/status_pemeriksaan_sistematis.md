@@ -21,7 +21,7 @@
 ## Bu Nanik
 | # | Poin | Status | Catatan |
 |---|---|:-:|---|
-| 1 | **Contoh NER berjalan (kalimat→BIO→entitas)** | ⚠️ | alur Abu Jahal (§3.7) ada; contoh BIO (Tabel 3.9) & keluaran NER (Tabel 3.12) **masih terpisah**, belum satu contoh utuh |
+| 1 | **Contoh NER berjalan (kalimat→BIO→entitas)** | ✅ | §3.6 kini pakai kalimat **Abu Jahal** yang sama dgn §3.7 (benang merah NER→KG utuh, ada kalimat penghubung eksplisit). Tabel 3.9/3.12 tetap sbg ilustrasi tambahan (4 tipe label + keluaran multi-entitas) |
 | 2 | **Record data latih utuh** | ⚠️ | kolom (text_id/id/pos_tag/label) dijelaskan; **belum ada tabel contoh 1 record terisi lengkap** |
 | 3 | Definisi token/subtoken/batch | ✅ | §3.6 (word_ids, -100) |
 | 4 | Alur NER→KG | ✅ | Abu Jahal §3.7 |
@@ -38,7 +38,7 @@
 | 3 | Notasi persamaan (semua variabel dijelaskan) | ✅ | tiap persamaan diberi keterangan simbol |
 | 4 | Contoh chunking sebelum/sesudah | ✅ | §3.4 (contoh "Kekuasaan di Berbagai Penjuru Arab") |
 | 5 | Koreksi manual + anotator tunggal | ✅ | §3.5.2 |
-| 6 | Contoh BIO 1 kalimat lengkap | ⚠️ | Tabel 3.9 ada; **belum jadi bagian contoh berjalan yang sama** (lihat Nanik #1) |
+| 6 | Contoh BIO 1 kalimat lengkap | ✅ | §3.6 contoh berjalan (Abu Jahal) kini menampilkan token→BIO→entitas satu kalimat utuh yang menyambung ke §3.7; Tabel 3.9 tetap sbg contoh 4 tipe label |
 | 7 | **JW 0,93 justifikasi empiris** | ⚠️ | ada alasan (0,93 vs 0,85 + guard + exclude); **belum ada hasil uji beberapa ambang (sweep)** |
 | 8 | Keterbacaan confusion matrix | ✅ | diperbesar |
 

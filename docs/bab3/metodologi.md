@@ -386,20 +386,22 @@ Tahap ekstraksi entitas bertujuan untuk memperluas cakupan anotasi dari seed dat
 
 Sebelum masuk ke proses pelatihan, perlu dibedakan empat istilah yang digunakan pada tahap ini. Chunk adalah potongan teks yang dapat memuat beberapa kalimat dan menjadi unit yang diberikan ke model. Token atau kata adalah unit hasil tokenisasi awal yang diberi label BIO. Subtoken adalah pecahan token yang dihasilkan tokenizer WordPiece IndoBERT dan menjadi unit yang benar-benar diproses model. Batch adalah kumpulan beberapa sequence yang diproses bersamaan dalam satu langkah pelatihan. IndoBERT melakukan klasifikasi token atas satu urutan token yang memiliki konteks, bukan mengklasifikasikan setiap kata secara terpisah, dengan panjang maksimum 512 subtoken. Karena satu kata dapat dipecah menjadi beberapa subtoken, label BIO pada tingkat kata diselaraskan ke tingkat subtoken dengan aturan berikut: hanya subtoken pertama dari setiap kata yang diberi label, sedangkan subtoken lanjutan serta token khusus ([CLS] dan [SEP]) diberi nilai -100 sehingga diabaikan oleh fungsi kerugian. Sebagai contoh, kata "Umair" dipecah menjadi subtoken "uma" dan "##ir"; hanya "uma" yang menerima label I-PERSON, sedangkan "##ir" diberi nilai -100. Penyelarasan ini diimplementasikan menggunakan fungsi word_ids() dari tokenizer.
 
-Sebagai contoh alur ekstraksi yang berjalan, kalimat "... Mush'ab bin Umair kembali ke Makkah ..." dari data uji (chunk 000083-007, halaman 199-202) diproses sebagai berikut. Kalimat ditokenisasi menjadi urutan token, lalu model memprediksi label BIO tiap token, kemudian token berlabel B- dan I- yang berurutan digabung menjadi entitas akhir. Hasilnya ditunjukkan pada tabel berikut.
+Sebagai contoh alur ekstraksi yang berjalan, digunakan kalimat yang sama yang akan ditelusuri hingga tahap konstruksi knowledge graph pada Subbab 3.7, sehingga pembaca dapat mengikuti satu contoh berjalan dari deteksi entitas sampai pembentukan node dan edge. Dari sebuah chunk pada halaman 165-168, kalimat "Tatkala Abu Jahal mengajaknya pergi saat Perang Badr…" diproses sebagai berikut. Kalimat ditokenisasi menjadi urutan token, lalu model memprediksi label BIO tiap token, kemudian token berlabel B- dan I- yang berurutan digabung menjadi entitas akhir. Hasilnya ditunjukkan pada tabel berikut.
 
-**Tabel Contoh Alur Ekstraksi NER (chunk 000083-007)**
+**Tabel Contoh Alur Ekstraksi NER (kalimat benang merah)**
 
 | Token | Prediksi BIO | Entitas terbentuk |
 |---|---|---|
-| Mush'ab | B-PERSON | Mush'ab bin Umair (Person) |
-| bin | I-PERSON |  |
-| Umair | I-PERSON |  |
-| kembali | O |  |
-| ke | O |  |
-| Makkah | B-LOCATION | Makkah (Location) |
+| Tatkala | O |  |
+| Abu | B-PERSON | Abu Jahal (Person) |
+| Jahal | I-PERSON |  |
+| mengajaknya | O |  |
+| pergi | O |  |
+| saat | O |  |
+| Perang | B-EVENT | Perang Badr (Event) |
+| Badr | I-EVENT |  |
 
-Pada contoh ini prediksi model sama persis dengan label acuan. Kedua entitas hasil ekstraksi, yaitu Mush'ab bin Umair (Person) dan Makkah (Location), selanjutnya menjadi kandidat node dan baru dihubungkan pada tahap konstruksi knowledge graph, bukan oleh model NER.
+Pada contoh ini prediksi model sama persis dengan label acuan. Kedua entitas hasil ekstraksi, yaitu Abu Jahal (Person) dan Perang Badr (Event), selanjutnya menjadi kandidat node dan baru dihubungkan pada tahap konstruksi knowledge graph, bukan oleh model NER. Kalimat yang sama ini dilanjutkan sebagai contoh berjalan pada Subbab 3.7, mulai dari normalisasi alias hingga pembentukan simpul dan sisi serta pemuatannya ke Neo4j.
 
 Gambar 3.6 Diagram Alir Tahapan Ekstraksi Entitas Pada strategi iterative self-training, model terlebih dahulu dilatih melalui proses fine- tuning menggunakan seed data berlabel. Setelah itu, model digunakan untuk memprediksi label pada data tak berlabel. Hanya prediksi dengan tingkat keyakinan tinggi yang diterima sebagai label semu (pseudo-label) dan ditambahkan ke dalam data latih untuk proses pelatihan ulang. Proses ini dilakukan secara berulang hingga tidak terdapat label semu baru yang memenuhi kriteria atau hingga mencapai batas jumlah iterasi yang telah ditentukan. Dalam penelitian ini, sebuah kalimat diterima sebagai label semu apabila rata-rata keyakinan entitas pada kalimat tersebut mencapai ambang batas (threshold) 0,9. Implementasi tahap ini ditunjukkan pada **Kode Semu 3.7**
 
