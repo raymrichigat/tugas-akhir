@@ -29,5 +29,6 @@
 - `.../relation_window/` (dasar 200-char + chart)
 - `data/result/analysis/bab4_viz/` (chart F1, distribusi augmentasi)
 
-## Di-SKIP (menunggu)
-- **Pak Aldi #5 hyperparameter** — user tanya Mbak Amelia dulu.
+## Catatan
+- **Pak Aldi #5 hyperparameter** ✅ artefak `artefak/dasar_hyperparameter.md` (referensi Ariyanto
+  dkk. 2025 IEEE Access). Tinggal konfirmasi final ke Mbak Amelia.

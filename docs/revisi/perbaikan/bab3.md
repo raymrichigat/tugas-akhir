@@ -33,6 +33,13 @@ pemeriksa manual, keterbatasan 1-anotator (sekaligus Bu Ratih #5).
 
 Sumber: `docs/revisi/artefak/keterbatasan_negasi_relasi.md` (bukti Abu Lahab → Perang Badr).
 
+## P-3.6b. Dasar pemilihan hyperparameter (Pak Aldi #5) 🧰
+Sumber: `docs/revisi/artefak/dasar_hyperparameter.md`. Nilai (lr 2e-5 / batch 16 / 10 epoch +
+early stopping / weight decay 0,01 / seed 42 / threshold 0,9 / IndoBERT uncased) + alasan tiap
+parameter dari **referensi nyata: Ariyanto dkk. (2025), IEEE Access** (DOI 10.1109/ACCESS.2025.3604068
+— first author Mbak Amelia). Framing: nilai awal dari penelitian acuan sejenis, diuji ulang di
+Sirah. ⚠️ Jujur: maks 6 iterasi = titik henti praktis, BUKAN dari referensi.
+
 ## P-3.7. Contoh chunking sebelum/sesudah (Bu Ratih #4) 🧰
 Sumber: `docs/revisi/artefak/contoh_chunking.md`. Param: ≤1500 char, overlap 1 kalimat, batas
 kalimat dijaga, metadata bab/sub-bab/halaman. Contoh nyata sub-bab "Kekuasaan di Berbagai Penjuru
