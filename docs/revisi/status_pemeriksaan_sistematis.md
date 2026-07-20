@@ -26,7 +26,7 @@
 | 3 | Definisi token/subtoken/batch | ✅ | §3.6 (word_ids, -100) |
 | 4 | Alur NER→KG | ✅ | Abu Jahal §3.7 |
 | 5 | "alias clustering"→normalisasi alias | ✅ | 4 tempat + klarifikasi JW |
-| 6 | Metode relasi 200-char + contoh + aturan Invalid* | ⚠️ | 200-char + contoh benar/salah + negasi ✅; **aturan Invalid\* belum diuraikan operasional** (baru disebut "guard") |
+| 6 | Metode relasi 200-char + contoh + aturan Invalid* | ✅ | 200-char + contoh benar/salah + negasi ✅; aturan Invalid\* diuraikan operasional §3.7.2; **rujukan paper co-occurrence** (Choi & Jung 2025 + Zhao et al. 2023) ditambah §2.7/§3.7.2 |
 | 7 | Referensi konstruksi KG + batas heuristik | ✅ | §2.7 (Zhong 2024, Sevgili 2022) |
 | 8 | Pengukuran kualitas KG (validitas semantis) | ✅ | §2.7/§3.9.2/§4.5.8 (31,58%) |
 
