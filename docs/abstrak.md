@@ -1,6 +1,6 @@
 <!-- SUMBER: docs/Buku-TA-Genta-fixed.pdf (buku terbaru), diekstrak 2026-07-19. Cermin TEKS untuk rujukan revisi; tabel/gambar/persamaan dipipihkan. Backup .md lama: abstrak.md.bak_pre_pdf_sync -->
 
-ABSTRAK
+## ABSTRAK
 
 PENDEKATAN NAMED-ENTITY RECOGNITION DALAM PEMBANGUNAN KNOWLEDGE GRAPH SIRAH NABAWIYAH
 
@@ -12,7 +12,7 @@ melalui normalisasi alias, dihubungkan berdasarkan pola relasi, diperkaya dengan
 
 Kata kunci: IndoBERT; Knowledge Graph; Named-Entity Recognition; Sirah Nabawiyah; Social Network Analysis.
 
-ABSTRACT
+## ABSTRACT
 
 NAMED-ENTITY RECOGNITION–BASED CONSTRUCTION OF A SIRAH NABAWIYAH KNOWLEDGE GRAPH
 
