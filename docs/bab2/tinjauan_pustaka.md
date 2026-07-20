@@ -225,4 +225,10 @@ Pembentukan knowledge graph dari teks umumnya mengikuti tahapan ekstraksi entita
 
 ## Perbaikan notasi Persamaan (2.13) betweenness
 
-Cari kalimat "…menunjukkan jumlah jalur terpendek dari simpul 𝒕 ke simpul 𝒕 yang melewati simpul v" dan betulkan menjadi "…menunjukkan jumlah jalur terpendek dari simpul **𝒔** ke simpul **𝒕** yang melewati simpul v".
+✅ SUDAH diterapkan inline di badan Bab 2 (cari penanda `✳ REVISI (Pak Aldi #2)`): "𝜎𝑠𝑡(𝑣) …
+jalur terpendek dari simpul **𝒔** ke simpul **𝒕** yang melewati simpul 𝑣".
+
+> BELUM (butuh keputusanmu, audit tulisan): (a) rujuk tiap persamaan dengan nomor eksplisit
+> ("…pada Persamaan (2.x)"), bukan "persamaan di bawah ini"; (b) pastikan tiap simbol/variabel
+> pada Persamaan (2.11)–(2.19) didefinisikan (Bu Ratih #3). Ini audit per-persamaan — bisa aku
+> bantu telusuri kalau kamu mau.
