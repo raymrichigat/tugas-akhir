@@ -66,15 +66,17 @@ def main() -> None:
     ax.text(len(DATA) - 0.5, BASELINE + 0.004, f"baseline {BASELINE:.4f}",
             ha="right", va="bottom", fontsize=8, color="#555")
 
-    for i, (b, v, w) in enumerate(zip(bars, vals, win)):
-        tag = f"{v:.4f}" + (" (menang)" if w else "")
-        ax.annotate(tag, (b.get_x() + b.get_width() / 2, v),
-                    ha="center", va="bottom",
-                    fontsize=9, fontweight="bold" if w else "normal",
+    for b, v in zip(bars, vals):
+        ax.annotate(f"{v:.4f}", (b.get_x() + b.get_width() / 2, v),
+                    ha="center", va="bottom", fontsize=9,
                     xytext=(0, 2), textcoords="offset points")
 
     ax.set_xticks(list(x))
     ax.set_xticklabels(labels, fontsize=9)
+    # Tandai pemenang: bold nama langkah/model pada sumbu-x (bukan warna/hatch/anotasi).
+    for i, w in enumerate(win):
+        if w:
+            ax.get_xticklabels()[i].set_fontweight("bold")
     ax.set_ylim(0.72, 1.0)
     ax.set_ylabel("F1-score entity-level (seqeval, gold terkoreksi)")
     ax.set_title("Perbandingan F1 seluruh skenario (ground-truth uji terkoreksi)")

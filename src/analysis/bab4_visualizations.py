@@ -121,23 +121,17 @@ fig.savefig(OUT / "augmentasi_distribusi.png"); plt.close(fig)
 def plot_agregat(fname, judul, labels, micro, macro, highlight=None, rot=0, figw=7.2):
     fig, ax = plt.subplots(figsize=(figw, 4.4))
     x = np.arange(len(labels)); w = 0.36
-    # Warna KONSISTEN dengan legenda: F1 mikro selalu biru, F1 macro selalu biru muda.
-    # Pemenang TIDAK diberi warna berbeda (revisi Pak Aldi #8), melainkan ditandai hatch.
-    from matplotlib.patches import Patch
+    # Warna KONSISTEN dengan legenda: F1 mikro selalu biru, F1 macro selalu biru muda
+    # (revisi Pak Aldi #8). Pemenang ditandai dengan MEN-BOLD nama model/langkahnya
+    # pada sumbu-x -- bukan lewat warna berbeda maupun hatch.
     bM = ax.bar(x - w/2, micro, w, label="F1 mikro", color="#3b6ea5")
     bR = ax.bar(x + w/2, macro, w, label="F1 macro", color="#9fb8d4")
-    if highlight is not None:
-        for b in (bM[highlight], bR[highlight]):
-            b.set_hatch("////"); b.set_edgecolor("#12222f"); b.set_linewidth(1.3)
     ax.set_ylim(min(min(micro), min(macro))*0.90, 1.0)
     ax.set_xticks(x); ax.set_xticklabels(labels, rotation=rot)
-    ax.set_ylabel("F1-score"); ax.set_title(judul)
-    handles, lbls = ax.get_legend_handles_labels()
     if highlight is not None:
-        handles.append(Patch(facecolor="white", edgecolor="#12222f",
-                             hatch="////", label="Terbaik"))
-        lbls.append("Terbaik")
-    ax.legend(handles, lbls, frameon=False, fontsize=9)
+        ax.get_xticklabels()[highlight].set_fontweight("bold")
+    ax.set_ylabel("F1-score"); ax.set_title(judul)
+    ax.legend(frameon=False, fontsize=9)
     for bars in (bM, bR):
         for b in bars:
             ax.text(b.get_x()+b.get_width()/2, b.get_height()+0.003,
