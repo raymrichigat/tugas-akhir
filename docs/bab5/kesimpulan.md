@@ -4,12 +4,13 @@
 BAB 5
 KESIMPULAN DAN SARAN
 5.1 Kesimpulan
-Berdasarkan hasil dan pengujian dan pembahasan yang telah dilakukan, diperoleh Kesimpulan
+<!-- ✳ REVISI (Temuan #6): hapus dobel "dan" + "Kesimpulan" → huruf kecil -->
+Berdasarkan hasil pengujian dan pembahasan yang telah dilakukan, diperoleh kesimpulan
 sebagai berikut:
 1. Data teks Sirah Nabawiyah disiapkan melalui tahapan OCR (Optical Character
 Recognition), pembersihan teks, pemrosesan awal, pemotongan teks menjadi beberapa
 chunk, pelabelan entitas menggunakan skema BIO, pembagian data, serta penyatuan
-variasi nama melalui alias clustering. Pelabelan awal dilakukan secara semiotomatis
+variasi nama melalui <!-- ✳ REVISI (Bu Ratih #1) -->normalisasi alias. Pelabelan awal dilakukan secara semiotomatis
 menggunakan kamus entitas dan pola ekspresi reguler, kemudian diperiksa kembali
 untuk menghasilkan data berlabel. Tahapan tersebut menghasilkan data latih sebanyak
 590 chunk yang terdiri atas 116.353 token dan 4.247 entitas. Sementara itu, data uji
@@ -138,3 +139,38 @@ lebih dari satu sumber untuk membandingkan variasi riwayat. Setelah kualitas rel
 meningkat, graf dapat dikembangkan lebih lanjut menjadi sistem tanya-jawab,
 pencarian semantik, atau visualisasi kronologis interaktif dengan tetap menampilkan
 bukti dan halaman sumber pada setiap jawaban.
+
+<!-- ================================================================= -->
+<!-- ✳ SISIPAN REVISI SIDANG — teks baru untuk bab ini (letak ada di tiap blok). -->
+<!-- Perbaikan kecil sudah disisipkan inline di badan bab (cari penanda ✳ REVISI). -->
+<!-- ================================================================= -->
+
+
+## Kalimat pembuka 5.1 (perbaiki dobel "dan")
+
+> Berdasarkan hasil pengujian dan pembahasan yang telah dilakukan, diperoleh kesimpulan sebagai
+> berikut.
+
+## Tambahan angka pada kesimpulan evaluasi fungsional
+
+> Seluruh enam skenario kueri berhasil dijalankan sehingga tingkat keberhasilan operasional mencapai
+> 100%, dan seluruh hasil dapat ditelusuri melalui metadata bukti dan halaman. Namun, tingkat
+> kesesuaian semantis berbeda pada setiap fungsi, dengan nilai tertinggi 82,35% pada F6 dan nilai
+> terendah 0% pada F4, sehingga knowledge graph lebih tepat digunakan untuk penelusuran awal yang
+> disertai verifikasi terhadap teks sumber.
+
+## Batas interpretasi hasil SNA (tambahan)
+
+> Nilai degree centrality, betweenness centrality, PageRank, density, dan modularity menggambarkan
+> struktur graf hasil ekstraksi. Nilai tersebut tidak secara otomatis menunjukkan pengaruh historis
+> seorang tokoh atau membuktikan bahwa seluruh relasi benar, sehingga interpretasinya dibatasi pada
+> struktur jaringan hasil ekstraksi.
+
+## Saran (bedakan evaluasi sekarang dan lanjutan)
+
+> Penelitian ini menghitung tingkat kesesuaian jawaban yang dikembalikan kueri, yaitu precision
+> jawaban. Penelitian selanjutnya dapat menyusun gold standard relasi beranotasi manual untuk
+> menghitung precision, recall, dan F1-score seluruh relasi. Recall menyeluruh belum dapat dihitung
+> pada penelitian ini karena tidak tersedia daftar lengkap seluruh relasi yang seharusnya ada.
+> Selain itu, penelitian selanjutnya dapat menambahkan deteksi negasi untuk mengurangi relasi yang
+> keliru.

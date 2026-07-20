@@ -25,7 +25,8 @@ Penelitian dilakukan melalui ekstraksi teks menggunakan OCR, prapemrosesan,
 pemecahan teks menjadi chunk, pelabelan semiotomatis, serta pelatihan NER berbasis
 IndoBERT dengan strategi iterative self-training. Orientasi peran semantik digunakan untuk
 menentukan entitas Person, Event, Location, dan Time. Entitas hasil ekstraksi dinormalisasi
-melalui alias clustering, dihubungkan berdasarkan pola relasi, diperkaya dengan periodisasi,
+<!-- ✳ REVISI (Bu Ratih #1): "alias clustering" → "normalisasi alias" -->
+melalui normalisasi alias, dihubungkan berdasarkan pola relasi, diperkaya dengan periodisasi,
 dan disimpan dalam Neo4j. Evaluasi mencakup tiga skenario NER, SNA, dan enam kueri
 fungsional.
 Hasil terbaik dicapai IndoBERT uncased dengan augmentasi data dan F1-score mikro
@@ -63,7 +64,7 @@ relational exploration and analysis.
 This research involved OCR-based text extraction, preprocessing, segmentation into
 chunks, semi-automatic labeling, and IndoBERT-based NER training through iterative self-
 training. A semantic-role orientation was used to define Person, Event, Location, and Time
-entities. Extracted entities were normalized through alias clustering, connected using relation
+entities. <!-- ✳ REVISI (Bu Ratih #1): alias clustering → alias normalization -->Extracted entities were normalized through alias normalization, connected using relation
 patterns, enriched with periodization, and stored in Neo4j. Evaluation comprised three NER
 scenarios, SNA, and six functional queries.
 The best result was achieved by uncased IndoBERT with data augmentation, obtaining a

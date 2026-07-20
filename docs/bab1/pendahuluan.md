@@ -129,12 +129,14 @@ menganalisis hasilnya. Tujuan spesifik penelitian ini adalah sebagai berikut:
 Recognition (NER) berbasis SRL dengan strategi iterative self-training.
 3. Merancang skema dan membangun knowledge graph berbasis entitas Person, Event,
 Location, dan Time beserta relasinya menggunakan Neo4j.
+<!-- ✳ REVISI (Temuan #1): SNA hanya mendeskripsikan struktur; pisahkan tiga peran (NER/SNA/fungsional) -->
 4. Mengevaluasi hasil NER melalui tiga skenario uji coba serta menganalisis knowledge
 graph yang dibangun, termasuk analisis jaringan menggunakan Social Network
-Analysis dan pengujian fungsional graf, untuk menguji kualitas ekstraksi entitas dan
+Analysis dan pengujian fungsional graf, untuk menguji kualitas ekstraksi entitas,
+mendeskripsikan struktur jaringan, dan menilai
 
 <!-- Halaman buku 4 · PDF 38 -->
-kelayakan struktur graf dalam mendukung penelusuran informasi pada Sirah
+kelayakan graf dalam mendukung penelusuran informasi pada Sirah
 Nabawiyah.
 Luaran utama penelitian ini berbentuk knowledge graph Sirah Nabawiyah yang tersimpan
 dan dapat ditelusuri pada graph database Neo4j melalui kueri Cypher. Selain itu, penelitian ini
