@@ -10,7 +10,7 @@
 Unit yang diperiksa = **setiap baris jawaban yang dikembalikan kueri** (bukan entitas unik).
 Untuk F5, penyebut = **21 jalur** yang dikembalikan (bukan 15 lokasi unik) — sesuai Temuan #3.
 
-## Enam pertanyaan kompetensi (dari Tabel 3.21)
+## Enam pertanyaan kompetensi (dari Tabel 3.22)
 
 | Fungsi | Pertanyaan | Pola relasi | Jumlah jawaban |
 |---|---|---|---:|
