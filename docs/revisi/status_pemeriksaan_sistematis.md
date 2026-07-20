@@ -72,3 +72,18 @@
 5. **Bu Nanik #6** — ✅ aturan **InvalidInvolvedIn/OccurredAt/OccurredOn** diuraikan operasional di §3.7.2 (dari kode `relation_extraction.py`: perawi/ayat-Quran/"meninggal dunia" dll; berbasis pola, negasi tetap keterbatasan).
 
 **Semua GAP teks buku CLOSED.** Sisanya murni format/Word (halaman ganjil, header tabel, font pustaka, isi fisik lampiran, perbesar gambar).
+
+## Verifikasi ulang menyeluruh (2026-07-21)
+Seluruh poin substansi (non-format) dicek langsung ke teks buku aktual dan **terkonfirmasi ada**:
+- Pak Aldi #2 betweenness Persamaan (2.13) = "𝑠 ke 𝑡" (bukan "𝑡 ke 𝑡") ✅
+- Pak Aldi #3 confusion teori §2.8 = dua tingkat (4 tipe entitas + **9 kelas BIO** disebut lengkap) ✅
+- Pak Aldi #9 / cased-uncased = SEMUA klaim selaras "semua model uncased": §2.4.2 teori, §4.3 pengantar 5 model + anomali (vocabulary/tokenizer, bukan kapitalisasi), Bab 5 saran ✅
+- **BARU ditutup sesi ini:** §4.2 analisis error (2 klaim FP "Hijabah" karena huruf kapital) DIPERBAIKI → model uncased tak baca kapital; reframe ke kemiripan bentuk/konteks nama diri.
+- Bu Nanik #2 / Bu Dini #5 record data latih §3.5.3 (chunk 000384-001, kolom lengkap + Khaibar LOC vs EVENT) ✅
+- Bu Nanik #5 / Bu Ratih #7 istilah = TAK ada "alias clustering" tersisa di file buku aktif (abstrak/bab1-5/metodologi.md); "normalisasi alias" konsisten; "clustering coefficient" & "pengelompokan manual" = pemakaian sah ✅
+- Bu Ratih #1 abstrak = "normalisasi alias"/"alias normalization" + batas validitas ("sebagian relasi masih memerlukan verifikasi") ID+EN ✅
+- Temuan #1 tujuan bab1 = "mendeskripsikan struktur jaringan" ⟂ "menilai kelayakan graf dalam mendukung penelusuran" (bukan "kelayakan struktur graf") ✅
+- Temuan #4 batas SNA bab5 = "karakteristik graf hasil ekstraksi, bukan ukuran pengaruh sejarah mutlak" ✅
+- Temuan #5 istilah: TAK ada "menyeimbangkan/data seimbang" di file buku aktif ✅
+
+⚠️ **Housekeeping:** `docs/bab3/bab3_revisi_paragraf.md` (DRAFT lama, BUKAN buku aktif — Bab 3 berlaku = `metodologi.md`) masih memuat "Alias Clustering". Tidak masuk buku, tapi bisa dihapus/dibersihkan agar tak membingungkan.
